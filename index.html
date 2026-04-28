@@ -63,6 +63,28 @@
         #levelPopup { position: fixed; inset: 0; background: rgba(0,0,0,.85); display: none; justify-content: center; align-items: center; z-index: 999; }
         .popupInner { background: linear-gradient(#2d1d00, #8b5a00, #2d1d00); padding: 40px 70px; border: 3px solid gold; color: #fff; text-align: center; box-shadow: 0 0 50px gold; }
         .popupInner h2 { font-size: 70px; margin: 0; color: gold; text-shadow: 0 0 20px yellow; }
+
+        /* Hiệu ứng chữ động cho Shadow Hunter */
+        .sh-title {
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 5px #1baeff, 0 0 10px #1baeff;
+            animation: shadowGlow 2s ease-in-out infinite;
+            display: inline-block;
+}
+
+@keyframes shadowGlow {
+    0%, 100% {
+        text-shadow: 0 0 5px #1baeff, 0 0 10px #1baeff, 0 0 20px #1baeff;
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 40px #ff00ff;
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+}
     </style>
 </head>
 <body>
@@ -83,7 +105,7 @@
         <h1>STATUS</h1>
         <div class="row"><span>NAME: <span id="playerName"></span></span><span>LEVEL: <span id="level"></span></span></div>
         <div class="row"><span>JOB: <span id="job"></span></span><span>FATIGUE: 0</span></div>
-        <div class="row small">TITLE: SHADOW HUNTER</div>
+        <div class="row small">TITLE: <span class="sh-title">SHADOW HUNTER</span></div>
         
         <div>HP: <span id="hpDisplay"></span></div>
         <div class="barbox"><div class="bar" id="hpBar"></div></div>
