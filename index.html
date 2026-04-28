@@ -143,6 +143,7 @@
 
     <div class="characterBox">
         <img id="jinwooImg" src="Sungjinwoo.png" alt="Jinwoo">
+        <div id="imageRank" class="sh-title" style="display: block; font-size: 28px; margin-top: 10px;"></div>
     </div>
 </div>
 
@@ -186,12 +187,13 @@
     }
 
     function getJob(l) {
-        if (l >= 31) return 'Thợ Săn Hạng C';
-        if (l >= 21) return 'Thợ Săn Hạng D';
-        if (l >= 11) return 'Thợ Săn Hạng E';
-        if (l >= 6) return 'Chiến Binh';
-        return 'Tân Binh';
-    }
+        if (l >= 45) return 'Thợ Săn Hạng S';
+        if (l >= 30) return 'Thợ Săn Hạng A';
+        if (l >= 20) return 'Thợ Săn Hạng B';
+        if (l >= 10) return 'Thợ Săn Hạng C';
+        if (l >= 5)  return 'Thợ Săn Hạng D';
+        return 'Thợ Săn Hạng E';
+}
 
     window.register = async function() {
         const u = username.value.trim(), p = password.value.trim();
@@ -303,6 +305,7 @@
         ).join('');
 
         document.getElementById('logs').innerHTML = (currentUser.logs || []).slice().reverse().join('<br>');
+        document.getElementById('imageRank').innerText = getJob(currentUser.level);
     }
 </script>
 </body>
