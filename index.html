@@ -68,9 +68,22 @@
         .sh-title {
             font-weight: bold;
             color: #fff;
-            text-shadow: 0 0 5px #1baeff, 0 0 10px #1baeff;
+            text-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff; /* Phát sáng màu xanh */
             animation: shadowGlow 2s ease-in-out infinite;
             display: inline-block;
+}
+
+@keyframes shadowGlow {
+    0%, 100% {
+        text-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff, 0 0 30px #00bfff;
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        text-shadow: 0 0 15px #fff, 0 0 25px #00bfff, 0 0 40px #00bfff;
+        transform: scale(1.05); /* Chữ hơi to lên khi "thở" */
+        opacity: 0.8;
+    }
 }
 
 @keyframes shadowGlow {
