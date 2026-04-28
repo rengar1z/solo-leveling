@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solo Leveling Ultimate UI</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap');
+        
+        body {
+            margin: 0;
+            font-family: 'Oswald', sans-serif;
+            background: radial-gradient(circle at center, #02152d, #000814, #000);
+            color: #8eefff;
+            overflow-x: hidden;
+        }
+
+        #debug { color: yellow; text-align: center; padding: 8px; text-shadow: 0 0 8px yellow; font-size: 14px; }
+
+        .wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 20px;
+            min-height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .panel {
+            width: 55%;
+            border: 2px solid #00bfff;
+            box-shadow: 0 0 25px #00bfff, inset 0 0 20px #00bfff;
+            padding: 25px;
+            background: rgba(0, 20, 50, .45);
+            backdrop-filter: blur(5px);
+        }
+
+        h1 { text-align: center; font-size: 64px; color: #fff; text-shadow: 0 0 20px #00bfff; margin: 5px 0 20px; letter-spacing: 5px; }
+
+        .row { display: flex; justify-content: space-between; font-size: 30px; margin: 12px 0; border-bottom: 1px solid rgba(0, 191, 255, 0.3); }
+        .small { font-size: 22px; color: #aaa; }
+
+        .barbox { width: 100%; height: 16px; border: 1px solid #00bfff; margin: 8px 0 18px; background: rgba(0,0,0,0.5); position: relative; }
+        .bar { height: 100%; background: linear-gradient(90deg, #00bfff, #23d8ff); box-shadow: 0 0 12px #23d8ff; transition: width 0.5s ease; }
+        #hpBar { background: linear-gradient(90deg, #ff0000, #ff4d4d); box-shadow: 0 0 12px #ff0000; }
+        #mpBar { background: linear-gradient(90deg, #0066ff, #00bfff); }
+
+        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 26px; margin-top: 20px; }
+        .card { margin-top: 20px; border: 1px solid #00bfff; padding: 15px; background: rgba(0,0,30,.6); box-shadow: 0 0 10px #00bfff; }
+        
+        input, button { padding: 10px 14px; font-size: 18px; margin: 5px; border: 1px solid #00bfff; border-radius: 4px; background: #000; color: #fff; }
+        button { background: #00bfff; color: #000; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #fff; box-shadow: 0 0 20px #fff; }
+
+        .hidden { display: none; }
+
+        .characterBox { width: 40%; text-align: center; position: sticky; top: 20px; }
+        #jinwooImg { max-width: 200%; height: auto; filter: drop-shadow(0 0 25px #1baeff); animation: float 4s ease-in-out infinite; }
+        
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        #levelPopup { position: fixed; inset: 0; background: rgba(0,0,0,.85); display: none; justify-content: center; align-items: center; z-index: 999; }
+        .popupInner { background: linear-gradient(#2d1d00, #8b5a00, #2d1d00); padding: 40px 70px; border: 3px solid gold; color: #fff; text-align: center; box-shadow: 0 0 50px gold; }
+        .popupInner h2 { font-size: 70px; margin: 0; color: gold; text-shadow: 0 0 20px yellow; }
+    </style>
+</head>
+<body>
+
+<div id="debug">Hệ thống đang khởi tạo...</div>
+
+<div id="auth" style="text-align:center; padding: 50px 20px;">
+    <h2 style="font-size: 40px; text-shadow: 0 0 10px #00bfff;">CỔNG DỊ GIỚI ĐANG MỞ</h2>
+    <input id="username" placeholder="Tên thợ săn...">
+    <input id="password" type="password" placeholder="Mật mã...">
+    <br><br>
+    <button onclick="register()">ĐĂNG KÝ THỨC TỈNH</button>
+    <button onclick="login()">ĐĂNG NHẬP HỆ THỐNG</button>
+</div>
+
+<div class="wrapper hidden" id="gameWrap">
+    <div class="panel">
+        <h1>STATUS</h1>
+        <div class="row"><span>NAME: <span id="playerName"></span></span><span>LEVEL: <span id="level"></span></span></div>
+        <div class="row"><span>JOB: <span id="job"></span></span><span>FATIGUE: 0</span></div>
+        <div class="row small">TITLE: SHADOW HUNTER</div>
+        
+        <div>HP: <span id="hpDisplay"></span></div>
+        <div class="barbox"><div class="bar" id="hpBar"></div></div>
+        
+        <div>MP: <span id="mpDisplay"></span></div>
+        <div class="barbox"><div class="bar" id="mpBar"></div></div>
+        
+        <div>EXP: <span id="expText"></span></div>
+        <div class="barbox"><div class="bar" id="expBar"></div></div>
+
+        <div class="stats">
+            <div>STRENGTH: <span id="str"></span></div><div>VITALITY: <span id="vit"></span></div>
+            <div>AGILITY: <span id="agi"></span></div><div>INTELLIGENCE: <span id="int"></span></div>
+            <div>SENSE: <span id="sense"></span></div><div>POINTS: <span id="points"></span></div>
+        </div>
+
+        <div class="card">
+            <h2 style="color: #ffcc00;">NHIỆM VỤ HÀNG NGÀY</h2>
+            <p id="mission" style="font-size: 24px;"></p>
+            <p id="reward" style="color: #00ff00;"></p>
+            <button onclick="completeMission()">XÁC NHẬN HOÀN THÀNH</button>
+            <p id="streak"></p>
+        </div>
+
+        <div class="card">
+            <h2>BẢNG XẾP HẠNG THỢ SĂN</h2>
+            <div id="leaderboard"></div>
+        </div>
+
+        <div class="card">
+            <h2>NHẬT KÝ RÈN LUYỆN</h2>
+            <div id="logs" style="max-height: 150px; overflow-y: auto; font-size: 16px; color: #888;"></div>
+        </div>
+    </div>
+
+    <div class="characterBox">
+        <img id="jinwooImg" src="Sungjinwoo.png" alt="Jinwoo">
+        <p style="margin-top:20px; font-size: 14px; color: #555;">ẢNH NHÂN VẬT HỆ THỐNG</p>
+    </div>
+</div>
+
+<div id="levelPopup">
+    <div class="popupInner">
+        <h2>LEVEL UP</h2>
+        <p id="popupText" style="font-size: 30px;"></p>
+        <button onclick="closePopup()" style="padding: 15px 40px;">TIẾP TỤC</button>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getDatabase, ref, set, get, child } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+    const firebaseConfig = {
+        apiKey: 'AIzaSyCNTgbxXX3x6JaQUumUpawGd-ih8AyN1EI',
+        authDomain: 'solo-leveling-system-abb20.firebaseapp.com',
+        databaseURL: 'https://solo-leveling-system-abb20-default-rtdb.asia-southeast1.firebasedatabase.app',
+        projectId: 'solo-leveling-system-abb20',
+        storageBucket: 'solo-leveling-system-abb20.firebasestorage.app',
+        messagingSenderId: '670113654913',
+        appId: '1:670113654913:web:08feecb3c0341cac1a0580'
+    };
+
+    let db, currentUser = null, allUsers = {};
+    const debug = document.getElementById('debug');
+
+    try {
+        const app = initializeApp(firebaseConfig);
+        db = getDatabase(app);
+        debug.innerText = 'Kết nối hệ thống: THÀNH CÔNG';
+    } catch (e) {
+        debug.innerText = 'Lỗi kết nối: ' + e;
+    }
+
+    function getMission() {
+        const d = new Date().getDay();
+        if ([1, 3, 5].includes(d)) return { text: 'Tập tạ 50 cái', exp: 35 };
+        return { text: 'Chạy bộ 5km + Hít đất 70 cái', exp: 50 };
+    }
+
+    function getJob(l) {
+        if (l >= 31) return 'Thợ Săn Hạng C';
+        if (l >= 21) return 'Thợ Săn Hạng D';
+        if (l >= 11) return 'Thợ Săn Hạng E';
+        if (l >= 6) return 'Chiến Binh';
+        return 'Tân Binh';
+    }
+
+    window.register = async function() {
+        const u = username.value.trim(), p = password.value.trim();
+        if(!u || !p) return alert('Vui lòng nhập đầy đủ');
+        const s = await get(child(ref(db), 'users/' + u));
+        if (s.exists()) return alert('Tên thợ săn đã được sử dụng');
+        
+        const userData = {
+            username: u, password: p, level: 1, exp: 0, need: 100,
+            hp: 100, maxHp: 100, mp: 50, maxMp: 50,
+            str: 5, agi: 5, int: 5, vit: 5, sense: 5, points: 0,
+            claimedDate: '', streak: 0, logs: []
+        };
+        await set(ref(db, 'users/' + u), userData);
+        alert('Thức tỉnh thành công! Hãy đăng nhập.');
+    }
+
+    window.login = async function() {
+        const u = username.value.trim(), p = password.value.trim();
+        const s = await get(child(ref(db), 'users/' + u));
+        if (!s.exists()) return alert('Thợ săn chưa thức tỉnh');
+        const data = s.val();
+        if (data.password !== p) return alert('Mật mã sai');
+        
+        currentUser = data;
+        // Bổ sung các chỉ số còn thiếu nếu là acc cũ
+        currentUser.maxHp = currentUser.maxHp || 100;
+        currentUser.maxMp = currentUser.maxMp || 50;
+        
+        document.getElementById('auth').classList.add('hidden');
+        document.getElementById('gameWrap').classList.remove('hidden');
+        await loadLeaderboard();
+        render();
+    }
+
+    window.completeMission = async function() {
+        const today = new Date().toLocaleDateString();
+        if (currentUser.claimedDate === today) return alert('Hôm nay bạn đã rèn luyện rồi!');
+        
+        const m = getMission();
+        currentUser.exp += m.exp;
+        let up = false;
+
+        while (currentUser.exp >= currentUser.need) {
+            currentUser.exp -= currentUser.need;
+            currentUser.level++;
+            currentUser.need += 50;
+            currentUser.maxHp += 20;
+            currentUser.maxMp += 10;
+            currentUser.hp = currentUser.maxHp;
+            currentUser.mp = currentUser.maxMp;
+            currentUser.str += 2; currentUser.agi += 2; currentUser.vit += 2;
+            currentUser.int += 1; currentUser.sense += 1;
+            currentUser.points += 3;
+            up = true;
+        }
+
+        currentUser.claimedDate = today;
+        currentUser.streak++;
+        currentUser.logs = currentUser.logs || [];
+        currentUser.logs.push(today + ' - ' + m.text + ' (+' + m.exp + ' EXP)');
+        
+        await set(ref(db, 'users/' + currentUser.username), currentUser);
+        await loadLeaderboard();
+        render();
+        if (up) showPopup();
+    }
+
+    function showPopup() {
+        document.getElementById('popupText').innerText = 'Chúc mừng ' + currentUser.username + ' đã đạt Level ' + currentUser.level + '!';
+        document.getElementById('levelPopup').style.display = 'flex';
+    }
+
+    window.closePopup = function() { document.getElementById('levelPopup').style.display = 'none'; }
+
+    async function loadLeaderboard() {
+        const s = await get(child(ref(db), 'users'));
+        allUsers = s.exists() ? s.val() : {};
+    }
+
+    function render() {
+        document.getElementById('playerName').innerText = currentUser.username;
+        document.getElementById('level').innerText = currentUser.level;
+        document.getElementById('job').innerText = getJob(currentUser.level);
+        
+        document.getElementById('hpDisplay').innerText = currentUser.hp + '/' + currentUser.maxHp;
+        document.getElementById('mpDisplay').innerText = currentUser.mp + '/' + currentUser.maxMp;
+        document.getElementById('expText').innerText = currentUser.exp + '/' + currentUser.need;
+
+        document.getElementById('hpBar').style.width = (currentUser.hp / currentUser.maxHp * 100) + '%';
+        document.getElementById('mpBar').style.width = (currentUser.mp / currentUser.maxMp * 100) + '%';
+        document.getElementById('expBar').style.width = (currentUser.exp / currentUser.need * 100) + '%';
+
+        document.getElementById('str').innerText = currentUser.str;
+        document.getElementById('vit').innerText = currentUser.vit;
+        document.getElementById('agi').innerText = currentUser.agi;
+        document.getElementById('int').innerText = currentUser.int;
+        document.getElementById('sense').innerText = currentUser.sense;
+        document.getElementById('points').innerText = currentUser.points;
+
+        const m = getMission();
+        document.getElementById('mission').innerText = m.text;
+        document.getElementById('reward').innerText = 'Phần thưởng: ' + m.exp + ' EXP';
+        document.getElementById('streak').innerText = 'Chuỗi rèn luyện: ' + currentUser.streak + ' ngày';
+
+        let rank = Object.values(allUsers).sort((a, b) => b.level - a.level);
+        document.getElementById('leaderboard').innerHTML = rank.slice(0, 5).map((p, i) => 
+            `<div style="margin:5px 0">${i + 1}. ${p.username} - <span style="color:gold">LV ${p.level}</span></div>`
+        ).join('');
+
+        document.getElementById('logs').innerHTML = (currentUser.logs || []).slice().reverse().join('<br>');
+    }
+</script>
+</body>
+</html>
