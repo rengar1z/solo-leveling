@@ -673,19 +673,27 @@
 
 // Hàm cộng điểm chỉ số
         window.upgradeStat = async function(e, statKey) {
-        e.stopPropagation(); // Ngăn chặn việc mở bảng thông tin khi bấm dấu +
+        e.stopPropagation(); // Ngăn việc mở bảng thông tin khi bấm dấu +
     
         if (currentUser.points > 0) {
             currentUser[statKey]++;
             currentUser.points--;
 
-        // Cập nhật lại HP/MP tối đa nếu cộng vào VIT/INT
-            if (statKey === 'vit') currentUser.maxHp = 100 + (currentUser.vit * 10);
-            if (statKey === 'int') currentUser.maxMp = 50 + (currentUser.int * 5);
+        // Cập nhật HP tối đa và HỒI ĐẦY máu khi cộng vào VITALITY
+        if (statKey === 'vit') {
+            currentUser.maxHp = 100 + (currentUser.vit * 10);
+            currentUser.hp = currentUser.maxHp; // Thêm dòng này để fill đầy cây HP
+        }
+        
+        // Cập nhật MP tối đa và HỒI ĐẦY mana khi cộng vào INTELLIGENCE
+        if (statKey === 'int') {
+            currentUser.maxMp = 50 + (currentUser.int * 5);
+            currentUser.mp = currentUser.maxMp; // Thêm dòng này để fill đầy cây MP
+        }
 
         // Lưu vào Firebase
-            await set(ref(db, 'users/' + currentUser.username), currentUser);
-        render(); // Gọi hàm render chính để cập nhật toàn bộ giao diện
+        await set(ref(db, 'users/' + currentUser.username), currentUser);
+        render(); // Gọi hàm render để cập nhật thanh bar trên giao diện
     } else {
         alert("Bạn không đủ điểm tiềm năng!");
     }
