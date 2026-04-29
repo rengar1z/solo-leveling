@@ -797,8 +797,19 @@ let player = { x: 50, y: 200, width: 40, height: 50, speed: 5, color: '#00bfff' 
 let monsters = [];
 let keys = {};
 
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+// Khởi tạo kích thước thực cho canvas
+canvas.width = 800;
+canvas.height = 300;
+
+let player = { x: 50, y: 200, width: 40, height: 50, speed: 5, color: '#00bfff' };
+let monsters = [];
+let keys = {};
+
 const playerImg = new Image();
-playerImg.src = 'pixel.jpg'; // Đảm bảo file này nằm cùng thư mục với index.html
+playerImg.src = 'pixel.jpg'; // Đảm bảo file này tồn tại hoặc thay bằng link ảnh của bạn
 
 // Theo dõi phím bấm
 window.addEventListener('keydown', e => keys[e.code] = true);
@@ -816,7 +827,8 @@ function spawnMonster() {
 }
 
 function updateGame() {
-    if (!currentUser) return; // Chỉ chạy khi đã đăng nhập
+    // Chỉ chạy logic game nếu đã đăng nhập thành công
+    if (!currentUser) return;
 
     // Điều khiển nhân vật
     if (keys['ArrowUp'] && player.y > 0) player.y -= player.speed;
@@ -831,8 +843,8 @@ function updateGame() {
         if (player.x < m.x + m.width && player.x + player.width > m.x &&
             player.y < m.y + m.height && player.y + player.height > m.y) {
             monsters.splice(index, 1);
-            currentUser.hp = Math.max(0, currentUser.hp - 5); // Bị quái chạm trừ 5 HP
-            render(); // Cập nhật thanh HP bên ngoài
+            currentUser.hp = Math.max(0, currentUser.hp - 5);
+            render(); 
         }
         if (m.x + m.width < 0) monsters.splice(index, 1);
     });
@@ -843,8 +855,8 @@ function updateGame() {
 function drawGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Vẽ nhân vật Sung Jin Woo Pixel
-    if (playerImg.complete) {
+    // Vẽ nhân vật (Nếu ảnh chưa tải xong thì vẽ hình vuông xanh)
+    if (playerImg.complete && playerImg.naturalWidth !== 0) {
         ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
     } else {
         ctx.fillStyle = player.color;
@@ -861,7 +873,7 @@ function drawGame() {
     });
 }
 
-// Khởi động vòng lặp game ngay lập tức
+// Chạy game
 drawGame();
 
 </script>
