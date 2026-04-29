@@ -191,7 +191,18 @@
         <h1>STATUS</h1>
         <div class="row"><span>NAME: <span id="playerName"></span></span><span>LEVEL: <span id="level"></span></span></div>
         <div class="row"><span>JOB: <span id="job" class="sh-title"></span></span><span>FATIGUE: 0</span></div>
-        <div class="row small">TITLE: <span class="sh-title">SHADOW HUNTER</span></div>
+        <div class="row small">
+    <span>TITLE:</span>
+        <select id="titleSelect" class="sh-title" style="background: none; border: none; outline: none; cursor: pointer;" onchange="updateTitle()">
+            <option value="Weakest Hunter of All Time">Weakest Hunter of All Time</option>
+            <option value="Wolf Slayer">Wolf Slayer</option>
+            <option value="Sand Soldier Slayer">Sand Soldier Slayer</option>
+            <option value="Demon Slayer">Demon Slayer</option>
+            <option value="Survivor">Survivor</option>
+            <option value="Monarch Slayer">Monarch Slayer</option>
+            <option value="Shadow Monarch">Shadow Monarch</option>
+        </select>
+        </div>
         
         <div>HP: <span id="hpDisplay"></span></div>
         <div class="barbox"><div class="bar" id="hpBar"></div></div>
@@ -311,6 +322,7 @@
             hp: 100, maxHp: 100, mp: 50, maxMp: 50,
             str: 5, agi: 5, int: 5, vit: 5, sense: 5, points: 0,
             claimedDate: '', streak: 0, logs: [],
+            title: "Weakest Hunter of All Time",
             isNew: true
 };
         
@@ -392,6 +404,14 @@
         allUsers = s.exists() ? s.val() : {};
     }
 
+    window.updateTitle = async function() {
+        const newTitle = document.getElementById('titleSelect').value;
+        currentUser.title = newTitle;
+    
+    // Lưu vào database
+        await set(ref(db, 'users/' + currentUser.username), currentUser);
+        render();
+    }
     function render() {
         document.getElementById('playerName').innerText = currentUser.username;
         document.getElementById('level').innerText = currentUser.level;
@@ -423,6 +443,9 @@
         ).join('');
 
         document.getElementById('logs').innerHTML = (currentUser.logs || []).slice().reverse().join('<br>');
+        if (currentUser.title) {
+        document.getElementById('titleSelect').value = currentUser.title;
+    }
     }
         window.openTab = function(evt, tabName) {
     // Ẩn tất cả các tab panel
