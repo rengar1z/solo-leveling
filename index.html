@@ -158,6 +158,7 @@
             padding: 10px; border-bottom: 1px solid rgba(0,191,255,0.2); 
             font-size: 22px; color: #fff; text-shadow: 0 0 5px #00bfff;
 }
+        
         #titleSelect option {
             background-color: #001a33; /* Màu nền tối giống giao diện game */
             color: #fff;              /* Màu chữ trắng để dễ nhìn */
@@ -166,11 +167,26 @@
 }    
 
 /* Loại bỏ viền đen mặc định khi nhấn vào trên một số trình duyệt */
-        #titleSelect:focus {
+        #titleSelect {
+            font-size: 32px; /* Phải bằng với font-size của .sh-title ở trên */
+            background: transparent;
+            border: none;
+            color: #fff;
             outline: none;
-            box-shadow: 0 0 15px #00bfff;
+            cursor: pointer;
+            font-family: 'Oswald', sans-serif;
 }
 
+/* Cập nhật hàng row để chứa các chữ to mà không bị đè lên nhau */
+        .row { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            font-size: 32px; 
+            margin: 15px 0; 
+            border-bottom: 1px solid rgba(0, 191, 255, 0.3); 
+            height: 50px; /* Cố định chiều cao hàng để không bị giật khi đổi title */
+}
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
