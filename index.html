@@ -322,22 +322,42 @@
     .btn-red img { filter: drop-shadow(0 0 5px #ff4d4d); }
 
 
-        .icon-mode {
-    width: 60px !important;
-    height: 60px !important;
+        .btn-system {
+    background: #222 !important;
+    color: #8eefff !important;
+    border: 1px solid #444 !important;
+    padding: 10px !important;
+    font-family: 'Oswald', sans-serif !important;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-system:hover:not(:disabled) {
+    background: #333 !important;
+    border-color: #00bfff !important;
+    box-shadow: 0 0 10px #00bfff !important;
+}
+
+/* Khi biến thành Icon tròn */
+.icon-mode {
+    width: 55px !important;
+    height: 55px !important;
     border-radius: 50% !important;
     flex: none !important;
     padding: 0 !important;
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
-    border: 2px solid #00bfff;
+    background: rgba(0, 0, 0, 0.8) !important;
+    border: 2px solid #00bfff !important;
 }
 
 .icon-mode img {
     width: 70%;
     height: 70%;
     object-fit: contain;
+    filter: drop-shadow(0 0 5px #00bfff);
 }
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -501,28 +521,26 @@
         Sẵn sàng khiêu chiến...
     </div>
 
-    <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px; width: 100%;">
-    <div style="display: flex; gap: 15px; justify-content: center; align-items: center;">
+    <div id="actionControls" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px; width: 100%;">
+    <div style="display: flex; gap: 10px; justify-content: center; align-items: center; width: 100%;">
         
-        <button id="btnAttack" onclick="playerAttack()" class="skill-icon-btn" title="Tấn công thường">
-            <img src="attack.jpg" alt="Attack">
+        <button id="btnAttack" class="tab-btn btn-system" onclick="playerAttack()" style="flex: 1;">
+            TẤN CÔNG
         </button>
         
-        <button id="btnDagger" onclick="useDaggerRush()" class="skill-icon-btn btn-blue" style="display: none;" title="Dagger Rush (35 MP)">
-            <img src="dagger.jpg" alt="Dagger">
-            <span class="mp-cost">35</span>
+        <button id="btnDagger" class="tab-btn btn-system" onclick="useDaggerRush()" style="display: none; flex: 1;">
+            DAGGER RUSH
         </button>
         
-        <button id="btnTanSat" onclick="useTanSat()" class="skill-icon-btn btn-red" style="display: none;" title="Tàn Sát (50 MP)">
-            <img src="amsat.jpg" alt="Execute">
-            <span class="mp-cost">50</span>
+        <button id="btnTanSat" class="tab-btn btn-system" onclick="useTanSat()" style="display: none; flex: 1;">
+            TÀN SÁT
         </button>
-
     </div>
 
-    <button id="btnFindEnemy" onclick="startNewBattle()" class="tab-btn" style="width: 100%; background: #555; margin-top: 10px;">TÌM ĐỐI THỦ MỚI</button>
+    <button id="btnFindEnemy" class="tab-btn btn-system" onclick="startNewBattle()" style="width: 100%;">
+        TÌM ĐỐI THỦ MỚI
+    </button>
 </div>
-    </div>
 
 <div id="levelPopup">
     <div class="popupInner">
@@ -743,35 +761,34 @@
     skills.forEach(skill => {
         const btn = document.getElementById(skill.id);
         if (btn) {
-            btn.classList.add('icon-mode'); // Biến thành hình tròn
-            btn.innerHTML = `<img src="${skill.icon}">`; // Chèn hình ảnh vào
+            // Kiểm tra nếu là chiêu Dagger/Tàn sát thì chỉ hiện khi đã học
+            if (skill.id !== 'btnAttack' && currentUser.skills[skill.id === 'btnDagger' ? "Dagger Rush" : "Tàn sát"] <= 0) {
+                return; 
+            }
+            btn.classList.add('icon-mode');
+            btn.style.display = "flex"; // Hiện nút dưới dạng flex để căn giữa icon
+            btn.innerHTML = `<img src="${skill.icon}">`;
         }
     });
 }
 
-// Khi trận đấu kết thúc (Thắng hoặc Thua), gọi hàm này để quay lại dạng nút chữ
 function resetToButtonMode() {
     const btnAttack = document.getElementById('btnAttack');
     if (btnAttack) {
-        btnAttack.classList.remove('icon-mode'); // Xóa class hình tròn
-        btnAttack.innerHTML = "TẤN CÔNG";       // Trả lại chữ
-        btnAttack.style.display = "block";      // Đảm bảo nút hiện
-        btnAttack.style.flex = "1";             // Trả lại độ dài nếu dùng flex
-        btnAttack.disabled = false;             // Mở khóa
+        btnAttack.classList.remove('icon-mode');
+        btnAttack.innerHTML = "TẤN CÔNG";
+        btnAttack.style.display = "block";
+        btnAttack.style.flex = "1";
     }
 
-    // Ẩn 2 nút kỹ năng, chỉ cho hiện khi bắt đầu đánh (vào Icon Mode)
-    const btnDagger = document.getElementById('btnDagger');
-    if (btnDagger) {
-        btnDagger.style.display = "none";
-        btnDagger.classList.remove('icon-mode');
-    }
-
-    const btnTanSat = document.getElementById('btnTanSat');
-    if (btnTanSat) {
-        btnTanSat.style.display = "none";
-        btnTanSat.classList.remove('icon-mode');
-    }
+    // Ẩn các nút kỹ năng đặc biệt
+    ['btnDagger', 'btnTanSat'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+            btn.style.display = "none";
+            btn.classList.remove('icon-mode');
+        }
+    });
 }
 
     window.useDaggerRush = function() {
