@@ -684,14 +684,32 @@
         const btnDagger = document.getElementById(pre + 'btnDagger');
         const btnTanSat = document.getElementById(pre + 'btnTanSat');
 
+        // Chỉ khóa cứng (disabled) nút khi không phải lượt của người chơi
         if (btnAttack) btnAttack.disabled = !isMyTurn;
+
+        // Xử lý nút Dagger Rush
         if (btnDagger && btnDagger.style.display !== "none") {
-            btnDagger.disabled = (!isMyTurn || currentUser.mp < 35);
-            btnDagger.style.opacity = (currentUser.mp < 35) ? "0.5" : "1";
+            btnDagger.disabled = !isMyTurn; 
+            // Nếu không đủ MP, chỉ dùng CSS làm mờ để vẫn bấm được và ra thông báo
+            if (currentUser.mp < 35) {
+                btnDagger.style.filter = "grayscale(1) brightness(0.5)";
+                btnDagger.style.cursor = "not-allowed";
+            } else {
+                btnDagger.style.filter = "none";
+                btnDagger.style.cursor = "pointer";
+            }
         }
+
+        // Xử lý nút Tàn Sát
         if (btnTanSat && btnTanSat.style.display !== "none") {
-            btnTanSat.disabled = (!isMyTurn || currentUser.mp < 50);
-            btnTanSat.style.opacity = (currentUser.mp < 50) ? "0.5" : "1";
+            btnTanSat.disabled = !isMyTurn;
+            if (currentUser.mp < 50) {
+                btnTanSat.style.filter = "grayscale(1) brightness(0.5)";
+                btnTanSat.style.cursor = "not-allowed";
+            } else {
+                btnTanSat.style.filter = "none";
+                btnTanSat.style.cursor = "pointer";
+            }
         }
     }
 
