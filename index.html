@@ -853,20 +853,23 @@ const enemies = [
 window.startNewBattle = function() {
     if (!currentUser) return;
     
-    const randIdx = Math.floor(Math.random() * Math.min(enemies.length, Math.floor(currentUser.level/5) + 1));
+    const randIdx = Math.floor(Math.random() * enemies.length);
     const template = enemies[randIdx];
     
     enemy = { ...template, maxHp: template.hp };
     isMyTurn = true;
-    
-    document.getElementById('e-name').innerText = enemy.name;
-    // Cập nhật ảnh đối thủ
-    document.getElementById('e-img').src = enemy.img;
-    // Cập nhật ảnh của bạn (lấy từ ảnh nhân vật chính)
-    document.getElementById('p-img').src = "SungJinWoov2.jpeg"; 
 
-    document.getElementById('battleLog').innerHTML = `Bắt đầu khiêu chiến với ${enemy.name}!`;
+    document.getElementById('e-name').innerText = enemy.name;
+    document.getElementById('e-img').src = enemy.img;
+    document.getElementById('p-img').src = "Sungjinwoo.png"; 
+
+    document.getElementById('battleLog').innerHTML = `Đã tìm thấy ${enemy.name}. Hãy chọn TẤN CÔNG để bắt đầu!`;
+    
     document.getElementById('btnAttack').disabled = false;
+    
+    const btnFind = document.querySelector("button[onclick='startNewBattle()']");
+    if(btnFind) btnFind.disabled = false;
+
     updateCombatUI();
 };
 
@@ -885,19 +888,20 @@ function updateCombatUI() {
 
 // Người chơi tấn công
 window.playerAttack = function() {
+
     if (!isMyTurn || enemy.hp <= 0) return;
 
-    // --- GIỮ NGUYÊN CÁC DÒNG TÍNH DMG CŨ ---
+    const btnFind = document.querySelector("button[onclick='startNewBattle()']");
+    if(btnFind) btnFind.disabled = true;
+
     const dmg = Math.max(5, (currentUser.str * 2) - enemy.def);
     enemy.hp = Math.max(0, enemy.hp - dmg);
     
-    // --- THÊM HIỆU ỨNG RUNG Ở ĐÂY ---
     const eImg = document.getElementById('e-img');
     if (eImg) {
         eImg.classList.add('shake');
         setTimeout(() => eImg.classList.remove('shake'), 300);
     }
-    // -------------------------------
 
     logBattle(`Bạn chém ${enemy.name}, gây ${dmg} sát thương!`);
     updateCombatUI();
@@ -932,19 +936,22 @@ function enemyTurn() {
     render(); 
 
     if (currentUser.hp <= 0) {
-        logBattle(`<span style="color:red">Bạn đã thất bại! Hãy rèn luyện thêm.</span>`);
-    } else {
-        isMyTurn = true;
-        document.getElementById('btnAttack').disabled = false;
+    logBattle(`<span style="color:red">Bạn đã thất bại!</span>`);
+    // MỞ LẠI NÚT TÌM ĐỐI THỦ MỚI KHI THUA
+    const btnFind = document.querySelector("button[onclick='startNewBattle()']");
+    if(btnFind) btnFind.disabled = false;
     }
 }
 
 function winBattle() {
     logBattle(`<span style="color:#00ff00">Chiến thắng! Bạn nhận được ${enemy.exp} EXP.</span>`);
     currentUser.exp += enemy.exp;
-    // Tự động kiểm tra lên cấp ở đây (giống hàm completeMission)
     checkLevelUp(); 
-    saveUserData(); // Lưu lại Firebase
+    saveUserData(); 
+
+    // MỞ LẠI NÚT TÌM ĐỐI THỦ MỚI
+    const btnFind = document.querySelector("button[onclick='startNewBattle()']");
+    if(btnFind) btnFind.disabled = false;
 }
 
 function logBattle(msg) {
