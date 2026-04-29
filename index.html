@@ -503,7 +503,9 @@
                 "Trị Thương": 0,
                 "Siêu Giác Quan": 0,
                 "Gia Tăng Chỉ Số": 0,
-                "Tàng Hình": 0
+                "Tàng Hình": 0,
+                "Tàn sát": 0,      // Thêm dòng này
+                "Dagger Rush": 0
     },
             isNew: true
 };
@@ -629,7 +631,16 @@
     },
         "Tàng Hình": {
             desc: "Ẩn thân hoàn toàn khỏi tầm mắt kẻ thù. (Yêu cầu: Hạng B)",
-            icon: "https://cdn-icons-png.flaticon.com/512/2822/2822376.png"
+            icon: "tanghinh.jpg"
+    },
+
+        "Tàn sát": {
+            desc: "Nhắm vào các điểm quan trọng và gây sát thương chí mạng bằng dao găm.",
+            icon: "amsat.jpg" // Icon gợi ý
+    },
+        "Dagger Rush": {
+            desc: "Tung ra một loạt các đòn tấn công bằng dao găm từ mọi hướng vào mục tiêu.",
+            icon: "dagger.jpg" // Icon gợi ý
     }
 };
 
@@ -646,8 +657,14 @@
     Object.keys(currentUser.skills).forEach(s => {
         const lv = currentUser.skills[s];
         const isLocked = lv === 0;
-        const isMax = lv >= 3;
-        const canUnlock = s !== "Tàng Hình" || currentUser.level >= 20;
+        
+        // Cấu hình phím điều kiện: 2 skill mới max là 1, skill cũ max là 3
+        const maxLvOfThisSkill = (s === "Tàn sát" || s === "Dagger Rush") ? 1 : 3;
+        const isMax = lv >= maxLvOfThisSkill;
+        
+        // Cấu hình chi phí hiển thị để kiểm tra điều kiện bấm nút
+        const cost = (s === "Tàn sát" || s === "Dagger Rush") ? 10 : 1;
+        const canUnlock = (s !== "Tàng Hình" || currentUser.level >= 20);
 
         const div = document.createElement('div');
         div.className = `skill-item ${isLocked ? 'locked' : 'unlocked'}`;
@@ -655,18 +672,20 @@
         
         const lvDisplay = isMax ? 
             '<span style="color: gold; font-weight: bold;">MAX</span>' : 
-            `Lv.${lv}`;
+            `Lv.${lv}/${maxLvOfThisSkill}`;
         
-        // Lấy link icon từ skillData, nếu không có thì dùng ảnh mặc định
         const iconUrl = skillData[s] ? skillData[s].icon : "";
 
         div.innerHTML = `
             <div style="display: flex; align-items: center;">
                 <img src="${iconUrl}" style="width: 35px; height: 35px; margin-right: 15px; border-radius: 5px; border: 1px solid #00bfff;">
-                <span>${s} (${lvDisplay})</span>
+                <div style="display: flex; flex-direction: column;">
+                    <span>${s} (${lvDisplay})</span>
+                    ${!isMax ? `<small style="color: #aaa; font-size: 12px;">Yêu cầu: ${cost} điểm</small>` : ''}
+                </div>
             </div>
             <button class="add-skill-btn" onclick="upgradeSkill(event, '${s}')" 
-                ${(currentUser.skillPoints > 0 && canUnlock && !isMax) ? '' : 'disabled'}>+</button>
+                ${(currentUser.skillPoints >= cost && canUnlock && !isMax) ? '' : 'disabled'}>+</button>
         `;
         list.appendChild(div);
     });
@@ -682,19 +701,28 @@
 }
 
     window.upgradeSkill = async function(e, name) {
-        e.stopPropagation(); 
-    // Thêm điều kiện: currentUser.skills[name] < 3
-        if (currentUser.skillPoints > 0 && currentUser.skills[name] < 3) {
-        // Kiểm tra điều kiện Tàng Hình
+    e.stopPropagation(); 
+
+    // Xác định phí nâng cấp: 2 skill mới tốn 10đ, các skill cũ tốn 1đ
+    const cost = (name === "Tàn sát" || name === "Dagger Rush") ? 10 : 1;
+    
+    // Xác định cấp độ tối đa: 2 skill mới max là 1, các skill cũ max là 3
+    const maxLevel = (name === "Tàn sát" || name === "Dagger Rush") ? 1 : 3;
+
+    if (currentUser.skillPoints >= cost && currentUser.skills[name] < maxLevel) {
+        // Kiểm tra điều kiện Tàng Hình (giữ nguyên logic cũ)
         if (name === "Tàng Hình" && currentUser.level < 20) {
             alert("Cần đạt Hạng B (Level 20) để học kỹ năng này!");
             return;
         }
 
         currentUser.skills[name]++;
-        currentUser.skillPoints--;
+        currentUser.skillPoints -= cost; // Trừ số điểm tương ứng
+        
         await set(ref(db, 'users/' + currentUser.username), currentUser);
         renderSkills();
+    } else if (currentUser.skillPoints < cost) {
+        alert("Bạn cần " + cost + " điểm kỹ năng để học chiêu này!");
     }
 }
 
