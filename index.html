@@ -187,6 +187,31 @@
             border-bottom: 1px solid rgba(0, 191, 255, 0.3); 
             height: 50px; /* Cố định chiều cao hàng để không bị giật khi đổi title */
 }
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+            transition: 0.3s;
+            cursor: pointer;
+}
+        .skill-item.locked { opacity: 0.4; filter: grayscale(1); } /* Kỹ năng chưa học sẽ tối lại */
+        .skill-item.unlocked { border-color: #00bfff; opacity: 1; background: rgba(0, 191, 255, 0.1); }
+
+        .add-skill-btn {
+            background: #00bfff;
+            color: #000;
+            border: none;
+            width: 30px;
+            height: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+}
+        .add-skill-btn:disabled { background: #555; cursor: not-allowed; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -270,14 +295,16 @@
         </div>
 
         <div id="tab-skills" class="tab-panel">
-            <h2>HỆ THỐNG KỸ NĂNG</h2>
-            <div class="skill-list">
-                <div class="skill-item">🔥 Hỏa Long Thuật - Level 1</div>
-                <div class="skill-item">⚡ Tốc Biến - Level 3</div>
-                <div class="skill-item">🛡️ Khiên Ma Pháp - Level 2</div>
-            </div>
-            <p style="color: #888; font-style: italic; margin-top: 10px;">(Kỹ năng mới sẽ mở khóa khi lên cấp cao hơn)</p>
+            <h2 style="color: #00bfff;">SKILL POINTS: <span id="skPoints">0</span></h2>
+        <div id="skillList" class="skill-list">
         </div>
+    
+        <div id="skillDetail" class="card hidden" style="margin-top: 20px; border-color: gold;">
+            <h3 id="detName" style="color: gold; margin-top: 0;"></h3>
+            <p id="detDesc" style="font-size: 18px; color: #eee;"></p>
+            <p id="detReq" style="color: #ff4d4d; font-weight: bold;"></p>
+        </div>
+</div>
 
         <div id="tab-logs" class="tab-panel">
             <h2>NHẬT KÝ RÈN LUYỆN</h2>
@@ -351,6 +378,16 @@
             str: 5, agi: 5, int: 5, vit: 5, sense: 5, points: 0,
             claimedDate: '', streak: 0, logs: [],
             title: "Weakest Hunter of All Time",
+            skillPoints: 0,
+            skills: {
+                "Phát Triển Cấp Tốc": 0,
+                "Thể Chất Siêu Phàm": 0,
+                "Tái Tạo": 0,
+                "Trị Thương": 0,
+                "Siêu Giác Quan": 0,
+                "Gia Tăng Chỉ Số": 0,
+                "Tàng Hình": 0
+    }
             isNew: true
 };
         
@@ -405,7 +442,8 @@
             currentUser.mp = currentUser.maxMp;
             currentUser.str += 2; currentUser.agi += 2; currentUser.vit += 2;
             currentUser.int += 1; currentUser.sense += 1;
-            currentUser.points += 3;
+            currentUser.points += 3; // Point chỉ số
+            currentUser.skillPoints += 2; // Thêm 2 điểm kỹ năng mỗi level
             up = true;
         }
 
@@ -440,6 +478,57 @@
         await set(ref(db, 'users/' + currentUser.username), currentUser);
         render();
     }
+
+    const skillData = {
+        "Phát Triển Cấp Tốc": "Tăng lượng EXP nhận được từ nhiệm vụ thêm 10%.",
+        "Thể Chất Siêu Phàm": "Tăng vĩnh viễn chỉ số Strength và Vitality.",
+        "Tái Tạo": "Tự động hồi phục HP sau mỗi nhiệm vụ.",
+        "Trị Thương": "Sử dụng MP để hồi phục lượng lớn HP ngay lập tức.",
+        "Siêu Giác Quan": "Tăng tỷ lệ né tránh và phát hiện quái vật hiếm.",
+        "Gia Tăng Chỉ Số": "Mỗi cấp tăng thêm điểm tiềm năng khi lên level.",
+        "Tàng Hình": "Ẩn thân hoàn toàn khỏi tầm mắt kẻ thù. (Yêu cầu: Hạng B)"
+};
+
+    window.renderSkills = function() {
+        const list = document.getElementById('skillList');
+        document.getElementById('skPoints').innerText = currentUser.skillPoints;
+        list.innerHTML = '';
+
+        Object.keys(currentUser.skills).forEach(s => {
+            const lv = currentUser.skills[s];
+            const isLocked = lv === 0;
+            const canUnlock = s !== "Tàng Hình" || currentUser.level >= 20; // Hạng B là level 20
+
+            const div = document.createElement('div');
+            div.className = `skill-item ${isLocked ? 'locked' : 'unlocked'}`;
+            div.onclick = () => showSkillDetail(s);
+        
+            div.innerHTML = `
+                <span>${s} (Lv.${lv})</span>
+                <button class="add-skill-btn" onclick="upgradeSkill(event, '${s}')" 
+                    ${(currentUser.skillPoints > 0 && canUnlock) ? '' : 'disabled'}>+</button>
+            `;
+            list.appendChild(div);
+    });
+}
+
+    window.showSkillDetail = function(name) {
+        const det = document.getElementById('skillDetail');
+        det.classList.remove('hidden');
+        document.getElementById('detName').innerText = name;
+        document.getElementById('detDesc').innerText = skillData[name];
+        document.getElementById('detReq').innerText = (name === "Tàng Hình" && currentUser.level < 20) ? "ĐIỀU KIỆN: ĐẠT HẠNG B (LEVEL 20)" : "";
+}
+
+    window.upgradeSkill = async function(e, name) {
+        e.stopPropagation(); // Ngăn việc hiện bảng chi tiết khi bấm dấu +
+        if (currentUser.skillPoints > 0) {
+            currentUser.skills[name]++;
+            currentUser.skillPoints--;
+            await set(ref(db, 'users/' + currentUser.username), currentUser);
+            renderSkills();
+    }
+}
     function render() {
         document.getElementById('playerName').innerText = currentUser.username;
         document.getElementById('level').innerText = currentUser.level;
