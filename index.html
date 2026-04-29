@@ -1070,11 +1070,6 @@ window.startNewBattle = function() {
     // 1. Reset giao diện về dạng nút chữ nhật xám
     resetToButtonMode(); 
 
-    if (!currentUser || currentUser.hp <= 0) {
-        alert("Bạn cần hồi phục máu trước!");
-        return;
-    }
-
     const randIdx = Math.floor(Math.random() * enemies.length);
     const template = enemies[randIdx];
     enemy = { ...template, maxHp: template.hp };
