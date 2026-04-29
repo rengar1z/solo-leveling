@@ -1027,7 +1027,7 @@ function triggerShake() {
     evt.currentTarget.classList.add("active");
 }
 
-    let enemy = { ...enemies[0], maxHp: enemies[0].hp };
+    let enemy = { name: "Quái vật", hp: 100, maxHp: 100, atk: 10, def: 5, exp: 20, img: "monster.jpg" };
     updateCombatUI();
     let isMyTurn = true;
 
@@ -1052,12 +1052,36 @@ const enemies = [
 
 // Hàm bắt đầu trận đấu mới
 window.startNewBattle = function() {
-    // 1. Kiểm tra điều kiện (Phải có dòng này để tránh lỗi khi chưa load user)
     if (!currentUser) return;
+    
+    // Reset giao diện trước
+    resetToButtonMode(); 
+
     if (currentUser.hp <= 0) {
-        alert("Bạn cần hồi phục máu trước khi chiến đấu!");
+        alert("Bạn cần hồi phục máu trước!");
         return;
     }
+
+    // Chọn quái ngẫu nhiên
+    if (typeof enemies !== 'undefined' && enemies.length > 0) {
+        const randIdx = Math.floor(Math.random() * enemies.length);
+        const template = enemies[randIdx];
+        
+        // Copy dữ liệu và thiết lập maxHp
+        enemy = { ...template, maxHp: template.hp };
+        isMyTurn = true;
+
+        // Hiển thị thông tin
+        document.getElementById('e-name').innerText = enemy.name;
+        document.getElementById('e-img').src = enemy.img;
+        document.getElementById('battleLog').innerHTML = `Đã tìm thấy ${enemy.name}!`;
+        
+        // Cập nhật thanh máu
+        updateCombatUI();
+    } else {
+        console.error("Danh sách enemies chưa được định nghĩa!");
+    }
+};
 
     // 2. Reset giao diện về dạng nút chữ nhật xám
     resetToButtonMode(); 
@@ -1094,41 +1118,29 @@ window.startNewBattle = function() {
 };
 // Cập nhật giao diện chiến đấu
 function updateCombatUI() {
-    // 1. Cập nhật thanh máu Người chơi
-    const pPercent = (currentUser.hp / currentUser.maxHp) * 100;
-    document.getElementById('p-hp-bar').style.width = pPercent + "%";
-    document.getElementById('p-hp-text').innerText = `HP: ${currentUser.hp}/${currentUser.maxHp}`;
-    
-    // 2. Cập nhật thanh máu Kẻ địch
-    // PHẦN SỬA: Kiểm tra nếu chưa có maxHp thì lấy hp hiện tại làm mốc, tránh lỗi chia cho 0 hoặc undefined
-    const enemyMaxHp = enemy.maxHp || enemy.hp || 100;
-    const ePercent = (enemy.hp / enemyMaxHp) * 100;
-    
-    document.getElementById('e-hp-bar').style.width = ePercent + "%";
-    document.getElementById('e-hp-text').innerText = `HP: ${enemy.hp}/${enemyMaxHp}`;
+    if (!currentUser || !enemy) return; // Nếu chưa có dữ liệu thì thoát, không chạy tiếp để tránh treo
 
-    // 3. Lấy các thẻ nút
-    const btnDagger = document.getElementById('btnDagger');
-    const btnTanSat = document.getElementById('btnTanSat');
+    // 1. Player UI
+    const pPercent = (currentUser.maxHp > 0) ? (currentUser.hp / currentUser.maxHp) * 100 : 0;
+    const pHpBar = document.getElementById('p-hp-bar');
+    if (pHpBar) pHpBar.style.width = pPercent + "%";
+    
+    const pHpText = document.getElementById('p-hp-text');
+    if (pHpText) pHpText.innerText = `HP: ${currentUser.hp}/${currentUser.maxHp}`;
+    
+    // 2. Enemy UI
+    const eMax = enemy.maxHp || enemy.hp || 100;
+    const ePercent = (enemy.hp / eMax) * 100;
+    
+    const eHpBar = document.getElementById('e-hp-bar');
+    if (eHpBar) eHpBar.style.width = ePercent + "%";
+    
+    const eHpText = document.getElementById('e-hp-text');
+    if (eHpText) eHpText.innerText = `HP: ${enemy.hp}/${eMax}`;
+
+    // 3. Khóa/Mở nút
     const btnAttack = document.getElementById('btnAttack');
-
-    // 4. Cập nhật trạng thái khóa/mở nút theo lượt
-    // Nút Tấn công: Chỉ khóa/mở, giữ nguyên hiển thị (Chữ hoặc Icon tùy lúc đó)
-    if (btnAttack) {
-        btnAttack.disabled = !isMyTurn;
-    }
-
-    // Nút Dagger Rush: Chỉ cập nhật khi nó ĐANG HIỆN (không ép display: block)
-    if (btnDagger && btnDagger.style.display !== "none") {
-        btnDagger.disabled = (!isMyTurn || currentUser.mp < 35);
-        btnDagger.style.opacity = (currentUser.mp < 35) ? "0.5" : "1";
-    }
-
-    // Nút Tàn sát: Chỉ cập nhật khi nó ĐANG HIỆN
-    if (btnTanSat && btnTanSat.style.display !== "none") {
-        btnTanSat.disabled = (!isMyTurn || currentUser.mp < 50);
-        btnTanSat.style.opacity = (currentUser.mp < 50) ? "0.5" : "1";
-    }
+    if (btnAttack) btnAttack.disabled = !isMyTurn;
 }
 function disableAllActionButtons(status) {
     document.getElementById('btnAttack').disabled = status;
