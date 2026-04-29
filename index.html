@@ -139,6 +139,27 @@
 }
 
         .hidden { display: none !important; }
+
+        /* Style cho System Tabs */
+        .tabs-container { margin-top: 30px; border: 1px solid #00bfff; background: rgba(0,0,30,0.8); }
+        .tabs-header { display: flex; background: rgba(0, 191, 255, 0.2); border-bottom: 1px solid #00bfff; }
+        .tab-btn {
+            flex: 1; padding: 15px; border: none; background: none; color: #8eefff;
+            font-family: 'Oswald', sans-serif; font-size: 20px; cursor: pointer; transition: 0.3s;
+}
+        .tab-btn:hover { background: rgba(255, 255, 255, 0.1); }
+        .tab-btn.active { background: #00bfff; color: #000; font-weight: bold; box-shadow: inset 0 0 10px #fff; }
+
+        .tabs-content { padding: 20px; min-height: 200px; }
+        .tab-panel { display: none; animation: fadeIn 0.5s ease; }
+        .tab-panel.active { display: block; }
+
+        .skill-item { 
+            padding: 10px; border-bottom: 1px solid rgba(0,191,255,0.2); 
+            font-size: 22px; color: #fff; text-shadow: 0 0 5px #00bfff;
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -187,7 +208,16 @@
             <div>SENSE: <span id="sense"></span></div><div>POINTS: <span id="points"></span></div>
         </div>
 
-        <div class="card">
+        <div class="tabs-container">
+    <div class="tabs-header">
+        <button class="tab-btn active" onclick="openTab(event, 'tab-mission')">QUEST</button>
+        <button class="tab-btn" onclick="openTab(event, 'tab-ranking')">RANKING</button>
+        <button class="tab-btn" onclick="openTab(event, 'tab-skills')">SKILLS</button>
+        <button class="tab-btn" onclick="openTab(event, 'tab-logs')">LOGS</button>
+    </div>
+
+    <div class="tabs-content">
+        <div id="tab-mission" class="tab-panel active">
             <h2 style="color: #ffcc00;">NHIỆM VỤ HÀNG NGÀY</h2>
             <p id="mission" style="font-size: 24px;"></p>
             <p id="reward" style="color: #00ff00;"></p>
@@ -195,16 +225,27 @@
             <p id="streak"></p>
         </div>
 
-        <div class="card">
+        <div id="tab-ranking" class="tab-panel">
             <h2>BẢNG XẾP HẠNG THỢ SĂN</h2>
             <div id="leaderboard"></div>
         </div>
 
-        <div class="card">
+        <div id="tab-skills" class="tab-panel">
+            <h2>HỆ THỐNG KỸ NĂNG</h2>
+            <div class="skill-list">
+                <div class="skill-item">🔥 Hỏa Long Thuật - Level 1</div>
+                <div class="skill-item">⚡ Tốc Biến - Level 3</div>
+                <div class="skill-item">🛡️ Khiên Ma Pháp - Level 2</div>
+            </div>
+            <p style="color: #888; font-style: italic; margin-top: 10px;">(Kỹ năng mới sẽ mở khóa khi lên cấp cao hơn)</p>
+        </div>
+
+        <div id="tab-logs" class="tab-panel">
             <h2>NHẬT KÝ RÈN LUYỆN</h2>
-            <div id="logs" style="max-height: 150px; overflow-y: auto; font-size: 16px; color: #888;"></div>
+            <div id="logs" style="max-height: 250px; overflow-y: auto; font-size: 18px; color: #ccc;"></div>
         </div>
     </div>
+</div>
 
     <div class="characterBox">
         <img id="jinwooImg" src="Sungjinwoo.png" alt="Jinwoo">
@@ -383,6 +424,23 @@
 
         document.getElementById('logs').innerHTML = (currentUser.logs || []).slice().reverse().join('<br>');
     }
+        window.openTab = function(evt, tabName) {
+    // Ẩn tất cả các tab panel
+        const panels = document.getElementsByClassName("tab-panel");
+            for (let i = 0; i < panels.length; i++) {
+        panels[i].classList.remove("active");
+    }
+
+    // Bỏ trạng thái active của tất cả các nút
+        const btns = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < btns.length; i++) {
+        btns[i].classList.remove("active");
+    }
+
+    // Hiển thị tab hiện tại và thêm class active vào nút đã nhấn
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+}
 </script>
 </body>
 </html>
