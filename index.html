@@ -53,7 +53,7 @@
         button { background: #00bfff; color: #000; font-weight: bold; cursor: pointer; transition: 0.3s; }
         button:hover { background: #fff; box-shadow: 0 0 20px #fff; }
 
-        .hidden { display: none; }
+        .hidden { display: none !important; }
         
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
@@ -61,89 +61,28 @@
         .popupInner { background: linear-gradient(#2d1d00, #8b5a00, #2d1d00); padding: 40px 70px; border: 3px solid gold; color: #fff; text-align: center; box-shadow: 0 0 50px gold; }
         .popupInner h2 { font-size: 70px; margin: 0; color: gold; text-shadow: 0 0 20px yellow; }
 
-        /* Hiệu ứng chữ động cho Shadow Hunter */
         .sh-title {
             font-weight: bold;
             color: #fff;
-            text-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff; /* Phát sáng màu xanh */
+            text-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff;
             animation: shadowGlow 2s ease-in-out infinite;
             display: inline-block;
-}
+        }
 
-@keyframes shadowGlow {
-    0%, 100% {
-        text-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff, 0 0 30px #00bfff;
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        text-shadow: 0 0 15px #fff, 0 0 25px #00bfff, 0 0 40px #00bfff;
-        transform: scale(1.05); /* Chữ hơi to lên khi "thở" */
-        opacity: 0.8;
-    }
-}
+        @keyframes shadowGlow {
+            0%, 100% { text-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff, 0 0 30px #00bfff; transform: scale(1); opacity: 1; }
+            50% { text-shadow: 0 0 15px #fff, 0 0 25px #00bfff, 0 0 40px #00bfff; transform: scale(1.05); opacity: 0.8; }
+        }
 
-@keyframes shadowGlow {
-    0%, 100% {
-        text-shadow: 0 0 5px #1baeff, 0 0 10px #1baeff, 0 0 20px #1baeff;
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 40px #ff00ff;
-        transform: scale(1.05);
-        opacity: 0.8;
-    }
-}
-        .welcome-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
+        .welcome-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .welcome-box { width: 450px; background: linear-gradient(to bottom, #001a33, #003366); border-top: 2px solid #336699; border-bottom: 2px solid #336699; padding: 20px; text-align: center; box-shadow: 0 0 30px rgba(0, 191, 255, 0.5); font-family: 'Oswald', sans-serif; }
+        .alert-header { color: #fff; font-size: 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-bottom: 10px; margin-bottom: 20px; letter-spacing: 2px; }
+        .alert-content { color: #fff; font-size: 32px; font-weight: bold; }
+        .player-text { color: #a3cf62; }
 
-        .welcome-box {
-    width: 450px;
-    background: linear-gradient(to bottom, #001a33, #003366);
-    border-top: 2px solid #336699;
-    border-bottom: 2px solid #336699;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 0 30px rgba(0, 191, 255, 0.5);
-    font-family: 'Oswald', sans-serif;
-}
-
-        .alert-header {
-    color: #fff;
-    font-size: 24px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-    letter-spacing: 2px;
-}
-
-        .alert-content {
-    color: #fff;
-    font-size: 32px;
-    font-weight: bold;
-}
-
-        .player-text {
-    color: #a3cf62; 
-}
-
-        .hidden { display: none !important; }
-
-        /* Style cho System Tabs */
         .tabs-container { margin-top: 30px; border: 1px solid #00bfff; background: rgba(0,0,30,0.8); }
         .tabs-header { display: flex; background: rgba(0, 191, 255, 0.2); border-bottom: 1px solid #00bfff; }
-        .tab-btn {
-            flex: 1; padding: 15px; border: none; background: none; color: #8eefff;
-            font-family: 'Oswald', sans-serif; font-size: 20px; cursor: pointer; transition: 0.3s;
-}
+        .tab-btn { flex: 1; padding: 15px; border: none; background: none; color: #8eefff; font-family: 'Oswald', sans-serif; font-size: 20px; cursor: pointer; transition: 0.3s; }
         .tab-btn:hover { background: rgba(255, 255, 255, 0.1); }
         .tab-btn.active { background: #00bfff; color: #000; font-weight: bold; box-shadow: inset 0 0 10px #fff; }
 
@@ -151,224 +90,64 @@
         .tab-panel { display: none; animation: fadeIn 0.5s ease; }
         .tab-panel.active { display: block; }
 
-        .skill-item { 
-            padding: 10px; border-bottom: 1px solid rgba(0,191,255,0.2); 
-            font-size: 22px; color: #fff; text-shadow: 0 0 5px #00bfff;
-}
+        .skill-item { padding: 10px; border-bottom: 1px solid rgba(0,191,255,0.2); font-size: 22px; color: #fff; text-shadow: 0 0 5px #00bfff; }
         
-        #titleSelect option {
-            background-color: #001a33; /* Màu nền tối giống giao diện game */
-            color: #fff;              /* Màu chữ trắng để dễ nhìn */
-            font-family: 'Oswald', sans-serif;
-            padding: 10px;
-}    
+        #titleSelect option { background-color: #001a33; color: #fff; font-family: 'Oswald', sans-serif; padding: 10px; }    
+        #titleSelect { font-size: 32px; background: transparent; border: none; color: #fff; outline: none; cursor: pointer; font-family: 'Oswald', sans-serif; }
 
-/* Loại bỏ viền đen mặc định khi nhấn vào trên một số trình duyệt */
-        #titleSelect {
-            font-size: 32px; /* Phải bằng với font-size của .sh-title ở trên */
-            background: transparent;
-            border: none;
-            color: #fff;
-            outline: none;
-            cursor: pointer;
-            font-family: 'Oswald', sans-serif;
-}
-
-/* Cập nhật hàng row để chứa các chữ to mà không bị đè lên nhau */
-        .row { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            font-size: 32px; 
-            margin: 15px 0; 
-            border-bottom: 1px solid rgba(0, 191, 255, 0.3); 
-            height: 50px; /* Cố định chiều cao hàng để không bị giật khi đổi title */
-}
-        .skill-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            margin-bottom: 8px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #333;
-            transition: 0.3s;
-            cursor: pointer;
-}
-        .skill-item.locked { opacity: 0.4; filter: grayscale(1); } /* Kỹ năng chưa học sẽ tối lại */
+        .row { display: flex; justify-content: space-between; align-items: center; font-size: 32px; margin: 15px 0; border-bottom: 1px solid rgba(0, 191, 255, 0.3); height: 50px; }
+        
+        .skill-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; margin-bottom: 8px; background: rgba(0, 0, 0, 0.5); border: 1px solid #333; transition: 0.3s; cursor: pointer; }
+        .skill-item.locked { opacity: 0.4; filter: grayscale(1); } 
         .skill-item.unlocked { border-color: #00bfff; opacity: 1; background: rgba(0, 191, 255, 0.1); }
 
-        .add-skill-btn {
-            background: #00bfff;
-            color: #000;
-            border: none;
-            width: 30px;
-            height: 30px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 4px;
-}
+        .add-skill-btn { background: #00bfff; color: #000; border: none; width: 30px; height: 30px; font-weight: bold; cursor: pointer; border-radius: 4px; }
         .add-skill-btn:disabled { background: #555; cursor: not-allowed; }
 
-        .stat-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 12px;
-            margin-bottom: 5px;
-            background: rgba(0, 191, 255, 0.05);
-            border: 1px solid rgba(0, 191, 255, 0.2);
-            cursor: pointer;
+        .stat-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; margin-bottom: 5px; background: rgba(0, 191, 255, 0.05); border: 1px solid rgba(0, 191, 255, 0.2); cursor: pointer; transition: 0.3s; }
+        .stat-item:hover { background: rgba(0, 191, 255, 0.15); }
+        .add-btn { background: #00bfff; color: #000; border: none; width: 24px; height: 24px; font-weight: bold; cursor: pointer; border-radius: 3px; display: flex; justify-content: center; align-items: center; }
+        .add-btn:disabled { background: #444; cursor: not-allowed; }
+
+        .shake { animation: shake 0.3s; }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+        
+        .avatar-frame { width: 150px; height: 200px; object-fit: cover; object-position: top; border-radius: 8px; border: 2px solid transparent; transition: 0.3s; }
+
+        .btn-system { background: #222 !important; color: #8eefff !important; border: 1px solid #444 !important; padding: 10px; font-family: 'Oswald', sans-serif; text-transform: uppercase; }
+
+        .icon-mode { width: 60px !important; height: 60px !important; border-radius: 50% !important; flex: none !important; padding: 0 !important; display: flex !important; align-items: center; justify-content: center; background: rgba(0, 0, 0, 0.8) !important; border: 2px solid #00bfff !important; overflow: hidden; }
+        .icon-mode img { width: 100%; height: 100%; object-fit: cover; }
+        .hidden-skill { display: none !important; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Style cho Dungeon */
+        .dungeon-card {
+            background: rgba(40, 0, 0, 0.6);
+            border: 2px solid #ff4d4d;
+            padding: 20px;
+            margin-bottom: 15px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(255, 77, 77, 0.5);
             transition: 0.3s;
-}
-        .stat-item:hover {
-            background: rgba(0, 191, 255, 0.15);
-}
-        .add-btn {
-            background: #00bfff;
-            color: #000;
-            border: none;
-            width: 24px;
-            height: 24px;
-            font-weight: bold;
             cursor: pointer;
-            border-radius: 3px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-}
-        .add-btn:disabled {
-            background: #444;
-            cursor: not-allowed;
-}
-
-        #gameCanvas {
-            width: 100%;
-            height: 100%;
-            image-rendering: pixelated; /* Giúp ảnh pixel không bị mờ */
-            background-image: url('https://i.imgur.com/your-pixel-background.png'); /* Có thể thêm nền map */
-}
-        .shake {
-    animation: shake 0.3s;
-}
-@keyframes shake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    50% { transform: translateX(5px); }
-    75% { transform: translateX(-5px); }
-    100% { transform: translateX(0); }
-}
-        .avatar-frame {
-        width: 150px;           /* Chiều rộng cố định */
-        height: 200px;          /* Chiều cao cố định */
-        object-fit: cover;      /* Ép ảnh lấp đầy khung mà không bị méo */
-        object-position: top;   /* Ưu tiên hiển thị phần đầu nhân vật */
-        border-radius: 8px;     /* Bo góc cho đẹp */
-        border: 2px solid transparent; 
-        transition: 0.3s;
-    }
-
-    .skill-icon-btn {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%; /* Làm nút hình tròn */
-        border: 2px solid #00bfff;
-        background: rgba(0, 0, 0, 0.7);
-        cursor: pointer;
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: 0.3s;
-        padding: 0;
-        overflow: visible;
-    }
-
-    .skill-icon-btn img {
-        width: 70%;
-        height: 70%;
-        object-fit: contain;
-        filter: drop-shadow(0 0 5px #00bfff);
-    }
-
-    .skill-icon-btn:hover:not(:disabled) {
-        transform: scale(1.1);
-        box-shadow: 0 0 15px #00bfff;
-    }
-
-    /* Hiệu ứng khi hết Mana hoặc không phải lượt */
-    .skill-icon-btn:disabled {
-        filter: grayscale(1) brightness(0.5);
-        cursor: not-allowed;
-        border-color: #555;
-    }
-
-    /* Hiển thị số Mana tiêu tốn nhỏ ở góc nút */
-    .mp-cost {
-        position: absolute;
-        bottom: -5px;
-        right: -5px;
-        background: #000;
-        color: #00bfff;
-        font-size: 10px;
-        padding: 2px 5px;
-        border: 1px solid #00bfff;
-        border-radius: 10px;
-        font-weight: bold;
-    }
-
-    .btn-red { border-color: #ff4d4d; }
-    .btn-red .mp-cost { color: #ff4d4d; border-color: #ff4d4d; }
-    .btn-red img { filter: drop-shadow(0 0 5px #ff4d4d); }
-
-
-        .btn-system {
-    background: #222 !important;
-    color: #8eefff !important;
-    border: 1px solid #444 !important;
-    padding: 10px;
-    font-family: 'Oswald', sans-serif;
-    text-transform: uppercase;
-}
-
-/* Giao diện khi biến thành Icon tròn */
-.icon-mode {
-    width: 60px !important;
-    height: 60px !important;
-    border-radius: 50% !important;
-    flex: none !important;
-    padding: 0 !important;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.8) !important;
-    border: 2px solid #00bfff !important;
-    overflow: hidden;
-}
-
-.icon-mode img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* Ẩn các nút skill khi chưa vào trận */
-.hidden-skill {
-    display: none !important;
-}
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        }
+        .dungeon-card:hover { background: rgba(80, 0, 0, 0.8); transform: scale(1.02); box-shadow: 0 0 25px rgba(255, 77, 77, 1); }
+        .dungeon-card h3 { color: #ffcc00; margin-top: 0; font-size: 28px; text-shadow: 0 0 10px red; }
     </style>
 </head>
 <body>
     
 <div id="welcomeAlert" class="welcome-overlay hidden">
     <div class="welcome-box">
-        <div class="alert-header">
-            <span class="symbol">①</span> Alert <span class="symbol">①</span>
-        </div>
-        <div class="alert-content">
-            [ Welcome, <span class="player-text">player.</span> ]
-        </div>
+        <div class="alert-header"><span class="symbol">①</span> Alert <span class="symbol">①</span></div>
+        <div class="alert-content">[ Welcome, <span class="player-text">player.</span> ]</div>
     </div>
 </div>    
 
@@ -384,21 +163,20 @@
 </div>
 
 <div class="wrapper hidden" id="gameWrap">
-    <div class="panel">
-        <h1>STATUS</h1>
+    <div class="panel" style="width: 100%;"> <h1>STATUS</h1>
         <div class="row"><span>NAME: <span id="playerName"></span></span><span>LEVEL: <span id="level"></span></span></div>
         <div class="row"><span>JOB: <span id="job" class="sh-title"></span></span><span>FATIGUE: 0</span></div>
         <div class="row small">
-    <span>TITLE:</span>
-        <select id="titleSelect" class="sh-title" style="background: none; border: none; outline: none; cursor: pointer;" onchange="updateTitle()">
-            <option value="Weakest Hunter of All Time">Weakest Hunter of All Time</option>
-            <option value="Wolf Slayer">Wolf Slayer</option>
-            <option value="Sand Soldier Slayer">Sand Soldier Slayer</option>
-            <option value="Demon Slayer">Demon Slayer</option>
-            <option value="Survivor">Survivor</option>
-            <option value="Monarch Slayer">Monarch Slayer</option>
-            <option value="Shadow Monarch">Shadow Monarch</option>
-        </select>
+            <span>TITLE:</span>
+            <select id="titleSelect" class="sh-title" onchange="updateTitle()">
+                <option value="Weakest Hunter of All Time">Weakest Hunter of All Time</option>
+                <option value="Wolf Slayer">Wolf Slayer</option>
+                <option value="Sand Soldier Slayer">Sand Soldier Slayer</option>
+                <option value="Demon Slayer">Demon Slayer</option>
+                <option value="Survivor">Survivor</option>
+                <option value="Monarch Slayer">Monarch Slayer</option>
+                <option value="Shadow Monarch">Shadow Monarch</option>
+            </select>
         </div>
         
         <div>HP: <span id="hpDisplay"></span></div>
@@ -411,122 +189,147 @@
         <div class="barbox"><div class="bar" id="expBar"></div></div>
 
         <div class="stats">
-    <div class="stat-item" onclick="showStatDetail('STRENGTH')">
-        <span>STRENGTH: <span id="str">0</span></span>
-        <button class="add-btn" onclick="upgradeStat(event, 'str')">+</button>
-    </div>
-    <div class="stat-item" onclick="showStatDetail('VITALITY')">
-        <span>VITALITY: <span id="vit">0</span></span>
-        <button class="add-btn" onclick="upgradeStat(event, 'vit')">+</button>
-    </div>
-    <div class="stat-item" onclick="showStatDetail('AGILITY')">
-        <span>AGILITY: <span id="agi">0</span></span>
-        <button class="add-btn" onclick="upgradeStat(event, 'agi')">+</button>
-    </div>
-    <div class="stat-item" onclick="showStatDetail('INTELLIGENCE')">
-        <span>INTELLIGENCE: <span id="int">0</span></span>
-        <button class="add-btn" onclick="upgradeStat(event, 'int')">+</button>
-    </div>
-    <div class="stat-item" onclick="showStatDetail('SENSE')">
-        <span>SENSE: <span id="sense">0</span></span>
-        <button class="add-btn" onclick="upgradeStat(event, 'sense')">+</button>
-    </div>
+            <div class="stat-item" onclick="showStatDetail('STRENGTH')"><span>STRENGTH: <span id="str">0</span></span><button class="add-btn" onclick="upgradeStat(event, 'str')">+</button></div>
+            <div class="stat-item" onclick="showStatDetail('VITALITY')"><span>VITALITY: <span id="vit">0</span></span><button class="add-btn" onclick="upgradeStat(event, 'vit')">+</button></div>
+            <div class="stat-item" onclick="showStatDetail('AGILITY')"><span>AGILITY: <span id="agi">0</span></span><button class="add-btn" onclick="upgradeStat(event, 'agi')">+</button></div>
+            <div class="stat-item" onclick="showStatDetail('INTELLIGENCE')"><span>INTELLIGENCE: <span id="int">0</span></span><button class="add-btn" onclick="upgradeStat(event, 'int')">+</button></div>
+            <div class="stat-item" onclick="showStatDetail('SENSE')"><span>SENSE: <span id="sense">0</span></span><button class="add-btn" onclick="upgradeStat(event, 'sense')">+</button></div>
 
-    <div style="margin-top: 15px; color: gold; font-weight: bold;">
-        AVAILABLE POINTS: <span id="points">0</span>
-    </div>
+            <div style="margin-top: 15px; color: gold; font-weight: bold;">AVAILABLE POINTS: <span id="points">0</span></div>
 
-    <div id="statDetail" class="card hidden" style="margin-top: 20px; border-color: #00bfff; background: rgba(0, 30, 60, 0.8);">
-        <h3 id="statDetName" style="color: #00bfff; margin-top: 0; text-transform: uppercase;"></h3>
-        <p id="statDetDesc" style="font-size: 16px; color: #eee; line-height: 1.4;"></p>
-    </div>
-</div>
+            <div id="statDetail" class="card hidden" style="margin-top: 20px; border-color: #00bfff; background: rgba(0, 30, 60, 0.8);">
+                <h3 id="statDetName" style="color: #00bfff; margin-top: 0; text-transform: uppercase;"></h3>
+                <p id="statDetDesc" style="font-size: 16px; color: #eee; line-height: 1.4;"></p>
+            </div>
+        </div>
 
         <div class="tabs-container">
-    <div class="tabs-header">
-        <button class="tab-btn active" onclick="openTab(event, 'tab-mission')">QUEST</button>
-        <button class="tab-btn" onclick="openTab(event, 'tab-ranking')">RANKING</button>
-        <button class="tab-btn" onclick="openTab(event, 'tab-skills')">SKILLS</button>
-        <button class="tab-btn" onclick="openTab(event, 'tab-logs')">LOGS</button>
-        <button class="tab-btn" onclick="openTab(event, 'tab-minigame')">MINIGAME</button>
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="openTab(event, 'tab-mission')">QUEST</button>
+                <button class="tab-btn" onclick="openTab(event, 'tab-ranking')">RANKING</button>
+                <button class="tab-btn" onclick="openTab(event, 'tab-skills')">SKILLS</button>
+                <button class="tab-btn" onclick="openTab(event, 'tab-logs')">LOGS</button>
+                <button class="tab-btn" onclick="openTab(event, 'tab-minigame')">MINIGAME</button>
+                <button class="tab-btn" onclick="openTab(event, 'tab-dungeon')" style="color: #ff4d4d;">DUNGEON</button>
+            </div>
+
+            <div class="tabs-content">
+                <div id="tab-mission" class="tab-panel active">
+                    <h2 style="color: #ffcc00;">NHIỆM VỤ HÀNG NGÀY</h2>
+                    <p id="mission" style="font-size: 24px;"></p>
+                    <p id="reward" style="color: #00ff00;"></p>
+                    <button onclick="completeMission()">XÁC NHẬN HOÀN THÀNH</button>
+                    <p id="streak"></p>
+                </div>
+
+                <div id="tab-ranking" class="tab-panel">
+                    <h2>BẢNG XẾP HẠNG THỢ SĂN</h2>
+                    <div id="leaderboard"></div>
+                </div>
+
+                <div id="tab-skills" class="tab-panel">
+                    <h2 style="color: #00bfff;">SKILL POINTS: <span id="skPoints">0</span></h2>
+                    <div id="skillList" class="skill-list"></div>
+                    <div id="skillDetail" class="card hidden" style="margin-top: 20px; border-color: gold;">
+                        <h3 id="detName" style="color: gold; margin-top: 0;"></h3>
+                        <p id="detDesc" style="font-size: 18px; color: #eee;"></p>
+                        <p id="detReq" style="color: #ff4d4d; font-weight: bold;"></p>
+                    </div>
+                </div>
+
+                <div id="tab-logs" class="tab-panel">
+                    <h2>NHẬT KÝ RÈN LUYỆN</h2>
+                    <div id="logs" style="max-height: 250px; overflow-y: auto; font-size: 18px; color: #ccc;"></div>
+                </div>
+
+                <div id="tab-minigame" class="tab-panel">
+                    <h2 style="color: #00bfff; text-align: center;">KHU VỰC HUẤN LUYỆN TỰ DO</h2>
+                    
+                    <div id="combatArea" class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(0,0,0,0.8); min-height: 300px;">
+                        <div style="text-align: center; width: 42%;">
+                            <div id="p-name" style="color: #00bfff; font-weight: bold; margin-bottom: 10px;">SUNG JIN WOO</div>
+                            <img id="p-img" src="SungJinWoov2.jpeg" class="avatar-frame" style="filter: drop-shadow(0 0 15px #00bfff); border-color: #00bfff;">
+                            <div style="height: 10px; background: #333; margin: 10px 0;"><div id="p-hp-bar" style="height: 100%; background: #ff0000; width: 100%; transition: 0.3s;"></div></div>
+                            <div id="p-hp-text">HP: 100/100</div>
+                        </div>
+                        <div style="font-size: 40px; color: gold; font-style: italic; align-self: center;">VS</div>
+                        <div style="text-align: center; width: 42%;">
+                            <div id="e-name" style="color: #ff4d4d; font-weight: bold; margin-bottom: 10px;">ĐỐI THỦ</div>
+                            <img id="e-img" src="enemy.png" class="avatar-frame" style="filter: drop-shadow(0 0 15px #ff4d4d); border-color: #ff4d4d;">
+                            <div style="height: 10px; background: #333; margin: 10px 0;"><div id="e-hp-bar" style="height: 100%; background: #ff0000; width: 100%; transition: 0.3s;"></div></div>
+                            <div id="e-hp-text">HP: 100/100</div>
+                        </div>
+                    </div>
+
+                    <div id="battleLog" style="height: 100px; overflow-y: auto; background: rgba(0,0,0,0.5); border: 1px solid #444; margin-top: 10px; padding: 10px; font-size: 14px; color: #ccc; font-family: monospace;">
+                        Sẵn sàng khiêu chiến...
+                    </div>
+
+                    <div id="actionControls" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px; width: 100%;">
+                        <div id="skillRow" style="display: flex; gap: 15px; justify-content: center; align-items: center; width: 100%;">
+                            <button id="btnAttack" class="tab-btn btn-system" onclick="playerAttack()" style="flex: 1;">TẤN CÔNG</button>
+                            <button id="btnDagger" class="tab-btn btn-system hidden-skill" onclick="useDaggerRush()"></button>
+                            <button id="btnTanSat" class="tab-btn btn-system hidden-skill" onclick="useTanSat()"></button>
+                        </div>
+                        <button id="btnFindEnemy" class="tab-btn btn-system" onclick="startNewBattle()" style="width: 100%;">TÌM ĐỐI THỦ MỚI</button>
+                    </div>
+                </div>
+
+                <div id="tab-dungeon" class="tab-panel">
+                    <h2 style="color: #ff4d4d; text-align: center;">CỔNG HẦM NGỤC</h2>
+                    
+                    <div id="dungeonListArea">
+                        <div class="dungeon-card" onclick="enterDungeon('troll_village')">
+                            <h3>LÀNG CỦA TROLL</h3>
+                            <p style="font-size: 20px; color: #ccc;">Số ải: 5 | Độ khó: Hạng C</p>
+                            <button class="tab-btn btn-system" style="border-color: #ff4d4d; color: #ff4d4d !important; font-size: 24px;">TIẾN VÀO HẦM NGỤC</button>
+                        </div>
+                        </div>
+
+                    <div id="dungeonCombatUI" class="hidden">
+                        <h3 id="dDungeonTitle" style="color: #ffcc00; text-align: center; margin-bottom: 5px; font-size: 32px;">Làng Của Troll</h3>
+                        <h4 id="dStageText" style="color: #fff; text-align: center; margin-top: 0; font-size: 24px;">Ải 1/5</h4>
+                        
+                        <div class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(50,0,0,0.4); border-color: #ff4d4d; min-height: 300px;">
+                            <div style="text-align: center; width: 42%;">
+                                <div id="d-p-name" style="color: #00bfff; font-weight: bold; margin-bottom: 10px;">SUNG JIN WOO</div>
+                                <img id="d-p-img" src="SungJinWoov2.jpeg" class="avatar-frame" style="filter: drop-shadow(0 0 15px #00bfff); border-color: #00bfff;">
+                                <div style="height: 10px; background: #333; margin: 10px 0;"><div id="d-p-hp-bar" style="height: 100%; background: #ff0000; width: 100%; transition: 0.3s;"></div></div>
+                                <div id="d-p-hp-text">HP: 100/100</div>
+                            </div>
+                            <div style="font-size: 40px; color: #ff4d4d; font-style: italic; align-self: center; text-shadow: 0 0 10px red;">VS</div>
+                            <div style="text-align: center; width: 42%;">
+                                <div id="d-e-name" style="color: #ff4d4d; font-weight: bold; margin-bottom: 10px;">QUÁI VẬT</div>
+                                <img id="d-e-img" src="enemy.png" class="avatar-frame" style="filter: drop-shadow(0 0 15px #ff4d4d); border-color: #ff4d4d;">
+                                <div style="height: 10px; background: #333; margin: 10px 0;"><div id="d-e-hp-bar" style="height: 100%; background: #ff0000; width: 100%; transition: 0.3s;"></div></div>
+                                <div id="d-e-hp-text">HP: 100/100</div>
+                            </div>
+                        </div>
+
+                        <div id="d-battleLog" style="height: 100px; overflow-y: auto; background: rgba(0,0,0,0.5); border: 1px solid #ff4d4d; margin-top: 10px; padding: 10px; font-size: 14px; color: #ffcccc; font-family: monospace;">
+                            Hệ thống hầm ngục đã kích hoạt...
+                        </div>
+
+                        <div id="d-actionControls" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px; width: 100%;">
+                            <div id="d-skillRow" style="display: flex; gap: 15px; justify-content: center; align-items: center; width: 100%;">
+                                <button id="d-btnAttack" class="tab-btn btn-system" onclick="playerAttack()" style="flex: 1;">TẤN CÔNG</button>
+                                <button id="d-btnDagger" class="tab-btn btn-system hidden-skill" onclick="useDaggerRush()"></button>
+                                <button id="d-btnTanSat" class="tab-btn btn-system hidden-skill" onclick="useTanSat()"></button>
+                            </div>
+
+                            <button id="btnNextStage" class="tab-btn btn-system hidden" onclick="startNextStage()" style="width: 100%; border-color: gold; color: gold !important; font-size: 24px; text-shadow: 0 0 5px gold;">
+                                TIẾN VÀO ẢI TIẾP THEO
+                            </button>
+                            <button id="btnExitDungeon" class="tab-btn btn-system" onclick="exitDungeon()" style="width: 100%; border-color: red;">
+                                BỎ CUỘC & THOÁT
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
-
-    <div class="tabs-content">
-        <div id="tab-mission" class="tab-panel active">
-            <h2 style="color: #ffcc00;">NHIỆM VỤ HÀNG NGÀY</h2>
-            <p id="mission" style="font-size: 24px;"></p>
-            <p id="reward" style="color: #00ff00;"></p>
-            <button onclick="completeMission()">XÁC NHẬN HOÀN THÀNH</button>
-            <p id="streak"></p>
-        </div>
-
-        <div id="tab-ranking" class="tab-panel">
-            <h2>BẢNG XẾP HẠNG THỢ SĂN</h2>
-            <div id="leaderboard"></div>
-        </div>
-
-        <div id="tab-skills" class="tab-panel">
-            <h2 style="color: #00bfff;">SKILL POINTS: <span id="skPoints">0</span></h2>
-        <div id="skillList" class="skill-list">
-        </div>
-    
-        <div id="skillDetail" class="card hidden" style="margin-top: 20px; border-color: gold;">
-            <h3 id="detName" style="color: gold; margin-top: 0;"></h3>
-            <p id="detDesc" style="font-size: 18px; color: #eee;"></p>
-            <p id="detReq" style="color: #ff4d4d; font-weight: bold;"></p>
-        </div>
-        
-            
-</div>
-
-        <div id="tab-logs" class="tab-panel">
-            <h2>NHẬT KÝ RÈN LUYỆN</h2>
-            <div id="logs" style="max-height: 250px; overflow-y: auto; font-size: 18px; color: #ccc;"></div>
-        </div>
-    </div>
-
-            <div id="tab-minigame" class="tab-panel">
-    <h2 style="color: #ff4d4d; text-align: center;">HẦM NGỤC KHIÊU CHIẾN</h2>
-    
-    <div id="combatArea" class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(0,0,0,0.8); min-height: 300px;">
-    
-    <div style="text-align: center; width: 42%;">
-        <div id="p-name" style="color: #00bfff; font-weight: bold; margin-bottom: 10px;">SUNG JIN WOO</div>
-        <img id="p-img" src="SungJinWoov2.jpeg" class="avatar-frame" style="filter: drop-shadow(0 0 15px #00bfff); border-color: #00bfff;">
-        
-        <div style="height: 10px; background: #333; margin: 10px 0;">
-            <div id="p-hp-bar" style="height: 100%; background: #ff0000; width: 100%; transition: 0.3s;"></div>
-        </div>
-        <div id="p-hp-text">HP: 100/100</div>
-    </div>
-
-    <div style="font-size: 40px; color: gold; font-style: italic; align-self: center;">VS</div>
-
-    <div style="text-align: center; width: 42%;">
-        <div id="e-name" style="color: #ff4d4d; font-weight: bold; margin-bottom: 10px;">ĐỐI THỦ</div>
-        <img id="e-img" src="enemy.png" class="avatar-frame" style="filter: drop-shadow(0 0 15px #ff4d4d); border-color: #ff4d4d;">
-        
-        <div style="height: 10px; background: #333; margin: 10px 0;">
-            <div id="e-hp-bar" style="height: 100%; background: #ff0000; width: 100%; transition: 0.3s;"></div>
-        </div>
-        <div id="e-hp-text">HP: 100/100</div>
-    </div>
-    </div>
-
-    <div id="battleLog" style="height: 100px; overflow-y: auto; background: rgba(0,0,0,0.5); border: 1px solid #444; margin-top: 10px; padding: 10px; font-size: 14px; color: #ccc; font-family: monospace;">
-        Sẵn sàng khiêu chiến...
-    </div>
-
-    <div id="actionControls" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px; width: 100%;">
-   <div id="skillRow" style="display: flex; gap: 15px; justify-content: center; align-items: center; width: 100%;">
-    <button id="btnAttack" class="tab-btn btn-system" onclick="playerAttack()" style="flex: 1;">TẤN CÔNG</button>
-    <button id="btnDagger" class="tab-btn btn-system hidden-skill" onclick="useDaggerRush()"></button>
-    <button id="btnTanSat" class="tab-btn btn-system hidden-skill" onclick="useTanSat()"></button>
-</div>
-
-    <button id="btnFindEnemy" class="tab-btn btn-system" onclick="startNewBattle()" style="width: 100%;">
-        TÌM ĐỐI THỦ MỚI
-    </button>
 </div>
 
 <div id="levelPopup">
@@ -562,6 +365,34 @@
         debug.innerText = 'Lỗi kết nối: ' + e;
     }
 
+    // --- BIẾN TOÀN CỤC CHO CHIẾN ĐẤU ---
+    let enemy = null;
+    let isMyTurn = true;
+    let isDungeonMode = false;
+    let dCurrentId = null;
+    let dCurrentStage = 0;
+
+    // --- DỮ LIỆU HẦM NGỤC ---
+    const dungeonData = {
+        "troll_village": {
+            name: "Làng Của Troll",
+            stages: [
+                { name: "Troll Tập Sự", hp: 120, atk: 25, def: 10, exp: 40, img: "troll.jpg" },
+                { name: "Troll Ném Đá", hp: 200, atk: 35, def: 15, exp: 60, img: "troll.jpg" },
+                { name: "Troll Trinh Sát", hp: 300, atk: 45, def: 20, exp: 90, img: "troll.jpg" },
+                { name: "Troll Chiến Binh", hp: 450, atk: 60, def: 30, exp: 150, img: "troll.jpg" },
+                { name: "BOSS: Troll Khổng Lồ Đột Biến", hp: 800, atk: 90, def: 45, exp: 500, img: "boss_troll.jpg", isBoss: true }
+            ]
+        }
+    };
+
+    const enemies = [
+        { name: "Thợ Săn Hạng E", hp: 80, atk: 10, def: 5, exp: 20, img: "HanSongYi.jpg" },
+        { name: "Thợ Săn Hạng D", hp: 150, atk: 25, def: 15, exp: 50, img: "YooJinHoo.jpg" },
+        { name: "Thợ Săn Hạng C", hp: 300, atk: 50, def: 30, exp: 120, img: "HwangDongsuk.jpg" },
+        { name: "Thợ Săn Hạng B", hp: 600, atk: 100, def: 70, exp: 300, img: "SonKihoon.jpg" }
+    ];
+
     function getMission() {
         const d = new Date().getDay();
         if ([1, 3, 5].includes(d)) return { text: 'Tập tạ 50 cái', exp: 35 };
@@ -575,7 +406,7 @@
         if (l >= 10) return 'Thợ Săn Hạng C';
         if (l >= 5)  return 'Thợ Săn Hạng D';
         return 'Thợ Săn Hạng E';
-}
+    }
 
     window.register = async function() {
         const u = username.value.trim(), p = password.value.trim();
@@ -588,22 +419,10 @@
             hp: 100, maxHp: 100, mp: 50, maxMp: 50,
             str: 5, agi: 5, int: 5, vit: 5, sense: 5, points: 0,
             claimedDate: '', streak: 0, logs: [],
-            title: "Weakest Hunter of All Time",
-            skillPoints: 0,
-            skills: {
-                "Phát Triển Cấp Tốc": 0,
-                "Thể Chất Siêu Phàm": 0,
-                "Tái Tạo": 0,
-                "Trị Thương": 0,
-                "Siêu Giác Quan": 0,
-                "Gia Tăng Chỉ Số": 0,
-                "Tàng Hình": 0,
-                "Tàn sát": 0,      // Thêm dòng này
-                "Dagger Rush": 0
-    },
+            title: "Weakest Hunter of All Time", skillPoints: 0,
+            skills: { "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Tái Tạo": 0, "Trị Thương": 0, "Siêu Giác Quan": 0, "Gia Tăng Chỉ Số": 0, "Tàng Hình": 0, "Tàn sát": 0, "Dagger Rush": 0 },
             isNew: true
-};
-        
+        };
         await set(ref(db, 'users/' + u), userData);
         alert('Thức tỉnh thành công! Hãy đăng nhập.');
     }
@@ -612,19 +431,14 @@
         const u = username.value.trim(), p = password.value.trim();
         const s = await get(child(ref(db), 'users/' + u));
         if (!s.exists()) return alert('Thợ săn chưa thức tỉnh');
-            const data = s.val();
+        const data = s.val();
         if (data.password !== p) return alert('Mật mã sai');
     
         currentUser = data;
-
-    // QUAN TRỌNG: Khởi tạo dữ liệu cho tài khoản cũ chưa có Skills
         if (!currentUser.skills) {
-            currentUser.skills = {
-                "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Tái Tạo": 0,
-                "Trị Thương": 0, "Siêu Giác Quan": 0, "Gia Tăng Chỉ Số": 0, "Tàng Hình": 0
-        };
+            currentUser.skills = { "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Tái Tạo": 0, "Trị Thương": 0, "Siêu Giác Quan": 0, "Gia Tăng Chỉ Số": 0, "Tàng Hình": 0 };
             currentUser.skillPoints = currentUser.skillPoints || 0;
-    }
+        }
 
         if (currentUser.isNew) {
             const welcome = document.getElementById('welcomeAlert');
@@ -633,15 +447,15 @@
                 welcome.classList.add('hidden');
                 currentUser.isNew = false;
                 await set(ref(db, 'users/' + currentUser.username), currentUser);
-        }, 3000);
-    }
+            }, 3000);
+        }
 
-    document.getElementById('auth').classList.add('hidden');
-    document.getElementById('gameWrap').classList.remove('hidden');
-    await loadLeaderboard();
-    render();
-    window.renderSkills(); // Phải gọi hàm này sau khi render chính
-}
+        document.getElementById('auth').classList.add('hidden');
+        document.getElementById('gameWrap').classList.remove('hidden');
+        await loadLeaderboard();
+        render();
+        window.renderSkills(); 
+    }
 
     window.completeMission = async function() {
         const today = new Date().toLocaleDateString();
@@ -655,14 +469,11 @@
             currentUser.exp -= currentUser.need;
             currentUser.level++;
             currentUser.need += 50;
-            currentUser.maxHp += 20;
-            currentUser.maxMp += 10;
-            currentUser.hp = currentUser.maxHp;
-            currentUser.mp = currentUser.maxMp;
+            currentUser.maxHp += 20; currentUser.maxMp += 10;
+            currentUser.hp = currentUser.maxHp; currentUser.mp = currentUser.maxMp;
             currentUser.str += 2; currentUser.agi += 2; currentUser.vit += 2;
             currentUser.int += 1; currentUser.sense += 1;
-            currentUser.points += 3; // Point chỉ số
-            currentUser.skillPoints += 2; // Thêm 2 điểm kỹ năng mỗi level
+            currentUser.points += 3; currentUser.skillPoints += 2; 
             up = true;
         }
 
@@ -690,288 +501,108 @@
     }
 
     window.updateTitle = async function() {
-        const newTitle = document.getElementById('titleSelect').value;
-        currentUser.title = newTitle;
-    
-    // Lưu vào database
+        currentUser.title = document.getElementById('titleSelect').value;
         await set(ref(db, 'users/' + currentUser.username), currentUser);
         render();
     }
 
     const skillData = {
-        "Phát Triển Cấp Tốc": {
-            desc: "Tăng lượng EXP nhận được từ nhiệm vụ thêm 10%.",
-            icon: "https://cdn-icons-png.flaticon.com/512/9483/9483031.png"
-    },
-        "Thể Chất Siêu Phàm": {
-            desc: "Tăng vĩnh viễn chỉ số Strength và Vitality.",
-            icon: "https://cdn-icons-png.flaticon.com/256/1845/1845861.png"
-    },
-        "Tái Tạo": {
-            desc: "Tự động hồi phục HP sau mỗi nhiệm vụ.",
-            icon: "https://cdn-icons-png.flaticon.com/512/15532/15532570.png"
-    },
-        "Trị Thương": {
-            desc: "Sử dụng MP để hồi phục lượng lớn HP ngay lập tức.",
-            icon: "https://cdn-icons-png.flaticon.com/512/687/687529.png"
-    },
-        "Siêu Giác Quan": {
-            desc: "Tăng tỷ lệ né tránh và phát hiện quái vật hiếm.",
-            icon: "https://cdn-icons-png.flaticon.com/512/709/709612.png"
-    },
-        "Gia Tăng Chỉ Số": {
-            desc: "Mỗi cấp tăng thêm điểm tiềm năng khi lên level.",
-            icon: "https://cdn-icons-png.flaticon.com/512/15404/15404233.png"
-    },
-        "Tàng Hình": {
-            desc: "Ẩn thân hoàn toàn khỏi tầm mắt kẻ thù. (Yêu cầu: Hạng B)",
-            icon: "tanghinh.jpg"
-    },
-
-        "Tàn sát": {
-            desc: "Nhắm vào các điểm quan trọng và gây sát thương chí mạng bằng dao găm.",
-            icon: "amsat.jpg" // Icon gợi ý
-    },
-        "Dagger Rush": {
-            desc: "Tung ra một loạt các đòn tấn công bằng dao găm từ mọi hướng vào mục tiêu.",
-            icon: "dagger.jpg" // Icon gợi ý
-    }
-};
-
-    function switchToIconMode() {
-    const btnAtk = document.getElementById('btnAttack');
-    btnAtk.classList.add('icon-mode');
-    btnAtk.classList.remove('btn-system'); 
-    btnAtk.innerHTML = `<img src="attack.jpg">`;
-    btnAtk.style.flex = "none";
-
-    if (currentUser.skills["Dagger Rush"] > 0) {
-        const btnD = document.getElementById('btnDagger');
-        btnD.classList.remove('hidden-skill'); 
-        btnD.style.display = "flex"; 
-        btnD.classList.add('icon-mode');
-        btnD.innerHTML = `<img src="dagger.jpg">`;
-    }
-
-    if (currentUser.skills["Tàn sát"] > 0) {
-        const btnT = document.getElementById('btnTanSat');
-        btnT.classList.remove('hidden-skill'); 
-        btnT.style.display = "flex";
-        btnT.classList.add('icon-mode');
-        btnT.innerHTML = `<img src="amsat.jpg">`;
-    }
-
-    // --- THÊM LOGIC KHÓA NÚT TÌM ĐỐI THỦ TẠI ĐÂY ---
-    const btnFind = document.getElementById('btnFindEnemy');
-    if (btnFind) {
-        btnFind.disabled = true; // Khóa không cho bấm
-        btnFind.style.opacity = "0.4"; // Làm mờ nút đi
-        btnFind.innerText = "ĐANG CHIẾN ĐẤU..."; // Đổi dòng chữ để báo hiệu
-        btnFind.style.cursor = "not-allowed";
-    }
-}
-
-function resetToButtonMode() {
-    const btnAtk = document.getElementById('btnAttack');
-    if (btnAtk) {
-        btnAtk.classList.remove('icon-mode');
-        btnAtk.classList.add('btn-system');
-        btnAtk.innerHTML = "TẤN CÔNG";
-        btnAtk.style.flex = "1";
-    }
-
-    ['btnDagger', 'btnTanSat'].forEach(id => {
-        const btn = document.getElementById(id);
-        if (btn) {
-            btn.style.display = "none";
-            btn.classList.add('hidden-skill');
-            btn.classList.remove('icon-mode');
-        }
-    });
-
-    // --- MỞ KHÓA LẠI NÚT TÌM ĐỐI THỦ TẠI ĐÂY ---
-    const btnFind = document.getElementById('btnFindEnemy');
-    if (btnFind) {
-        btnFind.disabled = false; // Mở khóa
-        btnFind.style.opacity = "1"; // Sáng lại bình thường
-        btnFind.innerText = "TÌM ĐỐI THỦ MỚI"; // Trả lại chữ gốc
-        btnFind.style.cursor = "pointer";
-    }
-}
-
-    window.useDaggerRush = function() {
-    // Kiểm tra: Phải là lượt của mình, quái còn sống và đủ 35 MP
-    if (!isMyTurn || enemy.hp <= 0 || currentUser.mp < 35) {
-        if(currentUser.mp < 35) logBattle("<span style='color:orange'>Không đủ MP để dùng Dagger Rush!</span>");
-        return;
-    }
-
-    currentUser.mp -= 35; // Trừ mana
-    let dmg = Math.max(5, (currentUser.str * 2.5) - enemy.def); // Sát thương cao hơn đánh thường
-    
-    // Hiệu ứng rung
-    triggerShake();
-    
-    logBattle(`Bạn dùng <span style="color:#4a90e2">Dagger Rush</span> gây ${Math.floor(dmg)} sát thương!`);
-    
-    enemy.hp = Math.max(0, enemy.hp - dmg);
-    updateCombatUI();
-    checkBattleEnd(); // Kiểm tra kết thúc lượt
-};
-
-window.useTanSat = function() {
-    // Kiểm tra: Phải là lượt của mình, quái còn sống và đủ 50 MP
-    if (!isMyTurn || enemy.hp <= 0 || currentUser.mp < 50) {
-        if(currentUser.mp < 50) logBattle("<span style='color:orange'>Không đủ MP để dùng Tàn Sát!</span>");
-        return;
-    }
-
-    currentUser.mp -= 50; // Trừ mana
-    let dmg = Math.max(10, (currentUser.str * 4) - enemy.def); // Sát thương cực lớn (X4)
-    
-    triggerShake();
-    
-    logBattle(`<span style="color:#ff4d4d">TÀN SÁT!!!</span> Gây ${Math.floor(dmg)} sát thương chí mạng!`);
-    
-    enemy.hp = Math.max(0, enemy.hp - dmg);
-    updateCombatUI();
-    checkBattleEnd();
-};
-
-// Hàm rung màn hình dùng chung
-function triggerShake() {
-    const eImg = document.getElementById('e-img');
-    if (eImg) {
-        eImg.classList.add('shake');
-        setTimeout(() => eImg.classList.remove('shake'), 300);
-    }
-}
+        "Phát Triển Cấp Tốc": { desc: "Tăng lượng EXP nhận được từ nhiệm vụ thêm 10%.", icon: "https://cdn-icons-png.flaticon.com/512/9483/9483031.png" },
+        "Thể Chất Siêu Phàm": { desc: "Tăng vĩnh viễn chỉ số Strength và Vitality.", icon: "https://cdn-icons-png.flaticon.com/256/1845/1845861.png" },
+        "Tái Tạo": { desc: "Tự động hồi phục HP sau mỗi nhiệm vụ.", icon: "https://cdn-icons-png.flaticon.com/512/15532/15532570.png" },
+        "Trị Thương": { desc: "Sử dụng MP để hồi phục lượng lớn HP ngay lập tức.", icon: "https://cdn-icons-png.flaticon.com/512/687/687529.png" },
+        "Siêu Giác Quan": { desc: "Tăng tỷ lệ né tránh và phát hiện quái vật hiếm.", icon: "https://cdn-icons-png.flaticon.com/512/709/709612.png" },
+        "Gia Tăng Chỉ Số": { desc: "Mỗi cấp tăng thêm điểm tiềm năng khi lên level.", icon: "https://cdn-icons-png.flaticon.com/512/15404/15404233.png" },
+        "Tàng Hình": { desc: "Ẩn thân hoàn toàn khỏi tầm mắt kẻ thù. (Yêu cầu: Hạng B)", icon: "tanghinh.jpg" },
+        "Tàn sát": { desc: "Nhắm vào các điểm quan trọng và gây sát thương chí mạng bằng dao găm.", icon: "amsat.jpg" },
+        "Dagger Rush": { desc: "Tung ra một loạt các đòn tấn công bằng dao găm từ mọi hướng vào mục tiêu.", icon: "dagger.jpg" }
+    };
 
     window.renderSkills = function() {
-    const skPointsElem = document.getElementById('skPoints');
-    if (skPointsElem) {
-        skPointsElem.innerText = currentUser.skillPoints || 0;
-    }
+        if (document.getElementById('skPoints')) document.getElementById('skPoints').innerText = currentUser.skillPoints || 0;
+        const list = document.getElementById('skillList');
+        if (!list) return;
+        list.innerHTML = '';
 
-    const list = document.getElementById('skillList');
-    if (!list) return;
-    list.innerHTML = '';
+        Object.keys(currentUser.skills).forEach(s => {
+            const lv = currentUser.skills[s];
+            const maxLvOfThisSkill = (s === "Tàn sát" || s === "Dagger Rush") ? 1 : 3;
+            const isMax = lv >= maxLvOfThisSkill;
+            const cost = (s === "Tàn sát" || s === "Dagger Rush") ? 10 : 1;
+            const canUnlock = (s !== "Tàng Hình" || currentUser.level >= 20);
 
-    Object.keys(currentUser.skills).forEach(s => {
-        const lv = currentUser.skills[s];
-        const isLocked = lv === 0;
-        
-        // Cấu hình phím điều kiện: 2 skill mới max là 1, skill cũ max là 3
-        const maxLvOfThisSkill = (s === "Tàn sát" || s === "Dagger Rush") ? 1 : 3;
-        const isMax = lv >= maxLvOfThisSkill;
-        
-        // Cấu hình chi phí hiển thị để kiểm tra điều kiện bấm nút
-        const cost = (s === "Tàn sát" || s === "Dagger Rush") ? 10 : 1;
-        const canUnlock = (s !== "Tàng Hình" || currentUser.level >= 20);
+            const div = document.createElement('div');
+            div.className = `skill-item ${lv === 0 ? 'locked' : 'unlocked'}`;
+            div.onclick = () => showSkillDetail(s);
+            
+            const lvDisplay = isMax ? '<span style="color: gold; font-weight: bold;">MAX</span>' : `Lv.${lv}/${maxLvOfThisSkill}`;
+            const iconUrl = skillData[s] ? skillData[s].icon : "";
 
-        const div = document.createElement('div');
-        div.className = `skill-item ${isLocked ? 'locked' : 'unlocked'}`;
-        div.onclick = () => showSkillDetail(s);
-        
-        const lvDisplay = isMax ? 
-            '<span style="color: gold; font-weight: bold;">MAX</span>' : 
-            `Lv.${lv}/${maxLvOfThisSkill}`;
-        
-        const iconUrl = skillData[s] ? skillData[s].icon : "";
-
-        div.innerHTML = `
-            <div style="display: flex; align-items: center;">
-                <img src="${iconUrl}" style="width: 35px; height: 35px; margin-right: 15px; border-radius: 5px; border: 1px solid #00bfff;">
-                <div style="display: flex; flex-direction: column;">
-                    <span>${s} (${lvDisplay})</span>
-                    ${!isMax ? `<small style="color: #aaa; font-size: 12px;">Yêu cầu: ${cost} điểm</small>` : ''}
+            div.innerHTML = `
+                <div style="display: flex; align-items: center;">
+                    <img src="${iconUrl}" style="width: 35px; height: 35px; margin-right: 15px; border-radius: 5px; border: 1px solid #00bfff;">
+                    <div style="display: flex; flex-direction: column;">
+                        <span>${s} (${lvDisplay})</span>
+                        ${!isMax ? `<small style="color: #aaa; font-size: 12px;">Yêu cầu: ${cost} điểm</small>` : ''}
+                    </div>
                 </div>
-            </div>
-            <button class="add-skill-btn" onclick="upgradeSkill(event, '${s}')" 
-                ${(currentUser.skillPoints >= cost && canUnlock && !isMax) ? '' : 'disabled'}>+</button>
-        `;
-        list.appendChild(div);
-    });
-}
+                <button class="add-skill-btn" onclick="upgradeSkill(event, '${s}')" ${(currentUser.skillPoints >= cost && canUnlock && !isMax) ? '' : 'disabled'}>+</button>
+            `;
+            list.appendChild(div);
+        });
+    }
 
     window.showSkillDetail = function(name) {
-        const det = document.getElementById('skillDetail');
-        det.classList.remove('hidden');
+        document.getElementById('skillDetail').classList.remove('hidden');
         document.getElementById('detName').innerText = name;
-        // Truy cập vào .desc thay vì lấy trực tiếp chuỗi
         document.getElementById('detDesc').innerText = skillData[name].desc;
         document.getElementById('detReq').innerText = (name === "Tàng Hình" && currentUser.level < 20) ? "ĐIỀU KIỆN: ĐẠT HẠNG B (LEVEL 20)" : "";
-}
+    }
 
     window.upgradeSkill = async function(e, name) {
-    e.stopPropagation(); 
+        e.stopPropagation(); 
+        const cost = (name === "Tàn sát" || name === "Dagger Rush") ? 10 : 1;
+        const maxLevel = (name === "Tàn sát" || name === "Dagger Rush") ? 1 : 3;
 
-    // Xác định phí nâng cấp: 2 skill mới tốn 10đ, các skill cũ tốn 1đ
-    const cost = (name === "Tàn sát" || name === "Dagger Rush") ? 10 : 1;
-    
-    // Xác định cấp độ tối đa: 2 skill mới max là 1, các skill cũ max là 3
-    const maxLevel = (name === "Tàn sát" || name === "Dagger Rush") ? 1 : 3;
-
-    if (currentUser.skillPoints >= cost && currentUser.skills[name] < maxLevel) {
-        // Kiểm tra điều kiện Tàng Hình (giữ nguyên logic cũ)
-        if (name === "Tàng Hình" && currentUser.level < 20) {
-            alert("Cần đạt Hạng B (Level 20) để học kỹ năng này!");
-            return;
+        if (currentUser.skillPoints >= cost && currentUser.skills[name] < maxLevel) {
+            if (name === "Tàng Hình" && currentUser.level < 20) return alert("Cần đạt Hạng B (Level 20) để học kỹ năng này!");
+            currentUser.skills[name]++;
+            currentUser.skillPoints -= cost;
+            await set(ref(db, 'users/' + currentUser.username), currentUser);
+            renderSkills();
+        } else if (currentUser.skillPoints < cost) {
+            alert("Bạn cần " + cost + " điểm kỹ năng để học chiêu này!");
         }
-
-        currentUser.skills[name]++;
-        currentUser.skillPoints -= cost; // Trừ số điểm tương ứng
-        
-        await set(ref(db, 'users/' + currentUser.username), currentUser);
-        renderSkills();
-    } else if (currentUser.skillPoints < cost) {
-        alert("Bạn cần " + cost + " điểm kỹ năng để học chiêu này!");
     }
-}
 
-        const statDescriptions = {
-            'STRENGTH': 'Tăng sức mạnh vật lý. Mỗi điểm giúp tăng sát thương khi thực hiện các nhiệm vụ chiến đấu.',
-            'VITALITY': 'Tăng khả năng chịu đựng và lượng máu (HP) tối đa. Giúp bạn sống sót lâu hơn.',
-            'AGILITY': 'Tăng tốc độ và khả năng phản xạ. Giúp giảm tiêu hao thể lực và tăng tỷ lệ né tránh.',
-            'INTELLIGENCE': 'Tăng trí tuệ và lượng năng lượng (MP) tối đa. Cần thiết để sử dụng các kỹ năng đặc biệt.',
-            'SENSE': 'Tăng trực giác. Giúp phát hiện các mối nguy hiểm sớm hơn và tăng tỷ lệ nhận vật phẩm hiếm.'
-};
+    const statDescriptions = {
+        'STRENGTH': 'Tăng sức mạnh vật lý. Tăng sát thương tấn công.',
+        'VITALITY': 'Tăng lượng máu (HP) và phòng thủ.',
+        'AGILITY': 'Tăng tốc độ, né tránh và đánh trước.',
+        'INTELLIGENCE': 'Tăng lượng mana (MP) để dùng kỹ năng.',
+        'SENSE': 'Tăng tỷ lệ nhận diện điểm yếu kẻ địch.'
+    };
 
-// Hàm hiển thị thông tin chỉ số
-        window.showStatDetail = function(statName) {
-            const det = document.getElementById('statDetail');
-            det.classList.remove('hidden');
-            document.getElementById('statDetName').innerText = statName;
-            document.getElementById('statDetDesc').innerText = statDescriptions[statName];
-};
+    window.showStatDetail = function(statName) {
+        document.getElementById('statDetail').classList.remove('hidden');
+        document.getElementById('statDetName').innerText = statName;
+        document.getElementById('statDetDesc').innerText = statDescriptions[statName];
+    };
 
-// Hàm cộng điểm chỉ số
-        window.upgradeStat = async function(e, statKey) {
-        e.stopPropagation(); // Ngăn việc mở bảng thông tin khi bấm dấu +
-    
+    window.upgradeStat = async function(e, statKey) {
+        e.stopPropagation(); 
         if (currentUser.points > 0) {
             currentUser[statKey]++;
             currentUser.points--;
-
-        // Cập nhật HP tối đa và HỒI ĐẦY máu khi cộng vào VITALITY
-        if (statKey === 'vit') {
-            currentUser.maxHp = 100 + (currentUser.vit * 10);
-            currentUser.hp = currentUser.maxHp; // Thêm dòng này để fill đầy cây HP
+            if (statKey === 'vit') { currentUser.maxHp = 100 + (currentUser.vit * 10); currentUser.hp = currentUser.maxHp; }
+            if (statKey === 'int') { currentUser.maxMp = 50 + (currentUser.int * 5); currentUser.mp = currentUser.maxMp; }
+            await set(ref(db, 'users/' + currentUser.username), currentUser);
+            render(); 
+        } else {
+            alert("Bạn không đủ điểm tiềm năng!");
         }
-        
-        // Cập nhật MP tối đa và HỒI ĐẦY mana khi cộng vào INTELLIGENCE
-        if (statKey === 'int') {
-            currentUser.maxMp = 50 + (currentUser.int * 5);
-            currentUser.mp = currentUser.maxMp; // Thêm dòng này để fill đầy cây MP
-        }
+    };
 
-        // Lưu vào Firebase
-        await set(ref(db, 'users/' + currentUser.username), currentUser);
-        render(); // Gọi hàm render để cập nhật thanh bar trên giao diện
-    } else {
-        alert("Bạn không đủ điểm tiềm năng!");
-    }
-};
     function render() {
         document.getElementById('playerName').innerText = currentUser.username;
         document.getElementById('level').innerText = currentUser.level;
@@ -985,298 +616,343 @@ function triggerShake() {
         document.getElementById('mpBar').style.width = (currentUser.mp / currentUser.maxMp * 100) + '%';
         document.getElementById('expBar').style.width = (currentUser.exp / currentUser.need * 100) + '%';
 
-        document.getElementById('str').innerText = currentUser.str;
-        document.getElementById('vit').innerText = currentUser.vit;
-        document.getElementById('agi').innerText = currentUser.agi;
-        document.getElementById('int').innerText = currentUser.int;
-        document.getElementById('sense').innerText = currentUser.sense;
-        document.getElementById('points').innerText = currentUser.points;
+        ['str', 'vit', 'agi', 'int', 'sense', 'points'].forEach(k => document.getElementById(k).innerText = currentUser[k]);
 
         const m = getMission();
         document.getElementById('mission').innerText = m.text;
         document.getElementById('reward').innerText = 'Phần thưởng: ' + m.exp + ' EXP';
         document.getElementById('streak').innerText = 'Chuỗi rèn luyện: ' + currentUser.streak + ' ngày';
 
-    // --- PHẦN SỬA ĐỔI CHO BẢNG XẾP HẠNG (TOP 10) ---
-        let rank = Object.values(allUsers)
-            .sort((a, b) => b.level - a.level) // Sắp xếp Level từ cao xuống thấp
-            .slice(0, 10); // Chỉ lấy tối đa 10 người đứng đầu
-
+        let rank = Object.values(allUsers).sort((a, b) => b.level - a.level).slice(0, 10); 
         document.getElementById('leaderboard').innerHTML = rank.map((p, i) => 
-        `<div style="margin:8px 0; padding: 5px; border-bottom: 1px solid rgba(0,191,255,0.2); display: flex; justify-content: space-between;">
-            <span>${i + 1}. ${p.username}</span>
-            <span style="color:gold; font-weight: bold;">LV ${p.level}</span>
-        </div>`
-    ).join('');
-    // ----------------------------------------------
+            `<div style="margin:8px 0; padding: 5px; border-bottom: 1px solid rgba(0,191,255,0.2); display: flex; justify-content: space-between;">
+                <span>${i + 1}. ${p.username}</span><span style="color:gold; font-weight: bold;">LV ${p.level}</span>
+            </div>`
+        ).join('');
 
-    document.getElementById('logs').innerHTML = (currentUser.logs || []).slice().reverse().join('<br>');
-    
-    if (currentUser.title) {
-        document.getElementById('titleSelect').value = currentUser.title;
-    }
-
-    if (window.renderSkills) {
-        window.renderSkills();
-    }
+        document.getElementById('logs').innerHTML = (currentUser.logs || []).slice().reverse().join('<br>');
+        if (currentUser.title) document.getElementById('titleSelect').value = currentUser.title;
+        if (window.renderSkills) window.renderSkills();
+        
         const addBtns = document.getElementsByClassName('add-btn');
-        for (let btn of addBtns) {
-            btn.disabled = currentUser.points <= 0;
-    }       
-}
-        window.openTab = function(evt, tabName) {
-    // Ẩn tất cả các tab panel
+        for (let btn of addBtns) btn.disabled = currentUser.points <= 0;
+        
+        // Refresh UI if in battle
+        if (enemy) updateCombatUI();
+    }
+
+    // --- TAB ĐIỀU HƯỚNG ---
+    window.openTab = function(evt, tabName) {
+        if (isDungeonMode && tabName !== 'tab-dungeon') {
+            if (confirm("Bạn đang khiêu chiến Hầm Ngục! Rời tab lúc này đồng nghĩa với BỎ CUỘC và phải đi lại từ đầu. Chắc chắn thoát?")) {
+                exitDungeon();
+            } else {
+                return; // Ngừng chuyển tab nếu hủy
+            }
+        }
+
         const panels = document.getElementsByClassName("tab-panel");
-            for (let i = 0; i < panels.length; i++) {
-        panels[i].classList.remove("active");
-    }
+        for (let i = 0; i < panels.length; i++) panels[i].classList.remove("active");
 
-    // Bỏ trạng thái active của tất cả các nút
         const btns = document.getElementsByClassName("tab-btn");
-            for (let i = 0; i < btns.length; i++) {
-        btns[i].classList.remove("active");
+        for (let i = 0; i < btns.length; i++) btns[i].classList.remove("active");
+
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
     }
 
-    // Hiển thị tab hiện tại và thêm class active vào nút đã nhấn
-    document.getElementById(tabName).classList.add("active");
-    evt.currentTarget.classList.add("active");
-}
+    // --- CƠ CHẾ DÙNG CHUNG (MINIGAME VÀ DUNGEON) ---
+    function getPrefix() { return isDungeonMode ? 'd-' : ''; }
 
-    let enemy = null;
-    let isMyTurn = true;
+    function updateCombatUI() {
+        if (!enemy) return;
+        const pre = getPrefix();
+        
+        // Player
+        const pPercent = (currentUser.hp / currentUser.maxHp) * 100;
+        document.getElementById(pre + 'p-hp-bar').style.width = pPercent + "%";
+        document.getElementById(pre + 'p-hp-text').innerText = `HP: ${currentUser.hp}/${currentUser.maxHp}`;
+        
+        // Enemy
+        const enemyMaxHp = enemy.maxHp || enemy.hp || 100;
+        const ePercent = (enemy.hp / enemyMaxHp) * 100;
+        document.getElementById(pre + 'e-hp-bar').style.width = ePercent + "%";
+        document.getElementById(pre + 'e-hp-text').innerText = `HP: ${enemy.hp}/${enemyMaxHp}`;
 
-    // Khai báo danh sách quái vật
-    const enemies = [
-    { 
-        name: "Thợ Săn Hạng E", hp: 80, atk: 10, def: 5, exp: 20, 
-        img: "HanSongYi.jpg" // Thay link hình thật vào đây
-    },
-    { 
-        name: "Thợ Săn Hạng D", hp: 150, atk: 25, def: 15, exp: 50,
-        img: "YooJinHoo.jpg"
-    },
-    { 
-        name: "Thợ Săn Hạng C", hp: 300, atk: 50, def: 30, exp: 120,
-        img: "HwangDongsuk.jpg"
-    },
-    { 
-        name: "Thợ Săn Hạng B", hp: 600, atk: 100, def: 70, exp: 300,
-        img: "SonKihoon.jpg"
-    }
-];
+        // Buttons
+        const btnAttack = document.getElementById(pre + 'btnAttack');
+        const btnDagger = document.getElementById(pre + 'btnDagger');
+        const btnTanSat = document.getElementById(pre + 'btnTanSat');
 
-// Hàm bắt đầu trận đấu mới
-window.startNewBattle = function() {
-    // 1. Kiểm tra điều kiện (Phải có dòng này để tránh lỗi khi chưa load user)
-    if (!currentUser) return;
-    if (currentUser.hp <= 0) {
-        alert("Bạn cần hồi phục máu trước khi chiến đấu!");
-        return;
+        if (btnAttack) btnAttack.disabled = !isMyTurn;
+        if (btnDagger && btnDagger.style.display !== "none") {
+            btnDagger.disabled = (!isMyTurn || currentUser.mp < 35);
+            btnDagger.style.opacity = (currentUser.mp < 35) ? "0.5" : "1";
+        }
+        if (btnTanSat && btnTanSat.style.display !== "none") {
+            btnTanSat.disabled = (!isMyTurn || currentUser.mp < 50);
+            btnTanSat.style.opacity = (currentUser.mp < 50) ? "0.5" : "1";
+        }
     }
 
-    // 2. Reset giao diện về dạng nút chữ nhật xám
-    resetToButtonMode(); 
-    
-    // Đảm bảo các nút kỹ năng bị ẩn tuyệt đối khi tìm đối thủ mới
-    const btnD = document.getElementById('btnDagger');
-    const btnT = document.getElementById('btnTanSat');
-    if (btnD) btnD.style.display = "none";
-    if (btnT) btnT.style.display = "none";
-
-    // 3. Chọn ngẫu nhiên đối thủ
-    const randIdx = Math.floor(Math.random() * enemies.length);
-    const template = enemies[randIdx];
-    
-    // Gán dữ liệu: Quan trọng nhất là maxHp để thanh máu tính đúng %
-    enemy = { ...template, maxHp: template.hp };
-    
-    // 4. Trả lại lượt cho người chơi
-    isMyTurn = true; 
-
-    // 5. Cập nhật thông tin đối thủ lên màn hình
-    document.getElementById('e-name').innerText = enemy.name;
-    document.getElementById('e-img').src = enemy.img;
-    document.getElementById('battleLog').innerHTML = `Đã tìm thấy <span style="color:#ff4d4d">${enemy.name}</span>!`;
-
-    // 6. Mở khóa nút Tấn công (Dạng chữ)
-    const btnAttack = document.getElementById('btnAttack');
-    if (btnAttack) {
-        btnAttack.disabled = false;
+    function triggerShake() {
+        const eImg = document.getElementById(getPrefix() + 'e-img');
+        if (eImg) { eImg.classList.add('shake'); setTimeout(() => eImg.classList.remove('shake'), 300); }
     }
 
-    // 7. Cập nhật lại toàn bộ UI (Thanh máu, Mana)
-    updateCombatUI();
-};
-// Cập nhật giao diện chiến đấu
-function updateCombatUI() {
-    // 1. Cập nhật thanh máu Người chơi
-    const pPercent = (currentUser.hp / currentUser.maxHp) * 100;
-    document.getElementById('p-hp-bar').style.width = pPercent + "%";
-    document.getElementById('p-hp-text').innerText = `HP: ${currentUser.hp}/${currentUser.maxHp}`;
-    
-    // 2. Cập nhật thanh máu Kẻ địch
-    // PHẦN SỬA: Kiểm tra nếu chưa có maxHp thì lấy hp hiện tại làm mốc, tránh lỗi chia cho 0 hoặc undefined
-    const enemyMaxHp = enemy.maxHp || enemy.hp || 100;
-    const ePercent = (enemy.hp / enemyMaxHp) * 100;
-    
-    document.getElementById('e-hp-bar').style.width = ePercent + "%";
-    document.getElementById('e-hp-text').innerText = `HP: ${enemy.hp}/${enemyMaxHp}`;
-
-    // 3. Lấy các thẻ nút
-    const btnDagger = document.getElementById('btnDagger');
-    const btnTanSat = document.getElementById('btnTanSat');
-    const btnAttack = document.getElementById('btnAttack');
-
-    // 4. Cập nhật trạng thái khóa/mở nút theo lượt
-    // Nút Tấn công: Chỉ khóa/mở, giữ nguyên hiển thị (Chữ hoặc Icon tùy lúc đó)
-    if (btnAttack) {
-        btnAttack.disabled = !isMyTurn;
+    function triggerPlayerShake() {
+        const pImg = document.getElementById(getPrefix() + 'p-img');
+        if (pImg) { pImg.classList.add('shake'); setTimeout(() => pImg.classList.remove('shake'), 300); }
     }
 
-    // Nút Dagger Rush: Chỉ cập nhật khi nó ĐANG HIỆN (không ép display: block)
-    if (btnDagger && btnDagger.style.display !== "none") {
-        btnDagger.disabled = (!isMyTurn || currentUser.mp < 35);
-        btnDagger.style.opacity = (currentUser.mp < 35) ? "0.5" : "1";
+    function logBattle(msg) {
+        const log = document.getElementById(getPrefix() + 'battleLog');
+        log.innerHTML = msg + "<br>" + log.innerHTML;
     }
 
-    // Nút Tàn sát: Chỉ cập nhật khi nó ĐANG HIỆN
-    if (btnTanSat && btnTanSat.style.display !== "none") {
-        btnTanSat.disabled = (!isMyTurn || currentUser.mp < 50);
-        btnTanSat.style.opacity = (currentUser.mp < 50) ? "0.5" : "1";
-    }
-}
-function disableAllActionButtons(status) {
-    document.getElementById('btnAttack').disabled = status;
-    document.getElementById('btnDagger').disabled = status;
-    document.getElementById('btnTanSat').disabled = status;
-}
+    function switchToIconMode() {
+        const pre = getPrefix();
+        const btnAtk = document.getElementById(pre + 'btnAttack');
+        btnAtk.classList.add('icon-mode'); btnAtk.classList.remove('btn-system'); 
+        btnAtk.innerHTML = `<img src="attack.jpg">`; btnAtk.style.flex = "none";
 
-// Người chơi tấn công
+        if (currentUser.skills["Dagger Rush"] > 0) {
+            const btnD = document.getElementById(pre + 'btnDagger');
+            btnD.classList.remove('hidden-skill'); btnD.style.display = "flex"; 
+            btnD.classList.add('icon-mode'); btnD.innerHTML = `<img src="dagger.jpg">`;
+        }
+
+        if (currentUser.skills["Tàn sát"] > 0) {
+            const btnT = document.getElementById(pre + 'btnTanSat');
+            btnT.classList.remove('hidden-skill'); btnT.style.display = "flex";
+            btnT.classList.add('icon-mode'); btnT.innerHTML = `<img src="amsat.jpg">`;
+        }
+
+        if (isDungeonMode) {
+            document.getElementById('btnExitDungeon').disabled = true;
+            document.getElementById('btnExitDungeon').style.opacity = "0.4";
+        } else {
+            const btnFind = document.getElementById('btnFindEnemy');
+            if (btnFind) { btnFind.disabled = true; btnFind.style.opacity = "0.4"; btnFind.innerText = "ĐANG CHIẾN ĐẤU..."; }
+        }
+    }
+
+    function resetToButtonMode() {
+        const pre = getPrefix();
+        const btnAtk = document.getElementById(pre + 'btnAttack');
+        if (btnAtk) {
+            btnAtk.classList.remove('icon-mode'); btnAtk.classList.add('btn-system');
+            btnAtk.innerHTML = "TẤN CÔNG"; btnAtk.style.flex = "1";
+        }
+
+        [pre + 'btnDagger', pre + 'btnTanSat'].forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn) { btn.style.display = "none"; btn.classList.add('hidden-skill'); btn.classList.remove('icon-mode'); }
+        });
+
+        if (isDungeonMode) {
+            document.getElementById('btnExitDungeon').disabled = false;
+            document.getElementById('btnExitDungeon').style.opacity = "1";
+        } else {
+            const btnFind = document.getElementById('btnFindEnemy');
+            if (btnFind) { btnFind.disabled = false; btnFind.style.opacity = "1"; btnFind.innerText = "TÌM ĐỐI THỦ MỚI"; }
+        }
+    }
+
+    // --- CHIÊU THỨC ---
     window.playerAttack = function() {
         if (!isMyTurn || enemy.hp <= 0) return;
+        const btnAttack = document.getElementById(getPrefix() + 'btnAttack');
+        if (!btnAttack.classList.contains('icon-mode')) {
+            switchToIconMode(); logBattle("Sẵn sàng! Hãy chọn kỹ năng để tấn công."); return; 
+        }
+        
+        const dmg = Math.max(5, (currentUser.str * 2) - enemy.def);
+        enemy.hp = Math.max(0, enemy.hp - dmg);
+        triggerShake();
+        logBattle(`Bạn chém ${enemy.name}, gây ${dmg} sát thương!`);
+        updateCombatUI(); checkBattleEnd(); 
+    };
+
+    window.useDaggerRush = function() {
+        if (!isMyTurn || enemy.hp <= 0 || currentUser.mp < 35) { if(currentUser.mp < 35) logBattle("<span style='color:orange'>Không đủ MP để dùng Dagger Rush!</span>"); return; }
+        currentUser.mp -= 35; 
+        let dmg = Math.max(5, (currentUser.str * 2.5) - enemy.def); 
+        triggerShake();
+        logBattle(`Bạn dùng <span style="color:#4a90e2">Dagger Rush</span> gây ${Math.floor(dmg)} sát thương!`);
+        enemy.hp = Math.max(0, enemy.hp - dmg);
+        updateCombatUI(); checkBattleEnd(); 
+    };
+
+    window.useTanSat = function() {
+        if (!isMyTurn || enemy.hp <= 0 || currentUser.mp < 50) { if(currentUser.mp < 50) logBattle("<span style='color:orange'>Không đủ MP để dùng Tàn Sát!</span>"); return; }
+        currentUser.mp -= 50; 
+        let dmg = Math.max(10, (currentUser.str * 4) - enemy.def); 
+        triggerShake();
+        logBattle(`<span style="color:#ff4d4d">TÀN SÁT!!!</span> Gây ${Math.floor(dmg)} sát thương chí mạng!`);
+        enemy.hp = Math.max(0, enemy.hp - dmg);
+        updateCombatUI(); checkBattleEnd();
+    };
+
+    function enemyTurn() {
+        if (!enemy || enemy.hp <= 0 || !currentUser) return;
+
+        const defensePower = currentUser.vit || 0; 
+        const enemyAtk = enemy.atk || 10;
+        const dmg = Math.max(2, enemyAtk - Math.floor(defensePower / 2));
+        
+        triggerPlayerShake();
+
+        currentUser.hp = Math.max(0, currentUser.hp - dmg);
+        logBattle(`${enemy.name} phản công, bạn mất ${dmg} HP.`);
+        
+        updateCombatUI();
+        if (typeof render === "function") render(); 
+
+        if (currentUser.hp <= 0) {
+            logBattle(`<span style="color:red; font-size: 20px;">BẠN ĐÃ THẤT BẠI! Bị thương nặng...</span>`);
+            resetToButtonMode(); 
+            if (isDungeonMode) {
+                document.getElementById('btnNextStage').classList.add('hidden');
+                document.getElementById('btnExitDungeon').classList.remove('hidden');
+            } else {
+                const btnFind = document.getElementById('btnFindEnemy');
+                if(btnFind) btnFind.disabled = false;
+            }
+        } else {
+            isMyTurn = true;
+            updateCombatUI(); // Cập nhật lại UI để mở khoá nút
+        }
+    }
+
+    function winBattle() {
+        logBattle(`<span style="color:#00ff00">Chiến thắng! Bạn nhận được ${enemy.exp} EXP.</span>`);
+        currentUser.exp += enemy.exp;
+        checkLevelUp(); 
+        saveUserData(); 
+
+        setTimeout(resetToButtonMode, 1500);
+
+        if (isDungeonMode) {
+            const dData = dungeonData[dCurrentId];
+            if (dCurrentStage < dData.stages.length - 1) {
+                document.getElementById('btnNextStage').classList.remove('hidden');
+                document.getElementById('btnExitDungeon').classList.add('hidden');
+            } else {
+                logBattle(`<span style="color:gold; font-size:22px; text-shadow: 0 0 10px gold;">CHÚC MỪNG! BẠN ĐÃ CHINH PHỤC ${dData.name.toUpperCase()}!</span>`);
+                document.getElementById('btnExitDungeon').classList.remove('hidden');
+                document.getElementById('btnExitDungeon').innerText = "HOÀN THÀNH & RỜI KHỎI";
+            }
+        } else {
+            const btnFind = document.getElementById('btnFindEnemy');
+            if(btnFind) btnFind.disabled = false;
+        }
+    }
+
+    function checkBattleEnd() {
+        if (enemy.hp <= 0) { winBattle(); } 
+        else {
+            isMyTurn = false;
+            updateCombatUI(); // Khóa nút
+            setTimeout(enemyTurn, 1000);
+        }
+    }
+
+    function checkLevelUp() {
+        while (currentUser.exp >= currentUser.need) {
+            currentUser.exp -= currentUser.need;
+            currentUser.level++; currentUser.need += 50; currentUser.points += 3; currentUser.skillPoints += 2;
+            currentUser.maxHp += 20; currentUser.maxMp += 10;
+            currentUser.hp = currentUser.maxHp; currentUser.mp = currentUser.maxMp;
+        }
+    }
+
+    async function saveUserData() {
+        await set(ref(db, 'users/' + currentUser.username), currentUser);
+        render();
+    }
+
+    // --- HÀM MINIGAME ---
+    window.startNewBattle = function() {
+        if (!currentUser) return;
+        if (currentUser.hp <= 0) return alert("Bạn cần hồi phục máu trước khi chiến đấu!");
+        
+        isDungeonMode = false;
+        resetToButtonMode(); 
+
+        const randIdx = Math.floor(Math.random() * enemies.length);
+        const template = enemies[randIdx];
+        enemy = { ...template, maxHp: template.hp };
+        isMyTurn = true; 
+
+        document.getElementById('e-name').innerText = enemy.name;
+        document.getElementById('e-img').src = enemy.img;
+        document.getElementById('battleLog').innerHTML = `Đã tìm thấy <span style="color:#ff4d4d">${enemy.name}</span>!`;
 
         const btnAttack = document.getElementById('btnAttack');
+        if (btnAttack) btnAttack.disabled = false;
+        updateCombatUI();
+    };
 
-    // NẾU CHƯA HIỆN ICON: Thì chỉ hiện Icon và dừng lại (chưa đánh)
-    if (!btnAttack.classList.contains('icon-mode')) {
-        switchToIconMode();
-        logBattle("Sẵn sàng! Hãy chọn kỹ năng để tấn công.");
-        return; 
-    }
-
-    // NẾU ĐÃ LÀ ICON: Thì thực hiện đòn đánh thường
-        executeBasicAttack();
-};
-
-    function executeBasicAttack() {
-    const dmg = Math.max(5, (currentUser.str * 2) - enemy.def);
-    enemy.hp = Math.max(0, enemy.hp - dmg);
-    
-    // Hiệu ứng rung quái
-    const eImg = document.getElementById('e-img');
-    if (eImg) {
-        eImg.classList.add('shake');
-        setTimeout(() => eImg.classList.remove('shake'), 300);
-    }
-
-    logBattle(`Bạn chém ${enemy.name}, gây ${dmg} sát thương!`);
-    updateCombatUI();
-    checkBattleEnd(); // Hàm này bạn đã có để đổi lượt
-}
-    
-// Lượt của kẻ địch
-function enemyTurn() {
-    if (!enemy || enemy.hp <= 0 || !currentUser) return;
-
-    const defensePower = currentUser.vit || 0; 
-    const enemyAtk = enemy.atk || 10;
-    const dmg = Math.max(2, enemyAtk - Math.floor(defensePower / 2));
-    
-    const pImg = document.getElementById('p-img');
-    if (pImg) {
-        pImg.classList.add('shake');
-        setTimeout(() => pImg.classList.remove('shake'), 300);
-    }
-
-    currentUser.hp = Math.max(0, currentUser.hp - dmg);
-    logBattle(`${enemy.name} phản công, bạn mất ${dmg} HP.`);
-    
-    updateCombatUI();
-    if (typeof render === "function") render(); 
-
-    if (currentUser.hp <= 0) {
-        logBattle(`<span style="color:red">Bạn đã thất bại!</span>`);
+    // --- HÀM DUNGEON ---
+    window.enterDungeon = function(id) {
+        if (!currentUser) return;
+        if (currentUser.hp <= 0) return alert("Bạn cần hồi phục máu trước khi vào Hầm Ngục!");
         
-        // --- SỬA TẠI ĐÂY ---
-        // Khi thua, ép giao diện quay về dạng Button ngay lập tức
-        resetToButtonMode(); 
+        dCurrentId = id;
+        dCurrentStage = 0;
+        isDungeonMode = true;
+
+        document.getElementById('dungeonListArea').classList.add('hidden');
+        document.getElementById('dungeonCombatUI').classList.remove('hidden');
+        document.getElementById('dDungeonTitle').innerText = dungeonData[id].name;
         
-        const btnFind = document.querySelector("button[onclick='startNewBattle()']");
-        if(btnFind) btnFind.disabled = false;
-    } else {
+        startDungeonStage();
+    }
+
+    window.startDungeonStage = function() {
+        resetToButtonMode();
+        const stageData = dungeonData[dCurrentId].stages[dCurrentStage];
+        enemy = { ...stageData, maxHp: stageData.hp };
         isMyTurn = true;
-        // Mở lại nút (nếu đang ở mode icon thì vẫn giữ mode icon)
-        document.getElementById('btnAttack').disabled = false;
+
+        document.getElementById('dStageText').innerText = `Ải ${dCurrentStage + 1}/${dungeonData[dCurrentId].stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
+        if(enemy.isBoss) {
+            document.getElementById('dStageText').style.color = "#ff4d4d";
+            document.getElementById('dStageText').style.textShadow = "0 0 10px red";
+        } else {
+            document.getElementById('dStageText').style.color = "#fff";
+            document.getElementById('dStageText').style.textShadow = "none";
+        }
+
+        document.getElementById('d-e-name').innerText = enemy.name;
+        document.getElementById('d-e-img').src = enemy.img || "enemy.png"; 
         
-        const btnDagger = document.getElementById('btnDagger');
-        if(btnDagger && currentUser.skills["Dagger Rush"] > 0) btnDagger.disabled = false;
+        document.getElementById('btnNextStage').classList.add('hidden');
+        document.getElementById('btnExitDungeon').classList.remove('hidden');
+        document.getElementById('btnExitDungeon').innerText = "BỎ CUỘC & THOÁT";
         
-        const btnTanSat = document.getElementById('btnTanSat');
-        if(btnTanSat && currentUser.skills["Tàn sát"] > 0) btnTanSat.disabled = false;
+        document.getElementById('d-battleLog').innerHTML = `Tiến vào Ải ${dCurrentStage + 1}! Khám phá thấy <span style="color:#ff4d4d">${enemy.name}</span>!`;
+
+        const btnAttack = document.getElementById('d-btnAttack');
+        if (btnAttack) btnAttack.disabled = false;
+
+        updateCombatUI();
     }
-}
-function winBattle() {
-    logBattle(`<span style="color:#00ff00">Chiến thắng! Bạn nhận được ${enemy.exp} EXP.</span>`);
-    currentUser.exp += enemy.exp;
-    checkLevelUp(); 
-    saveUserData(); 
 
-    // MỞ LẠI NÚT TÌM ĐỐI THỦ MỚI
-    const btnFind = document.querySelector("button[onclick='startNewBattle()']");
-    if(btnFind) btnFind.disabled = false;
-    setTimeout(resetToButtonMode, 1500);
-}
-
-function logBattle(msg) {
-    const log = document.getElementById('battleLog');
-    log.innerHTML = msg + "<br>" + log.innerHTML;
-}
-
-// Hàm bổ trợ để kiểm tra level up khi đánh thắng
-function checkLevelUp() {
-    while (currentUser.exp >= currentUser.need) {
-        currentUser.exp -= currentUser.need;
-        currentUser.level++;
-        currentUser.need += 50;
-        currentUser.points += 3;
-        currentUser.skillPoints += 2;
-        // ... thêm các chỉ số tăng trưởng khác
+    window.startNextStage = function() {
+        if (currentUser.hp <= 0) return alert("Bạn không thể đi tiếp khi hết máu!");
+        dCurrentStage++;
+        startDungeonStage();
     }
-}
 
-function checkBattleEnd() {
-    if (enemy.hp <= 0) {
-        winBattle();
-    } else {
-        isMyTurn = false;
-        // Khóa tất cả nút để quái đánh
-        document.getElementById('btnAttack').disabled = true;
-        if(document.getElementById('btnDagger')) document.getElementById('btnDagger').disabled = true;
-        if(document.getElementById('btnTanSat')) document.getElementById('btnTanSat').disabled = true;
-        
-        setTimeout(enemyTurn, 1000);
+    window.exitDungeon = function() {
+        isDungeonMode = false;
+        document.getElementById('dungeonListArea').classList.remove('hidden');
+        document.getElementById('dungeonCombatUI').classList.add('hidden');
     }
-}
 
-async function saveUserData() {
-    await set(ref(db, 'users/' + currentUser.username), currentUser);
-    render();
-}
-
-// Khởi tạo trận đầu tiên
-setTimeout(startNewBattle, 2000);
-
-
+    setTimeout(startNewBattle, 2000);
 
 </script>
 </body>
