@@ -399,30 +399,36 @@
         const u = username.value.trim(), p = password.value.trim();
         const s = await get(child(ref(db), 'users/' + u));
         if (!s.exists()) return alert('Thợ săn chưa thức tỉnh');
-        const data = s.val();
+            const data = s.val();
         if (data.password !== p) return alert('Mật mã sai');
-        
+    
         currentUser = data;
-        // Bổ sung các chỉ số còn thiếu nếu là acc cũ
+
+    // QUAN TRỌNG: Khởi tạo dữ liệu cho tài khoản cũ chưa có Skills
+        if (!currentUser.skills) {
+            currentUser.skills = {
+                "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Tái Tạo": 0,
+                "Trị Thương": 0, "Siêu Giác Quan": 0, "Gia Tăng Chỉ Số": 0, "Tàng Hình": 0
+        };
+            currentUser.skillPoints = currentUser.skillPoints || 0;
+    }
+
         if (currentUser.isNew) {
-        const welcome = document.getElementById('welcomeAlert');
-        welcome.classList.remove('hidden');
-        
-        // Tự động tắt sau 3 giây và cập nhật lại trạng thái không còn là người mới
-        setTimeout(async () => {
-            welcome.classList.add('hidden');
-            currentUser.isNew = false;
-            await set(ref(db, 'users/' + currentUser.username), currentUser);
+            const welcome = document.getElementById('welcomeAlert');
+            welcome.classList.remove('hidden');
+            setTimeout(async () => {
+                welcome.classList.add('hidden');
+                currentUser.isNew = false;
+                await set(ref(db, 'users/' + currentUser.username), currentUser);
         }, 3000);
     }
-        currentUser.maxHp = currentUser.maxHp || 100;
-        currentUser.maxMp = currentUser.maxMp || 50;
-        
-        document.getElementById('auth').classList.add('hidden');
-        document.getElementById('gameWrap').classList.remove('hidden');
-        await loadLeaderboard();
-        render();
-    }
+
+    document.getElementById('auth').classList.add('hidden');
+    document.getElementById('gameWrap').classList.remove('hidden');
+    await loadLeaderboard();
+    render();
+    window.renderSkills(); // Phải gọi hàm này sau khi render chính
+}
 
     window.completeMission = async function() {
         const today = new Date().toLocaleDateString();
