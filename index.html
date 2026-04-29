@@ -785,33 +785,52 @@ function resetToButtonMode() {
 }
 
     window.useDaggerRush = function() {
-    if (!isMyTurn || enemy.hp <= 0 || currentUser.mp < 35) return;
-
-    currentUser.mp -= 35; // Trừ mana
-    let totalDmg = Math.max(5, (currentUser.str * 2) - enemy.def);
-    let logs = `Bạn dùng Dagger Rush gây ${totalDmg} sát thương!`;
-
-    // Xác suất 20% đánh thêm 2 lần
-    if (Math.random() < 0.2) {
-        let extraDmg = totalDmg * 2;
-        totalDmg += extraDmg;
-        logs += ` <span style="color:yellow">Kích hoạt combo! Đánh thêm 2 lần (+${extraDmg} HP)</span>`;
+    // Kiểm tra: Phải là lượt của mình, quái còn sống và đủ 35 MP
+    if (!isMyTurn || enemy.hp <= 0 || currentUser.mp < 35) {
+        if(currentUser.mp < 35) logBattle("<span style='color:orange'>Không đủ MP để dùng Dagger Rush!</span>");
+        return;
     }
 
-    executePlayerMove(totalDmg, logs);
+    currentUser.mp -= 35; // Trừ mana
+    let dmg = Math.max(5, (currentUser.str * 2.5) - enemy.def); // Sát thương cao hơn đánh thường
+    
+    // Hiệu ứng rung
+    triggerShake();
+    
+    logBattle(`Bạn dùng <span style="color:#4a90e2">Dagger Rush</span> gây ${Math.floor(dmg)} sát thương!`);
+    
+    enemy.hp = Math.max(0, enemy.hp - dmg);
+    updateCombatUI();
+    checkBattleEnd(); // Kiểm tra kết thúc lượt
 };
 
-// Kỹ năng Tàn Sát
 window.useTanSat = function() {
-    if (!isMyTurn || enemy.hp <= 0 || currentUser.mp < 50) return;
+    // Kiểm tra: Phải là lượt của mình, quái còn sống và đủ 50 MP
+    if (!isMyTurn || enemy.hp <= 0 || currentUser.mp < 50) {
+        if(currentUser.mp < 50) logBattle("<span style='color:orange'>Không đủ MP để dùng Tàn Sát!</span>");
+        return;
+    }
 
     currentUser.mp -= 50; // Trừ mana
-    // Chí mạng x2 sát thương gốc
-    let totalDmg = Math.max(5, (currentUser.str * 2) - enemy.def) * 2;
-    let logs = `<span style="color:#ff4d4d">Bạn dùng TÀN SÁT gây sát thương CHÍ MẠNG: ${totalDmg} HP!</span>`;
-
-    executePlayerMove(totalDmg, logs);
+    let dmg = Math.max(10, (currentUser.str * 4) - enemy.def); // Sát thương cực lớn (X4)
+    
+    triggerShake();
+    
+    logBattle(`<span style="color:#ff4d4d">TÀN SÁT!!!</span> Gây ${Math.floor(dmg)} sát thương chí mạng!`);
+    
+    enemy.hp = Math.max(0, enemy.hp - dmg);
+    updateCombatUI();
+    checkBattleEnd();
 };
+
+// Hàm rung màn hình dùng chung
+function triggerShake() {
+    const eImg = document.getElementById('e-img');
+    if (eImg) {
+        eImg.classList.add('shake');
+        setTimeout(() => eImg.classList.remove('shake'), 300);
+    }
+}
 
     window.renderSkills = function() {
     const skPointsElem = document.getElementById('skPoints');
@@ -1055,33 +1074,39 @@ window.startNewBattle = function() {
 
 // Cập nhật giao diện chiến đấu
 function updateCombatUI() {
-    // Player UI
+    // 1. Cập nhật thanh máu Người chơi
     const pPercent = (currentUser.hp / currentUser.maxHp) * 100;
     document.getElementById('p-hp-bar').style.width = pPercent + "%";
     document.getElementById('p-hp-text').innerText = `HP: ${currentUser.hp}/${currentUser.maxHp}`;
     
-    // Enemy UI
+    // 2. Cập nhật thanh máu Kẻ địch
     const ePercent = (enemy.hp / enemy.maxHp) * 100;
     document.getElementById('e-hp-bar').style.width = ePercent + "%";
     document.getElementById('e-hp-text').innerText = `HP: ${enemy.hp}/${enemy.maxHp}`;
 
+    // 3. Lấy các thẻ nút
     const btnDagger = document.getElementById('btnDagger');
     const btnTanSat = document.getElementById('btnTanSat');
     const btnAttack = document.getElementById('btnAttack');
 
-    // Hiện Dagger Rush nếu đã học (Lv.1)
-    if (currentUser.skills["Dagger Rush"] > 0) {
-        btnDagger.style.display = "flex";
-        btnDagger.disabled = (!isMyTurn || currentUser.mp < 35);
-    }
+    // --- SỬA LOGIC TẠI ĐÂY ---
 
-    // Hiện Tàn Sát nếu đã học (Lv.1)
-    if (currentUser.skills["Tàn sát"] > 0) {
-        btnTanSat.style.display = "flex";
-        btnTanSat.disabled = (!isMyTurn || currentUser.mp < 50);
-    }
-
+    // Nút Tấn công: Chỉ khóa/mở, không đổi display
     btnAttack.disabled = !isMyTurn;
+
+    // Nút Dagger Rush:
+    if (btnDagger) {
+        // Chỉ cập nhật disabled/opacity, KHÔNG đổi style.display ở đây
+        btnDagger.disabled = (!isMyTurn || currentUser.mp < 35);
+        btnDagger.style.opacity = (currentUser.mp < 35) ? "0.5" : "1";
+    }
+
+    // Nút Tàn sát:
+    if (btnTanSat) {
+        // Chỉ cập nhật disabled/opacity, KHÔNG đổi style.display ở đây
+        btnTanSat.disabled = (!isMyTurn || currentUser.mp < 50);
+        btnTanSat.style.opacity = (currentUser.mp < 50) ? "0.5" : "1";
+    }
 }
 function disableAllActionButtons(status) {
     document.getElementById('btnAttack').disabled = status;
@@ -1197,14 +1222,14 @@ function checkBattleEnd() {
         winBattle();
     } else {
         isMyTurn = false;
-        // Khóa tất cả nút icon trong khi chờ quái đánh
+        // Khóa tất cả nút để quái đánh
         document.getElementById('btnAttack').disabled = true;
         if(document.getElementById('btnDagger')) document.getElementById('btnDagger').disabled = true;
         if(document.getElementById('btnTanSat')) document.getElementById('btnTanSat').disabled = true;
         
         setTimeout(enemyTurn, 1000);
     }
-}    
+}
 
 async function saveUserData() {
     await set(ref(db, 'users/' + currentUser.username), currentUser);
