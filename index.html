@@ -321,6 +321,25 @@
     .btn-red .mp-cost { color: #ff4d4d; border-color: #ff4d4d; }
     .btn-red img { filter: drop-shadow(0 0 5px #ff4d4d); }
 
+
+        .icon-mode {
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: 50% !important;
+    flex: none !important;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #00bfff;
+}
+
+.icon-mode img {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+}
+
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -714,6 +733,40 @@
     }
 };
 
+    function switchToIconMode() {
+    const skills = [
+        { id: 'btnAttack', icon: 'https://cdn-icons-png.flaticon.com/512/7414/7414545.png' },
+        { id: 'btnDagger', icon: 'https://cdn-icons-png.flaticon.com/512/1000/1000966.png' },
+        { id: 'btnTanSat', icon: 'https://cdn-icons-png.flaticon.com/512/4325/4325956.png' }
+    ];
+
+    skills.forEach(skill => {
+        const btn = document.getElementById(skill.id);
+        if (btn) {
+            btn.classList.add('icon-mode'); // Biến thành hình tròn
+            btn.innerHTML = `<img src="${skill.icon}">`; // Chèn hình ảnh vào
+        }
+    });
+}
+
+// Khi trận đấu kết thúc (Thắng hoặc Thua), gọi hàm này để quay lại dạng nút chữ
+function resetToButtonMode() {
+    const btnAttack = document.getElementById('btnAttack');
+    btnAttack.classList.remove('icon-mode');
+    btnAttack.innerHTML = "TẤN CÔNG";
+    btnAttack.style.display = "block";
+
+    const btnDagger = document.getElementById('btnDagger');
+    btnDagger.classList.remove('icon-mode');
+    btnDagger.innerHTML = "DAGGER RUSH";
+    btnDagger.style.display = "none"; // Ẩn đi cho đến khi vào trận mới
+
+    const btnTanSat = document.getElementById('btnTanSat');
+    btnTanSat.classList.remove('icon-mode');
+    btnTanSat.innerHTML = "TÀN SÁT";
+    btnTanSat.style.display = "none";
+}
+
     window.useDaggerRush = function() {
     if (!isMyTurn || enemy.hp <= 0 || currentUser.mp < 35) return;
 
@@ -1047,8 +1100,14 @@ function disableAllActionButtons(status) {
 
 // Người chơi tấn công
 window.playerAttack = function() {
-
     if (!isMyTurn || enemy.hp <= 0) return;
+
+    // --- PHẦN SỬA ĐỔI: Chuyển sang Icon Mode ở đòn đánh đầu tiên ---
+    const btnAttack = document.getElementById('btnAttack');
+    if (!btnAttack.classList.contains('icon-mode')) {
+        switchToIconMode();
+    }
+    // -----------------------------------------------------------
 
     const btnFind = document.querySelector("button[onclick='startNewBattle()']");
     if(btnFind) btnFind.disabled = true;
@@ -1067,9 +1126,12 @@ window.playerAttack = function() {
     
     if (enemy.hp <= 0) {
         winBattle();
+        // Sau khi thắng, có thể gọi resetToButtonMode() nếu muốn quay lại nút chữ
+        setTimeout(resetToButtonMode, 1500); 
     } else {
         isMyTurn = false;
-        document.getElementById('btnAttack').disabled = true;
+        // Khóa tất cả các nút (cả nút icon) khi đến lượt địch
+        disableCombatButtons(true);
         setTimeout(enemyTurn, 1000); 
     }
 };
