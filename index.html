@@ -741,26 +741,33 @@
     function switchToIconMode() {
     const btnAtk = document.getElementById('btnAttack');
     btnAtk.classList.add('icon-mode');
-    btnAtk.classList.remove('btn-system'); // Bỏ giao diện chữ nhật
+    btnAtk.classList.remove('btn-system'); 
     btnAtk.innerHTML = `<img src="attack.jpg">`;
     btnAtk.style.flex = "none";
 
-    // Hiện Dagger Rush nếu đã học
     if (currentUser.skills["Dagger Rush"] > 0) {
         const btnD = document.getElementById('btnDagger');
-        btnD.classList.remove('hidden-skill'); // Gỡ bỏ class ẩn
+        btnD.classList.remove('hidden-skill'); 
         btnD.style.display = "flex"; 
         btnD.classList.add('icon-mode');
         btnD.innerHTML = `<img src="dagger.jpg">`;
     }
 
-    // Hiện Tàn sát nếu đã học
     if (currentUser.skills["Tàn sát"] > 0) {
         const btnT = document.getElementById('btnTanSat');
-        btnT.classList.remove('hidden-skill'); // Gỡ bỏ class ẩn
+        btnT.classList.remove('hidden-skill'); 
         btnT.style.display = "flex";
         btnT.classList.add('icon-mode');
         btnT.innerHTML = `<img src="amsat.jpg">`;
+    }
+
+    // --- THÊM LOGIC KHÓA NÚT TÌM ĐỐI THỦ TẠI ĐÂY ---
+    const btnFind = document.getElementById('btnFindEnemy');
+    if (btnFind) {
+        btnFind.disabled = true; // Khóa không cho bấm
+        btnFind.style.opacity = "0.4"; // Làm mờ nút đi
+        btnFind.innerText = "ĐANG CHIẾN ĐẤU..."; // Đổi dòng chữ để báo hiệu
+        btnFind.style.cursor = "not-allowed";
     }
 }
 
@@ -773,7 +780,6 @@ function resetToButtonMode() {
         btnAtk.style.flex = "1";
     }
 
-    // Ẩn các nút đặc biệt bằng cách thêm lại class hidden-skill
     ['btnDagger', 'btnTanSat'].forEach(id => {
         const btn = document.getElementById(id);
         if (btn) {
@@ -782,6 +788,15 @@ function resetToButtonMode() {
             btn.classList.remove('icon-mode');
         }
     });
+
+    // --- MỞ KHÓA LẠI NÚT TÌM ĐỐI THỦ TẠI ĐÂY ---
+    const btnFind = document.getElementById('btnFindEnemy');
+    if (btnFind) {
+        btnFind.disabled = false; // Mở khóa
+        btnFind.style.opacity = "1"; // Sáng lại bình thường
+        btnFind.innerText = "TÌM ĐỐI THỦ MỚI"; // Trả lại chữ gốc
+        btnFind.style.cursor = "pointer";
+    }
 }
 
     window.useDaggerRush = function() {
