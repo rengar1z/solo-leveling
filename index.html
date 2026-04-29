@@ -1137,10 +1137,10 @@ window.playerAttack = function() {
 };
 // Lượt của kẻ địch
 function enemyTurn() {
-    // 1. Kiểm tra an toàn: Nếu đối thủ chết hoặc không có người chơi thì dừng
+    // 1. Kiểm tra an toàn
     if (!enemy || enemy.hp <= 0 || !currentUser) return;
 
-    // 2. Tính sát thương (Thêm Math.floor để tránh số thập phân gây lỗi)
+    // 2. Tính sát thương
     const defensePower = currentUser.vit || 0; 
     const enemyAtk = enemy.atk || 10;
     const dmg = Math.max(2, enemyAtk - Math.floor(defensePower / 2));
@@ -1163,12 +1163,28 @@ function enemyTurn() {
     // 6. Kiểm tra nếu bạn thua
     if (currentUser.hp <= 0) {
         logBattle(`<span style="color:red">Bạn đã thất bại!</span>`);
-        const btnFind = document.querySelector("button[onclick='startNewBattle()']");
-        if(btnFind) btnFind.disabled = false;
+        
+        // --- PHẦN THÊM VÀO: Đưa nút về dạng chữ đỏ khi thua ---
+        setTimeout(() => {
+            resetToButtonMode(); // Trả lại nút TẤN CÔNG màu đỏ
+            const btnFind = document.querySelector("button[onclick='startNewBattle()']");
+            if(btnFind) btnFind.disabled = false;
+        }, 1000);
+        // --------------------------------------------------
+
     } else {
         // --- QUAN TRỌNG NHẤT: TRẢ LẠI LƯỢT CHO NGƯỜI CHƠI ---
         isMyTurn = true;
-        document.getElementById('btnAttack').disabled = false;
+        
+        // Mở khóa các nút (tùy vào đang là icon hay button)
+        const btnAttack = document.getElementById('btnAttack');
+        if(btnAttack) btnAttack.disabled = false;
+        
+        const btnDagger = document.getElementById('btnDagger');
+        if(btnDagger && currentUser.skills["Dagger Rush"] > 0) btnDagger.disabled = false;
+        
+        const btnTanSat = document.getElementById('btnTanSat');
+        if(btnTanSat && currentUser.skills["Tàn sát"] > 0) btnTanSat.disabled = false;
     }
 }
 
@@ -1181,6 +1197,7 @@ function winBattle() {
     // MỞ LẠI NÚT TÌM ĐỐI THỦ MỚI
     const btnFind = document.querySelector("button[onclick='startNewBattle()']");
     if(btnFind) btnFind.disabled = false;
+    setTimeout(resetToButtonMode, 1500);
 }
 
 function logBattle(msg) {
