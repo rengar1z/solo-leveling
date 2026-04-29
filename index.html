@@ -1062,37 +1062,29 @@ const enemies = [
 
 // Hàm bắt đầu trận đấu mới
 window.startNewBattle = function() {
-    // 1. Ép giao diện về dạng nút chữ (giống nút Tìm đối thủ mới)
+    // 1. Reset giao diện về dạng nút chữ nhật xám
     resetToButtonMode(); 
 
-    // 2. Kiểm tra điều kiện (Máu, tồn tại User)
-    if (!currentUser) return;
-    if (currentUser.hp <= 0) {
+    if (!currentUser || currentUser.hp <= 0) {
         alert("Bạn cần hồi phục máu trước!");
         return;
     }
 
-    // 3. Chọn ngẫu nhiên đối thủ từ danh sách
     const randIdx = Math.floor(Math.random() * enemies.length);
     const template = enemies[randIdx];
-    
-    // Gán dữ liệu vào biến enemy hiện tại (dùng spread để không lỗi dữ liệu gốc)
     enemy = { ...template, maxHp: template.hp };
-    isMyTurn = true;
     
-    // 4. Cập nhật thông tin đối thủ lên màn hình
+    // 2. PHẢI CÓ DÒNG NÀY: Trả lại lượt cho người chơi
+    isMyTurn = true; 
+
     document.getElementById('e-name').innerText = enemy.name;
     document.getElementById('e-img').src = enemy.img;
-    document.getElementById('battleLog').innerHTML = `Đã tìm thấy ${enemy.name}! Chuẩn bị chiến đấu...`;
-    
-    // 5. Mở khóa nút Tấn công và Tìm đối thủ
+    document.getElementById('battleLog').innerHTML = `Đã tìm thấy ${enemy.name}!`;
+
+    // 3. Mở khóa nút Tấn công
     const btnAttack = document.getElementById('btnAttack');
     if (btnAttack) btnAttack.disabled = false;
 
-    const btnFind = document.querySelector("button[onclick='startNewBattle()']");
-    if (btnFind) btnFind.disabled = false;
-
-    // 6. Cập nhật thanh máu/mana của quái mới
     updateCombatUI();
 };
 
@@ -1134,30 +1126,47 @@ function disableAllActionButtons(status) {
 
 // Người chơi tấn công
 window.playerAttack = function() {
+    // Nếu không phải lượt hoặc quái chết thì thoát
     if (!isMyTurn || enemy.hp <= 0) return;
 
-    // --- Kích hoạt Icon Mode ở đòn đánh đầu tiên ---
-    if (!document.getElementById('btnAttack').classList.contains('icon-mode')) {
-        switchToIconMode();
+    // BƯỚC 1: Nếu đang là nút chữ, chuyển sang Icon Mode
+    const btnAttack = document.getElementById('btnAttack');
+    if (!btnAttack.classList.contains('icon-mode')) {
+        switchToIconMode(); // Hiện 3 nút tròn
+        // Sau khi hiện Icon, ta không nên kết thúc lượt ngay để người chơi kịp chọn chiêu
+        // Nhưng nếu bạn muốn bấm "Tấn công" là đánh luôn 1 phát thì chạy tiếp code dưới
     }
 
-    // Khóa nút tìm đối thủ khi đang đánh
-    const btnFind = document.getElementById('btnFindEnemy');
+    // BƯỚC 2: Khóa nút tìm đối thủ
+    const btnFind = document.querySelector("button[onclick='startNewBattle()']");
     if(btnFind) btnFind.disabled = true;
 
-    // Logic tính sát thương... (giữ nguyên của bạn)
+    // BƯỚC 3: Tính sát thương
     const dmg = Math.max(5, (currentUser.str * 2) - enemy.def);
     enemy.hp = Math.max(0, enemy.hp - dmg);
     
+    // Hiệu ứng rung
+    const eImg = document.getElementById('e-img');
+    if (eImg) {
+        eImg.classList.add('shake');
+        setTimeout(() => eImg.classList.remove('shake'), 300);
+    }
+
     logBattle(`Bạn chém ${enemy.name}, gây ${dmg} sát thương!`);
     updateCombatUI();
     
+    // BƯỚC 4: Kiểm tra kết thúc hoặc đổi lượt
     if (enemy.hp <= 0) {
         winBattle();
     } else {
-        isMyTurn = false;
-        disableAllCombatButtons(true); // Khóa nút khi đến lượt địch
-        setTimeout(enemyTurn, 1000); 
+        isMyTurn = false; // Kết thúc lượt người chơi
+        
+        // Vô hiệu hóa TẤT CẢ các nút kỹ năng (để quái đánh)
+        document.getElementById('btnAttack').disabled = true;
+        if(document.getElementById('btnDagger')) document.getElementById('btnDagger').disabled = true;
+        if(document.getElementById('btnTanSat')) document.getElementById('btnTanSat').disabled = true;
+
+        setTimeout(enemyTurn, 1000); // Sau 1s tới lượt quái
     }
 };
 // Lượt của kẻ địch
