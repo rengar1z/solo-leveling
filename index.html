@@ -502,46 +502,68 @@
     }
 
     const skillData = {
-        "Phát Triển Cấp Tốc": "Tăng lượng EXP nhận được từ nhiệm vụ thêm 10%.",
-        "Thể Chất Siêu Phàm": "Tăng vĩnh viễn chỉ số Strength và Vitality.",
-        "Tái Tạo": "Tự động hồi phục HP sau mỗi nhiệm vụ.",
-        "Trị Thương": "Sử dụng MP để hồi phục lượng lớn HP ngay lập tức.",
-        "Siêu Giác Quan": "Tăng tỷ lệ né tránh và phát hiện quái vật hiếm.",
-        "Gia Tăng Chỉ Số": "Mỗi cấp tăng thêm điểm tiềm năng khi lên level.",
-        "Tàng Hình": "Ẩn thân hoàn toàn khỏi tầm mắt kẻ thù. (Yêu cầu: Hạng B)"
+        "Phát Triển Cấp Tốc": {
+            desc: "Tăng lượng EXP nhận được từ nhiệm vụ thêm 10%.",
+            icon: "https://cdn-icons-png.flaticon.com/512/1611/1611179.png" // Thay link ảnh của bạn vào đây
+    },
+        "Thể Chất Siêu Phàm": {
+            desc: "Tăng vĩnh viễn chỉ số Strength và Vitality.",
+            icon: "https://cdn-icons-png.flaticon.com/512/2972/2972185.png"
+    },
+        "Tái Tạo": {
+            desc: "Tự động hồi phục HP sau mỗi nhiệm vụ.",
+            icon: "https://cdn-icons-png.flaticon.com/512/822/822143.png"
+    },
+        "Trị Thương": {
+            desc: "Sử dụng MP để hồi phục lượng lớn HP ngay lập tức.",
+            icon: "https://cdn-icons-png.flaticon.com/512/2371/2371455.png"
+    },
+        "Siêu Giác Quan": {
+            desc: "Tăng tỷ lệ né tránh và phát hiện quái vật hiếm.",
+            icon: "https://cdn-icons-png.flaticon.com/512/1154/1154564.png"
+    },
+        "Gia Tăng Chỉ Số": {
+            desc: "Mỗi cấp tăng thêm điểm tiềm năng khi lên level.",
+            icon: "https://cdn-icons-png.flaticon.com/512/2545/2545551.png"
+    },
+        "Tàng Hình": {
+            desc: "Ẩn thân hoàn toàn khỏi tầm mắt kẻ thù. (Yêu cầu: Hạng B)",
+            icon: "https://cdn-icons-png.flaticon.com/512/2418/2418804.png"
+    }
 };
 
     window.renderSkills = function() {
     const skPointsElem = document.getElementById('skPoints');
     if (skPointsElem) {
-        // Hiển thị số điểm kỹ năng hiện có
         skPointsElem.innerText = currentUser.skillPoints || 0;
     }
 
     const list = document.getElementById('skillList');
-    if (!list) return; // Bảo vệ nếu chưa có element skillList
+    if (!list) return;
     list.innerHTML = '';
 
     Object.keys(currentUser.skills).forEach(s => {
         const lv = currentUser.skills[s];
         const isLocked = lv === 0;
-        const isMax = lv >= 3; // Kiểm tra nếu đã đạt cấp 3
-        
-        // Hạng B tương ứng với Level 20
-        const canUnlock = s !== "Tàng Hình" || currentUser.level >= 20; 
+        const isMax = lv >= 3;
+        const canUnlock = s !== "Tàng Hình" || currentUser.level >= 20;
 
         const div = document.createElement('div');
-        // Kỹ năng sẽ tối (locked) nếu lv = 0, và sáng (unlocked) nếu đã học
         div.className = `skill-item ${isLocked ? 'locked' : 'unlocked'}`;
         div.onclick = () => showSkillDetail(s);
         
-        // Logic hiển thị: Nếu cấp 3 trở lên thì hiện MAX màu vàng, ngược lại hiện Lv.x
         const lvDisplay = isMax ? 
             '<span style="color: gold; font-weight: bold;">MAX</span>' : 
             `Lv.${lv}`;
         
+        // Lấy link icon từ skillData, nếu không có thì dùng ảnh mặc định
+        const iconUrl = skillData[s] ? skillData[s].icon : "";
+
         div.innerHTML = `
-            <span>${s} (${lvDisplay})</span>
+            <div style="display: flex; align-items: center;">
+                <img src="${iconUrl}" style="width: 35px; height: 35px; margin-right: 15px; border-radius: 5px; border: 1px solid #00bfff;">
+                <span>${s} (${lvDisplay})</span>
+            </div>
             <button class="add-skill-btn" onclick="upgradeSkill(event, '${s}')" 
                 ${(currentUser.skillPoints > 0 && canUnlock && !isMax) ? '' : 'disabled'}>+</button>
         `;
@@ -553,7 +575,8 @@
         const det = document.getElementById('skillDetail');
         det.classList.remove('hidden');
         document.getElementById('detName').innerText = name;
-        document.getElementById('detDesc').innerText = skillData[name];
+        // Truy cập vào .desc thay vì lấy trực tiếp chuỗi
+        document.getElementById('detDesc').innerText = skillData[name].desc;
         document.getElementById('detReq').innerText = (name === "Tàng Hình" && currentUser.level < 20) ? "ĐIỀU KIỆN: ĐẠT HẠNG B (LEVEL 20)" : "";
 }
 
