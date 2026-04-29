@@ -277,6 +277,15 @@
     75% { transform: translateX(-5px); }
     100% { transform: translateX(0); }
 }
+        .avatar-frame {
+        width: 150px;           /* Chiều rộng cố định */
+        height: 200px;          /* Chiều cao cố định */
+        object-fit: cover;      /* Ép ảnh lấp đầy khung mà không bị méo */
+        object-position: top;   /* Ưu tiên hiển thị phần đầu nhân vật */
+        border-radius: 8px;     /* Bo góc cho đẹp */
+        border: 2px solid transparent; 
+        transition: 0.3s;
+    }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -409,31 +418,29 @@
             <div id="tab-minigame" class="tab-panel">
     <h2 style="color: #ff4d4d; text-align: center;">HẦM NGỤC KHIÊU CHIẾN</h2>
     
-    <div id="combatArea" class="card" style="display: flex; justify-content: space-between; align-items: flex-start; padding: 20px; background: rgba(0,0,0,0.8); min-height: 300px;">
-        <div style="text-align: center; width: 42%;">
-            <div id="p-name" style="color: #00bfff; font-weight: bold; font-size: 18px; margin-bottom: 10px; text-shadow: 0 0 5px #00bfff;">SUNG JIN WOO</div>
-            
-            <img id="p-img" src="SungJinWoov2.jpeg" style="width: 150px; height: 200px; object-fit: contain; filter: drop-shadow(0 0 10px #00bfff);">
-            
-            <div style="height: 12px; background: #333; margin: 10px 0; border: 1px solid #00bfff; border-radius: 3px; overflow: hidden;">
-                <div id="p-hp-bar" style="height: 100%; background: linear-gradient(90deg, #ff0000, #990000); width: 100%; transition: 0.5s;"></div>
-            </div>
-            <div id="p-hp-text" style="font-weight: bold;">HP: 100/100</div>
+    <div id="combatArea" class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(0,0,0,0.8); min-height: 300px;">
+    
+    <div style="text-align: center; width: 42%;">
+        <div id="p-name" style="color: #00bfff; font-weight: bold; margin-bottom: 10px;">SUNG JIN WOO</div>
+        <img id="p-img" src="Sungjinwoo.png" class="avatar-frame" style="filter: drop-shadow(0 0 15px #00bfff); border-color: #00bfff;">
+        
+        <div style="height: 10px; background: #333; margin: 10px 0;">
+            <div id="p-hp-bar" style="height: 100%; background: #ff0000; width: 100%; transition: 0.3s;"></div>
         </div>
+        <div id="p-hp-text">HP: 100/100</div>
+    </div>
 
-        <div style="font-size: 40px; color: gold; font-style: italic; align-self: center; text-shadow: 0 0 15px orange;">VS</div>
+    <div style="font-size: 40px; color: gold; font-style: italic; align-self: center;">VS</div>
 
-        <div style="text-align: center; width: 42%;">
-            <div id="e-name" style="color: #ff4d4d; font-weight: bold; font-size: 18px; margin-bottom: 10px; text-shadow: 0 0 5px #ff4d4d;">ĐỐI THỦ</div>
-            
-            <img id="e-img" src="HanSongYi.jpg" 
-                 style="width: 150px; height: 200px; object-fit: contain; filter: drop-shadow(0 0 10px #ff4d4d);">
-
-            <div style="height: 12px; background: #333; margin: 10px 0; border: 1px solid #ff4d4d; border-radius: 3px; overflow: hidden;">
-                <div id="e-hp-bar" style="height: 100%; background: linear-gradient(90deg, #990000, #ff0000); width: 100%; transition: 0.5s;"></div>
-            </div>
-            <div id="e-hp-text" style="font-weight: bold;">HP: 100/100</div>
+    <div style="text-align: center; width: 42%;">
+        <div id="e-name" style="color: #ff4d4d; font-weight: bold; margin-bottom: 10px;">ĐỐI THỦ</div>
+        <img id="e-img" src="enemy.png" class="avatar-frame" style="filter: drop-shadow(0 0 15px #ff4d4d); border-color: #ff4d4d;">
+        
+        <div style="height: 10px; background: #333; margin: 10px 0;">
+            <div id="e-hp-bar" style="height: 100%; background: #ff0000; width: 100%; transition: 0.3s;"></div>
         </div>
+        <div id="e-hp-text">HP: 100/100</div>
+    </div>
     </div>
 
     <div id="battleLog" style="height: 100px; overflow-y: auto; background: rgba(0,0,0,0.5); border: 1px solid #444; margin-top: 10px; padding: 10px; font-size: 14px; color: #ccc; font-family: monospace;">
