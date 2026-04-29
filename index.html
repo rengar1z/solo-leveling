@@ -228,6 +228,38 @@
             border-radius: 4px;
 }
         .add-skill-btn:disabled { background: #555; cursor: not-allowed; }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            background: rgba(0, 191, 255, 0.05);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            cursor: pointer;
+            transition: 0.3s;
+}
+        .stat-item:hover {
+            background: rgba(0, 191, 255, 0.15);
+}
+        .add-btn {
+            background: #00bfff;
+            color: #000;
+            border: none;
+            width: 24px;
+            height: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 3px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+}
+        .add-btn:disabled {
+            background: #444;
+            cursor: not-allowed;
+}
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -283,10 +315,36 @@
         <div class="barbox"><div class="bar" id="expBar"></div></div>
 
         <div class="stats">
-            <div>STRENGTH: <span id="str"></span></div><div>VITALITY: <span id="vit"></span></div>
-            <div>AGILITY: <span id="agi"></span></div><div>INTELLIGENCE: <span id="int"></span></div>
-            <div>SENSE: <span id="sense"></span></div><div>POINTS: <span id="points"></span></div>
-        </div>
+    <div class="stat-item" onclick="showStatDetail('STRENGTH')">
+        <span>STRENGTH: <span id="str">0</span></span>
+        <button class="add-btn" onclick="upgradeStat(event, 'str')">+</button>
+    </div>
+    <div class="stat-item" onclick="showStatDetail('VITALITY')">
+        <span>VITALITY: <span id="vit">0</span></span>
+        <button class="add-btn" onclick="upgradeStat(event, 'vit')">+</button>
+    </div>
+    <div class="stat-item" onclick="showStatDetail('AGILITY')">
+        <span>AGILITY: <span id="agi">0</span></span>
+        <button class="add-btn" onclick="upgradeStat(event, 'agi')">+</button>
+    </div>
+    <div class="stat-item" onclick="showStatDetail('INTELLIGENCE')">
+        <span>INTELLIGENCE: <span id="int">0</span></span>
+        <button class="add-btn" onclick="upgradeStat(event, 'int')">+</button>
+    </div>
+    <div class="stat-item" onclick="showStatDetail('SENSE')">
+        <span>SENSE: <span id="sense">0</span></span>
+        <button class="add-btn" onclick="upgradeStat(event, 'sense')">+</button>
+    </div>
+
+    <div style="margin-top: 15px; color: gold; font-weight: bold;">
+        AVAILABLE POINTS: <span id="points">0</span>
+    </div>
+
+    <div id="statDetail" class="card hidden" style="margin-top: 20px; border-color: #00bfff; background: rgba(0, 30, 60, 0.8);">
+        <h3 id="statDetName" style="color: #00bfff; margin-top: 0; text-transform: uppercase;"></h3>
+        <p id="statDetDesc" style="font-size: 16px; color: #eee; line-height: 1.4;"></p>
+    </div>
+</div>
 
         <div class="tabs-container">
     <div class="tabs-header">
@@ -596,6 +654,42 @@
         renderSkills();
     }
 }
+
+        const statDescriptions = {
+            'STRENGTH': 'Tăng sức mạnh vật lý. Mỗi điểm giúp tăng sát thương khi thực hiện các nhiệm vụ chiến đấu.',
+            'VITALITY': 'Tăng khả năng chịu đựng và lượng máu (HP) tối đa. Giúp bạn sống sót lâu hơn.',
+            'AGILITY': 'Tăng tốc độ và khả năng phản xạ. Giúp giảm tiêu hao thể lực và tăng tỷ lệ né tránh.',
+            'INTELLIGENCE': 'Tăng trí tuệ và lượng năng lượng (MP) tối đa. Cần thiết để sử dụng các kỹ năng đặc biệt.',
+            'SENSE': 'Tăng trực giác. Giúp phát hiện các mối nguy hiểm sớm hơn và tăng tỷ lệ nhận vật phẩm hiếm.'
+};
+
+// Hàm hiển thị thông tin chỉ số
+        window.showStatDetail = function(statName) {
+            const det = document.getElementById('statDetail');
+            det.classList.remove('hidden');
+            document.getElementById('statDetName').innerText = statName;
+            document.getElementById('statDetDesc').innerText = statDescriptions[statName];
+};
+
+// Hàm cộng điểm chỉ số
+        window.upgradeStat = async function(e, statKey) {
+        e.stopPropagation(); // Ngăn chặn việc mở bảng thông tin khi bấm dấu +
+    
+        if (currentUser.points > 0) {
+            currentUser[statKey]++;
+            currentUser.points--;
+
+        // Cập nhật lại HP/MP tối đa nếu cộng vào VIT/INT
+            if (statKey === 'vit') currentUser.maxHp = 100 + (currentUser.vit * 10);
+            if (statKey === 'int') currentUser.maxMp = 50 + (currentUser.int * 5);
+
+        // Lưu vào Firebase
+            await set(ref(db, 'users/' + currentUser.username), currentUser);
+        render(); // Gọi hàm render chính để cập nhật toàn bộ giao diện
+    } else {
+        alert("Bạn không đủ điểm tiềm năng!");
+    }
+};
     function render() {
         document.getElementById('playerName').innerText = currentUser.username;
         document.getElementById('level').innerText = currentUser.level;
@@ -643,6 +737,10 @@
     if (window.renderSkills) {
         window.renderSkills();
     }
+        const addBtns = document.getElementsByClassName('add-btn');
+        for (let btn of addBtns) {
+            btn.disabled = currentUser.points <= 0;
+    }       
 }
         window.openTab = function(evt, tabName) {
     // Ẩn tất cả các tab panel
