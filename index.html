@@ -356,7 +356,6 @@
 .hidden-skill {
     display: none !important;
 }
-
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -519,15 +518,11 @@
     </div>
 
     <div id="actionControls" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px; width: 100%;">
-    <div id="skillRow" style="display: flex; gap: 15px; justify-content: center; align-items: center; width: 100%;">
-        
-        <button id="btnAttack" class="tab-btn btn-system" onclick="playerAttack()" style="flex: 1;">
-            TẤN CÔNG
-        </button>
-        
-        <button id="btnDagger" class="tab-btn btn-system" onclick="useDaggerRush()" style="display: none;"></button>
-        <button id="btnTanSat" class="tab-btn btn-system" onclick="useTanSat()" style="display: none;"></button>
-    </div>
+   <div id="skillRow" style="display: flex; gap: 15px; justify-content: center; align-items: center; width: 100%;">
+    <button id="btnAttack" class="tab-btn btn-system" onclick="playerAttack()" style="flex: 1;">TẤN CÔNG</button>
+    <button id="btnDagger" class="tab-btn btn-system hidden-skill" onclick="useDaggerRush()"></button>
+    <button id="btnTanSat" class="tab-btn btn-system hidden-skill" onclick="useTanSat()"></button>
+</div>
 
     <button id="btnFindEnemy" class="tab-btn btn-system" onclick="startNewBattle()" style="width: 100%;">
         TÌM ĐỐI THỦ MỚI
@@ -744,54 +739,49 @@
 };
 
     function switchToIconMode() {
-    // 1. Biến nút Tấn công thành Icon tròn
     const btnAtk = document.getElementById('btnAttack');
     btnAtk.classList.add('icon-mode');
+    btnAtk.classList.remove('btn-system'); // Bỏ giao diện chữ nhật
     btnAtk.innerHTML = `<img src="attack.jpg">`;
     btnAtk.style.flex = "none";
 
-    // 2. Hiện nút Dagger Rush (nếu đã học)
+    // Hiện Dagger Rush nếu đã học
     if (currentUser.skills["Dagger Rush"] > 0) {
         const btnD = document.getElementById('btnDagger');
-        btnD.style.display = "flex";
+        btnD.classList.remove('hidden-skill'); // Gỡ bỏ class ẩn
+        btnD.style.display = "flex"; 
         btnD.classList.add('icon-mode');
         btnD.innerHTML = `<img src="dagger.jpg">`;
-        btnD.disabled = (currentUser.mp < 35);
     }
 
-    // 3. Hiện nút Tàn Sát (nếu đã học)
+    // Hiện Tàn sát nếu đã học
     if (currentUser.skills["Tàn sát"] > 0) {
         const btnT = document.getElementById('btnTanSat');
+        btnT.classList.remove('hidden-skill'); // Gỡ bỏ class ẩn
         btnT.style.display = "flex";
         btnT.classList.add('icon-mode');
         btnT.innerHTML = `<img src="amsat.jpg">`;
-        btnT.disabled = (currentUser.mp < 50);
     }
-
-    // Khóa nút Tìm đối thủ khi đang trong trận
-    document.getElementById('btnFindEnemy').disabled = true;
 }
 
 function resetToButtonMode() {
     const btnAtk = document.getElementById('btnAttack');
     if (btnAtk) {
         btnAtk.classList.remove('icon-mode');
+        btnAtk.classList.add('btn-system');
         btnAtk.innerHTML = "TẤN CÔNG";
         btnAtk.style.flex = "1";
-        btnAtk.style.display = "block";
     }
 
-    // Ẩn các nút kỹ năng đặc biệt
+    // Ẩn các nút đặc biệt bằng cách thêm lại class hidden-skill
     ['btnDagger', 'btnTanSat'].forEach(id => {
         const btn = document.getElementById(id);
         if (btn) {
             btn.style.display = "none";
+            btn.classList.add('hidden-skill');
             btn.classList.remove('icon-mode');
         }
     });
-
-    // Mở lại nút Tìm đối thủ
-    document.getElementById('btnFindEnemy').disabled = false;
 }
 
     window.useDaggerRush = function() {
