@@ -267,6 +267,16 @@
             image-rendering: pixelated; /* Giúp ảnh pixel không bị mờ */
             background-image: url('https://i.imgur.com/your-pixel-background.png'); /* Có thể thêm nền map */
 }
+        .shake {
+    animation: shake 0.3s;
+}
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -399,33 +409,39 @@
             <div id="tab-minigame" class="tab-panel">
     <h2 style="color: #ff4d4d; text-align: center;">HẦM NGỤC KHIÊU CHIẾN</h2>
     
-    <div id="combatArea" class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(0,0,0,0.8);">
-        <div style="text-align: center; width: 40%;">
-            <div id="p-name" style="color: #00bfff; font-weight: bold;">SUNG JIN WOO</div>
-            <div style="height: 10px; background: #333; margin: 10px 0;">
-                <div id="p-hp-bar" style="height: 100%; background: #ff0000; width: 100%; transition: 0.3s;"></div>
+    <div id="combatArea" class="card" style="display: flex; justify-content: space-between; align-items: flex-start; padding: 20px; background: rgba(0,0,0,0.8); min-height: 300px;">
+        <div style="text-align: center; width: 42%;">
+            <div id="p-name" style="color: #00bfff; font-weight: bold; font-size: 18px; margin-bottom: 10px; text-shadow: 0 0 5px #00bfff;">SUNG JIN WOO</div>
+            
+            <img id="p-img" src="Sungjinwoo.png" style="width: 120px; height: 150px; object-fit: contain; filter: drop-shadow(0 0 10px #00bfff); margin-bottom: 10px;">
+            
+            <div style="height: 12px; background: #333; margin: 10px 0; border: 1px solid #00bfff; border-radius: 3px; overflow: hidden;">
+                <div id="p-hp-bar" style="height: 100%; background: linear-gradient(90deg, #ff0000, #990000); width: 100%; transition: 0.5s;"></div>
             </div>
-            <div id="p-hp-text">HP: 100/100</div>
+            <div id="p-hp-text" style="font-weight: bold;">HP: 100/100</div>
         </div>
 
-        <div style="font-size: 40px; color: gold; font-style: italic;">VS</div>
+        <div style="font-size: 40px; color: gold; font-style: italic; align-self: center; text-shadow: 0 0 15px orange;">VS</div>
 
-        <div style="text-align: center; width: 40%;">
-            <div id="e-name" style="color: #ff4d4d; font-weight: bold;">THỢ SĂN HẠNG C</div>
-            <div style="height: 10px; background: #333; margin: 10px 0;">
-                <div id="e-hp-bar" style="height: 100%; background: #ff0000; width: 100%; transition: 0.3s;"></div>
+        <div style="text-align: center; width: 42%;">
+            <div id="e-name" style="color: #ff4d4d; font-weight: bold; font-size: 18px; margin-bottom: 10px; text-shadow: 0 0 5px #ff4d4d;">ĐỐI THỦ</div>
+            
+            <img id="e-img" src="https://via.placeholder.com/120x150?text=Enemy" style="width: 120px; height: 150px; object-fit: contain; filter: drop-shadow(0 0 10px #ff4d4d); margin-bottom: 10px;">
+            
+            <div style="height: 12px; background: #333; margin: 10px 0; border: 1px solid #ff4d4d; border-radius: 3px; overflow: hidden;">
+                <div id="e-hp-bar" style="height: 100%; background: linear-gradient(90deg, #990000, #ff0000); width: 100%; transition: 0.5s;"></div>
             </div>
-            <div id="e-hp-text">HP: 100/100</div>
+            <div id="e-hp-text" style="font-weight: bold;">HP: 100/100</div>
         </div>
     </div>
 
-    <div id="battleLog" style="height: 100px; overflow-y: auto; background: rgba(0,0,0,0.5); border: 1px solid #444; margin-top: 10px; padding: 10px; font-size: 14px; color: #ccc;">
+    <div id="battleLog" style="height: 100px; overflow-y: auto; background: rgba(0,0,0,0.5); border: 1px solid #444; margin-top: 10px; padding: 10px; font-size: 14px; color: #ccc; font-family: monospace;">
         Sẵn sàng khiêu chiến...
     </div>
 
     <div style="display: flex; gap: 10px; margin-top: 15px;">
-        <button id="btnAttack" onclick="playerAttack()" style="flex: 1;">TẤN CÔNG</button>
-        <button onclick="startNewBattle()" style="flex: 1; background: #555;">TÌM ĐỐI THỦ MỚI</button>
+        <button id="btnAttack" class="tab-btn" onclick="playerAttack()" style="flex: 1; background: #ff4d4d; color: white;">TẤN CÔNG</button>
+        <button class="tab-btn" onclick="startNewBattle()" style="flex: 1; background: #555;">TÌM ĐỐI THỦ MỚI</button>
     </div>
 </div>
 
@@ -814,17 +830,28 @@
 let isMyTurn = true;
 
 const enemies = [
-    { name: "Thợ Săn Hạng E", hp: 80, atk: 10, def: 5, exp: 20 },
-    { name: "Thợ Săn Hạng D", hp: 150, atk: 25, def: 15, exp: 50 },
-    { name: "Thợ Săn Hạng C", hp: 300, atk: 50, def: 30, exp: 120 },
-    { name: "Thợ Săn Hạng B", hp: 600, atk: 100, def: 70, exp: 300 }
+    { 
+        name: "Thợ Săn Hạng E", hp: 80, atk: 10, def: 5, exp: 20, 
+        img: "HanSongYi.jpg" // Thay link hình thật vào đây
+    },
+    { 
+        name: "Thợ Săn Hạng D", hp: 150, atk: 25, def: 15, exp: 50,
+        img: "https://i.imgur.com/your-enemy-d.png"
+    },
+    { 
+        name: "Thợ Săn Hạng C", hp: 300, atk: 50, def: 30, exp: 120,
+        img: "https://i.imgur.com/your-enemy-c.png"
+    },
+    { 
+        name: "Thợ Săn Hạng B", hp: 600, atk: 100, def: 70, exp: 300,
+        img: "https://i.imgur.com/your-enemy-b.png"
+    }
 ];
 
 // Hàm bắt đầu trận đấu mới
 window.startNewBattle = function() {
     if (!currentUser) return;
     
-    // Chọn ngẫu nhiên kẻ địch dựa trên level người chơi (ví dụ đơn giản)
     const randIdx = Math.floor(Math.random() * Math.min(enemies.length, Math.floor(currentUser.level/5) + 1));
     const template = enemies[randIdx];
     
@@ -832,6 +859,11 @@ window.startNewBattle = function() {
     isMyTurn = true;
     
     document.getElementById('e-name').innerText = enemy.name;
+    // Cập nhật ảnh đối thủ
+    document.getElementById('e-img').src = enemy.img;
+    // Cập nhật ảnh của bạn (lấy từ ảnh nhân vật chính)
+    document.getElementById('p-img').src = "Sungjinwoo.png"; 
+
     document.getElementById('battleLog').innerHTML = `Bắt đầu khiêu chiến với ${enemy.name}!`;
     document.getElementById('btnAttack').disabled = false;
     updateCombatUI();
@@ -854,10 +886,18 @@ function updateCombatUI() {
 window.playerAttack = function() {
     if (!isMyTurn || enemy.hp <= 0) return;
 
-    // Tính sát thương dựa trên STRENGTH của bạn
+    // --- GIỮ NGUYÊN CÁC DÒNG TÍNH DMG CŨ ---
     const dmg = Math.max(5, (currentUser.str * 2) - enemy.def);
     enemy.hp = Math.max(0, enemy.hp - dmg);
     
+    // --- THÊM HIỆU ỨNG RUNG Ở ĐÂY ---
+    const eImg = document.getElementById('e-img');
+    if (eImg) {
+        eImg.classList.add('shake');
+        setTimeout(() => eImg.classList.remove('shake'), 300);
+    }
+    // -------------------------------
+
     logBattle(`Bạn chém ${enemy.name}, gây ${dmg} sát thương!`);
     updateCombatUI();
     
@@ -866,22 +906,29 @@ window.playerAttack = function() {
     } else {
         isMyTurn = false;
         document.getElementById('btnAttack').disabled = true;
-        setTimeout(enemyTurn, 1000); // Đợi 1 giây kẻ địch đánh trả
+        setTimeout(enemyTurn, 1000); 
     }
 };
-
 // Lượt của kẻ địch
 function enemyTurn() {
-    if (enemy.hp <= 0) return;
+    if (enemy.hp <= 0 || !currentUser) return;
 
-    // Tính sát thương dựa trên chỉ số VITALITY (phòng thủ) của bạn
+    // --- GIỮ NGUYÊN CÁC DÒNG TÍNH DMG CỦA ĐỊCH ---
     const defensePower = currentUser.vit;
     const dmg = Math.max(2, enemy.atk - Math.floor(defensePower / 2));
     
+    // --- THÊM HIỆU ỨNG RUNG CHO BẠN Ở ĐÂY ---
+    const pImg = document.getElementById('p-img');
+    if (pImg) {
+        pImg.classList.add('shake');
+        setTimeout(() => pImg.classList.remove('shake'), 300);
+    }
+    // ---------------------------------------
+
     currentUser.hp = Math.max(0, currentUser.hp - dmg);
     logBattle(`${enemy.name} phản công, bạn mất ${dmg} HP.`);
     updateCombatUI();
-    render(); // Cập nhật thanh HP tổng của hệ thống
+    render(); 
 
     if (currentUser.hp <= 0) {
         logBattle(`<span style="color:red">Bạn đã thất bại! Hãy rèn luyện thêm.</span>`);
