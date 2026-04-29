@@ -496,30 +496,40 @@
 };
 
     window.renderSkills = function() {
-        const skPointsElem = document.getElementById('skPoints');
-        if (skPointsElem) {
-        // Cập nhật con số Skill Point hiện có lên giao diện
+    const skPointsElem = document.getElementById('skPoints');
+    if (skPointsElem) {
+        // Hiển thị số điểm kỹ năng hiện có
         skPointsElem.innerText = currentUser.skillPoints || 0;
     }
-        const list = document.getElementById('skillList');
-        document.getElementById('skPoints').innerText = currentUser.skillPoints;
-        list.innerHTML = '';
 
-        Object.keys(currentUser.skills).forEach(s => {
-            const lv = currentUser.skills[s];
-            const isLocked = lv === 0;
-            const canUnlock = s !== "Tàng Hình" || currentUser.level >= 20; // Hạng B là level 20
+    const list = document.getElementById('skillList');
+    if (!list) return; // Bảo vệ nếu chưa có element skillList
+    list.innerHTML = '';
 
-            const div = document.createElement('div');
-            div.className = `skill-item ${isLocked ? 'locked' : 'unlocked'}`;
-            div.onclick = () => showSkillDetail(s);
+    Object.keys(currentUser.skills).forEach(s => {
+        const lv = currentUser.skills[s];
+        const isLocked = lv === 0;
+        const isMax = lv >= 3; // Kiểm tra nếu đã đạt cấp 3
         
-            div.innerHTML = `
-                <span>${s} (Lv.${lv})</span>
-                <button class="add-skill-btn" onclick="upgradeSkill(event, '${s}')" 
-                    ${(currentUser.skillPoints > 0 && canUnlock) ? '' : 'disabled'}>+</button>
-            `;
-            list.appendChild(div);
+        // Hạng B tương ứng với Level 20
+        const canUnlock = s !== "Tàng Hình" || currentUser.level >= 20; 
+
+        const div = document.createElement('div');
+        // Kỹ năng sẽ tối (locked) nếu lv = 0, và sáng (unlocked) nếu đã học
+        div.className = `skill-item ${isLocked ? 'locked' : 'unlocked'}`;
+        div.onclick = () => showSkillDetail(s);
+        
+        // Logic hiển thị: Nếu cấp 3 trở lên thì hiện MAX màu vàng, ngược lại hiện Lv.x
+        const lvDisplay = isMax ? 
+            '<span style="color: gold; font-weight: bold;">MAX</span>' : 
+            `Lv.${lv}`;
+        
+        div.innerHTML = `
+            <span>${s} (${lvDisplay})</span>
+            <button class="add-skill-btn" onclick="upgradeSkill(event, '${s}')" 
+                ${(currentUser.skillPoints > 0 && canUnlock && !isMax) ? '' : 'disabled'}>+</button>
+        `;
+        list.appendChild(div);
     });
 }
 
@@ -532,12 +542,19 @@
 }
 
     window.upgradeSkill = async function(e, name) {
-        e.stopPropagation(); // Ngăn việc hiện bảng chi tiết khi bấm dấu +
-        if (currentUser.skillPoints > 0) {
-            currentUser.skills[name]++;
-            currentUser.skillPoints--;
-            await set(ref(db, 'users/' + currentUser.username), currentUser);
-            renderSkills();
+        e.stopPropagation(); 
+    // Thêm điều kiện: currentUser.skills[name] < 3
+        if (currentUser.skillPoints > 0 && currentUser.skills[name] < 3) {
+        // Kiểm tra điều kiện Tàng Hình
+        if (name === "Tàng Hình" && currentUser.level < 20) {
+            alert("Cần đạt Hạng B (Level 20) để học kỹ năng này!");
+            return;
+        }
+
+        currentUser.skills[name]++;
+        currentUser.skillPoints--;
+        await set(ref(db, 'users/' + currentUser.username), currentUser);
+        renderSkills();
     }
 }
     function render() {
