@@ -786,19 +786,19 @@
     evt.currentTarget.classList.add("active");
 }
 
-    const canvas = document.getElementById('gameCanvas');
+const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-const playerImg = new Image();
-playerImg.src = 'pixel.jpg';
-    playerImg.onload = () => {
-    drawGame();
+
 // Khởi tạo kích thước thực cho canvas
 canvas.width = 800;
 canvas.height = 300;
 
-let player = { x: 50, y: 200, width: 30, height: 40, speed: 5, color: '#00bfff' };
+let player = { x: 50, y: 200, width: 40, height: 50, speed: 5, color: '#00bfff' };
 let monsters = [];
 let keys = {};
+
+const playerImg = new Image();
+playerImg.src = 'pixel.jpg'; // Đảm bảo file này nằm cùng thư mục với index.html
 
 // Theo dõi phím bấm
 window.addEventListener('keydown', e => keys[e.code] = true);
@@ -816,6 +816,8 @@ function spawnMonster() {
 }
 
 function updateGame() {
+    if (!currentUser) return; // Chỉ chạy khi đã đăng nhập
+
     // Điều khiển nhân vật
     if (keys['ArrowUp'] && player.y > 0) player.y -= player.speed;
     if (keys['ArrowDown'] && player.y < canvas.height - player.height) player.y += player.speed;
@@ -829,28 +831,28 @@ function updateGame() {
         if (player.x < m.x + m.width && player.x + player.width > m.x &&
             player.y < m.y + m.height && player.y + player.height > m.y) {
             monsters.splice(index, 1);
-            currentUser.hp -= 5; // Bị quái chạm trừ 5 HP
+            currentUser.hp = Math.max(0, currentUser.hp - 5); // Bị quái chạm trừ 5 HP
             render(); // Cập nhật thanh HP bên ngoài
         }
-        // Xóa quái khi ra khỏi màn hình
         if (m.x + m.width < 0) monsters.splice(index, 1);
     });
 
-    if (Math.random() < 0.02) spawnMonster(); // Tỷ lệ xuất hiện quái
+    if (Math.random() < 0.02) spawnMonster();
 }
 
 function drawGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Vẽ nhân vật (Bạn có thể thay ctx.fillRect bằng ctx.drawImage nếu có ảnh pixel)
-    ctx.fillStyle = player.color;
-    ctx.shadowBlur = 10;
-    ctx.shadowColor = '#00bfff';
-    ctx.fillRect(player.x, player.y, player.width, player.height);
+    // Vẽ nhân vật Sung Jin Woo Pixel
+    if (playerImg.complete) {
+        ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
+    } else {
+        ctx.fillStyle = player.color;
+        ctx.fillRect(player.x, player.y, player.width, player.height);
+    }
 
     // Vẽ quái vật
     ctx.fillStyle = '#ff4d4d';
-    ctx.shadowColor = '#ff4d4d';
     monsters.forEach(m => ctx.fillRect(m.x, m.y, m.width, m.height));
 
     requestAnimationFrame(() => {
@@ -859,8 +861,9 @@ function drawGame() {
     });
 }
 
-// Bắt đầu chạy game
+// Khởi động vòng lặp game ngay lập tức
 drawGame();
+
 </script>
 </body>
 </html>
