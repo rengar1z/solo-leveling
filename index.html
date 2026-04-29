@@ -786,6 +786,72 @@
     evt.currentTarget.classList.add("active");
 }
 
+    const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = 800;
+canvas.height = 300;
+
+let player = { x: 50, y: 200, width: 30, height: 40, speed: 5, color: '#00bfff' };
+let monsters = [];
+let keys = {};
+const playerImg = new Image();
+playerImg.src = 'pixel.jpg'; 
+
+window.addEventListener('keydown', e => keys[e.code] = true);
+window.addEventListener('keyup', e => keys[e.code] = false);
+
+function spawnMonster() {
+    monsters.push({
+        x: canvas.width,
+        y: Math.random() * (canvas.height - 40),
+        width: 30, height: 30,
+        speed: 2 + Math.random() * 2
+    });
+}
+
+function updateGame() {
+    // CHỐT CHẶN: Nếu chưa đăng nhập thì không chạy logic game
+    if (!currentUser) return; 
+
+    if (keys['ArrowUp'] && player.y > 0) player.y -= player.speed;
+    if (keys['ArrowDown'] && player.y < canvas.height - player.height) player.y += player.speed;
+    if (keys['ArrowLeft'] && player.x > 0) player.x -= player.speed;
+    if (keys['ArrowRight'] && player.x < canvas.width - player.width) player.x += player.speed;
+
+    monsters.forEach((m, index) => {
+        m.x -= m.speed;
+        if (player.x < m.x + m.width && player.x + player.width > m.x &&
+            player.y < m.y + m.height && player.y + player.height > m.y) {
+            monsters.splice(index, 1);
+            currentUser.hp = Math.max(0, currentUser.hp - 5);
+            render(); 
+        }
+        if (m.x + m.width < 0) monsters.splice(index, 1);
+    });
+    if (Math.random() < 0.02) spawnMonster();
+}
+
+function drawGame() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Vẽ nhân vật (Ưu tiên ảnh, nếu lỗi thì vẽ hình vuông)
+    if (playerImg.complete && playerImg.naturalWidth !== 0) {
+        ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
+    } else {
+        ctx.fillStyle = player.color;
+        ctx.fillRect(player.x, player.y, player.width, player.height);
+    }
+    ctx.fillStyle = '#ff4d4d';
+    monsters.forEach(m => ctx.fillRect(m.x, m.y, m.width, m.height));
+
+    requestAnimationFrame(() => {
+        updateGame();
+        drawGame();
+    });
+}
+
+// Chạy hàm vẽ game độc lập
+drawGame();
+
 
 
 </script>
