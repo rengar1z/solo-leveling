@@ -1027,11 +1027,11 @@ function triggerShake() {
     evt.currentTarget.classList.add("active");
 }
 
-    let enemy = { ...enemies[0], maxHp: enemies[0].hp };
-    updateCombatUI();
+    let enemy = null;
     let isMyTurn = true;
 
-const enemies = [
+    // Khai báo danh sách quái vật
+    const enemies = [
     { 
         name: "Thợ Săn Hạng E", hp: 80, atk: 10, def: 5, exp: 20, 
         img: "HanSongYi.jpg" // Thay link hình thật vào đây
