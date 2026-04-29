@@ -428,10 +428,17 @@
         Sẵn sàng khiêu chiến...
     </div>
 
-    <div style="display: flex; gap: 10px; margin-top: 15px;">
+    <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+    <div style="display: flex; gap: 10px;">
         <button id="btnAttack" class="tab-btn" onclick="playerAttack()" style="flex: 1; background: #ff4d4d; color: white;">TẤN CÔNG</button>
-        <button class="tab-btn" onclick="startNewBattle()" style="flex: 1; background: #555;">TÌM ĐỐI THỦ MỚI</button>
+        
+        <button id="btnDagger" class="tab-btn" onclick="useDaggerRush()" style="flex: 1; background: #4a90e2; color: white; display: none;">DAGGER RUSH (35 MP)</button>
+        
+        <button id="btnTanSat" class="tab-btn" onclick="useTanSat()" style="flex: 1; background: #d0021b; color: white; display: none;">TÀN SÁT (50 MP)</button>
     </div>
+
+    <button id="btnFindEnemy" class="tab-btn" onclick="startNewBattle()" style="width: 100%; background: #555;">TÌM ĐỐI THỦ MỚI</button>
+</div>
 </div>
 
 
