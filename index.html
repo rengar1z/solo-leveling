@@ -1062,41 +1062,37 @@ const enemies = [
 
 // Hàm bắt đầu trận đấu mới
 window.startNewBattle = function() {
-    // 1. Ép giao diện về dạng Button chữ đỏ trước khi làm bất cứ việc gì khác
+    // 1. Ép giao diện về dạng nút chữ (giống nút Tìm đối thủ mới)
     resetToButtonMode(); 
 
-    // 2. Kiểm tra điều kiện bắt đầu
+    // 2. Kiểm tra điều kiện (Máu, tồn tại User)
     if (!currentUser) return;
     if (currentUser.hp <= 0) {
         alert("Bạn cần hồi phục máu trước!");
         return;
-    } // Đã thêm dấu đóng ngoặc } bị thiếu ở đây
+    }
 
-    // 3. Chọn ngẫu nhiên kẻ địch
+    // 3. Chọn ngẫu nhiên đối thủ từ danh sách
     const randIdx = Math.floor(Math.random() * enemies.length);
     const template = enemies[randIdx];
     
-    // Gán dữ liệu (dùng spread operator để copy tránh ghi đè dữ liệu gốc)
+    // Gán dữ liệu vào biến enemy hiện tại (dùng spread để không lỗi dữ liệu gốc)
     enemy = { ...template, maxHp: template.hp };
     isMyTurn = true;
     
-    // 4. CẬP NHẬT GIAO DIỆN
+    // 4. Cập nhật thông tin đối thủ lên màn hình
     document.getElementById('e-name').innerText = enemy.name;
     document.getElementById('e-img').src = enemy.img;
-    document.getElementById('battleLog').innerHTML = `Đã tìm thấy ${enemy.name}!`;
+    document.getElementById('battleLog').innerHTML = `Đã tìm thấy ${enemy.name}! Chuẩn bị chiến đấu...`;
     
-    // 5. Quản lý trạng thái nút
-    // Mở khóa nút Tấn công (lúc này đã là nút chữ đỏ do resetToButtonMode gọi trước đó)
+    // 5. Mở khóa nút Tấn công và Tìm đối thủ
     const btnAttack = document.getElementById('btnAttack');
-    if (btnAttack) {
-        btnAttack.disabled = false;
-    }
+    if (btnAttack) btnAttack.disabled = false;
 
-    // Nút Tìm đối thủ có thể để bật hoặc tắt tùy bạn (ở đây là để bật)
     const btnFind = document.querySelector("button[onclick='startNewBattle()']");
     if (btnFind) btnFind.disabled = false;
 
-    // 6. Cập nhật thanh máu/mana của quái vật mới
+    // 6. Cập nhật thanh máu/mana của quái mới
     updateCombatUI();
 };
 
