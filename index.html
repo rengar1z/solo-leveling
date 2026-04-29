@@ -98,9 +98,61 @@
         opacity: 0.8;
     }
 }
+        .welcome-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+        .welcome-box {
+    width: 450px;
+    background: linear-gradient(to bottom, #001a33, #003366);
+    border-top: 2px solid #336699;
+    border-bottom: 2px solid #336699;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0, 191, 255, 0.5);
+    font-family: 'Oswald', sans-serif;
+}
+
+        .alert-header {
+    color: #fff;
+    font-size: 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+        .alert-content {
+    color: #fff;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+        .player-text {
+    color: #a3cf62; 
+}
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
+    
+<div id="welcomeAlert" class="welcome-overlay hidden">
+    <div class="welcome-box">
+        <div class="alert-header">
+            <span class="symbol">①</span> Alert <span class="symbol">①</span>
+        </div>
+        <div class="alert-content">
+            [ Welcome, <span class="player-text">player.</span> ]
+        </div>
+    </div>
+</div>    
 
 <div id="debug">Hệ thống đang khởi tạo...</div>
 
@@ -212,13 +264,15 @@
         if(!u || !p) return alert('Vui lòng nhập đầy đủ');
         const s = await get(child(ref(db), 'users/' + u));
         if (s.exists()) return alert('Tên thợ săn đã được sử dụng');
-        
+
         const userData = {
             username: u, password: p, level: 1, exp: 0, need: 100,
             hp: 100, maxHp: 100, mp: 50, maxMp: 50,
             str: 5, agi: 5, int: 5, vit: 5, sense: 5, points: 0,
-            claimedDate: '', streak: 0, logs: []
-        };
+            claimedDate: '', streak: 0, logs: [],
+            isNew: true
+};
+        
         await set(ref(db, 'users/' + u), userData);
         alert('Thức tỉnh thành công! Hãy đăng nhập.');
     }
@@ -232,6 +286,17 @@
         
         currentUser = data;
         // Bổ sung các chỉ số còn thiếu nếu là acc cũ
+        if (currentUser.isNew) {
+        const welcome = document.getElementById('welcomeAlert');
+        welcome.classList.remove('hidden');
+        
+        // Tự động tắt sau 3 giây và cập nhật lại trạng thái không còn là người mới
+        setTimeout(async () => {
+            welcome.classList.add('hidden');
+            currentUser.isNew = false;
+            await set(ref(db, 'users/' + currentUser.username), currentUser);
+        }, 3000);
+    }
         currentUser.maxHp = currentUser.maxHp || 100;
         currentUser.maxMp = currentUser.maxMp || 50;
         
