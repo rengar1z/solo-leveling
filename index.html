@@ -853,20 +853,24 @@ const enemies = [
 window.startNewBattle = function() {
     if (!currentUser) return;
     
+    // Chọn ngẫu nhiên hoàn toàn trong danh sách enemies
     const randIdx = Math.floor(Math.random() * enemies.length);
     const template = enemies[randIdx];
     
+    // Gán dữ liệu thợ săn đã chọn vào biến enemy hiện tại
     enemy = { ...template, maxHp: template.hp };
     isMyTurn = true;
-
-    document.getElementById('e-name').innerText = enemy.name;
-    document.getElementById('e-img').src = enemy.img;
-    document.getElementById('p-img').src = "Sungjinwoo.png"; 
-
-    document.getElementById('battleLog').innerHTML = `Đã tìm thấy ${enemy.name}. Hãy chọn TẤN CÔNG để bắt đầu!`;
     
+    // CẬP NHẬT GIAO DIỆN
+    document.getElementById('e-name').innerText = enemy.name; // Đổi tên
+    
+    // Dòng này là dòng thay đổi hình ảnh:
+    document.getElementById('e-img').src = enemy.img; 
+
+    document.getElementById('battleLog').innerHTML = `Đã tìm thấy ${enemy.name}!`;
+    
+    // Mở lại nút Tấn công và Tìm đối thủ
     document.getElementById('btnAttack').disabled = false;
-    
     const btnFind = document.querySelector("button[onclick='startNewBattle()']");
     if(btnFind) btnFind.disabled = false;
 
