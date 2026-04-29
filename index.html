@@ -158,6 +158,18 @@
             padding: 10px; border-bottom: 1px solid rgba(0,191,255,0.2); 
             font-size: 22px; color: #fff; text-shadow: 0 0 5px #00bfff;
 }
+        #titleSelect option {
+            background-color: #001a33; /* Màu nền tối giống giao diện game */
+            color: #fff;              /* Màu chữ trắng để dễ nhìn */
+            font-family: 'Oswald', sans-serif;
+            padding: 10px;
+}    
+
+/* Loại bỏ viền đen mặc định khi nhấn vào trên một số trình duyệt */
+        #titleSelect:focus {
+            outline: none;
+            box-shadow: 0 0 15px #00bfff;
+}
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
