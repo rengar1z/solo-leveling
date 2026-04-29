@@ -496,6 +496,11 @@
 };
 
     window.renderSkills = function() {
+        const skPointsElem = document.getElementById('skPoints');
+        if (skPointsElem) {
+        // Cập nhật con số Skill Point hiện có lên giao diện
+        skPointsElem.innerText = currentUser.skillPoints || 0;
+    }
         const list = document.getElementById('skillList');
         document.getElementById('skPoints').innerText = currentUser.skillPoints;
         list.innerHTML = '';
@@ -568,6 +573,9 @@
         document.getElementById('logs').innerHTML = (currentUser.logs || []).slice().reverse().join('<br>');
         if (currentUser.title) {
         document.getElementById('titleSelect').value = currentUser.title;
+    }
+        if (window.renderSkills) {
+        window.renderSkills();
     }
     }
         window.openTab = function(evt, tabName) {
