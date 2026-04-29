@@ -651,6 +651,56 @@
     }
 };
 
+    window.useDaggerRush = function() {
+    if (!isMyTurn || enemy.hp <= 0 || currentUser.mp < 35) return;
+
+    currentUser.mp -= 35; // Trừ mana
+    let totalDmg = Math.max(5, (currentUser.str * 2) - enemy.def);
+    let logs = `Bạn dùng Dagger Rush gây ${totalDmg} sát thương!`;
+
+    // Xác suất 20% đánh thêm 2 lần
+    if (Math.random() < 0.2) {
+        let extraDmg = totalDmg * 2;
+        totalDmg += extraDmg;
+        logs += ` <span style="color:yellow">Kích hoạt combo! Đánh thêm 2 lần (+${extraDmg} HP)</span>`;
+    }
+
+    executePlayerMove(totalDmg, logs);
+};
+
+// Kỹ năng Tàn Sát
+window.useTanSat = function() {
+    if (!isMyTurn || enemy.hp <= 0 || currentUser.mp < 50) return;
+
+    currentUser.mp -= 50; // Trừ mana
+    // Chí mạng x2 sát thương gốc
+    let totalDmg = Math.max(5, (currentUser.str * 2) - enemy.def) * 2;
+    let logs = `<span style="color:#ff4d4d">Bạn dùng TÀN SÁT gây sát thương CHÍ MẠNG: ${totalDmg} HP!</span>`;
+
+    executePlayerMove(totalDmg, logs);
+};
+
+// Hàm bổ trợ để thực hiện đòn đánh (để tránh lặp code)
+function executePlayerMove(dmg, logMsg) {
+    enemy.hp = Math.max(0, enemy.hp - dmg);
+    logBattle(logMsg);
+    
+    // Hiệu ứng rung
+    const eImg = document.getElementById('e-img');
+    if (eImg) {
+        eImg.classList.add('shake');
+        setTimeout(() => eImg.classList.remove('shake'), 300);
+    }
+
+    updateCombatUI();
+    if (enemy.hp <= 0) {
+        winBattle();
+    } else {
+        isMyTurn = false;
+        disableAllActionButtons(true);
+        setTimeout(enemyTurn, 1000);
+    }
+}
     window.renderSkills = function() {
     const skPointsElem = document.getElementById('skPoints');
     if (skPointsElem) {
@@ -907,6 +957,30 @@ function updateCombatUI() {
     const ePercent = (enemy.hp / enemy.maxHp) * 100;
     document.getElementById('e-hp-bar').style.width = ePercent + "%";
     document.getElementById('e-hp-text').innerText = `HP: ${enemy.hp}/${enemy.maxHp}`;
+
+    const daggerBtn = document.getElementById('btnDagger');
+    const tansatBtn = document.getElementById('btnTanSat');
+
+    if (currentUser.skills["Dagger Rush"] > 0) {
+        daggerBtn.style.display = "inline-block";
+        // Nếu không đủ mana hoặc không phải lượt thì làm đen nút
+        daggerBtn.disabled = (!isMyTurn || currentUser.mp < 35);
+        daggerBtn.style.opacity = (currentUser.mp < 35) ? "0.5" : "1";
+    }
+
+    if (currentUser.skills["Tàn sát"] > 0) {
+        tansatBtn.style.display = "inline-block";
+        tansatBtn.disabled = (!isMyTurn || currentUser.mp < 50);
+        tansatBtn.style.opacity = (currentUser.mp < 50) ? "0.5" : "1";
+    }
+    
+    document.getElementById('btnAttack').disabled = !isMyTurn;
+}
+    
+function disableAllActionButtons(status) {
+    document.getElementById('btnAttack').disabled = status;
+    document.getElementById('btnDagger').disabled = status;
+    document.getElementById('btnTanSat').disabled = status;
 }
 
 // Người chơi tấn công
