@@ -577,7 +577,7 @@
         document.getElementById('playerName').innerText = currentUser.username;
         document.getElementById('level').innerText = currentUser.level;
         document.getElementById('job').innerText = getJob(currentUser.level);
-        
+    
         document.getElementById('hpDisplay').innerText = currentUser.hp + '/' + currentUser.maxHp;
         document.getElementById('mpDisplay').innerText = currentUser.mp + '/' + currentUser.maxMp;
         document.getElementById('expText').innerText = currentUser.exp + '/' + currentUser.need;
@@ -598,19 +598,29 @@
         document.getElementById('reward').innerText = 'Phần thưởng: ' + m.exp + ' EXP';
         document.getElementById('streak').innerText = 'Chuỗi rèn luyện: ' + currentUser.streak + ' ngày';
 
-        let rank = Object.values(allUsers).sort((a, b) => b.level - a.level);
-        document.getElementById('leaderboard').innerHTML = rank.slice(0, 5).map((p, i) => 
-            `<div style="margin:5px 0">${i + 1}. ${p.username} - <span style="color:gold">LV ${p.level}</span></div>`
-        ).join('');
+    // --- PHẦN SỬA ĐỔI CHO BẢNG XẾP HẠNG (TOP 10) ---
+        let rank = Object.values(allUsers)
+            .sort((a, b) => b.level - a.level) // Sắp xếp Level từ cao xuống thấp
+            .slice(0, 10); // Chỉ lấy tối đa 10 người đứng đầu
 
-        document.getElementById('logs').innerHTML = (currentUser.logs || []).slice().reverse().join('<br>');
-        if (currentUser.title) {
+        document.getElementById('leaderboard').innerHTML = rank.map((p, i) => 
+        `<div style="margin:8px 0; padding: 5px; border-bottom: 1px solid rgba(0,191,255,0.2); display: flex; justify-content: space-between;">
+            <span>${i + 1}. ${p.username}</span>
+            <span style="color:gold; font-weight: bold;">LV ${p.level}</span>
+        </div>`
+    ).join('');
+    // ----------------------------------------------
+
+    document.getElementById('logs').innerHTML = (currentUser.logs || []).slice().reverse().join('<br>');
+    
+    if (currentUser.title) {
         document.getElementById('titleSelect').value = currentUser.title;
     }
-        if (window.renderSkills) {
+
+    if (window.renderSkills) {
         window.renderSkills();
     }
-    }
+}
         window.openTab = function(evt, tabName) {
     // Ẩn tất cả các tab panel
         const panels = document.getElementsByClassName("tab-panel");
