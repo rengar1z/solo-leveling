@@ -1027,8 +1027,9 @@ function triggerShake() {
     evt.currentTarget.classList.add("active");
 }
 
-    let enemy = null;
-let isMyTurn = true;
+    let enemy = { ...enemies[0], maxHp: enemies[0].hp };
+    updateCombatUI();
+    let isMyTurn = true;
 
 const enemies = [
     { 
@@ -1051,27 +1052,46 @@ const enemies = [
 
 // Hàm bắt đầu trận đấu mới
 window.startNewBattle = function() {
-    // 1. Reset giao diện về dạng nút chữ nhật xám
-    resetToButtonMode(); 
+    // 1. Kiểm tra điều kiện (Phải có dòng này để tránh lỗi khi chưa load user)
+    if (!currentUser) return;
+    if (currentUser.hp <= 0) {
+        alert("Bạn cần hồi phục máu trước khi chiến đấu!");
+        return;
+    }
 
+    // 2. Reset giao diện về dạng nút chữ nhật xám
+    resetToButtonMode(); 
+    
+    // Đảm bảo các nút kỹ năng bị ẩn tuyệt đối khi tìm đối thủ mới
+    const btnD = document.getElementById('btnDagger');
+    const btnT = document.getElementById('btnTanSat');
+    if (btnD) btnD.style.display = "none";
+    if (btnT) btnT.style.display = "none";
+
+    // 3. Chọn ngẫu nhiên đối thủ
     const randIdx = Math.floor(Math.random() * enemies.length);
     const template = enemies[randIdx];
+    
+    // Gán dữ liệu: Quan trọng nhất là maxHp để thanh máu tính đúng %
     enemy = { ...template, maxHp: template.hp };
     
-    // 2. PHẢI CÓ DÒNG NÀY: Trả lại lượt cho người chơi
+    // 4. Trả lại lượt cho người chơi
     isMyTurn = true; 
 
+    // 5. Cập nhật thông tin đối thủ lên màn hình
     document.getElementById('e-name').innerText = enemy.name;
     document.getElementById('e-img').src = enemy.img;
-    document.getElementById('battleLog').innerHTML = `Đã tìm thấy ${enemy.name}!`;
+    document.getElementById('battleLog').innerHTML = `Đã tìm thấy <span style="color:#ff4d4d">${enemy.name}</span>!`;
 
-    // 3. Mở khóa nút Tấn công
+    // 6. Mở khóa nút Tấn công (Dạng chữ)
     const btnAttack = document.getElementById('btnAttack');
-    if (btnAttack) btnAttack.disabled = false;
+    if (btnAttack) {
+        btnAttack.disabled = false;
+    }
 
+    // 7. Cập nhật lại toàn bộ UI (Thanh máu, Mana)
     updateCombatUI();
 };
-
 // Cập nhật giao diện chiến đấu
 function updateCombatUI() {
     // 1. Cập nhật thanh máu Người chơi
@@ -1080,30 +1100,32 @@ function updateCombatUI() {
     document.getElementById('p-hp-text').innerText = `HP: ${currentUser.hp}/${currentUser.maxHp}`;
     
     // 2. Cập nhật thanh máu Kẻ địch
-    const ePercent = (enemy.hp / enemy.maxHp) * 100;
+    // PHẦN SỬA: Kiểm tra nếu chưa có maxHp thì lấy hp hiện tại làm mốc, tránh lỗi chia cho 0 hoặc undefined
+    const enemyMaxHp = enemy.maxHp || enemy.hp || 100;
+    const ePercent = (enemy.hp / enemyMaxHp) * 100;
+    
     document.getElementById('e-hp-bar').style.width = ePercent + "%";
-    document.getElementById('e-hp-text').innerText = `HP: ${enemy.hp}/${enemy.maxHp}`;
+    document.getElementById('e-hp-text').innerText = `HP: ${enemy.hp}/${enemyMaxHp}`;
 
     // 3. Lấy các thẻ nút
     const btnDagger = document.getElementById('btnDagger');
     const btnTanSat = document.getElementById('btnTanSat');
     const btnAttack = document.getElementById('btnAttack');
 
-    // --- SỬA LOGIC TẠI ĐÂY ---
+    // 4. Cập nhật trạng thái khóa/mở nút theo lượt
+    // Nút Tấn công: Chỉ khóa/mở, giữ nguyên hiển thị (Chữ hoặc Icon tùy lúc đó)
+    if (btnAttack) {
+        btnAttack.disabled = !isMyTurn;
+    }
 
-    // Nút Tấn công: Chỉ khóa/mở, không đổi display
-    btnAttack.disabled = !isMyTurn;
-
-    // Nút Dagger Rush:
-    if (btnDagger) {
-        // Chỉ cập nhật disabled/opacity, KHÔNG đổi style.display ở đây
+    // Nút Dagger Rush: Chỉ cập nhật khi nó ĐANG HIỆN (không ép display: block)
+    if (btnDagger && btnDagger.style.display !== "none") {
         btnDagger.disabled = (!isMyTurn || currentUser.mp < 35);
         btnDagger.style.opacity = (currentUser.mp < 35) ? "0.5" : "1";
     }
 
-    // Nút Tàn sát:
-    if (btnTanSat) {
-        // Chỉ cập nhật disabled/opacity, KHÔNG đổi style.display ở đây
+    // Nút Tàn sát: Chỉ cập nhật khi nó ĐANG HIỆN
+    if (btnTanSat && btnTanSat.style.display !== "none") {
         btnTanSat.disabled = (!isMyTurn || currentUser.mp < 50);
         btnTanSat.style.opacity = (currentUser.mp < 50) ? "0.5" : "1";
     }
