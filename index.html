@@ -326,23 +326,15 @@
     background: #222 !important;
     color: #8eefff !important;
     border: 1px solid #444 !important;
-    padding: 10px !important;
-    font-family: 'Oswald', sans-serif !important;
+    padding: 10px;
+    font-family: 'Oswald', sans-serif;
     text-transform: uppercase;
-    cursor: pointer;
-    transition: 0.3s;
 }
 
-.btn-system:hover:not(:disabled) {
-    background: #333 !important;
-    border-color: #00bfff !important;
-    box-shadow: 0 0 10px #00bfff !important;
-}
-
-/* Khi biến thành Icon tròn */
+/* Giao diện khi biến thành Icon tròn */
 .icon-mode {
-    width: 55px !important;
-    height: 55px !important;
+    width: 60px !important;
+    height: 60px !important;
     border-radius: 50% !important;
     flex: none !important;
     padding: 0 !important;
@@ -355,9 +347,9 @@
 }
 
 .icon-mode img {
-    width: 75%;
-    height: 75%;
-    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* Ẩn các nút skill khi chưa vào trận */
@@ -527,17 +519,17 @@
     </div>
 
     <div id="actionControls" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px; width: 100%;">
-    <div id="skillRow" style="display: flex; gap: 10px; justify-content: center; align-items: center; width: 100%;">
+    <div id="skillRow" style="display: flex; gap: 15px; justify-content: center; align-items: center; width: 100%;">
         
-        <button id="btnAttack" class="tab-btn" onclick="playerAttack()" style="flex: 1; background: #222; border: 1px solid #444;">
+        <button id="btnAttack" class="tab-btn btn-system" onclick="playerAttack()" style="flex: 1;">
             TẤN CÔNG
         </button>
         
-        <button id="btnDagger" class="tab-btn hidden-skill" onclick="useDaggerRush()"></button>
-        <button id="btnTanSat" class="tab-btn hidden-skill" onclick="useTanSat()"></button>
+        <button id="btnDagger" class="tab-btn btn-system" onclick="useDaggerRush()" style="display: none;"></button>
+        <button id="btnTanSat" class="tab-btn btn-system" onclick="useTanSat()" style="display: none;"></button>
     </div>
 
-    <button id="btnFindEnemy" class="tab-btn" onclick="startNewBattle()" style="width: 100%; background: #222; border: 1px solid #444;">
+    <button id="btnFindEnemy" class="tab-btn btn-system" onclick="startNewBattle()" style="width: 100%;">
         TÌM ĐỐI THỦ MỚI
     </button>
 </div>
@@ -752,42 +744,41 @@
 };
 
     function switchToIconMode() {
-    const btnAttack = document.getElementById('btnAttack');
-    btnAttack.classList.add('icon-mode');
-    btnAttack.innerHTML = `<img src="attack.jpg">`;
-    btnAttack.style.flex = "none";
-    btnAttack.disabled = false; 
+    // 1. Biến nút Tấn công thành Icon tròn
+    const btnAtk = document.getElementById('btnAttack');
+    btnAtk.classList.add('icon-mode');
+    btnAtk.innerHTML = `<img src="attack.jpg">`;
+    btnAtk.style.flex = "none";
 
-    // Hiện Dagger Rush (nếu đã học)
-    const btnD = document.getElementById('btnDagger');
+    // 2. Hiện nút Dagger Rush (nếu đã học)
     if (currentUser.skills["Dagger Rush"] > 0) {
+        const btnD = document.getElementById('btnDagger');
         btnD.style.display = "flex";
         btnD.classList.add('icon-mode');
         btnD.innerHTML = `<img src="dagger.jpg">`;
         btnD.disabled = (currentUser.mp < 35);
     }
 
-    // Hiện Tàn Sát (nếu đã học)
-    const btnT = document.getElementById('btnTanSat');
+    // 3. Hiện nút Tàn Sát (nếu đã học)
     if (currentUser.skills["Tàn sát"] > 0) {
+        const btnT = document.getElementById('btnTanSat');
         btnT.style.display = "flex";
         btnT.classList.add('icon-mode');
         btnT.innerHTML = `<img src="amsat.jpg">`;
         btnT.disabled = (currentUser.mp < 50);
     }
-    
-    // Khóa nút Tìm đối thủ để không bấm nhầm khi đang hiện skill
-    const btnFind = document.getElementById('btnFindEnemy');
-    if(btnFind) btnFind.disabled = true;
+
+    // Khóa nút Tìm đối thủ khi đang trong trận
+    document.getElementById('btnFindEnemy').disabled = true;
 }
 
 function resetToButtonMode() {
-    const btnAttack = document.getElementById('btnAttack');
-    if (btnAttack) {
-        btnAttack.classList.remove('icon-mode');
-        btnAttack.innerHTML = "TẤN CÔNG";
-        btnAttack.style.display = "block";
-        btnAttack.style.flex = "1";
+    const btnAtk = document.getElementById('btnAttack');
+    if (btnAtk) {
+        btnAtk.classList.remove('icon-mode');
+        btnAtk.innerHTML = "TẤN CÔNG";
+        btnAtk.style.flex = "1";
+        btnAtk.style.display = "block";
     }
 
     // Ẩn các nút kỹ năng đặc biệt
@@ -798,6 +789,9 @@ function resetToButtonMode() {
             btn.classList.remove('icon-mode');
         }
     });
+
+    // Mở lại nút Tìm đối thủ
+    document.getElementById('btnFindEnemy').disabled = false;
 }
 
     window.useDaggerRush = function() {
@@ -829,25 +823,6 @@ window.useTanSat = function() {
     executePlayerMove(totalDmg, logs);
 };
 
-// Hàm bổ trợ để thực hiện đòn đánh (để tránh lặp code)
-function executeBasicAttack() {
-    if (!isMyTurn || enemy.hp <= 0) return;
-
-    const dmg = Math.max(5, (currentUser.str * 2) - enemy.def);
-    enemy.hp = Math.max(0, enemy.hp - dmg);
-    
-    // Hiệu ứng rung
-    const eImg = document.getElementById('e-img');
-    if (eImg) {
-        eImg.classList.add('shake');
-        setTimeout(() => eImg.classList.remove('shake'), 300);
-    }
-
-    logBattle(`Bạn vung dao chém, gây ${dmg} sát thương!`);
-    updateCombatUI();
-    
-    checkBattleEnd(); // Kiểm tra xem quái chết chưa để đổi lượt
-}
     window.renderSkills = function() {
     const skPointsElem = document.getElementById('skPoints');
     if (skPointsElem) {
@@ -1125,22 +1100,38 @@ function disableAllActionButtons(status) {
 }
 
 // Người chơi tấn công
-window.playerAttack = function() {
-    // Nếu quái đã chết hoặc đang không phải lượt thì không làm gì
-    if (enemy.hp <= 0 || !isMyTurn) return;
+    window.playerAttack = function() {
+        if (!isMyTurn || enemy.hp <= 0) return;
 
-    const btnAttack = document.getElementById('btnAttack');
+        const btnAttack = document.getElementById('btnAttack');
 
-    // KIỂM TRA: Nếu đang là nút chữ (chưa vào trận)
+    // NẾU CHƯA HIỆN ICON: Thì chỉ hiện Icon và dừng lại (chưa đánh)
     if (!btnAttack.classList.contains('icon-mode')) {
-        switchToIconMode(); // Chỉ hiện Icon, chưa gây sát thương
-        logBattle("Sẵn sàng chiến đấu! Hãy chọn kỹ năng.");
-        return; // Dừng lại ở đây, đợi người chơi bấm Icon
+        switchToIconMode();
+        logBattle("Sẵn sàng! Hãy chọn kỹ năng để tấn công.");
+        return; 
     }
 
-    // Nếu đã là Icon rồi mà bấm vào (đây chính là chiêu đánh thường)
-    executeBasicAttack();
+    // NẾU ĐÃ LÀ ICON: Thì thực hiện đòn đánh thường
+        executeBasicAttack();
 };
+
+    function executeBasicAttack() {
+    const dmg = Math.max(5, (currentUser.str * 2) - enemy.def);
+    enemy.hp = Math.max(0, enemy.hp - dmg);
+    
+    // Hiệu ứng rung quái
+    const eImg = document.getElementById('e-img');
+    if (eImg) {
+        eImg.classList.add('shake');
+        setTimeout(() => eImg.classList.remove('shake'), 300);
+    }
+
+    logBattle(`Bạn chém ${enemy.name}, gây ${dmg} sát thương!`);
+    updateCombatUI();
+    checkBattleEnd(); // Hàm này bạn đã có để đổi lượt
+}
+    
 // Lượt của kẻ địch
 function enemyTurn() {
     if (!enemy || enemy.hp <= 0 || !currentUser) return;
