@@ -54,25 +54,6 @@
         button:hover { background: #fff; box-shadow: 0 0 20px #fff; }
 
         .hidden { display: none; }
-
-        .characterBox { 
-            width: 40%; 
-            display: flex;            /* Kích hoạt Flexbox */
-            flex-direction: column;   /* Xếp các thành phần (ảnh, tên hạng) theo hàng dọc */
-            align-items: center;      /* Căn giữa tất cả thành phần theo chiều ngang */
-            justify-content: flex-start; 
-            position: sticky; 
-            top: 20px;
-            margin: 0 auto;           /* Hỗ trợ căn giữa khung trong wrapper */
-}
-
-        #jinwooImg { 
-            max-width: 140%;          /* Chỉnh lại độ to của ảnh (140-150% là vừa đẹp) */
-            height: auto; 
-            filter: drop-shadow(0 0 25px #1baeff); 
-            animation: float 4s ease-in-out infinite; 
-            display: block;
-}
         
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
@@ -453,10 +434,6 @@
     </div>
 </div>
 
-    <div class="characterBox">
-        <img id="jinwooImg" src="Sungjinwoo.png" alt="Jinwoo">
-    </div>
-</div>
 
 <div id="levelPopup">
     <div class="popupInner">
