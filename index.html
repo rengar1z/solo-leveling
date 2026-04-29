@@ -267,6 +267,61 @@
         border: 2px solid transparent; 
         transition: 0.3s;
     }
+
+        <style>
+    .skill-icon-btn {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%; /* Làm nút hình tròn */
+        border: 2px solid #00bfff;
+        background: rgba(0, 0, 0, 0.7);
+        cursor: pointer;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+        padding: 0;
+        overflow: visible;
+    }
+
+    .skill-icon-btn img {
+        width: 70%;
+        height: 70%;
+        object-fit: contain;
+        filter: drop-shadow(0 0 5px #00bfff);
+    }
+
+    .skill-icon-btn:hover:not(:disabled) {
+        transform: scale(1.1);
+        box-shadow: 0 0 15px #00bfff;
+    }
+
+    /* Hiệu ứng khi hết Mana hoặc không phải lượt */
+    .skill-icon-btn:disabled {
+        filter: grayscale(1) brightness(0.5);
+        cursor: not-allowed;
+        border-color: #555;
+    }
+
+    /* Hiển thị số Mana tiêu tốn nhỏ ở góc nút */
+    .mp-cost {
+        position: absolute;
+        bottom: -5px;
+        right: -5px;
+        background: #000;
+        color: #00bfff;
+        font-size: 10px;
+        padding: 2px 5px;
+        border: 1px solid #00bfff;
+        border-radius: 10px;
+        font-weight: bold;
+    }
+
+    .btn-red { border-color: #ff4d4d; }
+    .btn-red .mp-cost { color: #ff4d4d; border-color: #ff4d4d; }
+    .btn-red img { filter: drop-shadow(0 0 5px #ff4d4d); }
+</style>
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -428,19 +483,28 @@
         Sẵn sàng khiêu chiến...
     </div>
 
-    <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
-    <div style="display: flex; gap: 10px;">
-        <button id="btnAttack" class="tab-btn" onclick="playerAttack()" style="flex: 1; background: #ff4d4d; color: white;">TẤN CÔNG</button>
+    <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px; width: 100%;">
+    <div style="display: flex; gap: 15px; justify-content: center; align-items: center;">
         
-        <button id="btnDagger" class="tab-btn" onclick="useDaggerRush()" style="flex: 1; background: #4a90e2; color: white; display: none;">DAGGER RUSH (35 MP)</button>
+        <button id="btnAttack" onclick="playerAttack()" class="skill-icon-btn" title="Tấn công thường">
+            <img src="https://cdn-icons-png.flaticon.com/512/7414/7414545.png" alt="Attack">
+        </button>
         
-        <button id="btnTanSat" class="tab-btn" onclick="useTanSat()" style="flex: 1; background: #d0021b; color: white; display: none;">TÀN SÁT (50 MP)</button>
+        <button id="btnDagger" onclick="useDaggerRush()" class="skill-icon-btn btn-blue" style="display: none;" title="Dagger Rush (35 MP)">
+            <img src="dagger.jpg" alt="Dagger">
+            <span class="mp-cost">35</span>
+        </button>
+        
+        <button id="btnTanSat" onclick="useTanSat()" class="skill-icon-btn btn-red" style="display: none;" title="Tàn Sát (50 MP)">
+            <img src="amsat.jpg" alt="Execute">
+            <span class="mp-cost">50</span>
+        </button>
+
     </div>
 
-    <button id="btnFindEnemy" class="tab-btn" onclick="startNewBattle()" style="width: 100%; background: #555;">TÌM ĐỐI THỦ MỚI</button>
+    <button id="btnFindEnemy" onclick="startNewBattle()" class="tab-btn" style="width: 100%; background: #555; margin-top: 10px;">TÌM ĐỐI THỦ MỚI</button>
 </div>
-</div>
-
+    </div>
 
 <div id="levelPopup">
     <div class="popupInner">
@@ -958,25 +1022,24 @@ function updateCombatUI() {
     document.getElementById('e-hp-bar').style.width = ePercent + "%";
     document.getElementById('e-hp-text').innerText = `HP: ${enemy.hp}/${enemy.maxHp}`;
 
-    const daggerBtn = document.getElementById('btnDagger');
-    const tansatBtn = document.getElementById('btnTanSat');
+    const btnDagger = document.getElementById('btnDagger');
+    const btnTanSat = document.getElementById('btnTanSat');
+    const btnAttack = document.getElementById('btnAttack');
 
+    // Hiện Dagger Rush nếu đã học (Lv.1)
     if (currentUser.skills["Dagger Rush"] > 0) {
-        daggerBtn.style.display = "inline-block";
-        // Nếu không đủ mana hoặc không phải lượt thì làm đen nút
-        daggerBtn.disabled = (!isMyTurn || currentUser.mp < 35);
-        daggerBtn.style.opacity = (currentUser.mp < 35) ? "0.5" : "1";
+        btnDagger.style.display = "flex";
+        btnDagger.disabled = (!isMyTurn || currentUser.mp < 35);
     }
 
+    // Hiện Tàn Sát nếu đã học (Lv.1)
     if (currentUser.skills["Tàn sát"] > 0) {
-        tansatBtn.style.display = "inline-block";
-        tansatBtn.disabled = (!isMyTurn || currentUser.mp < 50);
-        tansatBtn.style.opacity = (currentUser.mp < 50) ? "0.5" : "1";
+        btnTanSat.style.display = "flex";
+        btnTanSat.disabled = (!isMyTurn || currentUser.mp < 50);
     }
-    
-    document.getElementById('btnAttack').disabled = !isMyTurn;
+
+    btnAttack.disabled = !isMyTurn;
 }
-    
 function disableAllActionButtons(status) {
     document.getElementById('btnAttack').disabled = status;
     document.getElementById('btnDagger').disabled = status;
