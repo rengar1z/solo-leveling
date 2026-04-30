@@ -851,11 +851,9 @@
     //Trang bi item
 
     window.renderBag = function() {
-    // --- THÊM PHẦN NÀY ĐỂ BẢO VỆ DỮ LIỆU CŨ ---
     if (!currentUser.inventory) currentUser.inventory = [];
     if (!currentUser.equipped) currentUser.equipped = { weapon: null, shield: null, accessory: null };
     if (currentUser.cash === undefined) currentUser.cash = 0;
-    // ------------------------------------------
 
     const eqArea = document.getElementById('equippedArea');
     const invArea = document.getElementById('inventoryArea');
@@ -870,7 +868,10 @@
         if (itemObj) {
             const itemData = ITEM_DATA[itemObj.name];
             eqArea.innerHTML += `<div class="stat-item" style="border-color: gold; padding: 12px;">
-                <span style="font-size: 20px;"><img src="${itemData.img}" style="width: 25px; height: 25px; vertical-align: middle; margin-right: 5px;"> <b>${itemObj.name}</b><br><small style="color:#ccc; font-size:16px;">${itemData.effect}</small></span>
+                <span style="font-size: 20px;">
+                    <img src="${itemData.img}" style="width: 30px; height: 30px; vertical-align: middle; margin-right: 8px; border: 1px solid #00bfff; border-radius: 4px;"> 
+                    <b>${itemObj.name}</b> <br><small style="color:#ccc; font-size:16px;">${itemData.effect}</small>
+                </span>
                 <button class="add-btn" style="width: 60px; height: 35px; font-size: 16px;" onclick="unequipItem('${slot}')">THÁO</button>
             </div>`;
         } else {
@@ -887,7 +888,10 @@
         currentUser.inventory.forEach((itemName, index) => {
             const itemData = ITEM_DATA[itemName];
             invArea.innerHTML += `<div class="stat-item" style="padding: 12px;">
-                <span style="font-size: 20px;">${itemData.icon} <b>${itemName}</b> <br><small style="color:#ccc; font-size:16px;">${itemData.effect}</small></span>
+                <span style="font-size: 20px;">
+                    <img src="${itemData.img}" style="width: 30px; height: 30px; vertical-align: middle; margin-right: 8px; border: 1px solid #00bfff; border-radius: 4px;"> 
+                    <b>${itemName}</b> <br><small style="color:#ccc; font-size:16px;">${itemData.effect}</small>
+                </span>
                 <button class="add-btn" style="width: 60px; height: 35px; font-size: 16px;" onclick="equipItem(${index})">MẶC</button>
             </div>`;
         });
