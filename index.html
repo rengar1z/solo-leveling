@@ -159,6 +159,17 @@
             border-radius: 4px; 
             box-shadow: 0 0 5px #00bfff;
         }
+
+        /* Hiệu ứng viền lửa cho Boss nổi điên */
+        @keyframes fireGlow {
+            0% { box-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000; outline: 2px solid #ff0000; }
+            50% { box-shadow: 0 0 25px #ff9900, 0 0 45px #ff4d4d; outline: 2px solid #ff9900; }
+            100% { box-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000; outline: 2px solid #ff0000; }
+        }
+        .enraged-glow {
+            animation: fireGlow 0.4s infinite alternate !important;
+            border-radius: 2px;
+        }
     </style>
 </head>
 <body>
@@ -806,10 +817,16 @@
         document.getElementById(pre + 'e-hp-text').innerText = `HP: ${enemy.hp}/${enemyMaxHp}`;
 
         // --- CƠ CHẾ NỔI ĐIÊN (ENRAGE) CHO BOSS ---
+        // Lấy cái khung nền màu xám đen bao quanh thanh máu đỏ
+        const eHpBarBox = eHpBar.parentElement; 
+
+        // --- CƠ CHẾ NỔI ĐIÊN (ENRAGE) CHO BOSS ---
         if (enemy.isBoss && ePercent <= 20) {
-            // Đổi thanh máu sang màu đỏ sậm và phát sáng
-            eHpBar.style.background = "linear-gradient(90deg, #4a0000, #8b0000)";
-            eHpBar.style.boxShadow = "0 0 15px #8b0000";
+            // Đổi thanh máu sang màu đỏ sậm
+            eHpBar.style.background = "linear-gradient(90deg, #660000, #cc0000)";
+            
+            // "Châm lửa" bọc quanh toàn bộ thanh máu
+            eHpBarBox.classList.add('enraged-glow');
             
             // Kích hoạt trạng thái nổi điên 1 lần duy nhất
             if (!enemy.isEnraged) {
@@ -823,7 +840,9 @@
         } else {
             // Thanh máu bình thường
             eHpBar.style.background = "#ff0000";
-            eHpBar.style.boxShadow = "none";
+            
+            // Tắt hiệu ứng lửa
+            eHpBarBox.classList.remove('enraged-glow');
             
             // Tắt nổi điên nếu Boss hồi máu vượt mức 20%
             if (ePercent > 20 && enemy.isEnraged) {
