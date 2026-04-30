@@ -1184,7 +1184,7 @@ window.unequipItem = async function(slot, doSave = true) {
 
     // XÁC SUẤT 10% GẶP CỔNG ĐỎ KHI ĐÁNH XONG QUÁI TROLL
     if (isDungeonMode && dCurrentId === 'troll_village' && !isRedGate) {
-        if (Math.random() <= 0.10) {
+        if (Math.random() <= 0.9) {
             logBattle(`<span style="color:red; font-size:18px; font-weight:bold; text-shadow: 0 0 10px red;">[CẢNH BÁO MỨC ĐỘ NGUY HIỂM: A] - MỘT CỔNG ĐỎ BẤT NGỜ XUẤT HIỆN HÚT BẠN VÀO TRONG!</span>`);
             setTimeout(() => { enterRedGate(); }, 2500);
             return;
