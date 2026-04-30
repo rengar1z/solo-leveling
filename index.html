@@ -763,7 +763,7 @@
 
     // --- TAB ĐIỀU HƯỚNG ---
     window.openTab = function(evt, tabName) {
-        if (isRedGate) {
+        if (currentRedGateId) {
         alert("CẢNH BÁO: Cổng Đỏ đã phong ấn không gian! Bạn không thể thoát ra ngoài hoặc chuyển tab cho đến khi giết được Boss hoặc... tử trận!");
         return;
     }
@@ -1126,8 +1126,8 @@ window.unequipItem = async function(slot, doSave = true) {
             resetToButtonMode(); 
             
             // XỬ LÝ LỖI KẸT CỔNG ĐỎ KHI CHẾT
-            if (isRedGate) {
-                isRedGate = false; // Phá vỡ phong ấn Cổng Đỏ vì người chơi đã gục ngã
+            if (currentRedGateId) {
+                currentRedGateId = false; // Phá vỡ phong ấn Cổng Đỏ vì người chơi đã gục ngã
                 document.getElementById('dDungeonTitle').style.color = "#ffcc00"; 
                 document.getElementById('dDungeonTitle').style.textShadow = "none";
                 document.getElementById('btnExitDungeon').classList.remove('hidden');
