@@ -426,7 +426,7 @@
     let isDungeonMode = false;
     let dCurrentId = null;
     let dCurrentStage = 0;
-    let isRedGate = false;
+    let currentRedGateId = null; // Trạng thái lưu ID của cổng đỏ hiện tại
     let rgCurrentStage = 0;
 
     // --- DỮ LIỆU HẦM NGỤC ---
@@ -444,21 +444,28 @@
     };
 
     // --- DỮ LIỆU RED DUNGEON ---
-    const redGateData = {
-    name: "CỔNG ĐỎ: THẾ GIỚI BĂNG GIÁ",
-    stages: [
-        { name: "Tiên Băng Trinh Sát", hp: 200, atk: 45, def: 20, exp: 100, img: "HanSongYi.jpg" },
-        { name: "Tiên Băng Cầm Giáo", hp: 350, atk: 55, def: 25, exp: 150, img: "HanSongYi.jpg" },
-        { name: "Tiên Băng Cung Thủ", hp: 300, atk: 65, def: 15, exp: 150, img: "HanSongYi.jpg" },
-        { name: "Tiên Băng Chiến Binh", hp: 450, atk: 60, def: 30, exp: 200, img: "HanSongYi.jpg" },
-        { name: "Gấu Băng Khổng Lồ", hp: 600, atk: 75, def: 40, exp: 300, img: "HanSongYi.jpg" },
-        { name: "Tiên Băng Tinh Nhuệ", hp: 550, atk: 70, def: 35, exp: 350, img: "HanSongYi.jpg" },
-        { name: "Tiên Băng Cận Vệ", hp: 600, atk: 75, def: 40, exp: 400, img: "HanSongYi.jpg" },
-        { name: "Đội Trưởng Tiên Băng", hp: 800, atk: 85, def: 45, exp: 500, img: "HanSongYi.jpg" },
-        { name: "Gấu Băng Đột Biến", hp: 1000, atk: 95, def: 55, exp: 600, img: "HanSongYi.jpg" },
-        { name: "BOSS: Thủ Lĩnh Vua Tiên Băng", hp: 1800, atk: 120, def: 60, exp: 2000, img: "HanSongYi.jpg", isBoss: true }
-    ]
-};
+    const RED_GATES = {
+        "ice_world": {
+            name: "CỔNG ĐỎ: THẾ GIỚI BĂNG GIÁ",
+            themeColor: "#00ffff", // Màu xanh băng
+            rareDrops: ["Baruka's Dagger", "Ice Elf Cloak"], // Đồ hiếm riêng của cổng này
+            stages: [
+                { name: "Tiên Băng Trinh Sát", hp: 200, atk: 45, def: 20, exp: 100, img: "HanSongYi.jpg" },
+                { name: "Tiên Băng Cầm Giáo", hp: 350, atk: 55, def: 25, exp: 150, img: "HanSongYi.jpg" },
+                { name: "BOSS: Thủ Lĩnh Vua Tiên Băng", hp: 1800, atk: 120, def: 60, exp: 2000, img: "HanSongYi.jpg", isBoss: true, bossType: "ice_king" }
+            ]
+        },
+        "fire_hell": {
+            name: "CỔNG ĐỎ: HỎA NGỤC CHIẾN",
+            themeColor: "#ff4d4d", // Màu đỏ lửa
+            rareDrops: ["Vulcan's Sword", "Demon Horn"], // Đồ hiếm giả định cho cổng sau này
+            stages: [
+                { name: "Quỷ Lửa Tinh Nhuệ", hp: 300, atk: 60, def: 20, exp: 150, img: "HanSongYi.jpg" },
+                { name: "Chó Săn Địa Ngục", hp: 400, atk: 70, def: 25, exp: 200, img: "HanSongYi.jpg" },
+                { name: "BOSS: Chúa Tể Dung Nham", hp: 2500, atk: 150, def: 80, exp: 3000, img: "HanSongYi.jpg", isBoss: true, bossType: "fire_lord" }
+            ]
+        }
+    };
 
     // --- DỮ LIỆU ITEM ---
     const ITEM_DATA = {
@@ -1140,87 +1147,89 @@ window.unequipItem = async function(slot, doSave = true) {
     }
 
     function winBattle() {
-    // Rơi Cash (Trong cổng Đỏ rơi nhiều hơn)
-    let rewardCash = isRedGate ? Math.floor(enemy.exp * 2.5) : Math.floor(enemy.exp * 1.5);
-    currentUser.cash += rewardCash;
-    
-    logBattle(`<span style="color:#00ff00">Chiến thắng! Nhận ${enemy.exp} EXP và ${rewardCash} CASH.</span>`);
-    currentUser.exp += enemy.exp;
+        let rewardCash = currentRedGateId ? Math.floor(enemy.exp * 2.5) : Math.floor(enemy.exp * 1.5);
+        currentUser.cash += rewardCash;
+        
+        logBattle(`<span style="color:#00ff00">Chiến thắng! Nhận ${enemy.exp} EXP và ${rewardCash} CASH.</span>`);
+        currentUser.exp += enemy.exp;
 
-    // Logic rớt đồ hiếm Cổng Đỏ
-    if (isRedGate) {
-        let dropChance = enemy.isBoss ? 1.0 : 0.05; // Boss chắc chắn rơi, lính có 5% rơi
-        if (Math.random() <= dropChance) {
-            const rareItems = ["Baruka's Dagger", "Ice Elf Cloak"];
-            const droppedItem = rareItems[Math.floor(Math.random() * rareItems.length)];
-            currentUser.inventory.push(droppedItem);
-            logBattle(`<span style="color:#00bfff; font-size:18px;">❄️ CỔNG ĐỎ RƠI ĐỒ HIẾM: <b>${droppedItem}</b>!</span>`);
+        // Logic rớt đồ tự động lấy theo loại Cổng Đỏ hiện tại
+        if (currentRedGateId) {
+            let dropChance = enemy.isBoss ? 1.0 : 0.05; 
+            if (Math.random() <= dropChance) {
+                const rareItems = RED_GATES[currentRedGateId].rareDrops;
+                const droppedItem = rareItems[Math.floor(Math.random() * rareItems.length)];
+                currentUser.inventory.push(droppedItem);
+                logBattle(`<span style="color:${RED_GATES[currentRedGateId].themeColor}; font-size:18px;">✨ CỔNG ĐỎ RƠI ĐỒ HIẾM: <b>${droppedItem}</b>!</span>`);
+            }
+        } else if (isDungeonMode && enemy.isBoss) {
+            if (Math.random() <= 0.10) { 
+                const items = ["Dagger", "Shield", "Essence of Magic"];
+                const droppedItem = items[Math.floor(Math.random() * items.length)];
+                currentUser.inventory.push(droppedItem);
+                logBattle(`<span style="color:gold; font-size:18px;">🔥 BOSS rơi đồ: <b>${droppedItem}</b>!</span>`);
+            }
         }
-    } else if (isDungeonMode && enemy.isBoss) {
-        // Logic rớt đồ Hầm Ngục thường
-        if (Math.random() <= 0.10) { 
-            const items = ["Dagger", "Shield", "Essence of Magic"];
-            const droppedItem = items[Math.floor(Math.random() * items.length)];
-            currentUser.inventory.push(droppedItem);
-            logBattle(`<span style="color:gold; font-size:18px;">🔥 BOSS rơi đồ: <b>${droppedItem}</b>!</span>`);
+
+        checkLevelUp(); 
+        saveUserData(); 
+        setTimeout(resetToButtonMode, 1500);
+
+        // XỬ LÝ ĐI TIẾP NẾU ĐANG Ở CỔNG ĐỎ
+        if (currentRedGateId) {
+            const gateData = RED_GATES[currentRedGateId];
+            if (rgCurrentStage < gateData.stages.length - 1) {
+                const btnNext = document.getElementById('btnNextStage');
+                btnNext.classList.remove('hidden');
+                btnNext.setAttribute("onclick", "startNextRedGateStage()");
+                btnNext.innerText = "TIẾN SÂU VÀO CỔNG ĐỎ";
+                btnNext.style.borderColor = gateData.themeColor;
+                btnNext.style.color = gateData.themeColor;
+            } else {
+                logBattle(`<span style="color:gold; font-size:22px;">CỔNG ĐỎ ĐÃ BỊ PHÁ ĐẢO! KHÔNG GIAN SỤP ĐỔ...</span>`);
+                currentRedGateId = null; // Mở khóa
+                const btnExit = document.getElementById('btnExitDungeon');
+                btnExit.classList.remove('hidden');
+                btnExit.innerText = "THOÁT KHỎI CỔNG ĐỎ";
+                document.getElementById('dDungeonTitle').style.color = "#ffcc00"; 
+                document.getElementById('dDungeonTitle').style.textShadow = "none";
+            }
+            return; // Dừng tiến trình Làng Troll
         }
-    }
 
-    checkLevelUp(); 
-    saveUserData(); 
-    setTimeout(resetToButtonMode, 1500);
+        // RANDOM XUẤT HIỆN CỔNG ĐỎ BẤT KỲ SAU KHI ĐÁNH TROLL
+        if (isDungeonMode && dCurrentId === 'troll_village' && !currentRedGateId) {
+            if (Math.random() <= 0.10) { // 10% tỷ lệ
+                const gateKeys = Object.keys(RED_GATES);
+                const randomGateId = gateKeys[Math.floor(Math.random() * gateKeys.length)];
+                
+                logBattle(`<span style="color:red; font-size:18px; font-weight:bold; text-shadow: 0 0 10px red;">[CẢNH BÁO MỨC ĐỘ NGUY HIỂM: A] - MỘT CỔNG ĐỎ BẤT NGỜ XUẤT HIỆN HÚT BẠN VÀO TRONG!</span>`);
+                setTimeout(() => { enterRedGate(randomGateId); }, 2500);
+                return;
+            }
+        }
 
-    // XỬ LÝ ĐI TIẾP NẾU ĐANG Ở CỔNG ĐỎ
-    if (isRedGate) {
-        if (rgCurrentStage < redGateData.stages.length - 1) {
-            const btnNext = document.getElementById('btnNextStage');
-            btnNext.classList.remove('hidden');
-            btnNext.setAttribute("onclick", "startNextRedGateStage()");
-            btnNext.innerText = "TIẾN SÂU VÀO BĂNG GIÁ";
-            btnNext.style.borderColor = "red";
-            btnNext.style.color = "red";
+        // Chuyển ải Hầm ngục bình thường
+        if (isDungeonMode) {
+            const dData = dungeonData[dCurrentId];
+            if (dCurrentStage < dData.stages.length - 1) {
+                const btnNext = document.getElementById('btnNextStage');
+                btnNext.classList.remove('hidden');
+                document.getElementById('btnExitDungeon').classList.add('hidden');
+                btnNext.setAttribute("onclick", "startNextStage()");
+                btnNext.innerText = "TIẾN VÀO ẢI TIẾP THEO";
+                btnNext.style.borderColor = "gold";
+                btnNext.style.color = "gold";
+            } else {
+                logBattle(`<span style="color:gold; font-size:22px;">CHÚC MỪNG! BẠN ĐÃ CHINH PHỤC ${dData.name.toUpperCase()}!</span>`);
+                document.getElementById('btnExitDungeon').classList.remove('hidden');
+                document.getElementById('btnExitDungeon').innerText = "HOÀN THÀNH & RỜI KHỎI";
+            }
         } else {
-            logBattle(`<span style="color:gold; font-size:22px;">CỔNG ĐỎ ĐÃ BỊ PHÁ ĐẢO! KHÔNG GIAN SỤP ĐỔ...</span>`);
-            isRedGate = false; // Mở khóa
-            const btnExit = document.getElementById('btnExitDungeon');
-            btnExit.classList.remove('hidden');
-            btnExit.innerText = "THOÁT KHỎI CỔNG ĐỎ";
-            document.getElementById('dDungeonTitle').style.color = "#ffcc00"; 
-            document.getElementById('dDungeonTitle').style.textShadow = "none";
-        }
-        return; // MANG LỆNH RETURN XUỐNG ĐÂY NÈ! (Bên ngoài khối else, nhưng vẫn ở trong khối if isRedGate)
-    }
-
-    // XÁC SUẤT 10% GẶP CỔNG ĐỎ KHI ĐÁNH XONG QUÁI TROLL
-    if (isDungeonMode && dCurrentId === 'troll_village' && !isRedGate) {
-        if (Math.random() <= 0.9) {
-            logBattle(`<span style="color:red; font-size:18px; font-weight:bold; text-shadow: 0 0 10px red;">[CẢNH BÁO MỨC ĐỘ NGUY HIỂM: A] - MỘT CỔNG ĐỎ BẤT NGỜ XUẤT HIỆN HÚT BẠN VÀO TRONG!</span>`);
-            setTimeout(() => { enterRedGate(); }, 2500);
-            return;
+            const btnFind = document.getElementById('btnFindEnemy');
+            if(btnFind) btnFind.disabled = false;
         }
     }
-
-    // Chuyển ải Hầm ngục bình thường
-    if (isDungeonMode) {
-        const dData = dungeonData[dCurrentId];
-        if (dCurrentStage < dData.stages.length - 1) {
-            const btnNext = document.getElementById('btnNextStage');
-            btnNext.classList.remove('hidden');
-            document.getElementById('btnExitDungeon').classList.add('hidden');
-            btnNext.setAttribute("onclick", "startNextStage()");
-            btnNext.innerText = "TIẾN VÀO ẢI TIẾP THEO";
-            btnNext.style.borderColor = "gold";
-            btnNext.style.color = "gold";
-        } else {
-            logBattle(`<span style="color:gold; font-size:22px;">CHÚC MỪNG! BẠN ĐÃ CHINH PHỤC ${dData.name.toUpperCase()}!</span>`);
-            document.getElementById('btnExitDungeon').classList.remove('hidden');
-            document.getElementById('btnExitDungeon').innerText = "HOÀN THÀNH & RỜI KHỎI";
-        }
-    } else {
-        const btnFind = document.getElementById('btnFindEnemy');
-        if(btnFind) btnFind.disabled = false;
-    }
-}
 
     function checkBattleEnd() {
         if (enemy.hp <= 0) { winBattle(); } 
@@ -1313,36 +1322,49 @@ window.unequipItem = async function(slot, doSave = true) {
         updateCombatUI();
     }
 
-    window.enterRedGate = function() {
-    isRedGate = true;
-    rgCurrentStage = 0;
-    document.getElementById('dDungeonTitle').innerText = redGateData.name;
-    document.getElementById('dDungeonTitle').style.color = "red";
-    document.getElementById('dDungeonTitle').style.textShadow = "0 0 15px darkred";
-    startRedGateStage();
-}
+    window.enterRedGate = function(gateId) {
+        currentRedGateId = gateId;
+        rgCurrentStage = 0;
+        
+        const gateData = RED_GATES[gateId];
+        document.getElementById('dDungeonTitle').innerText = gateData.name;
+        document.getElementById('dDungeonTitle').style.color = gateData.themeColor;
+        document.getElementById('dDungeonTitle').style.textShadow = `0 0 15px ${gateData.themeColor}`;
+        
+        startRedGateStage();
+    }
 
     window.startRedGateStage = function() {
         resetToButtonMode();
-        const stageData = redGateData.stages[rgCurrentStage];
+        const gateData = RED_GATES[currentRedGateId];
+        const stageData = gateData.stages[rgCurrentStage];
         enemy = { ...stageData, maxHp: stageData.hp };
         isMyTurn = true;
 
-        document.getElementById('dStageText').innerText = `Ải ${rgCurrentStage + 1}/10: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT BĂNG"}`;
-        document.getElementById('dStageText').style.color = "red";
+        document.getElementById('dStageText').innerText = `Ải ${rgCurrentStage + 1}/${gateData.stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
+        document.getElementById('dStageText').style.color = gateData.themeColor;
         document.getElementById('d-e-name').innerText = enemy.name;
         document.getElementById('d-e-img').src = enemy.img || "enemy.png"; 
 
-        // Đổi logic Nút
         document.getElementById('btnNextStage').classList.add('hidden');
         document.getElementById('btnExitDungeon').classList.add('hidden'); // KHÓA NÚT THOÁT
 
-        document.getElementById('d-battleLog').innerHTML = `<span style="color:red">Băng tuyết bao phủ xung quanh... </span> <span style="color:#ff4d4d">${enemy.name}</span> lao đến!`;
+        let introLog = `<span style="color:${gateData.themeColor}">Không gian xung quanh biến đổi... </span> <span style="color:#ff4d4d">${enemy.name}</span> lao đến!`;
+        if (enemy.isBoss && enemy.bossType === "ice_king") {
+            introLog += `<br><span style="color:#00ffff; font-style:italic; font-weight:bold;">"Vua của tiên băng đang tỏ ra khinh thường bạn..."</span>`;
+        }
+        document.getElementById('d-battleLog').innerHTML = introLog;
 
         const btnAttack = document.getElementById('d-btnAttack');
         if (btnAttack) btnAttack.disabled = false;
-            updateCombatUI();
-}
+        updateCombatUI();
+    }
+
+    window.startNextRedGateStage = function() {
+        if (currentUser.hp <= 0) return alert("Hết máu rồi, không thể đi tiếp!");
+        rgCurrentStage++;
+        startRedGateStage();
+    }
 
     window.startNextRedGateStage = function() {
         if (currentUser.hp <= 0) return alert("Hết máu rồi, không thể đi tiếp!");
