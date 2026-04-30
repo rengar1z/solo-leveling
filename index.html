@@ -465,7 +465,7 @@
         "Dagger": { type: "weapon", name: "Dagger", str: 15, vit: 0, mp: 0, effect: "Tăng 2% ST đòn đánh thường", img: "dagger.png", sellPrice: 30 },
         "Shield": { type: "shield", name: "Shield", str: 0, vit: 5, mp: 0, effect: "Giảm 1.5% ST gánh chịu", img: "shield.png", sellPrice: 45 },
         "Essence of Magic": { type: "accessory", name: "Essence of Magic", str: 0, vit: 0, mp: 50, effect: "Hồi 2% MP mỗi lượt", img: "essenceofmagic.png", sellPrice: 30 },
-        / Đồ hiếm Red Gate:
+        // Đồ hiếm Red Gate:
         "Baruka's Dagger": { type: "weapon", name: "Baruka's Dagger", str: 35, vit: 0, mp: 20, effect: "Vũ khí của Vua Tiên Băng. Tăng 10% ST đòn thường", icon: "🗡️❄️" },
         "Ice Elf Cloak": { type: "accessory", name: "Ice Elf Cloak", str: 5, vit: 15, mp: 0, effect: "Giảm 5% sát thương gánh chịu", icon: "🧥❄️" }
         
@@ -1076,39 +1076,57 @@ window.unequipItem = async function(slot, doSave = true) {
         const enemyAtk = enemy.atk || 10;
         let dmg = Math.max(2, enemyAtk - Math.floor(defensePower / 2));
     
-    // Hiệu ứng Shield: Giảm sát thương 1.5%
+        // Hiệu ứng Shield: Giảm sát thương 1.5%
         if (currentUser.equipped && currentUser.equipped.shield && currentUser.equipped.shield.name === "Shield") {
-            dmg = Math.floor(dmg * 0.985);
-    }
+            dmg = dmg * 0.985;
+        }
+
+        // HIỆU ỨNG MỚI: Áo choàng Tiên Băng - Giảm 5% sát thương
+        if (currentUser.equipped && currentUser.equipped.accessory && currentUser.equipped.accessory.name === "Ice Elf Cloak") {
+            dmg = dmg * 0.95;
+        }
+
+        // Làm tròn sát thương cuối cùng
+        dmg = Math.floor(dmg);
     
         triggerPlayerShake();
 
         currentUser.hp = Math.max(0, currentUser.hp - dmg);
         logBattle(`${enemy.name} phản công, bạn mất ${dmg} HP.`);
     
-    // Hiệu ứng Essence of Magic: Hồi 2% MP sau mỗi lượt của địch (chuẩn bị tới lượt mình)
+        // Hiệu ứng Essence of Magic: Hồi 2% MP
         if (currentUser.hp > 0 && currentUser.equipped && currentUser.equipped.accessory && currentUser.equipped.accessory.name === "Essence of Magic") {
             let manaRegen = Math.max(1, Math.floor(currentUser.maxMp * 0.02));
             currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + manaRegen);
             logBattle(`<span style="color:#00bfff">🔮 Essence of Magic hồi phục ${manaRegen} MP.</span>`);
-    }
+        }
 
-    updateCombatUI();
+        updateCombatUI();
         if (typeof render === "function") render(); 
 
         if (currentUser.hp <= 0) {
             logBattle(`<span style="color:red; font-size: 20px;">BẠN ĐÃ THẤT BẠI! Bị thương nặng...</span>`);
             resetToButtonMode(); 
-        if (isDungeonMode) {
-            document.getElementById('btnNextStage').classList.add('hidden');
-            document.getElementById('btnExitDungeon').classList.remove('hidden');
-        } else {
-            const btnFind = document.getElementById('btnFindEnemy');
-            if(btnFind) btnFind.disabled = false;
-        }
+            
+            // XỬ LÝ LỖI KẸT CỔNG ĐỎ KHI CHẾT
+            if (isRedGate) {
+                isRedGate = false; // Phá vỡ phong ấn Cổng Đỏ vì người chơi đã gục ngã
+                document.getElementById('dDungeonTitle').style.color = "#ffcc00"; 
+                document.getElementById('dDungeonTitle').style.textShadow = "none";
+                document.getElementById('btnExitDungeon').classList.remove('hidden');
+                document.getElementById('btnExitDungeon').innerText = "BỎ MẠNG & THOÁT KHỎI CỔNG ĐỎ";
+            } 
+            else if (isDungeonMode) {
+                document.getElementById('btnNextStage').classList.add('hidden');
+                document.getElementById('btnExitDungeon').classList.remove('hidden');
+            } else {
+                const btnFind = document.getElementById('btnFindEnemy');
+                if(btnFind) btnFind.disabled = false;
+            }
         } else {
             isMyTurn = true;
             updateCombatUI();
+        }
     }
 }
 
@@ -1160,8 +1178,8 @@ window.unequipItem = async function(slot, doSave = true) {
             btnExit.innerText = "THOÁT KHỎI CỔNG ĐỎ";
             document.getElementById('dDungeonTitle').style.color = "#ffcc00"; 
             document.getElementById('dDungeonTitle').style.textShadow = "none";
+            return; // THÊM LỆNH NÀY ĐỂ DỪNG NGAY, TRÁNH LỖI NHẢY SANG ẢI HẦM NGỤC THƯỜNG
         }
-        return; // Dừng lại, không chạy code Hầm ngục thường
     }
 
     // XÁC SUẤT 10% GẶP CỔNG ĐỎ KHI ĐÁNH XONG QUÁI TROLL
