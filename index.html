@@ -426,6 +426,8 @@
     let isDungeonMode = false;
     let dCurrentId = null;
     let dCurrentStage = 0;
+    let isRedGate = false;
+    let rgCurrentStage = 0;
 
     // --- DỮ LIỆU HẦM NGỤC ---
     const dungeonData = {
@@ -441,11 +443,32 @@
         }
     };
 
+    // --- DỮ LIỆU RED DUNGEON ---
+    const redGateData = {
+    name: "CỔNG ĐỎ: THẾ GIỚI BĂNG GIÁ",
+    stages: [
+        { name: "Tiên Băng Trinh Sát", hp: 200, atk: 45, def: 20, exp: 100, img: "enemy.png" },
+        { name: "Tiên Băng Cầm Giáo", hp: 350, atk: 55, def: 25, exp: 150, img: "enemy.png" },
+        { name: "Tiên Băng Cung Thủ", hp: 300, atk: 65, def: 15, exp: 150, img: "enemy.png" },
+        { name: "Tiên Băng Chiến Binh", hp: 450, atk: 60, def: 30, exp: 200, img: "enemy.png" },
+        { name: "Gấu Băng Khổng Lồ", hp: 600, atk: 75, def: 40, exp: 300, img: "enemy.png" },
+        { name: "Tiên Băng Tinh Nhuệ", hp: 550, atk: 70, def: 35, exp: 350, img: "enemy.png" },
+        { name: "Tiên Băng Cận Vệ", hp: 600, atk: 75, def: 40, exp: 400, img: "enemy.png" },
+        { name: "Đội Trưởng Tiên Băng", hp: 800, atk: 85, def: 45, exp: 500, img: "enemy.png" },
+        { name: "Gấu Băng Đột Biến", hp: 1000, atk: 95, def: 55, exp: 600, img: "enemy.png" },
+        { name: "BOSS: Thủ Lĩnh Vua Tiên Băng", hp: 1800, atk: 120, def: 60, exp: 2000, img: "enemy.png", isBoss: true }
+    ]
+};
+
     // --- DỮ LIỆU ITEM ---
     const ITEM_DATA = {
         "Dagger": { type: "weapon", name: "Dagger", str: 15, vit: 0, mp: 0, effect: "Tăng 2% ST đòn đánh thường", img: "dagger.png", sellPrice: 30 },
         "Shield": { type: "shield", name: "Shield", str: 0, vit: 5, mp: 0, effect: "Giảm 1.5% ST gánh chịu", img: "shield.png", sellPrice: 45 },
-        "Essence of Magic": { type: "accessory", name: "Essence of Magic", str: 0, vit: 0, mp: 50, effect: "Hồi 2% MP mỗi lượt", img: "essenceofmagic.png", sellPrice: 30 }
+        "Essence of Magic": { type: "accessory", name: "Essence of Magic", str: 0, vit: 0, mp: 50, effect: "Hồi 2% MP mỗi lượt", img: "essenceofmagic.png", sellPrice: 30 },
+        / Đồ hiếm Red Gate:
+        "Baruka's Dagger": { type: "weapon", name: "Baruka's Dagger", str: 35, vit: 0, mp: 20, effect: "Vũ khí của Vua Tiên Băng. Tăng 10% ST đòn thường", icon: "🗡️❄️" },
+        "Ice Elf Cloak": { type: "accessory", name: "Ice Elf Cloak", str: 5, vit: 15, mp: 0, effect: "Giảm 5% sát thương gánh chịu", icon: "🧥❄️" }
+        
 };
 
     // --- DỮ LIỆU CỬA HÀNG ---
@@ -733,13 +756,18 @@
 
     // --- TAB ĐIỀU HƯỚNG ---
     window.openTab = function(evt, tabName) {
-        if (isDungeonMode && tabName !== 'tab-dungeon') {
-            if (confirm("Bạn đang khiêu chiến Hầm Ngục! Rời tab lúc này đồng nghĩa với BỎ CUỘC và phải đi lại từ đầu. Chắc chắn thoát?")) {
-                exitDungeon();
-            } else {
-                return; // Ngừng chuyển tab nếu hủy
-            }
+        if (isRedGate) {
+        alert("CẢNH BÁO: Cổng Đỏ đã phong ấn không gian! Bạn không thể thoát ra ngoài hoặc chuyển tab cho đến khi giết được Boss hoặc... tử trận!");
+        return;
+    }
+    
+    if (isDungeonMode && tabName !== 'tab-dungeon') {
+        if (confirm("Bạn đang khiêu chiến Hầm Ngục! Rời tab lúc này đồng nghĩa với BỎ CUỘC và phải đi lại từ đầu. Chắc chắn thoát?")) {
+            exitDungeon();
+        } else {
+            return; 
         }
+    }
 
         const panels = document.getElementsByClassName("tab-panel");
         for (let i = 0; i < panels.length; i++) panels[i].classList.remove("active");
@@ -1009,11 +1037,10 @@ window.unequipItem = async function(slot, doSave = true) {
     }
     
         let dmg = Math.max(5, (currentUser.str * 2) - enemy.def);
-    
-    // Hiệu ứng Dagger: Basic attack +2% damage
-        if (currentUser.equipped && currentUser.equipped.weapon && currentUser.equipped.weapon.name === "Dagger") {
-            dmg = dmg * 1.02;
-    }
+        if (currentUser.equipped && currentUser.equipped.weapon) {
+            if (currentUser.equipped.weapon.name === "Dagger") dmg *= 1.02;
+            if (currentUser.equipped.weapon.name === "Baruka's Dagger") dmg *= 1.05; // Đồ mới tăng 5%
+}
         dmg = Math.floor(dmg);
 
         enemy.hp = Math.max(0, enemy.hp - dmg);
@@ -1086,44 +1113,85 @@ window.unequipItem = async function(slot, doSave = true) {
 }
 
     function winBattle() {
-    // Rơi Cash (tỉ lệ thuận với lượng EXP của quái)
-        let rewardCash = Math.floor(enemy.exp * 1.5);
-        currentUser.cash += rewardCash;
-        
-        logBattle(`<span style="color:#00ff00">Chiến thắng! Bạn nhận được ${enemy.exp} EXP và ${rewardCash} CASH.</span>`);
-        currentUser.exp += enemy.exp;
+    // Rơi Cash (Trong cổng Đỏ rơi nhiều hơn)
+    let rewardCash = isRedGate ? Math.floor(enemy.exp * 2.5) : Math.floor(enemy.exp * 1.5);
+    currentUser.cash += rewardCash;
+    
+    logBattle(`<span style="color:#00ff00">Chiến thắng! Nhận ${enemy.exp} EXP và ${rewardCash} CASH.</span>`);
+    currentUser.exp += enemy.exp;
 
-    // Logic rớt đồ khi giết BOSS Hầm Ngục
-        if (isDungeonMode && enemy.isBoss) {
-            const dropChance = Math.random();
-            if (dropChance <= 0.9) { // Tỉ lệ 10% rớt 1 trong 3 đồ
+    // Logic rớt đồ hiếm Cổng Đỏ
+    if (isRedGate) {
+        let dropChance = enemy.isBoss ? 1.0 : 0.05; // Boss chắc chắn rơi, lính có 5% rơi
+        if (Math.random() <= dropChance) {
+            const rareItems = ["Baruka's Dagger", "Ice Elf Cloak"];
+            const droppedItem = rareItems[Math.floor(Math.random() * rareItems.length)];
+            currentUser.inventory.push(droppedItem);
+            logBattle(`<span style="color:#00bfff; font-size:18px;">❄️ CỔNG ĐỎ RƠI ĐỒ HIẾM: <b>${droppedItem}</b>!</span>`);
+        }
+    } else if (isDungeonMode && enemy.isBoss) {
+        // Logic rớt đồ Hầm Ngục thường
+        if (Math.random() <= 0.10) { 
             const items = ["Dagger", "Shield", "Essence of Magic"];
             const droppedItem = items[Math.floor(Math.random() * items.length)];
             currentUser.inventory.push(droppedItem);
-            logBattle(`<span style="color:gold; font-size:18px;">🔥 BOSS rơi đồ: <b>${droppedItem}</b>! Đã cất vào Túi đồ.</span>`);
-        } else {
-            logBattle(`<span style="color:#ccc;">Boss không đánh rơi vật phẩm nào...</span>`);
+            logBattle(`<span style="color:gold; font-size:18px;">🔥 BOSS rơi đồ: <b>${droppedItem}</b>!</span>`);
         }
     }
 
-        checkLevelUp(); 
-        saveUserData(); 
+    checkLevelUp(); 
+    saveUserData(); 
+    setTimeout(resetToButtonMode, 1500);
 
-        setTimeout(resetToButtonMode, 1500);
-
-        if (isDungeonMode) {
-            const dData = dungeonData[dCurrentId];
-        if (dCurrentStage < dData.stages.length - 1) {
-            document.getElementById('btnNextStage').classList.remove('hidden');
-            document.getElementById('btnExitDungeon').classList.add('hidden');
+    // XỬ LÝ ĐI TIẾP NẾU ĐANG Ở CỔNG ĐỎ
+    if (isRedGate) {
+        if (rgCurrentStage < redGateData.stages.length - 1) {
+            const btnNext = document.getElementById('btnNextStage');
+            btnNext.classList.remove('hidden');
+            btnNext.setAttribute("onclick", "startNextRedGateStage()");
+            btnNext.innerText = "TIẾN SÂU VÀO BĂNG GIÁ";
+            btnNext.style.borderColor = "red";
+            btnNext.style.color = "red";
         } else {
-            logBattle(`<span style="color:gold; font-size:22px; text-shadow: 0 0 10px gold;">CHÚC MỪNG! BẠN ĐÃ CHINH PHỤC ${dData.name.toUpperCase()}!</span>`);
+            logBattle(`<span style="color:gold; font-size:22px;">CỔNG ĐỎ ĐÃ BỊ PHÁ ĐẢO! KHÔNG GIAN SỤP ĐỔ...</span>`);
+            isRedGate = false; // Mở khóa
+            const btnExit = document.getElementById('btnExitDungeon');
+            btnExit.classList.remove('hidden');
+            btnExit.innerText = "THOÁT KHỎI CỔNG ĐỎ";
+            document.getElementById('dDungeonTitle').style.color = "#ffcc00"; 
+            document.getElementById('dDungeonTitle').style.textShadow = "none";
+        }
+        return; // Dừng lại, không chạy code Hầm ngục thường
+    }
+
+    // XÁC SUẤT 10% GẶP CỔNG ĐỎ KHI ĐÁNH XONG QUÁI TROLL
+    if (isDungeonMode && dCurrentId === 'troll_village' && !isRedGate) {
+        if (Math.random() <= 0.10) {
+            logBattle(`<span style="color:red; font-size:18px; font-weight:bold; text-shadow: 0 0 10px red;">[CẢNH BÁO MỨC ĐỘ NGUY HIỂM: A] - MỘT CỔNG ĐỎ BẤT NGỜ XUẤT HIỆN HÚT BẠN VÀO TRONG!</span>`);
+            setTimeout(() => { enterRedGate(); }, 2500);
+            return;
+        }
+    }
+
+    // Chuyển ải Hầm ngục bình thường
+    if (isDungeonMode) {
+        const dData = dungeonData[dCurrentId];
+        if (dCurrentStage < dData.stages.length - 1) {
+            const btnNext = document.getElementById('btnNextStage');
+            btnNext.classList.remove('hidden');
+            document.getElementById('btnExitDungeon').classList.add('hidden');
+            btnNext.setAttribute("onclick", "startNextStage()");
+            btnNext.innerText = "TIẾN VÀO ẢI TIẾP THEO";
+            btnNext.style.borderColor = "gold";
+            btnNext.style.color = "gold";
+        } else {
+            logBattle(`<span style="color:gold; font-size:22px;">CHÚC MỪNG! BẠN ĐÃ CHINH PHỤC ${dData.name.toUpperCase()}!</span>`);
             document.getElementById('btnExitDungeon').classList.remove('hidden');
             document.getElementById('btnExitDungeon').innerText = "HOÀN THÀNH & RỜI KHỎI";
         }
     } else {
-            const btnFind = document.getElementById('btnFindEnemy');
-            if(btnFind) btnFind.disabled = false;
+        const btnFind = document.getElementById('btnFindEnemy');
+        if(btnFind) btnFind.disabled = false;
     }
 }
 
@@ -1217,6 +1285,43 @@ window.unequipItem = async function(slot, doSave = true) {
 
         updateCombatUI();
     }
+
+    window.enterRedGate = function() {
+    isRedGate = true;
+    rgCurrentStage = 0;
+    document.getElementById('dDungeonTitle').innerText = redGateData.name;
+    document.getElementById('dDungeonTitle').style.color = "red";
+    document.getElementById('dDungeonTitle').style.textShadow = "0 0 15px darkred";
+    startRedGateStage();
+}
+
+    window.startRedGateStage = function() {
+        resetToButtonMode();
+        const stageData = redGateData.stages[rgCurrentStage];
+        enemy = { ...stageData, maxHp: stageData.hp };
+        isMyTurn = true;
+
+        document.getElementById('dStageText').innerText = `Ải ${rgCurrentStage + 1}/10: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT BĂNG"}`;
+        document.getElementById('dStageText').style.color = "red";
+        document.getElementById('d-e-name').innerText = enemy.name;
+        document.getElementById('d-e-img').src = enemy.img || "enemy.png"; 
+
+        // Đổi logic Nút
+        document.getElementById('btnNextStage').classList.add('hidden');
+        document.getElementById('btnExitDungeon').classList.add('hidden'); // KHÓA NÚT THOÁT
+
+        document.getElementById('d-battleLog').innerHTML = `<span style="color:red">Băng tuyết bao phủ xung quanh... </span> <span style="color:#ff4d4d">${enemy.name}</span> lao đến!`;
+
+        const btnAttack = document.getElementById('d-btnAttack');
+        if (btnAttack) btnAttack.disabled = false;
+            updateCombatUI();
+}
+
+    window.startNextRedGateStage = function() {
+        if (currentUser.hp <= 0) return alert("Hết máu rồi, không thể đi tiếp!");
+        rgCurrentStage++;
+        startRedGateStage();
+}
 
     window.startNextStage = function() {
         if (currentUser.hp <= 0) return alert("Bạn không thể đi tiếp khi hết máu!");
