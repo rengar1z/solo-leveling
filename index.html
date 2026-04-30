@@ -1283,7 +1283,7 @@ window.unequipItem = async function(slot, doSave = true) {
 
         // RANDOM XUẤT HIỆN CỔNG ĐỎ BẤT KỲ SAU KHI ĐÁNH TROLL
         if (isDungeonMode && dCurrentId === 'troll_village' && !currentRedGateId) {
-            if (Math.random() <= 0.10) { // 10% tỷ lệ
+            if (Math.random() <= 0.9) { // 10% tỷ lệ
                 const gateKeys = Object.keys(RED_GATES);
                 const randomGateId = gateKeys[Math.floor(Math.random() * gateKeys.length)];
                 
