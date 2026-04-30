@@ -145,6 +145,20 @@
             margin: 0 !important;
             box-sizing: border-box;
         }
+        
+        /* Thanh cuộn dành riêng cho kho đồ */
+        #inventoryArea::-webkit-scrollbar { 
+            width: 6px; 
+        }
+        #inventoryArea::-webkit-scrollbar-track { 
+            background: rgba(0, 30, 60, 0.5); 
+            border-radius: 4px; 
+        }
+        #inventoryArea::-webkit-scrollbar-thumb { 
+            background: #00bfff; 
+            border-radius: 4px; 
+            box-shadow: 0 0 5px #00bfff;
+        }
     </style>
 </head>
 <body>
@@ -237,7 +251,7 @@
                         </div>
                         <div class="card" style="flex: 1;">
                             <h3 style="text-align: center; margin-top: 0;">KHO ĐỒ</h3>
-                            <div id="inventoryArea"></div>
+                            <div id="inventoryArea" style="max-height: 350px; overflow-y: auto; padding-right: 5px;"></div>
                         </div>
                         
                    </div>
@@ -429,9 +443,9 @@
 
     // --- DỮ LIỆU ITEM ---
     const ITEM_DATA = {
-        "Dagger": { type: "weapon", name: "Dagger", str: 15, vit: 0, mp: 0, effect: "Tăng 2% ST đòn đánh thường", img: "dagger.png" },
-        "Shield": { type: "shield", name: "Shield", str: 0, vit: 5, mp: 0, effect: "Giảm 1.5% ST gánh chịu", img: "shield.png" },
-        "Essence of Magic": { type: "accessory", name: "Essence of Magic", str: 0, vit: 0, mp: 50, effect: "Hồi 2% MP mỗi lượt", img: "essenceofmagic.png" }
+        "Dagger": { type: "weapon", name: "Dagger", str: 15, vit: 0, mp: 0, effect: "Tăng 2% ST đòn đánh thường", img: "dagger.png", sellPrice: 30 },
+        "Shield": { type: "shield", name: "Shield", str: 0, vit: 5, mp: 0, effect: "Giảm 1.5% ST gánh chịu", img: "shield.png", sellPrice: 45 },
+        "Essence of Magic": { type: "accessory", name: "Essence of Magic", str: 0, vit: 0, mp: 50, effect: "Hồi 2% MP mỗi lượt", img: "essenceofmagic.png", sellPrice: 30 }
 };
 
     // --- DỮ LIỆU CỬA HÀNG ---
@@ -892,12 +906,16 @@
     } else {
         currentUser.inventory.forEach((itemName, index) => {
             const itemData = ITEM_DATA[itemName];
-            invArea.innerHTML += `<div class="stat-item" style="padding: 12px;">
-                <span style="font-size: 20px;">
+            const sellPrice = 25; // Giá bán mặc định là 25 Cash
+            invArea.innerHTML += `<div class="stat-item" style="padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 20px; flex: 1;">
                     <img src="${itemData.img}" style="width: 30px; height: 30px; vertical-align: middle; margin-right: 8px; border: 1px solid #00bfff; border-radius: 4px;"> 
                     <b>${itemName}</b> <br><small style="color:#ccc; font-size:16px;">${itemData.effect}</small>
                 </span>
-                <button class="add-btn" style="width: 60px; height: 35px; font-size: 16px;" onclick="equipItem(${index})">MẶC</button>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <button class="add-btn" style="width: 70px; height: 30px; font-size: 14px;" onclick="equipItem(${index})">MẶC</button>
+                    <button class="add-btn" style="width: 70px; height: 30px; font-size: 14px; background: #ff4d4d; border-color: #cc0000; color: #fff;" onclick="sellItem(${index}, ${sellPrice})">BÁN (${sellPrice})</button>
+                </div>
             </div>`;
         });
     }
@@ -954,6 +972,31 @@ window.unequipItem = async function(slot, doSave = true) {
     if (doSave) {
         await saveUserData();
         renderBag();
+    }
+}
+
+    //logic sell item
+    window.sellItem = async function(index, price) {
+    const itemName = currentUser.inventory[index];
+    
+    // Hiện bảng hỏi xác nhận để tránh bấm nhầm
+    if (confirm(`Bạn có chắc chắn muốn bán [${itemName}] để lấy ${price} Cash không?`)) {
+        
+        // Trừ đồ trong túi
+        currentUser.inventory.splice(index, 1);
+        
+        // Cộng tiền
+        currentUser.cash += price;
+        
+        // Lưu lên hệ thống
+        await set(ref(db, 'users/' + currentUser.username), currentUser);
+        
+        // Tải lại giao diện Túi đồ và Status (để hiển thị số tiền mới)
+        renderBag();
+        render(); 
+        
+        // Thông báo nho nhỏ (Bạn có thể bỏ dòng này nếu thấy phiền)
+        // alert(`Đã bán ${itemName} thành công!`); 
     }
 }
 
