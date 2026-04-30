@@ -206,7 +206,7 @@
         <div class="tabs-container">
             <div class="tabs-header">
                 <button class="tab-btn active" onclick="openTab(event, 'tab-mission')">QUEST</button>
-                <button class="tab-btn" onclick="openTab(event, 'tab-ranking')">RANKING</button>
+                <button class="tab-btn" onclick="openTab(event, 'tab-bag')">BAG</button>
                 <button class="tab-btn" onclick="openTab(event, 'tab-skills')">SKILLS</button>
                 <button class="tab-btn" onclick="openTab(event, 'tab-logs')">LOGS</button>
                 <button class="tab-btn" onclick="openTab(event, 'tab-minigame')">MINIGAME</button>
@@ -222,10 +222,19 @@
                     <p id="streak"></p>
                 </div>
 
-                <div id="tab-ranking" class="tab-panel">
-                    <h2>BẢNG XẾP HẠNG THỢ SĂN</h2>
-                    <div id="leaderboard"></div>
-                </div>
+                <div id="tab-bag" class="tab-panel">
+                    <h2 style="color: #00bfff;">TÚI ĐỒ VÀ TRANG BỊ</h2>
+                    <div style="display: flex; gap: 20px;">
+                        <div class="card" style="flex: 1; border-color: gold;">
+                            <h3 style="color: gold; text-align: center; margin-top: 0;">ĐANG TRANG BỊ</h3>
+                            <div id="equippedArea"></div>
+                        </div>
+                        <div class="card" style="flex: 1;">
+                            <h3 style="text-align: center; margin-top: 0;">KHO ĐỒ</h3>
+                            <div id="inventoryArea"></div>
+                    </div>
+    </div>
+</div>
 
                 <div id="tab-skills" class="tab-panel">
                     <h2 style="color: #00bfff;">SKILL POINTS: <span id="skPoints">0</span></h2>
@@ -386,6 +395,13 @@
         }
     };
 
+    // --- DỮ LIỆU ITEM ---
+    const ITEM_DATA = {
+    "Dagger": { type: "weapon", name: "Dagger", str: 15, vit: 0, mp: 0, effect: "Tăng 2% ST đòn đánh thường", icon: "🗡️" },
+    "Shield": { type: "shield", name: "Shield", str: 0, vit: 5, mp: 0, effect: "Giảm 1.5% ST gánh chịu", icon: "🛡️" },
+    "Essence of Magic": { type: "accessory", name: "Essence of Magic", str: 0, vit: 0, mp: 50, effect: "Hồi 2% MP mỗi lượt", icon: "🔮" }
+};
+
     const enemies = [
         { name: "Thợ Săn Hạng E", hp: 80, atk: 10, def: 5, exp: 20, img: "HanSongYi.jpg" },
         { name: "Thợ Săn Hạng D", hp: 150, atk: 25, def: 15, exp: 50, img: "YooJinHoo.jpg" },
@@ -415,14 +431,16 @@
         if (s.exists()) return alert('Tên thợ săn đã được sử dụng');
 
         const userData = {
-            username: u, password: p, level: 1, exp: 0, need: 100,
+            username: u, password: p, level: 1, exp: 0, need: 100, cash: 0, // Đã thêm cash: 0
             hp: 100, maxHp: 100, mp: 50, maxMp: 50,
             str: 5, agi: 5, int: 5, vit: 5, sense: 5, points: 0,
             claimedDate: '', streak: 0, logs: [],
             title: "Weakest Hunter of All Time", skillPoints: 0,
+            inventory: [], // Thêm mảng chứa đồ
+            equipped: { weapon: null, shield: null, accessory: null }, // Thêm các ô trang bị
             skills: { "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Tái Tạo": 0, "Trị Thương": 0, "Siêu Giác Quan": 0, "Gia Tăng Chỉ Số": 0, "Tàng Hình": 0, "Tàn sát": 0, "Dagger Rush": 0 },
             isNew: true
-        };
+};
         await set(ref(db, 'users/' + u), userData);
         alert('Thức tỉnh thành công! Hãy đăng nhập.');
     }
@@ -450,6 +468,9 @@
             }, 3000);
         }
 
+        currentUser.cash = currentUser.cash || 0;
+        currentUser.inventory = currentUser.inventory || [];
+        currentUser.equipped = currentUser.equipped || { weapon: null, shield: null, accessory: null };
         document.getElementById('auth').classList.add('hidden');
         document.getElementById('gameWrap').classList.remove('hidden');
         await loadLeaderboard();
@@ -639,6 +660,8 @@
         
         // Refresh UI if in battle
         if (enemy) updateCombatUI();
+        if (document.getElementById('cashText')) document.getElementById('cashText').innerText = currentUser.cash;
+        if (window.renderBag) window.renderBag();
     }
 
     // --- TAB ĐIỀU HƯỚNG ---
@@ -777,20 +800,121 @@
         }
     }
 
+    //Trang bi item
+
+    window.renderBag = function() {
+        const eqArea = document.getElementById('equippedArea');
+        const invArea = document.getElementById('inventoryArea');
+        if (!eqArea || !invArea) return;
+    
+        eqArea.innerHTML = '';
+        invArea.innerHTML = '';
+
+    // Render đồ đang mặc
+    ['weapon', 'shield', 'accessory'].forEach(slot => {
+        const itemObj = currentUser.equipped[slot];
+        if (itemObj) {
+            const itemData = ITEM_DATA[itemObj.name];
+            eqArea.innerHTML += `<div class="stat-item" style="border-color: gold; padding: 12px;">
+                <span style="font-size: 20px;">${itemData.icon} <b>${itemObj.name}</b> <br><small style="color:#ccc; font-size:16px;">${itemData.effect}</small></span>
+                <button class="add-btn" style="width: 60px; height: 35px; font-size: 16px;" onclick="unequipItem('${slot}')">THÁO</button>
+            </div>`;
+        } else {
+            eqArea.innerHTML += `<div class="stat-item" style="opacity: 0.5; padding: 12px; justify-content: center;">
+                <span>Trống (${slot.toUpperCase()})</span>
+            </div>`;
+        }
+    });
+
+    // Render túi đồ
+    if (currentUser.inventory.length === 0) {
+        invArea.innerHTML = '<p style="color: #aaa; text-align: center; font-size: 20px;">Túi đồ trống</p>';
+    } else {
+        currentUser.inventory.forEach((itemName, index) => {
+            const itemData = ITEM_DATA[itemName];
+            invArea.innerHTML += `<div class="stat-item" style="padding: 12px;">
+                <span style="font-size: 20px;">${itemData.icon} <b>${itemName}</b> <br><small style="color:#ccc; font-size:16px;">${itemData.effect}</small></span>
+                <button class="add-btn" style="width: 60px; height: 35px; font-size: 16px;" onclick="equipItem(${index})">MẶC</button>
+            </div>`;
+        });
+    }
+}
+
+window.equipItem = async function(index) {
+        const itemName = currentUser.inventory[index];
+        const itemData = ITEM_DATA[itemName];
+        const slot = itemData.type;
+
+    // Logic quan trọng: Nếu ô đã có đồ -> Tự động tháo đồ cũ ra trước để tránh bug cộng dồn
+    if (currentUser.equipped[slot]) {
+        await unequipItem(slot, false); // false để chưa save vội
+    }
+
+    // Mặc đồ mới
+    currentUser.inventory.splice(index, 1);
+    currentUser.equipped[slot] = { name: itemName };
+    
+    // Cộng chỉ số
+    currentUser.str += itemData.str;
+    currentUser.vit += itemData.vit;
+    currentUser.maxMp += itemData.mp;
+    currentUser.mp += itemData.mp; 
+    if (itemData.vit > 0) {
+        currentUser.maxHp += itemData.vit * 10;
+        currentUser.hp += itemData.vit * 10;
+    }
+
+    await saveUserData();
+    renderBag();
+}
+
+window.unequipItem = async function(slot, doSave = true) {
+    const itemObj = currentUser.equipped[slot];
+    if (!itemObj) return;
+
+    const itemData = ITEM_DATA[itemObj.name];
+    
+    // Trừ chỉ số
+    currentUser.str -= itemData.str;
+    currentUser.vit -= itemData.vit;
+    currentUser.maxMp -= itemData.mp;
+    currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
+    if (itemData.vit > 0) {
+        currentUser.maxHp -= itemData.vit * 10;
+        currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
+    }
+
+    // Chuyển vào túi
+    currentUser.inventory.push(itemObj.name);
+    currentUser.equipped[slot] = null;
+
+    if (doSave) {
+        await saveUserData();
+        renderBag();
+    }
+}
+
     // --- CHIÊU THỨC ---
     window.playerAttack = function() {
         if (!isMyTurn || enemy.hp <= 0) return;
         const btnAttack = document.getElementById(getPrefix() + 'btnAttack');
         if (!btnAttack.classList.contains('icon-mode')) {
             switchToIconMode(); logBattle("Sẵn sàng! Hãy chọn kỹ năng để tấn công."); return; 
-        }
-        
-        const dmg = Math.max(5, (currentUser.str * 2) - enemy.def);
+    }
+    
+        let dmg = Math.max(5, (currentUser.str * 2) - enemy.def);
+    
+    // Hiệu ứng Dagger: Basic attack +2% damage
+        if (currentUser.equipped && currentUser.equipped.weapon && currentUser.equipped.weapon.name === "Dagger") {
+            dmg = dmg * 1.02;
+    }
+        dmg = Math.floor(dmg);
+
         enemy.hp = Math.max(0, enemy.hp - dmg);
         triggerShake();
         logBattle(`Bạn chém ${enemy.name}, gây ${dmg} sát thương!`);
         updateCombatUI(); checkBattleEnd(); 
-    };
+};
 
     window.useDaggerRush = function() {
         if (!isMyTurn || enemy.hp <= 0 || currentUser.mp < 35) { if(currentUser.mp < 35) logBattle("<span style='color:orange'>Không đủ MP để dùng Dagger Rush!</span>"); return; }
@@ -817,35 +941,65 @@
 
         const defensePower = currentUser.vit || 0; 
         const enemyAtk = enemy.atk || 10;
-        const dmg = Math.max(2, enemyAtk - Math.floor(defensePower / 2));
-        
+        let dmg = Math.max(2, enemyAtk - Math.floor(defensePower / 2));
+    
+    // Hiệu ứng Shield: Giảm sát thương 1.5%
+        if (currentUser.equipped && currentUser.equipped.shield && currentUser.equipped.shield.name === "Shield") {
+            dmg = Math.floor(dmg * 0.985);
+    }
+    
         triggerPlayerShake();
 
         currentUser.hp = Math.max(0, currentUser.hp - dmg);
         logBattle(`${enemy.name} phản công, bạn mất ${dmg} HP.`);
-        
-        updateCombatUI();
+    
+    // Hiệu ứng Essence of Magic: Hồi 2% MP sau mỗi lượt của địch (chuẩn bị tới lượt mình)
+        if (currentUser.hp > 0 && currentUser.equipped && currentUser.equipped.accessory && currentUser.equipped.accessory.name === "Essence of Magic") {
+            let manaRegen = Math.max(1, Math.floor(currentUser.maxMp * 0.02));
+            currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + manaRegen);
+            logBattle(`<span style="color:#00bfff">🔮 Essence of Magic hồi phục ${manaRegen} MP.</span>`);
+    }
+
+    updateCombatUI();
         if (typeof render === "function") render(); 
 
         if (currentUser.hp <= 0) {
             logBattle(`<span style="color:red; font-size: 20px;">BẠN ĐÃ THẤT BẠI! Bị thương nặng...</span>`);
             resetToButtonMode(); 
-            if (isDungeonMode) {
-                document.getElementById('btnNextStage').classList.add('hidden');
-                document.getElementById('btnExitDungeon').classList.remove('hidden');
-            } else {
-                const btnFind = document.getElementById('btnFindEnemy');
-                if(btnFind) btnFind.disabled = false;
-            }
+        if (isDungeonMode) {
+            document.getElementById('btnNextStage').classList.add('hidden');
+            document.getElementById('btnExitDungeon').classList.remove('hidden');
+        } else {
+            const btnFind = document.getElementById('btnFindEnemy');
+            if(btnFind) btnFind.disabled = false;
+        }
         } else {
             isMyTurn = true;
-            updateCombatUI(); // Cập nhật lại UI để mở khoá nút
+            updateCombatUI();
+    }
+}
+
+    function winBattle() {
+    // Rơi Cash (tỉ lệ thuận với lượng EXP của quái)
+        let rewardCash = Math.floor(enemy.exp * 1.5);
+        currentUser.cash += rewardCash;
+        
+        logBattle(`<span style="color:#00ff00">Chiến thắng! Bạn nhận được ${enemy.exp} EXP và ${rewardCash} CASH.</span>`);
+        currentUser.exp += enemy.exp;
+
+    // Logic rớt đồ khi giết BOSS Hầm Ngục
+        if (isDungeonMode && enemy.isBoss) {
+            const dropChance = Math.random();
+            if (dropChance <= 0.10) { // Tỉ lệ 10% rớt 1 trong 3 đồ
+            const items = ["Dagger", "Shield", "Essence of Magic"];
+            const droppedItem = items[Math.floor(Math.random() * items.length)];
+            currentUser.inventory.push(droppedItem);
+            logBattle(`<span style="color:gold; font-size:18px;">🔥 BOSS rơi đồ: <b>${droppedItem}</b>! Đã cất vào Túi đồ.</span>`);
+        } else {
+            logBattle(`<span style="color:#ccc;">Boss không đánh rơi vật phẩm nào...</span>`);
         }
     }
 
-    function winBattle() {
-        logBattle(`<span style="color:#00ff00">Chiến thắng! Bạn nhận được ${enemy.exp} EXP.</span>`);
-        currentUser.exp += enemy.exp;
         checkLevelUp(); 
         saveUserData(); 
 
@@ -853,19 +1007,19 @@
 
         if (isDungeonMode) {
             const dData = dungeonData[dCurrentId];
-            if (dCurrentStage < dData.stages.length - 1) {
-                document.getElementById('btnNextStage').classList.remove('hidden');
-                document.getElementById('btnExitDungeon').classList.add('hidden');
-            } else {
-                logBattle(`<span style="color:gold; font-size:22px; text-shadow: 0 0 10px gold;">CHÚC MỪNG! BẠN ĐÃ CHINH PHỤC ${dData.name.toUpperCase()}!</span>`);
-                document.getElementById('btnExitDungeon').classList.remove('hidden');
-                document.getElementById('btnExitDungeon').innerText = "HOÀN THÀNH & RỜI KHỎI";
-            }
+        if (dCurrentStage < dData.stages.length - 1) {
+            document.getElementById('btnNextStage').classList.remove('hidden');
+            document.getElementById('btnExitDungeon').classList.add('hidden');
         } else {
+            logBattle(`<span style="color:gold; font-size:22px; text-shadow: 0 0 10px gold;">CHÚC MỪNG! BẠN ĐÃ CHINH PHỤC ${dData.name.toUpperCase()}!</span>`);
+            document.getElementById('btnExitDungeon').classList.remove('hidden');
+            document.getElementById('btnExitDungeon').innerText = "HOÀN THÀNH & RỜI KHỎI";
+        }
+    } else {
             const btnFind = document.getElementById('btnFindEnemy');
             if(btnFind) btnFind.disabled = false;
-        }
     }
+}
 
     function checkBattleEnd() {
         if (enemy.hp <= 0) { winBattle(); } 
