@@ -207,6 +207,7 @@
             <div class="tabs-header">
                 <button class="tab-btn active" onclick="openTab(event, 'tab-mission')">QUEST</button>
                 <button class="tab-btn" onclick="openTab(event, 'tab-bag')">BAG</button>
+                d<button class="tab-btn" style="color: gold;" onclick="openTab(event, 'tab-shop')">SHOP</button>
                 <button class="tab-btn" onclick="openTab(event, 'tab-skills')">SKILLS</button>
                 <button class="tab-btn" onclick="openTab(event, 'tab-logs')">LOGS</button>
                 <button class="tab-btn" onclick="openTab(event, 'tab-minigame')">MINIGAME</button>
@@ -232,9 +233,35 @@
                         <div class="card" style="flex: 1;">
                             <h3 style="text-align: center; margin-top: 0;">KHO ĐỒ</h3>
                             <div id="inventoryArea"></div>
+                        </div>
+                        
+                   </div>
+                </div>  
+
+                <div id="tab-shop" class="tab-panel">
+                    <h2 style="color: gold; text-align: center;">CỬA HÀNG HỆ THỐNG</h2>
+                    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                        
+                        <!-- Bình HP -->
+                        <div class="card" style="width: 45%; text-align: center; border-color: #ff4d4d;">
+                            <div style="font-size: 50px; margin-bottom: 10px;">❤️</div>
+                            <h3 style="color: #ff4d4d; margin: 0;">HP Potion</h3>
+                            <p style="color: #ccc; font-size: 18px; min-height: 50px;">Hồi phục ngay lập tức 100 HP.</p>
+                            <p style="color: gold; font-weight: bold; font-size: 22px;">Giá: 50 Cash</p>
+                            <button class="btn-system" style="width: 100%; border-color: #ff4d4d; color: #ff4d4d !important; font-size: 20px;" onclick="buyShopItem('hp_potion')">MUA VÀ DÙNG</button>
+                        </div>
+
+                        <!-- Bình MP -->
+                        <div class="card" style="width: 45%; text-align: center; border-color: #00bfff;">
+                            <div style="font-size: 50px; margin-bottom: 10px;">🧪</div>
+                            <h3 style="color: #00bfff; margin: 0;">MP Potion</h3>
+                            <p style="color: #ccc; font-size: 18px; min-height: 50px;">Hồi phục ngay lập tức 100 MP.</p>
+                            <p style="color: gold; font-weight: bold; font-size: 22px;">Giá: 50 Cash</p>
+                            <button class="btn-system" style="width: 100%; border-color: #00bfff; color: #00bfff !important; font-size: 20px;" onclick="buyShopItem('mp_potion')">MUA VÀ DÙNG</button>
+                        </div>
+
                     </div>
-    </div>
-</div>
+                </div>
 
                 <div id="tab-skills" class="tab-panel">
                     <h2 style="color: #00bfff;">SKILL POINTS: <span id="skPoints">0</span></h2>
@@ -397,10 +424,45 @@
 
     // --- DỮ LIỆU ITEM ---
     const ITEM_DATA = {
-    "Dagger": { type: "weapon", name: "Dagger", str: 15, vit: 0, mp: 0, effect: "Tăng 2% ST đòn đánh thường", img: "dagger.png" },
-    "Shield": { type: "shield", name: "Shield", str: 0, vit: 5, mp: 0, effect: "Giảm 1.5% ST gánh chịu", img: "shield.png" },
-    "Essence of Magic": { type: "accessory", name: "Essence of Magic", str: 0, vit: 0, mp: 50, effect: "Hồi 2% MP mỗi lượt", img: "essenceofmagic.png" }
+        "Dagger": { type: "weapon", name: "Dagger", str: 15, vit: 0, mp: 0, effect: "Tăng 2% ST đòn đánh thường", img: "dagger.png" },
+        "Shield": { type: "shield", name: "Shield", str: 0, vit: 5, mp: 0, effect: "Giảm 1.5% ST gánh chịu", img: "shield.png" },
+        "Essence of Magic": { type: "accessory", name: "Essence of Magic", str: 0, vit: 0, mp: 50, effect: "Hồi 2% MP mỗi lượt", img: "essenceofmagic.png" }
 };
+
+    // --- DỮ LIỆU CỬA HÀNG ---
+    const SHOP_DATA = {
+        "hp_potion": { name: "HP Potion", price: 50, type: "heal", amount: 100, stat: "hp", maxStat: "maxHp" },
+        "mp_potion": { name: "MP Potion", price: 50, type: "heal", amount: 100, stat: "mp", maxStat: "maxMp" }
+    };
+
+    window.buyShopItem = async function(itemId) {
+        const item = SHOP_DATA[itemId];
+        if (!item) return;
+
+        // Kiểm tra tiền
+        if (currentUser.cash < item.price) {
+            return alert(`Bạn không đủ Cash để mua ${item.name}! Cần ${item.price} Cash.`);
+        }
+
+        // Nếu là item hồi máu/mana
+        if (item.type === "heal") {
+            if (currentUser[item.stat] >= currentUser[item.maxStat]) {
+                return alert(`${item.stat.toUpperCase()} của bạn đã đầy, không thể dùng thêm!`);
+            }
+            
+            // Trừ tiền
+            currentUser.cash -= item.price;
+            
+            // Cộng máu/mana (Không vượt quá giới hạn Max)
+            currentUser[item.stat] = Math.min(currentUser[item.maxStat], currentUser[item.stat] + item.amount);
+            
+            alert(`Mua thành công! Bạn đã sử dụng ${item.name} và hồi phục ${item.amount} ${item.stat.toUpperCase()}.`);
+            
+            // Lưu dữ liệu lên database và tải lại giao diện
+            await set(ref(db, 'users/' + currentUser.username), currentUser);
+            render();
+        }
+    };
 
     const enemies = [
         { name: "Thợ Săn Hạng E", hp: 80, atk: 10, def: 5, exp: 20, img: "HanSongYi.jpg" },
