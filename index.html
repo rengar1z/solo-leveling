@@ -1187,8 +1187,8 @@ window.unequipItem = async function(slot, doSave = true) {
             btnExit.innerText = "THOÁT KHỎI CỔNG ĐỎ";
             document.getElementById('dDungeonTitle').style.color = "#ffcc00"; 
             document.getElementById('dDungeonTitle').style.textShadow = "none";
-            return; // THÊM LỆNH NÀY ĐỂ DỪNG NGAY, TRÁNH LỖI NHẢY SANG ẢI HẦM NGỤC THƯỜNG
         }
+        return; // MANG LỆNH RETURN XUỐNG ĐÂY NÈ! (Bên ngoài khối else, nhưng vẫn ở trong khối if isRedGate)
     }
 
     // XÁC SUẤT 10% GẶP CỔNG ĐỎ KHI ĐÁNH XONG QUÁI TROLL
