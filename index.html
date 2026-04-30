@@ -821,7 +821,7 @@
         const eHpBarBox = eHpBar.parentElement; 
 
         // --- CƠ CHẾ NỔI ĐIÊN (ENRAGE) CHO BOSS ---
-        if (enemy.isBoss && ePercent <= 20) {
+        if (enemy.isBoss && ePercent <= 50) { // <--- Sửa thành 50 ở đây (Kích hoạt khi HP <= 50%)
             // Đổi thanh máu sang màu đỏ sậm
             eHpBar.style.background = "linear-gradient(90deg, #660000, #cc0000)";
             
@@ -844,8 +844,8 @@
             // Tắt hiệu ứng lửa
             eHpBarBox.classList.remove('enraged-glow');
             
-            // Tắt nổi điên nếu Boss hồi máu vượt mức 20%
-            if (ePercent > 20 && enemy.isEnraged) {
+            // Tắt nổi điên nếu Boss hồi máu vượt mức 50%
+            if (ePercent > 50 && enemy.isEnraged) { // <--- Sửa thành 50 ở đây (Tắt đi nếu hồi máu vượt 50%)
                 enemy.isEnraged = false;
                 enemy.atk = Math.floor(enemy.atk / 1.3); // Trả lại sức mạnh cũ
             }
