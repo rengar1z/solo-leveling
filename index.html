@@ -898,56 +898,66 @@
     //Trang bi item
 
     window.renderBag = function() {
-    if (!currentUser.inventory) currentUser.inventory = [];
-    if (!currentUser.equipped) currentUser.equipped = { weapon: null, shield: null, accessory: null };
-    if (currentUser.cash === undefined) currentUser.cash = 0;
+        if (!currentUser.inventory) currentUser.inventory = [];
+        if (!currentUser.equipped) currentUser.equipped = { weapon: null, shield: null, accessory: null };
+        if (currentUser.cash === undefined) currentUser.cash = 0;
 
-    const eqArea = document.getElementById('equippedArea');
-    const invArea = document.getElementById('inventoryArea');
-    if (!eqArea || !invArea) return;
-    
-    eqArea.innerHTML = '';
-    invArea.innerHTML = '';
+        const eqArea = document.getElementById('equippedArea');
+        const invArea = document.getElementById('inventoryArea');
+        if (!eqArea || !invArea) return;
+        
+        eqArea.innerHTML = '';
+        invArea.innerHTML = '';
 
-    // Render đồ đang mặc
-    ['weapon', 'shield', 'accessory'].forEach(slot => {
-        const itemObj = currentUser.equipped[slot];
-        if (itemObj) {
-            const itemData = ITEM_DATA[itemObj.name];
-            eqArea.innerHTML += `<div class="stat-item" style="border-color: gold; padding: 12px;">
-                <span style="font-size: 20px;">
-                    <img src="${itemData.img}" style="width: 30px; height: 30px; vertical-align: middle; margin-right: 8px; border: 1px solid #00bfff; border-radius: 4px;"> 
-                    <b>${itemObj.name}</b> <br><small style="color:#ccc; font-size:16px;">${itemData.effect}</small>
-                </span>
-                <button class="add-btn" style="width: 60px; height: 35px; font-size: 16px;" onclick="unequipItem('${slot}')">THÁO</button>
-            </div>`;
-        } else {
-            eqArea.innerHTML += `<div class="stat-item" style="opacity: 0.5; padding: 12px; justify-content: center;">
-                <span>Trống (${slot.toUpperCase()})</span>
-            </div>`;
-        }
-    });
-
-    // Render túi đồ
-    if (currentUser.inventory.length === 0) {
-        invArea.innerHTML = '<p style="color: #aaa; text-align: center; font-size: 20px;">Túi đồ trống</p>';
-    } else {
-        currentUser.inventory.forEach((itemName, index) => {
-            const itemData = ITEM_DATA[itemName];
-            const sellPrice = itemData.sellPrice || 10;
-            invArea.innerHTML += `<div class="stat-item" style="padding: 12px; display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-size: 20px; flex: 1;">
-                    <img src="${itemData.img}" style="width: 30px; height: 30px; vertical-align: middle; margin-right: 8px; border: 1px solid #00bfff; border-radius: 4px;"> 
-                    <b>${itemName}</b> <br><small style="color:#ccc; font-size:16px;">${itemData.effect}</small>
-                </span>
-                <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <button class="add-btn" style="width: 70px; height: 30px; font-size: 14px;" onclick="equipItem(${index})">MẶC</button>
-                    <button class="add-btn" style="width: 70px; height: 30px; font-size: 14px; background: #ff4d4d; border-color: #cc0000; color: #fff;" onclick="sellItem(${index}, ${sellPrice})">BÁN (${sellPrice})</button>
-                </div>
-            </div>`;
+        // 1. TỰ ĐỘNG DỌN RÁC: Xóa các trang bị bị lỗi khỏi ô đang mặc
+        ['weapon', 'shield', 'accessory'].forEach(slot => {
+            if (currentUser.equipped[slot] && !ITEM_DATA[currentUser.equipped[slot].name]) {
+                currentUser.equipped[slot] = null; // Quét sạch đồ lỗi
+            }
         });
+
+        // 2. TỰ ĐỘNG DỌN RÁC: Xóa các vật phẩm bóng ma khỏi túi đồ
+        currentUser.inventory = currentUser.inventory.filter(itemName => ITEM_DATA[itemName]);
+
+        // Render đồ đang mặc
+        ['weapon', 'shield', 'accessory'].forEach(slot => {
+            const itemObj = currentUser.equipped[slot];
+            if (itemObj) {
+                const itemData = ITEM_DATA[itemObj.name];
+                eqArea.innerHTML += `<div class="stat-item" style="border-color: gold; padding: 12px;">
+                    <span style="font-size: 20px;">
+                        <img src="${itemData.img}" style="width: 30px; height: 30px; vertical-align: middle; margin-right: 8px; border: 1px solid #00bfff; border-radius: 4px;"> 
+                        <b>${itemObj.name}</b> <br><small style="color:#ccc; font-size:16px;">${itemData.effect}</small>
+                    </span>
+                    <button class="add-btn" style="width: 60px; height: 35px; font-size: 16px;" onclick="unequipItem('${slot}')">THÁO</button>
+                </div>`;
+            } else {
+                eqArea.innerHTML += `<div class="stat-item" style="opacity: 0.5; padding: 12px; justify-content: center;">
+                    <span>Trống (${slot.toUpperCase()})</span>
+                </div>`;
+            }
+        });
+
+        // Render túi đồ
+        if (currentUser.inventory.length === 0) {
+            invArea.innerHTML = '<p style="color: #aaa; text-align: center; font-size: 20px;">Túi đồ trống</p>';
+        } else {
+            currentUser.inventory.forEach((itemName, index) => {
+                const itemData = ITEM_DATA[itemName];
+                const sellPrice = itemData.sellPrice || 10;
+                invArea.innerHTML += `<div class="stat-item" style="padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 20px; flex: 1;">
+                        <img src="${itemData.img}" style="width: 30px; height: 30px; vertical-align: middle; margin-right: 8px; border: 1px solid #00bfff; border-radius: 4px;"> 
+                        <b>${itemName}</b> <br><small style="color:#ccc; font-size:16px;">${itemData.effect}</small>
+                    </span>
+                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                        <button class="add-btn" style="width: 70px; height: 30px; font-size: 14px;" onclick="equipItem(${index})">MẶC</button>
+                        <button class="add-btn" style="width: 70px; height: 30px; font-size: 14px; background: #ff4d4d; border-color: #cc0000; color: #fff;" onclick="sellItem(${index}, ${sellPrice})">BÁN (${sellPrice})</button>
+                    </div>
+                </div>`;
+            });
+        }
     }
-}
 
 window.equipItem = async function(index) {
         const itemName = currentUser.inventory[index];
