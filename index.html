@@ -906,7 +906,7 @@
     } else {
         currentUser.inventory.forEach((itemName, index) => {
             const itemData = ITEM_DATA[itemName];
-            const sellPrice = 25; // Giá bán mặc định là 25 Cash
+            const sellPrice = itemData.sellPrice || 10;
             invArea.innerHTML += `<div class="stat-item" style="padding: 12px; display: flex; justify-content: space-between; align-items: center;">
                 <span style="font-size: 20px; flex: 1;">
                     <img src="${itemData.img}" style="width: 30px; height: 30px; vertical-align: middle; margin-right: 8px; border: 1px solid #00bfff; border-radius: 4px;"> 
