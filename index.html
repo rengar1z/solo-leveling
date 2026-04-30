@@ -793,29 +793,54 @@
         if (!enemy) return;
         const pre = getPrefix();
         
-        // Player
+        // Cập nhật HP Player
         const pPercent = (currentUser.hp / currentUser.maxHp) * 100;
         document.getElementById(pre + 'p-hp-bar').style.width = pPercent + "%";
         document.getElementById(pre + 'p-hp-text').innerText = `HP: ${currentUser.hp}/${currentUser.maxHp}`;
         
-        // Enemy
+        // Cập nhật HP Enemy
         const enemyMaxHp = enemy.maxHp || enemy.hp || 100;
         const ePercent = (enemy.hp / enemyMaxHp) * 100;
-        document.getElementById(pre + 'e-hp-bar').style.width = ePercent + "%";
+        const eHpBar = document.getElementById(pre + 'e-hp-bar');
+        eHpBar.style.width = ePercent + "%";
         document.getElementById(pre + 'e-hp-text').innerText = `HP: ${enemy.hp}/${enemyMaxHp}`;
 
-        // Buttons
+        // --- CƠ CHẾ NỔI ĐIÊN (ENRAGE) CHO BOSS ---
+        if (enemy.isBoss && ePercent <= 20) {
+            // Đổi thanh máu sang màu đỏ sậm và phát sáng
+            eHpBar.style.background = "linear-gradient(90deg, #4a0000, #8b0000)";
+            eHpBar.style.boxShadow = "0 0 15px #8b0000";
+            
+            // Kích hoạt trạng thái nổi điên 1 lần duy nhất
+            if (!enemy.isEnraged) {
+                enemy.isEnraged = true;
+                const log = document.getElementById(pre + 'battleLog');
+                log.innerHTML = `<span style="color:red; font-size:18px; font-weight:bold; text-shadow: 0 0 10px red;">⚠️ CẢNH BÁO: ${enemy.name.toUpperCase()} ĐÃ NỔI ĐIÊN! SÁT THƯƠNG TĂNG ĐỘT BIẾN!</span><br>` + log.innerHTML;
+                
+                // Tăng 30% sức mạnh tấn công
+                enemy.atk = Math.floor(enemy.atk * 1.3); 
+            }
+        } else {
+            // Thanh máu bình thường
+            eHpBar.style.background = "#ff0000";
+            eHpBar.style.boxShadow = "none";
+            
+            // Tắt nổi điên nếu Boss hồi máu vượt mức 20%
+            if (ePercent > 20 && enemy.isEnraged) {
+                enemy.isEnraged = false;
+                enemy.atk = Math.floor(enemy.atk / 1.3); // Trả lại sức mạnh cũ
+            }
+        }
+
+        // Quản lý các nút tấn công
         const btnAttack = document.getElementById(pre + 'btnAttack');
         const btnDagger = document.getElementById(pre + 'btnDagger');
         const btnTanSat = document.getElementById(pre + 'btnTanSat');
 
-        // Chỉ khóa cứng (disabled) nút khi không phải lượt của người chơi
         if (btnAttack) btnAttack.disabled = !isMyTurn;
 
-        // Xử lý nút Dagger Rush
         if (btnDagger && btnDagger.style.display !== "none") {
             btnDagger.disabled = !isMyTurn; 
-            // Nếu không đủ MP, chỉ dùng CSS làm mờ để vẫn bấm được và ra thông báo
             if (currentUser.mp < 35) {
                 btnDagger.style.filter = "grayscale(1) brightness(0.5)";
                 btnDagger.style.cursor = "not-allowed";
@@ -825,7 +850,6 @@
             }
         }
 
-        // Xử lý nút Tàn Sát
         if (btnTanSat && btnTanSat.style.display !== "none") {
             btnTanSat.disabled = !isMyTurn;
             if (currentUser.mp < 50) {
@@ -1092,26 +1116,87 @@ window.unequipItem = async function(slot, doSave = true) {
         const defensePower = currentUser.vit || 0; 
         const enemyAtk = enemy.atk || 10;
         let dmg = Math.max(2, enemyAtk - Math.floor(defensePower / 2));
-    
-        // Hiệu ứng Shield: Giảm sát thương 1.5%
-        if (currentUser.equipped && currentUser.equipped.shield && currentUser.equipped.shield.name === "Shield") {
-            dmg = dmg * 0.985;
+        
+        let isSpecialAttack = false;
+        let specialAttackLog = "";
+
+        // --- CƠ CHẾ KỸ NĂNG CỦA CÁC BOSS CỔNG ĐỎ ---
+        if (currentRedGateId && enemy.isBoss) {
+            let rand = Math.random(); // Lấy tỷ lệ từ 0 đến 1
+
+            switch(enemy.bossType) {
+                // 1. BOSS CỔNG BĂNG
+                case "ice_king":
+                    if (rand <= 0.15) { 
+                        // KỸ NĂNG 1: Bão Tuyết Tuyệt Mệnh (15% Tỷ lệ)
+                        dmg = Math.max(10, Math.floor(enemyAtk * 1.8) - Math.floor(defensePower / 3)); 
+                        isSpecialAttack = true;
+                        specialAttackLog = `<span style="color:#00ffff; font-weight:bold; text-shadow: 0 0 5px #00ffff;">❄️ BÃO TUYẾT TUYỆT MỆNH!</span> Vua Tiên Băng vung tay, bão tuyết xé toạc giáp của bạn, gây ${Math.floor(dmg)} sát thương!`;
+                    
+                    } else if (rand <= 0.30) {
+                        // KỸ NĂNG 2 (MỚI): Giáo Băng Đoạt Mệnh (15% Tỷ lệ)
+                        dmg = Math.max(15, Math.floor(enemyAtk * 2.0) - Math.floor(defensePower / 2)); 
+                        isSpecialAttack = true;
+                        specialAttackLog = `<span style="color:#00ffff; font-weight:bold; text-shadow: 0 0 5px #00ffff;">🧊 GIÁO BĂNG ĐOẠT MỆNH!</span> Một ngọn giáo băng đâm xuyên qua bạn, gây ${Math.floor(dmg)} sát thương chí mạng!`;
+                    
+                    } else if (rand <= 0.45 && enemy.hp < enemy.maxHp * 0.5) { 
+                        // KỸ NĂNG 3: Hơi Thở Mùa Đông (15% Tỷ lệ - Chỉ dùng khi HP < 50%)
+                        let healAmount = 300;
+                        enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
+                        logBattle(`<span style="color:#00ff00; font-weight:bold;">✨ Hơi Thở Mùa Đông!</span> Vua Tiên Băng hấp thụ sương giá, hồi phục ${healAmount} HP!`);
+                        dmg = 0; // Hồi máu thì mất lượt đánh
+                    }
+                    break;
+
+                // 2. BOSS CỔNG LỬA
+                case "fire_lord":
+                    if (rand <= 0.15) {
+                        // KỸ NĂNG 1: Cột Lửa Hủy Diệt (15% Tỷ lệ)
+                        dmg = Math.max(20, Math.floor(enemyAtk * 2.2) - Math.floor(defensePower / 4)); 
+                        isSpecialAttack = true;
+                        specialAttackLog = `<span style="color:#ff4d4d; font-weight:bold; text-shadow: 0 0 5px #ff4d4d;">🔥 CỘT LỬA HỦY DIỆT!</span> Chúa Tể Dung Nham thiêu rụi không gian, giáng ${Math.floor(dmg)} sát thương tàn khốc!`;
+                    
+                    } else if (rand <= 0.30) {
+                        // KỸ NĂNG 2 (MỚI): Mưa Lưu Tinh (15% Tỷ lệ)
+                        dmg = Math.max(25, Math.floor(enemyAtk * 2.5) - Math.floor(defensePower / 2)); 
+                        isSpecialAttack = true;
+                        specialAttackLog = `<span style="color:#ff4d4d; font-weight:bold; text-shadow: 0 0 5px #ff4d4d;">☄️ MƯA LƯU TINH!</span> Những tảng đá rực lửa giáng từ trên cao xuống, gây ${Math.floor(dmg)} sát thương!`;
+
+                    } else if (rand <= 0.45 && enemy.hp < enemy.maxHp * 0.4) {
+                        // KỸ NĂNG 3: Dung Nham Trỗi Dậy (15% Tỷ lệ - Chỉ dùng khi HP < 40%)
+                        let healAmount = 450; 
+                        enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
+                        logBattle(`<span style="color:#ff9900; font-weight:bold;">🌋 Dung Nham Trỗi Dậy!</span> Chúa Tể gầm thét, tắm trong biển dung nham để hồi phục ${healAmount} HP!`);
+                        dmg = 0;
+                    }
+                    break;
+            }
         }
 
-        // HIỆU ỨNG MỚI: Áo choàng Tiên Băng - Giảm 5% sát thương
-        if (currentUser.equipped && currentUser.equipped.accessory && currentUser.equipped.accessory.name === "Ice Elf Cloak") {
-            dmg = dmg * 0.95;
+        // --- XỬ LÝ SÁT THƯƠNG GÁNH CHỊU ---
+        if (dmg > 0) {
+            // Giáp tay
+            if (currentUser.equipped && currentUser.equipped.shield && currentUser.equipped.shield.name === "Shield") {
+                dmg = dmg * 0.985;
+            }
+            // Áo choàng Tiên Băng
+            if (currentUser.equipped && currentUser.equipped.accessory && currentUser.equipped.accessory.name === "Ice Elf Cloak") {
+                dmg = dmg * 0.95;
+            }
+            
+            dmg = Math.floor(dmg);
+            triggerPlayerShake();
+            currentUser.hp = Math.max(0, currentUser.hp - dmg);
+            
+            // Xuất log đánh đặc biệt hoặc đánh thường
+            if (isSpecialAttack) {
+                logBattle(specialAttackLog);
+            } else {
+                logBattle(`${enemy.name} tấn công, bạn mất ${dmg} HP.`);
+            }
         }
 
-        // Làm tròn sát thương cuối cùng
-        dmg = Math.floor(dmg);
-    
-        triggerPlayerShake();
-
-        currentUser.hp = Math.max(0, currentUser.hp - dmg);
-        logBattle(`${enemy.name} phản công, bạn mất ${dmg} HP.`);
-    
-        // Hiệu ứng Essence of Magic: Hồi 2% MP
+        // Hiệu ứng trang bị hồi mana
         if (currentUser.hp > 0 && currentUser.equipped && currentUser.equipped.accessory && currentUser.equipped.accessory.name === "Essence of Magic") {
             let manaRegen = Math.max(1, Math.floor(currentUser.maxMp * 0.02));
             currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + manaRegen);
@@ -1125,9 +1210,8 @@ window.unequipItem = async function(slot, doSave = true) {
             logBattle(`<span style="color:red; font-size: 20px;">BẠN ĐÃ THẤT BẠI! Bị thương nặng...</span>`);
             resetToButtonMode(); 
             
-            // XỬ LÝ LỖI KẸT CỔNG ĐỎ KHI CHẾT
             if (currentRedGateId) {
-                currentRedGateId = false; // Phá vỡ phong ấn Cổng Đỏ vì người chơi đã gục ngã
+                currentRedGateId = null; // Phá vỡ phong ấn Cổng Đỏ
                 document.getElementById('dDungeonTitle').style.color = "#ffcc00"; 
                 document.getElementById('dDungeonTitle').style.textShadow = "none";
                 document.getElementById('btnExitDungeon').classList.remove('hidden');
@@ -1349,10 +1433,17 @@ window.unequipItem = async function(slot, doSave = true) {
         document.getElementById('btnNextStage').classList.add('hidden');
         document.getElementById('btnExitDungeon').classList.add('hidden'); // KHÓA NÚT THOÁT
 
+        // --- LỜI THOẠI MỞ MÀN ---
         let introLog = `<span style="color:${gateData.themeColor}">Không gian xung quanh biến đổi... </span> <span style="color:#ff4d4d">${enemy.name}</span> lao đến!`;
-        if (enemy.isBoss && enemy.bossType === "ice_king") {
-            introLog += `<br><span style="color:#00ffff; font-style:italic; font-weight:bold;">"Vua của tiên băng đang tỏ ra khinh thường bạn..."</span>`;
+        
+        if (enemy.isBoss) {
+            if (enemy.bossType === "ice_king") {
+                introLog += `<br><span style="color:#00ffff; font-style:italic; font-weight:bold; text-shadow: 0 0 5px #00ffff;">"Vua của tiên băng đang nhìn bạn bằng ánh mắt khinh bỉ..."</span>`;
+            } else if (enemy.bossType === "fire_lord") {
+                introLog += `<br><span style="color:#ff4d4d; font-style:italic; font-weight:bold; text-shadow: 0 0 5px #ff0000;">"Chúa Tể Dung Nham gầm rống, nhiệt độ bỗng chốc tăng lên dữ dội..."</span>`;
+            }
         }
+        
         document.getElementById('d-battleLog').innerHTML = introLog;
 
         const btnAttack = document.getElementById('d-btnAttack');
