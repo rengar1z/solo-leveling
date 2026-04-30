@@ -473,7 +473,6 @@
         currentUser.equipped = currentUser.equipped || { weapon: null, shield: null, accessory: null };
         document.getElementById('auth').classList.add('hidden');
         document.getElementById('gameWrap').classList.remove('hidden');
-        await loadLeaderboard();
         render();
         window.renderSkills(); 
     }
@@ -504,7 +503,6 @@
         currentUser.logs.push(today + ' - ' + m.text + ' (+' + m.exp + ' EXP)');
         
         await set(ref(db, 'users/' + currentUser.username), currentUser);
-        await loadLeaderboard();
         render();
         if (up) showPopup();
     }
@@ -515,11 +513,6 @@
     }
 
     window.closePopup = function() { document.getElementById('levelPopup').style.display = 'none'; }
-
-    async function loadLeaderboard() {
-        const s = await get(child(ref(db), 'users'));
-        allUsers = s.exists() ? s.val() : {};
-    }
 
     window.updateTitle = async function() {
         currentUser.title = document.getElementById('titleSelect').value;
@@ -643,13 +636,6 @@
         document.getElementById('mission').innerText = m.text;
         document.getElementById('reward').innerText = 'Phần thưởng: ' + m.exp + ' EXP';
         document.getElementById('streak').innerText = 'Chuỗi rèn luyện: ' + currentUser.streak + ' ngày';
-
-        let rank = Object.values(allUsers).sort((a, b) => b.level - a.level).slice(0, 10); 
-        document.getElementById('leaderboard').innerHTML = rank.map((p, i) => 
-            `<div style="margin:8px 0; padding: 5px; border-bottom: 1px solid rgba(0,191,255,0.2); display: flex; justify-content: space-between;">
-                <span>${i + 1}. ${p.username}</span><span style="color:gold; font-weight: bold;">LV ${p.level}</span>
-            </div>`
-        ).join('');
 
         document.getElementById('logs').innerHTML = (currentUser.logs || []).slice().reverse().join('<br>');
         if (currentUser.title) document.getElementById('titleSelect').value = currentUser.title;
