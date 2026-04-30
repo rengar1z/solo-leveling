@@ -870,7 +870,7 @@
         if (itemObj) {
             const itemData = ITEM_DATA[itemObj.name];
             eqArea.innerHTML += `<div class="stat-item" style="border-color: gold; padding: 12px;">
-                <span style="font-size: 20px;">${itemData.img} <b>${itemObj.name}</b> <br><small style="color:#ccc; font-size:16px;">${itemData.effect}</small></span>
+                <span style="font-size: 20px;"><img src="${itemData.img}" style="width: 25px; height: 25px; vertical-align: middle; margin-right: 5px;"> <b>${itemObj.name}</b><br><small style="color:#ccc; font-size:16px;">${itemData.effect}</small></span>
                 <button class="add-btn" style="width: 60px; height: 35px; font-size: 16px;" onclick="unequipItem('${slot}')">THÁO</button>
             </div>`;
         } else {
