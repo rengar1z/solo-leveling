@@ -803,12 +803,18 @@
     //Trang bi item
 
     window.renderBag = function() {
-        const eqArea = document.getElementById('equippedArea');
-        const invArea = document.getElementById('inventoryArea');
-        if (!eqArea || !invArea) return;
+    // --- THÊM PHẦN NÀY ĐỂ BẢO VỆ DỮ LIỆU CŨ ---
+    if (!currentUser.inventory) currentUser.inventory = [];
+    if (!currentUser.equipped) currentUser.equipped = { weapon: null, shield: null, accessory: null };
+    if (currentUser.cash === undefined) currentUser.cash = 0;
+    // ------------------------------------------
+
+    const eqArea = document.getElementById('equippedArea');
+    const invArea = document.getElementById('inventoryArea');
+    if (!eqArea || !invArea) return;
     
-        eqArea.innerHTML = '';
-        invArea.innerHTML = '';
+    eqArea.innerHTML = '';
+    invArea.innerHTML = '';
 
     // Render đồ đang mặc
     ['weapon', 'shield', 'accessory'].forEach(slot => {
