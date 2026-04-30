@@ -1044,7 +1044,7 @@ window.unequipItem = async function(slot, doSave = true) {
     // Logic rớt đồ khi giết BOSS Hầm Ngục
         if (isDungeonMode && enemy.isBoss) {
             const dropChance = Math.random();
-            if (dropChance <= 0.10) { // Tỉ lệ 10% rớt 1 trong 3 đồ
+            if (dropChance <= 0.9) { // Tỉ lệ 10% rớt 1 trong 3 đồ
             const items = ["Dagger", "Shield", "Essence of Magic"];
             const droppedItem = items[Math.floor(Math.random() * items.length)];
             currentUser.inventory.push(droppedItem);
