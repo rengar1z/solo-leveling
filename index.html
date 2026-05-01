@@ -614,24 +614,84 @@
 
                 <div id="tab-shop" class="tab-panel">
                     <h2 style="color: gold; text-align: center;">CỬA HÀNG HỆ THỐNG</h2>
-                    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                    
+                    <h3 style="color: #00bfff; border-bottom: 1px solid rgba(0, 191, 255, 0.5); padding-bottom: 5px;">💊 VẬT PHẨM HỒI PHỤC</h3>
+                    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px;">
                         
-                        <!-- Bình HP -->
-                        <div class="card" style="width: 45%; text-align: center; border-color: #ff4d4d;">
-                            <div style="font-size: 50px; margin-bottom: 10px;">❤️</div>
-                            <h3 style="color: #ff4d4d; margin: 0;">HP Potion</h3>
-                            <p style="color: #ccc; font-size: 18px; min-height: 50px;">Hồi phục ngay lập tức 100 HP.</p>
-                            <p style="color: gold; font-weight: bold; font-size: 22px;">Giá: 50 Cash</p>
-                            <button class="btn-system" style="width: 100%; border-color: #ff4d4d; color: #ff4d4d !important; font-size: 20px;" onclick="buyShopItem('hp_potion')">MUA VÀ DÙNG</button>
+                        <!-- HP Nhỏ -->
+                        <div class="card" style="width: 30%; text-align: center; border-color: #ff4d4d; padding: 10px;">
+                            <div style="font-size: 35px; margin-bottom: 5px;">❤️</div>
+                            <h4 style="color: #ff4d4d; margin: 0;">HP Potion (Nhỏ)</h4>
+                            <p style="color: #ccc; font-size: 14px; min-height: 40px;">Hồi phục 100 HP.</p>
+                            <p style="color: gold; font-weight: bold;">Giá: 50 Cash</p>
+                            <button class="btn-system" style="width: 100%; border-color: #ff4d4d; color: #ff4d4d !important; font-size: 14px;" onclick="buyShopItem('hp_potion')">MUA & DÙNG</button>
                         </div>
 
-                        <!-- Bình MP -->
-                        <div class="card" style="width: 45%; text-align: center; border-color: #00bfff;">
-                            <div style="font-size: 50px; margin-bottom: 10px;">🧪</div>
-                            <h3 style="color: #00bfff; margin: 0;">MP Potion</h3>
-                            <p style="color: #ccc; font-size: 18px; min-height: 50px;">Hồi phục ngay lập tức 100 MP.</p>
-                            <p style="color: gold; font-weight: bold; font-size: 22px;">Giá: 50 Cash</p>
-                            <button class="btn-system" style="width: 100%; border-color: #00bfff; color: #00bfff !important; font-size: 20px;" onclick="buyShopItem('mp_potion')">MUA VÀ DÙNG</button>
+                        <!-- HP Trung -->
+                        <div class="card" style="width: 30%; text-align: center; border-color: #ff3333; padding: 10px;">
+                            <div style="font-size: 35px; margin-bottom: 5px;">💖</div>
+                            <h4 style="color: #ff3333; margin: 0;">HP Potion (Trung)</h4>
+                            <p style="color: #ccc; font-size: 14px; min-height: 40px;">Hồi phục 500 HP.</p>
+                            <p style="color: gold; font-weight: bold;">Giá: 200 Cash</p>
+                            <button class="btn-system" style="width: 100%; border-color: #ff3333; color: #ff3333 !important; font-size: 14px;" onclick="buyShopItem('hp_potion_mid')">MUA & DÙNG</button>
+                        </div>
+
+                        <!-- HP Cao -->
+                        <div class="card" style="width: 30%; text-align: center; border-color: #cc0000; padding: 10px;">
+                            <div style="font-size: 35px; margin-bottom: 5px;">❤️‍🔥</div>
+                            <h4 style="color: #cc0000; margin: 0;">HP Potion (Lớn)</h4>
+                            <p style="color: #ccc; font-size: 14px; min-height: 40px;">Hồi phục 2000 HP.</p>
+                            <p style="color: gold; font-weight: bold;">Giá: 700 Cash</p>
+                            <button class="btn-system" style="width: 100%; border-color: #cc0000; color: #cc0000 !important; font-size: 14px;" onclick="buyShopItem('hp_potion_high')">MUA & DÙNG</button>
+                        </div>
+
+                        <!-- MP Nhỏ -->
+                        <div class="card" style="width: 30%; text-align: center; border-color: #00bfff; padding: 10px;">
+                            <div style="font-size: 35px; margin-bottom: 5px;">🧪</div>
+                            <h4 style="color: #00bfff; margin: 0;">MP Potion (Nhỏ)</h4>
+                            <p style="color: #ccc; font-size: 14px; min-height: 40px;">Hồi phục 100 MP.</p>
+                            <p style="color: gold; font-weight: bold;">Giá: 50 Cash</p>
+                            <button class="btn-system" style="width: 100%; border-color: #00bfff; color: #00bfff !important; font-size: 14px;" onclick="buyShopItem('mp_potion')">MUA & DÙNG</button>
+                        </div>
+
+                        <!-- MP Trung -->
+                        <div class="card" style="width: 30%; text-align: center; border-color: #0088ff; padding: 10px;">
+                            <div style="font-size: 35px; margin-bottom: 5px;">💧</div>
+                            <h4 style="color: #0088ff; margin: 0;">MP Potion (Trung)</h4>
+                            <p style="color: #ccc; font-size: 14px; min-height: 40px;">Hồi phục 300 MP.</p>
+                            <p style="color: gold; font-weight: bold;">Giá: 150 Cash</p>
+                            <button class="btn-system" style="width: 100%; border-color: #0088ff; color: #0088ff !important; font-size: 14px;" onclick="buyShopItem('mp_potion_mid')">MUA & DÙNG</button>
+                        </div>
+
+                        <!-- MP Cao -->
+                        <div class="card" style="width: 30%; text-align: center; border-color: #0044ff; padding: 10px;">
+                            <div style="font-size: 35px; margin-bottom: 5px;">🌊</div>
+                            <h4 style="color: #0044ff; margin: 0;">MP Potion (Lớn)</h4>
+                            <p style="color: #ccc; font-size: 14px; min-height: 40px;">Hồi phục 1000 MP.</p>
+                            <p style="color: gold; font-weight: bold;">Giá: 500 Cash</p>
+                            <button class="btn-system" style="width: 100%; border-color: #0044ff; color: #0044ff !important; font-size: 14px;" onclick="buyShopItem('mp_potion_high')">MUA & DÙNG</button>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #ffcc00; border-bottom: 1px solid rgba(255, 204, 0, 0.5); padding-bottom: 5px;">👔 CỬA HÀNG TRANG PHỤC (COSTUME)</h3>
+                    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                        
+                        <!-- Costume 1 -->
+                        <div class="card" style="width: 45%; text-align: center; border-color: gold; padding: 10px;">
+                            <img src="costume_black_suit_icon.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid gold; margin-bottom: 10px;">
+                            <h4 style="color: gold; margin: 0;">Bộ Vest Đen Ám Sát</h4>
+                            <p style="color: #ccc; font-size: 14px; min-height: 40px;">Thay đổi Avatar. Tăng 50 STR, 20 VIT.</p>
+                            <p style="color: gold; font-weight: bold; font-size: 18px;">Giá: 5000 Cash</p>
+                            <button class="btn-system" style="width: 100%; border-color: gold; color: gold !important; font-size: 16px;" onclick="buyShopItem('costume_black_suit')">MUA CẤT VÀO TÚI</button>
+                        </div>
+
+                        <!-- Costume 2 -->
+                        <div class="card" style="width: 45%; text-align: center; border-color: #8eefff; padding: 10px;">
+                            <img src="costume_monarch_icon.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid #8eefff; margin-bottom: 10px;">
+                            <h4 style="color: #8eefff; margin: 0;">Giáp Hoàng Đế Bóng Tối</h4>
+                            <p style="color: #ccc; font-size: 14px; min-height: 40px;">Thay đổi Avatar. Tăng 150 STR, 100 VIT.</p>
+                            <p style="color: gold; font-weight: bold; font-size: 18px;">Giá: 15000 Cash</p>
+                            <button class="btn-system" style="width: 100%; border-color: #8eefff; color: #8eefff !important; font-size: 16px;" onclick="buyShopItem('costume_monarch')">MUA CẤT VÀO TÚI</button>
                         </div>
 
                     </div>
@@ -849,6 +909,9 @@
         "Trường Kiếm của Igris": { type: "weapon", name: "Trường Kiếm của Igris", str: 60, vit: 0, mp: 0, effect: "Vũ khí của Igris. Tăng 15% ST đòn thường", img: "wp/redsword.png", sellPrice: 2000 },
         "Mũ bảo hộ của hiệp sĩ đỏ": { type: "helmet", name: "Mũ bảo hộ của hiệp sĩ đỏ", str: 10, vit: 25, mp: 0, effect: "Giảm 8% sát thương gánh chịu", img: "wp/dagger.png", sellPrice: 1200 },
         "Bao tay của kẻ thống trị": { type: "gloves", name: "Bao tay của kẻ thống trị", str: 20, vit: 10, mp: 0, effect: "Giảm 3% sát thương gánh chịu", img: "wp/dagger.png", sellPrice: 1500 }
+        // DỮ LIỆU COSTUME MỚI (Lưu ý: Thuộc tính avatar dùng để đổi ảnh nhân vật)
+        "Bộ Vest Đen Ám Sát": { type: "costume", name: "Bộ Vest Đen Ám Sát", str: 50, vit: 20, mp: 0, effect: "Đổi Avatar thành Vest Đen", img: "costume_black_suit_icon.png", avatar: "char/Sung_Jinwoo_Black_Suit.jpg", sellPrice: 2500 },
+        "Giáp Hoàng Đế Bóng Tối": { type: "costume", name: "Giáp Hoàng Đế Bóng Tối", str: 150, vit: 100, mp: 100, effect: "Đổi Avatar thành Shadow Monarch", img: "costume_monarch_icon.png", avatar: "char/Shadow_Monarch.jpg", sellPrice: 7500 }
 };
 
     // --- DỮ LIỆU CỬA HÀNG ---
@@ -861,29 +924,28 @@
         const item = SHOP_DATA[itemId];
         if (!item) return;
 
-        // Kiểm tra tiền
         if (currentUser.cash < item.price) {
             return alert(`Bạn không đủ Cash để mua ${item.name}! Cần ${item.price} Cash.`);
         }
 
-        // Nếu là item hồi máu/mana
         if (item.type === "heal") {
             if (currentUser[item.stat] >= currentUser[item.maxStat]) {
                 return alert(`${item.stat.toUpperCase()} của bạn đã đầy, không thể dùng thêm!`);
             }
-            
-            // Trừ tiền
             currentUser.cash -= item.price;
-            
-            // Cộng máu/mana (Không vượt quá giới hạn Max)
             currentUser[item.stat] = Math.min(currentUser[item.maxStat], currentUser[item.stat] + item.amount);
-            
             alert(`Mua thành công! Bạn đã sử dụng ${item.name} và hồi phục ${item.amount} ${item.stat.toUpperCase()}.`);
-            
-            // Lưu dữ liệu lên database và tải lại giao diện
-            await set(ref(db, 'users/' + currentUser.username), currentUser);
-            render();
+        } 
+        // Logic mới: Mua Costume (Item) cất vào túi đồ
+        else if (item.type === "item") {
+            currentUser.cash -= item.price;
+            currentUser.inventory.push(item.itemId);
+            alert(`Mua thành công [${item.name}]! Vật phẩm đã được chuyển vào Túi đồ.`);
         }
+        
+        await set(ref(db, 'users/' + currentUser.username), currentUser);
+        render();
+        if (window.renderBag) window.renderBag();
     };
 
     const enemies = [
@@ -1259,6 +1321,24 @@
                 btnTanSat.style.cursor = "pointer";
             }
         }
+
+        // Dán đoạn này vào trong cùng của hàm function render() {}
+    window.updatePlayerAvatar = function() {
+        let defaultAvatar = "char/Sungjinwoo.png"; // <-- Đổi lại tên file gốc của bạn nếu khác
+        if (currentUser.equipped && currentUser.equipped.costume) {
+            const costumeName = currentUser.equipped.costume.name;
+            if (ITEM_DATA[costumeName] && ITEM_DATA[costumeName].avatar) {
+                defaultAvatar = ITEM_DATA[costumeName].avatar;
+            }
+        }
+        
+        // Quét toàn bộ Avatar trong ARENA và DUNGEON để ép nó đổi ảnh
+        const pImg = document.getElementById('p-img');
+        const dpImg = document.getElementById('d-p-img');
+        if (pImg) pImg.src = defaultAvatar;
+        if (dpImg) dpImg.src = defaultAvatar;
+    };
+    updatePlayerAvatar(); // Kích hoạt ngay lập tức
     }
 
     function triggerShake() {
@@ -1360,39 +1440,38 @@
 
     window.renderBag = function() {
         if (!currentUser.inventory) currentUser.inventory = [];
-        if (!currentUser.equipped) currentUser.equipped = { weapon: null, shield: null, accessory: null, helmet: null, gloves: null };
+        if (!currentUser.equipped) currentUser.equipped = { weapon: null, shield: null, accessory: null, helmet: null, gloves: null, costume: null };
         if (currentUser.cash === undefined) currentUser.cash = 0;
         
-        // Cập nhật cho tài khoản cũ chưa có ô Helmet và Gloves
         if (currentUser.equipped.helmet === undefined) currentUser.equipped.helmet = null;
         if (currentUser.equipped.gloves === undefined) currentUser.equipped.gloves = null;
+        // Bổ sung cho tài khoản cũ ô Costume
+        if (currentUser.equipped.costume === undefined) currentUser.equipped.costume = null;
 
         const eqArea = document.getElementById('equippedArea');
         const invArea = document.getElementById('inventoryArea');
         if (!eqArea || !invArea) return;
         
-        eqArea.innerHTML = '';
-        invArea.innerHTML = '';
+        eqArea.innerHTML = ''; invArea.innerHTML = '';
 
-        // 1. TỰ ĐỘNG DỌN RÁC
-        ['weapon', 'shield', 'accessory', 'helmet', 'gloves'].forEach(slot => {
+        // TỰ ĐỘNG DỌN RÁC (Đã bổ sung ô 'costume')
+        ['weapon', 'shield', 'accessory', 'helmet', 'gloves', 'costume'].forEach(slot => {
             if (currentUser.equipped[slot] && !ITEM_DATA[currentUser.equipped[slot].name]) {
                 currentUser.equipped[slot] = null;
             }
         });
 
-        // 2. DỌN TÚI ĐỒ
+        // DỌN TÚI ĐỒ
         currentUser.inventory = currentUser.inventory.filter(itemName => ITEM_DATA[itemName]);
 
-        // Render đồ ĐANG MẶC
-        ['weapon', 'shield', 'accessory', 'helmet', 'gloves'].forEach(slot => {
+        // Render đồ ĐANG MẶC (Đã bổ sung ô 'costume')
+        ['weapon', 'shield', 'accessory', 'helmet', 'gloves', 'costume'].forEach(slot => {
             const itemObj = currentUser.equipped[slot];
             if (itemObj) {
                 const itemData = ITEM_DATA[itemObj.name];
                 eqArea.innerHTML += `
                 <div class="stat-item" style="border-color: gold; padding: 12px;">
                     <div style="display: flex; gap: 15px; align-items: center; flex: 1;">
-                        <!-- KHUNG ẢNH VÀ TOOLTIP -->
                         <div class="item-icon-wrapper">
                             <img src="${itemData.img}" class="item-img-premium">
                             <div class="item-tooltip">
@@ -1404,7 +1483,6 @@
                                 <span style="color: #ccc; font-size: 14px;">${itemData.effect}</span>
                             </div>
                         </div>
-                        <!-- TÊN VẬT PHẨM BÊN NGOÀI -->
                         <div style="display: flex; flex-direction: column;">
                             <b style="font-size: 22px; color: gold;">${itemObj.name}</b>
                             <small style="color:#aaa; font-size:16px;">Đang trang bị</small>
@@ -1430,7 +1508,6 @@
                 invArea.innerHTML += `
                 <div class="stat-item" style="padding: 12px;">
                     <div style="display: flex; gap: 15px; align-items: center; flex: 1;">
-                        <!-- KHUNG ẢNH VÀ TOOLTIP -->
                         <div class="item-icon-wrapper">
                             <img src="${itemData.img}" class="item-img-premium">
                             <div class="item-tooltip">
@@ -1443,13 +1520,11 @@
                                 <span style="color: yellow; font-size: 14px;">Giá bán: ${sellPrice} Cash</span>
                             </div>
                         </div>
-                        <!-- TÊN VẬT PHẨM BÊN NGOÀI -->
                         <div style="display: flex; flex-direction: column;">
                             <b style="font-size: 20px; color: #fff;">${itemName}</b>
                             <small style="color:#aaa; font-size:16px;">${itemData.effect.length > 25 ? itemData.effect.substring(0, 25) + '...' : itemData.effect}</small>
                         </div>
                     </div>
-                    <!-- NÚT BẤM -->
                     <div style="display: flex; flex-direction: column; gap: 5px;">
                         <button class="add-btn" style="width: 80px; height: 32px; font-size: 16px;" onclick="equipItem(${index})">MẶC</button>
                         <button class="add-btn" style="width: 80px; height: 32px; font-size: 16px; background: #ff4d4d; border-color: #cc0000; color: #fff;" onclick="sellItem(${index}, ${sellPrice})">BÁN (${sellPrice})</button>
