@@ -259,13 +259,47 @@
             flex-direction: column;
             align-items: flex-end;
         }
+        /* KÉO DÀI THANH MÁU TRÊN PC */
         .sl-bar-outer {
-            width: 160px;
-            height: 10px;
+            width: 320px; /* <--- Kéo dài gấp đôi (Từ 160px lên 320px) */
+            height: 14px; /* <--- Làm dày hơn một chút để nhìn rõ màu (Từ 10px lên 14px) */
             border: 2px solid rgba(142, 239, 255, 0.7);
             border-radius: 10px;
             padding: 2px;
             box-shadow: 0 0 8px rgba(142, 239, 255, 0.4);
+        }
+
+        /* VẼ ICON CHỮ THẬP CHUẨN SOLO LEVELING BẰNG CSS */
+        .hp-cross {
+            position: relative;
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+            margin-bottom: 4px;
+        }
+        .hp-cross::before, .hp-cross::after {
+            content: '';
+            position: absolute;
+            background: #8eefff; /* Màu xanh hệ thống */
+            box-shadow: 0 0 10px #8eefff, 0 0 15px #8eefff;
+            border-radius: 4px; /* Bo góc hoàn hảo */
+        }
+        .hp-cross::before {
+            top: 0; bottom: 0; left: 7px; right: 7px; /* Vẽ thanh dọc */
+        }
+        .hp-cross::after {
+            left: 0; right: 0; top: 7px; bottom: 7px; /* Vẽ thanh ngang */
+        }
+
+        /* RESPONSIVE: Tự động thu nhỏ lại khi dùng trên Điện thoại */
+        @media (max-width: 768px) {
+            .sl-bar-outer {
+                width: 140px; 
+            }
+            .sl-top-row {
+                flex-wrap: wrap; /* Cho phép rớt dòng nếu thiếu chỗ */
+                gap: 15px;
+            }
         }
         
         /* Ghi đè màu thanh HP/MP cũ thành xanh Neon */
@@ -402,13 +436,13 @@
         <div>EXP: <span id="expText"></span></div>
         <div class="barbox" style="margin-bottom: 5px;"><div class="bar" id="expBar"></div></div>
 
-        <!-- ================= KHUNG GIAO DIỆN MỚI (TOP) ================= -->
-        <div class="sl-box sl-top-row">
+        <div class="sl-box sl-top-row" style="flex-wrap: wrap; gap: 15px;">
+            
             <!-- HP -->
             <div class="sl-status-block">
                 <div class="sl-icon-col">
-                    <span style="font-size:24px;">➕</span>
-                    <span style="font-size:14px; font-weight:bold;">HP</span>
+                    <div class="hp-cross"></div> <!-- Icon HP vẽ bằng CSS -->
+                    <span style="font-size:16px; font-weight:bold; letter-spacing: 1px;">HP</span>
                 </div>
                 <div class="sl-bar-col">
                     <div class="sl-bar-outer"><div id="hpBar"></div></div>
@@ -419,8 +453,9 @@
             <!-- MP -->
             <div class="sl-status-block">
                 <div class="sl-icon-col">
-                    <span style="font-size:24px;">🧪</span>
-                    <span style="font-size:14px; font-weight:bold;">MP</span>
+                    <!-- Icon Bình MP (Dùng Emoji có filter để đổi sang viền xanh cho đồng bộ) -->
+                    <span style="font-size:26px; line-height: 1; margin-bottom: 2px; filter: drop-shadow(0 0 8px #8eefff) hue-rotate(160deg);">🧪</span>
+                    <span style="font-size:16px; font-weight:bold; letter-spacing: 1px;">MP</span>
                 </div>
                 <div class="sl-bar-col">
                     <div class="sl-bar-outer"><div id="mpBar"></div></div>
@@ -428,11 +463,12 @@
                 </div>
             </div>
 
-            <!-- FATIGUE -> ĐỔI THÀNH CASH -->
+            <!-- CASH -->
             <div class="sl-status-block" style="flex-direction: column; gap: 5px;">
-                <span style="font-size:28px; filter: drop-shadow(0 0 10px #8eefff);">💠</span>
-                <span style="font-size:16px; font-weight:bold; color: #8eefff; text-shadow: 0 0 5px #8eefff;">CASH: <span id="cashText" style="color: #fff;">0</span></span>
+                <span style="font-size:28px; filter: drop-shadow(0 0 10px #8eefff); line-height: 1;">💠</span>
+                <span style="font-size:16px; font-weight:bold; color: #8eefff; text-shadow: 0 0 5px #8eefff; letter-spacing: 1px;">CASH: <span id="cashText" style="color: #fff;">0</span></span>
             </div>
+            
         </div>
 
         <!-- ================= KHUNG GIAO DIỆN MỚI (CHỈ SỐ) ================= -->
