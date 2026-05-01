@@ -832,49 +832,6 @@
         }
     };
 
-    // --- HỆ THỐNG PRELOAD (TẢI TRƯỚC HÌNH ẢNH TOÀN DIỆN) ---
-    window.preloadGameImages = function() {
-        let loadedCount = 0;
-        const imagesToLoad = [];
-
-        // 1. Thu thập ảnh từ ARENA (Thợ săn)
-        enemies.forEach(e => {
-            if (e.img) imagesToLoad.push(e.img);
-            if (e.enrageImg) imagesToLoad.push(e.enrageImg); 
-        });
-
-        // 2. Thu thập ảnh từ CỔNG ĐỎ (Red Gates)
-        for (const key in RED_GATES) {
-            RED_GATES[key].stages.forEach(stage => {
-                if (stage.img) imagesToLoad.push(stage.img);
-                if (stage.enrageImg) imagesToLoad.push(stage.enrageImg);
-            });
-        }
-
-        // 3. Thu thập ảnh từ HẦM NGỤC (Dungeons)
-        for (const key in dungeonData) {
-            dungeonData[key].stages.forEach(stage => {
-                if (stage.img) imagesToLoad.push(stage.img);
-                if (stage.enrageImg) imagesToLoad.push(stage.enrageImg);
-            });
-        }
-
-        // Lọc bỏ các ảnh bị trùng lặp (để không tải 1 ảnh nhiều lần)
-        const uniqueImages = [...new Set(imagesToLoad)];
-        
-        // Tiến hành tải ngầm
-        uniqueImages.forEach(src => {
-            const img = new Image();
-            img.src = src;
-            loadedCount++;
-        });
-
-        console.log(`[Hệ thống] Đã tải trước ${loadedCount} hình ảnh thợ săn và quái vật vào bộ nhớ đệm!`);
-    }
-
-    // Kích hoạt ngay khi web vừa chạy
-    preloadGameImages();
-
     // --- DỮ LIỆU ITEM ---
     const ITEM_DATA = {
         "Dagger": { type: "weapon", name: "Dagger", str: 15, vit: 0, mp: 0, effect: "Tăng 2% ST đòn đánh thường", img: "wp/dagger.png", sellPrice: 30 },
@@ -1129,11 +1086,27 @@
 
     window.upgradeStat = async function(e, statKey) {
         e.stopPropagation(); 
+
+        // LỚP BẢO VỆ: Cấm cộng điểm khi đang đối đầu quái vật còn sống
+        if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
+            return alert("⚠️ HỆ THỐNG: Không thể phân bổ điểm tiềm năng trong lúc chiến đấu!");
+        }
+
         if (currentUser.points > 0) {
             currentUser[statKey]++;
             currentUser.points--;
-            if (statKey === 'vit') { currentUser.maxHp = 100 + (currentUser.vit * 10); currentUser.hp = currentUser.maxHp; }
-            if (statKey === 'int') { currentUser.maxMp = 50 + (currentUser.int * 5); currentUser.mp = currentUser.maxMp; }
+            
+            if (statKey === 'vit') { 
+                // Fix Bug Hồi Full Máu: Chỉ cộng thêm 10 HP giới hạn, KHÔNG hồi full cây
+                currentUser.maxHp += 10; 
+                currentUser.hp += 10; 
+            }
+            if (statKey === 'int') { 
+                // Tương tự với MP: Chỉ cộng thêm 5 MP giới hạn
+                currentUser.maxMp += 5; 
+                currentUser.mp += 5; 
+            }
+            
             await set(ref(db, 'users/' + currentUser.username), currentUser);
             render(); 
         } else {
@@ -1988,7 +1961,52 @@ window.unequipItem = async function(slot, doSave = true) {
         isDungeonMode = false;
         document.getElementById('dungeonListArea').classList.remove('hidden');
         document.getElementById('dungeonCombatUI').classList.add('hidden');
+        
+        enemy = null; // <--- THÊM DÒNG NÀY VÀO ĐỂ XÓA DỮ LIỆU QUÁI VẬT CŨ
     }
+
+    // --- HỆ THỐNG PRELOAD (TẢI TRƯỚC HÌNH ẢNH TOÀN DIỆN) ---
+    window.preloadGameImages = function() {
+        let loadedCount = 0;
+        const imagesToLoad = [];
+
+        // 1. Thu thập ảnh từ ARENA (Thợ săn)
+        enemies.forEach(e => {
+            if (e.img) imagesToLoad.push(e.img);
+            if (e.enrageImg) imagesToLoad.push(e.enrageImg); 
+        });
+
+        // 2. Thu thập ảnh từ CỔNG ĐỎ (Red Gates)
+        for (const key in RED_GATES) {
+            RED_GATES[key].stages.forEach(stage => {
+                if (stage.img) imagesToLoad.push(stage.img);
+                if (stage.enrageImg) imagesToLoad.push(stage.enrageImg);
+            });
+        }
+
+        // 3. Thu thập ảnh từ HẦM NGỤC (Dungeons)
+        for (const key in dungeonData) {
+            dungeonData[key].stages.forEach(stage => {
+                if (stage.img) imagesToLoad.push(stage.img);
+                if (stage.enrageImg) imagesToLoad.push(stage.enrageImg);
+            });
+        }
+
+        // Lọc bỏ các ảnh bị trùng lặp (để không tải 1 ảnh nhiều lần)
+        const uniqueImages = [...new Set(imagesToLoad)];
+        
+        // Tiến hành tải ngầm
+        uniqueImages.forEach(src => {
+            const img = new Image();
+            img.src = src;
+            loadedCount++;
+        });
+
+        console.log(`[Hệ thống] Đã tải trước ${loadedCount} hình ảnh thợ săn và quái vật vào bộ nhớ đệm!`);
+    }
+
+    // Kích hoạt ngay khi web vừa chạy
+    preloadGameImages();
 
     setTimeout(startNewBattle, 2000);
 
