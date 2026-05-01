@@ -916,8 +916,14 @@
 
     // --- DỮ LIỆU CỬA HÀNG ---
     const SHOP_DATA = {
-        "hp_potion": { name: "HP Potion", price: 50, type: "heal", amount: 100, stat: "hp", maxStat: "maxHp" },
-        "mp_potion": { name: "MP Potion", price: 50, type: "heal", amount: 100, stat: "mp", maxStat: "maxMp" }
+        "hp_potion": { name: "HP Potion (Nhỏ)", price: 50, type: "heal", amount: 100, stat: "hp", maxStat: "maxHp" },
+        "mp_potion": { name: "MP Potion (Nhỏ)", price: 50, type: "heal", amount: 100, stat: "mp", maxStat: "maxMp" },
+        "hp_potion_mid": { name: "HP Potion (Trung)", price: 200, type: "heal", amount: 500, stat: "hp", maxStat: "maxHp" },
+        "mp_potion_mid": { name: "MP Potion (Trung)", price: 150, type: "heal", amount: 300, stat: "mp", maxStat: "maxMp" },
+        "hp_potion_high": { name: "HP Potion (Lớn)", price: 700, type: "heal", amount: 2000, stat: "hp", maxStat: "maxHp" },
+        "mp_potion_high": { name: "MP Potion (Lớn)", price: 500, type: "heal", amount: 1000, stat: "mp", maxStat: "maxMp" },
+        "costume_black_suit": { name: "Bộ Vest Đen Ám Sát", price: 5000, type: "item", itemId: "Bộ Vest Đen Ám Sát" },
+        "costume_monarch": { name: "Giáp Hoàng Đế Bóng Tối", price: 15000, type: "item", itemId: "Giáp Hoàng Đế Bóng Tối" }
     };
 
     window.buyShopItem = async function(itemId) {
