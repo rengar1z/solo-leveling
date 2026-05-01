@@ -1240,7 +1240,7 @@ window.unequipItem = async function(slot, doSave = true) {
                             dmg = Math.max(30, Math.floor(enemyAtk * 2.8) - Math.floor(defensePower / 2));
                             isSpecialAttack = true;
                             specialAttackLog = `<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">🌪️ LIÊN HOÀN KIẾM!</span> Igris áp sát chớp nhoáng và chém liên tục, giáng ${Math.floor(dmg)} sát thương!`;
-                        } } else if (rand <= 0.45) {
+                        } else if (rand <= 0.45) {
                             // KỸ NĂNG 3: Uy Áp Kẻ Thống Trị (Gây Choáng)
                             dmg = Math.max(10, Math.floor(enemyAtk * 1.5) - Math.floor(defensePower / 2));
                             isSpecialAttack = true;
