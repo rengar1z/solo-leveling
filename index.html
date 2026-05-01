@@ -832,6 +832,49 @@
         }
     };
 
+    // --- HỆ THỐNG PRELOAD (TẢI TRƯỚC HÌNH ẢNH TOÀN DIỆN) ---
+    window.preloadGameImages = function() {
+        let loadedCount = 0;
+        const imagesToLoad = [];
+
+        // 1. Thu thập ảnh từ ARENA (Thợ săn)
+        enemies.forEach(e => {
+            if (e.img) imagesToLoad.push(e.img);
+            if (e.enrageImg) imagesToLoad.push(e.enrageImg); 
+        });
+
+        // 2. Thu thập ảnh từ CỔNG ĐỎ (Red Gates)
+        for (const key in RED_GATES) {
+            RED_GATES[key].stages.forEach(stage => {
+                if (stage.img) imagesToLoad.push(stage.img);
+                if (stage.enrageImg) imagesToLoad.push(stage.enrageImg);
+            });
+        }
+
+        // 3. Thu thập ảnh từ HẦM NGỤC (Dungeons)
+        for (const key in dungeonData) {
+            dungeonData[key].stages.forEach(stage => {
+                if (stage.img) imagesToLoad.push(stage.img);
+                if (stage.enrageImg) imagesToLoad.push(stage.enrageImg);
+            });
+        }
+
+        // Lọc bỏ các ảnh bị trùng lặp (để không tải 1 ảnh nhiều lần)
+        const uniqueImages = [...new Set(imagesToLoad)];
+        
+        // Tiến hành tải ngầm
+        uniqueImages.forEach(src => {
+            const img = new Image();
+            img.src = src;
+            loadedCount++;
+        });
+
+        console.log(`[Hệ thống] Đã tải trước ${loadedCount} hình ảnh thợ săn và quái vật vào bộ nhớ đệm!`);
+    }
+
+    // Kích hoạt ngay khi web vừa chạy
+    preloadGameImages();
+
     // --- DỮ LIỆU ITEM ---
     const ITEM_DATA = {
         "Dagger": { type: "weapon", name: "Dagger", str: 15, vit: 0, mp: 0, effect: "Tăng 2% ST đòn đánh thường", img: "wp/dagger.png", sellPrice: 30 },
