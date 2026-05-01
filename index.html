@@ -445,11 +445,11 @@
         "troll_village": {
             name: "Làng Của Troll",
             stages: [
-                { name: "Troll Tập Sự", hp: 120, atk: 25, def: 10, exp: 40, img: "troll-1.PNG" },
-                { name: "Troll Ném Đá", hp: 200, atk: 35, def: 15, exp: 60, img: "troll-2.PNG" },
-                { name: "Troll Trinh Sát", hp: 300, atk: 45, def: 20, exp: 90, img: "troll-3.PNG" },
-                { name: "Troll Chiến Binh", hp: 450, atk: 60, def: 30, exp: 150, img: "troll-4.PNG" },
-                { name: "BOSS: Troll Khổng Lồ Đột Biến", hp: 800, atk: 90, def: 45, exp: 500, img: "troll-5.PNG", isBoss: true }
+                { name: "Troll Tập Sự", hp: 120, atk: 25, def: 10, exp: 40, img: "bot/troll-1.PNG" },
+                { name: "Troll Ném Đá", hp: 200, atk: 35, def: 15, exp: 60, img: "bot/troll-2.PNG" },
+                { name: "Troll Trinh Sát", hp: 300, atk: 45, def: 20, exp: 90, img: "bot/troll-3.PNG" },
+                { name: "Troll Chiến Binh", hp: 450, atk: 60, def: 30, exp: 150, img: "bot/troll-4.PNG" },
+                { name: "BOSS: Troll Khổng Lồ Đột Biến", hp: 800, atk: 90, def: 45, exp: 500, img: "bot/troll-5.PNG", isBoss: true }
             ]
         }
     };
@@ -461,14 +461,14 @@
             themeColor: "#00ffff", // Màu xanh băng
             rareDrops: ["Baruka's Dagger", "Ice Elf Cloak"], // Đồ hiếm riêng của cổng này
             stages: [
-                { name: "Tiên Băng Trinh Sát", hp: 300, atk: 45, def: 20, exp: 100, img: "elf1.PNG" },
-                { name: "Tiên Băng Cung Thủ", hp: 550, atk: 55, def: 25, exp: 150, img: "elf2.PNG" },
-                { name: "Gấu Băng", hp: 700, atk: 60, def: 30, exp: 250, img: "gaubang.PNG" },
-                { name: "Thủ Lĩnh Gấu Băng", hp: 1000, atk: 75, def: 35, exp: 400, img: "thulinhgaubang.PNG" },
+                { name: "Tiên Băng Trinh Sát", hp: 300, atk: 45, def: 20, exp: 100, img: "bot/elf1.PNG" },
+                { name: "Tiên Băng Cung Thủ", hp: 550, atk: 55, def: 25, exp: 150, img: "bot/elf2.PNG" },
+                { name: "Gấu Băng", hp: 700, atk: 60, def: 30, exp: 250, img: "bot/gaubang.PNG" },
+                { name: "Thủ Lĩnh Gấu Băng", hp: 1000, atk: 75, def: 35, exp: 400, img: "bot/thulinhgaubang.PNG" },
                 { 
                 name: "BOSS: Thủ Lĩnh Vua Tiên Băng", hp: 1800, atk: 120, def: 60, exp: 2000, 
-                img: "bakura.PNG", // <--- Hình dạng lúc chưa nổi điên
-                enrageImg: "bakura_rage.png", // <--- HÌNH ẢNH BIẾN HÌNH BẠN MUỐN ĐỔI Ở ĐÂY
+                img: "boss/bakura.PNG", // <--- Hình dạng lúc chưa nổi điên
+                enrageImg: "boss/bakura_rage.png", // <--- HÌNH ẢNH BIẾN HÌNH BẠN MUỐN ĐỔI Ở ĐÂY
                 isBoss: true, bossType: "ice_king" 
                 }
             ]
@@ -478,12 +478,12 @@
             themeColor: "#ff4d4d", // Màu đỏ lửa
             rareDrops: ["Vulcan's Sword", "Demon Horn"], // Đồ hiếm giả định cho cổng sau này
             stages: [
-                { name: "Quỷ Lửa Tinh Nhuệ", hp: 300, atk: 60, def: 20, exp: 150, img: "HanSongYi.jpg" },
-                { name: "Chó Săn Địa Ngục", hp: 400, atk: 70, def: 25, exp: 200, img: "HanSongYi.jpg" },
+                { name: "Quỷ Lửa Tinh Nhuệ", hp: 300, atk: 60, def: 20, exp: 150, img: "bot/HanSongYi.jpg" },
+                { name: "Chó Săn Địa Ngục", hp: 400, atk: 70, def: 25, exp: 200, img: "bot/HanSongYi.jpg" },
                 { 
                 name: "BOSS: Chúa Tể Dung Nham", hp: 2500, atk: 150, def: 80, exp: 3000, 
-                img: "HanSongYi.jpg", // <--- Hình dạng lúc chưa nổi điên
-                enrageImg: "SonKihoon.jpg", // <--- HÌNH ẢNH BIẾN HÌNH BẠN MUỐN ĐỔI Ở ĐÂY
+                img: "char/HanSongYi.jpg", // <--- Hình dạng lúc chưa nổi điên
+                enrageImg: "char/SonKihoon.jpg", // <--- HÌNH ẢNH BIẾN HÌNH BẠN MUỐN ĐỔI Ở ĐÂY
                 isBoss: true, bossType: "fire_lord" 
                 }
             ]
@@ -492,12 +492,12 @@
 
     // --- DỮ LIỆU ITEM ---
     const ITEM_DATA = {
-        "Dagger": { type: "weapon", name: "Dagger", str: 15, vit: 0, mp: 0, effect: "Tăng 2% ST đòn đánh thường", img: "dagger.png", sellPrice: 30 },
-        "Shield": { type: "shield", name: "Shield", str: 0, vit: 5, mp: 0, effect: "Giảm 1.5% ST gánh chịu", img: "shield.png", sellPrice: 45 },
-        "Essence of Magic": { type: "accessory", name: "Essence of Magic", str: 0, vit: 0, mp: 50, effect: "Hồi 2% MP mỗi lượt", img: "essenceofmagic.png", sellPrice: 30 },
+        "Dagger": { type: "weapon", name: "Dagger", str: 15, vit: 0, mp: 0, effect: "Tăng 2% ST đòn đánh thường", img: "wp/dagger.png", sellPrice: 30 },
+        "Shield": { type: "shield", name: "Shield", str: 0, vit: 5, mp: 0, effect: "Giảm 1.5% ST gánh chịu", img: "wp/shield.png", sellPrice: 45 },
+        "Essence of Magic": { type: "accessory", name: "Essence of Magic", str: 0, vit: 0, mp: 50, effect: "Hồi 2% MP mỗi lượt", img: "wp/essenceofmagic.png", sellPrice: 30 },
         // Đồ hiếm Red Gate:
-        "Baruka's Dagger": { type: "weapon", name: "Baruka's Dagger", str: 35, vit: 0, mp: 20, effect: "Vũ khí của Vua Tiên Băng. Tăng 10% ST đòn thường", img: "dagger.png",sellPrice: 1500 },
-        "Ice Elf Cloak": { type: "accessory", name: "Ice Elf Cloak", str: 5, vit: 15, mp: 0, effect: "Giảm 5% sát thương gánh chịu", img: "dagger.png", sellPrice: 700 }
+        "Baruka's Dagger": { type: "weapon", name: "Baruka's Dagger", str: 35, vit: 0, mp: 20, effect: "Vũ khí của Vua Tiên Băng. Tăng 10% ST đòn thường", img: "wp/dagger.png",sellPrice: 1500 },
+        "Ice Elf Cloak": { type: "accessory", name: "Ice Elf Cloak", str: 5, vit: 15, mp: 0, effect: "Giảm 5% sát thương gánh chịu", img: "wp/dagger.png", sellPrice: 700 }
         
 };
 
@@ -537,10 +537,10 @@
     };
 
     const enemies = [
-        { name: "Thợ Săn Hạng E", hp: 80, atk: 10, def: 5, exp: 20, img: "HanSongYi.jpg" },
-        { name: "Thợ Săn Hạng D", hp: 150, atk: 25, def: 15, exp: 50, img: "YooJinHoo.jpg" },
-        { name: "Thợ Săn Hạng C", hp: 300, atk: 50, def: 30, exp: 120, img: "HwangDongsuk.jpg" },
-        { name: "Thợ Săn Hạng B", hp: 600, atk: 100, def: 70, exp: 300, img: "SonKihoon.jpg" }
+        { name: "Thợ Săn Hạng E", hp: 80, atk: 10, def: 5, exp: 20, img: "char/HanSongYi.jpg" },
+        { name: "Thợ Săn Hạng D", hp: 150, atk: 25, def: 15, exp: 50, img: "char/YooJinHoo.jpg" },
+        { name: "Thợ Săn Hạng C", hp: 300, atk: 50, def: 30, exp: 120, img: "char/HwangDongsuk.jpg" },
+        { name: "Thợ Săn Hạng B", hp: 600, atk: 100, def: 70, exp: 300, img: "char/SonKihoon.jpg" }
     ];
 
     function getMission() {
@@ -661,9 +661,9 @@
         "Trị Thương": { desc: "Sử dụng MP để hồi phục lượng lớn HP ngay lập tức.", icon: "https://cdn-icons-png.flaticon.com/512/687/687529.png" },
         "Siêu Giác Quan": { desc: "Tăng tỷ lệ né tránh và phát hiện quái vật hiếm.", icon: "https://cdn-icons-png.flaticon.com/512/709/709612.png" },
         "Gia Tăng Chỉ Số": { desc: "Mỗi cấp tăng thêm điểm tiềm năng khi lên level.", icon: "https://cdn-icons-png.flaticon.com/512/15404/15404233.png" },
-        "Tàng Hình": { desc: "Ẩn thân hoàn toàn khỏi tầm mắt kẻ thù. (Yêu cầu: Hạng B)", icon: "tanghinh.jpg" },
-        "Tàn sát": { desc: "Nhắm vào các điểm quan trọng và gây sát thương chí mạng bằng dao găm.", icon: "amsat.jpg" },
-        "Dagger Rush": { desc: "Tung ra một loạt các đòn tấn công bằng dao găm từ mọi hướng vào mục tiêu.", icon: "dagger.jpg" }
+        "Tàng Hình": { desc: "Ẩn thân hoàn toàn khỏi tầm mắt kẻ thù. (Yêu cầu: Hạng B)", icon: "skill/tanghinh.jpg" },
+        "Tàn sát": { desc: "Nhắm vào các điểm quan trọng và gây sát thương chí mạng bằng dao găm.", icon: "skill/amsat.jpg" },
+        "Dagger Rush": { desc: "Tung ra một loạt các đòn tấn công bằng dao găm từ mọi hướng vào mục tiêu.", icon: "skill/dagger.jpg" }
     };
 
     window.renderSkills = function() {
@@ -913,18 +913,18 @@
         const pre = getPrefix();
         const btnAtk = document.getElementById(pre + 'btnAttack');
         btnAtk.classList.add('icon-mode'); btnAtk.classList.remove('btn-system'); 
-        btnAtk.innerHTML = `<img src="attack.jpg">`; btnAtk.style.flex = "none";
+        btnAtk.innerHTML = `<img src="skill/attack.jpg">`; btnAtk.style.flex = "none";
 
         if (currentUser.skills["Dagger Rush"] > 0) {
             const btnD = document.getElementById(pre + 'btnDagger');
             btnD.classList.remove('hidden-skill'); btnD.style.display = "flex"; 
-            btnD.classList.add('icon-mode'); btnD.innerHTML = `<img src="dagger.jpg">`;
+            btnD.classList.add('icon-mode'); btnD.innerHTML = `<img src="skill/dagger.jpg">`;
         }
 
         if (currentUser.skills["Tàn sát"] > 0) {
             const btnT = document.getElementById(pre + 'btnTanSat');
             btnT.classList.remove('hidden-skill'); btnT.style.display = "flex";
-            btnT.classList.add('icon-mode'); btnT.innerHTML = `<img src="amsat.jpg">`;
+            btnT.classList.add('icon-mode'); btnT.innerHTML = `<img src="skill/amsat.jpg">`;
         }
 
         if (isDungeonMode) {
