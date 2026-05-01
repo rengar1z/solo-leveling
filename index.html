@@ -1179,34 +1179,33 @@ window.unequipItem = async function(slot, doSave = true) {
         // --- CƠ CHẾ KỸ NĂNG CỦA CÁC BOSS CỔNG ĐỎ ---
         if (currentRedGateId && enemy.isBoss) {
             
-            // ƯU TIÊN SỐ 1: KIỂM TRA ĐIỀU KIỆN HỒI MÁU (Dưới 50% máu và chưa xài lần nào)
+            // ƯU TIÊN SỐ 1: KIỂM TRA ĐIỀU KIỆN HỒI MÁU
             if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasHealed) {
                 let healAmount = Math.floor(enemy.maxHp * 0.30);
                 
                 enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
-                enemy.hasHealed = true; // Khóa lại, đánh dấu là đã xài
-                dmg = 0; // Mất lượt đánh để tập trung hồi máu
+                enemy.hasHealed = true; 
+                dmg = 0; 
                 
                 if (enemy.bossType === "ice_king") {
                     logBattle(`<span style="color:#00ff00; font-weight:bold; text-shadow: 0 0 5px #00ff00;">✨ HƠI THỞ MÙA ĐÔNG!</span> Vua Tiên Băng hấp thụ sương giá ngàn năm, đột ngột hồi phục ${healAmount} HP!`);
                 } else if (enemy.bossType === "fire_lord") {
                     logBattle(`<span style="color:#ff9900; font-weight:bold; text-shadow: 0 0 5px #ff9900;">🌋 DUNG NHAM TRỖI DẬY!</span> Chúa Tể tắm trong biển lửa, đột ngột hồi phục ${healAmount} HP!`);
                 } else if (enemy.bossType === "igris") {
-                    // KỸ NĂNG HỒI PHỤC DUY NHẤT LÚC RAGE CỦA IGRIS
                     logBattle(`<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">🩸 HUYẾT TẾ!</span> Igris bộc phát hào quang đỏ, hấp thụ máu và hồi phục ${healAmount} HP!`);
-            } 
+                }
+            } // Đã vá lỗi thiếu ngoặc của Ưu tiên số 1 tại đây!
+            
             // NẾU CHƯA ĐỦ ĐIỀU KIỆN HOẶC ĐÃ HỒI MÁU XONG RỒI THÌ MỚI ĐÁNH
             else {
-                let rand = Math.random(); // Lấy tỷ lệ từ 0 đến 1
+                let rand = Math.random(); 
 
                 switch(enemy.bossType) {
-                    // 1. BOSS CỔNG BĂNG
                     case "ice_king":
                         if (rand <= 0.15) { 
                             dmg = Math.max(10, Math.floor(enemyAtk * 1.8) - Math.floor(defensePower / 3)); 
                             isSpecialAttack = true;
                             specialAttackLog = `<span style="color:#00ffff; font-weight:bold; text-shadow: 0 0 5px #00ffff;">❄️ BÃO TUYẾT TUYỆT MỆNH!</span> Vua Tiên Băng vung tay, bão tuyết xé toạc giáp của bạn, gây ${Math.floor(dmg)} sát thương!`;
-                        
                         } else if (rand <= 0.30) {
                             dmg = Math.max(15, Math.floor(enemyAtk * 2.0) - Math.floor(defensePower / 2)); 
                             isSpecialAttack = true;
@@ -1214,13 +1213,11 @@ window.unequipItem = async function(slot, doSave = true) {
                         } 
                         break;
 
-                    // 2. BOSS CỔNG LỬA
                     case "fire_lord":
                         if (rand <= 0.15) {
                             dmg = Math.max(20, Math.floor(enemyAtk * 2.2) - Math.floor(defensePower / 4)); 
                             isSpecialAttack = true;
                             specialAttackLog = `<span style="color:#ff4d4d; font-weight:bold; text-shadow: 0 0 5px #ff4d4d;">🔥 CỘT LỬA HỦY DIỆT!</span> Chúa Tể Dung Nham thiêu rụi không gian, giáng ${Math.floor(dmg)} sát thương tàn khốc!`;
-                        
                         } else if (rand <= 0.30) {
                             dmg = Math.max(25, Math.floor(enemyAtk * 2.5) - Math.floor(defensePower / 2)); 
                             isSpecialAttack = true;
@@ -1228,23 +1225,19 @@ window.unequipItem = async function(slot, doSave = true) {
                         }
                         break;
 
-                        // 3. BOSS IGRIS
                     case "igris":
                         if (rand <= 0.15) {
-                            // KỸ NĂNG 1: Trảm Phong
                             dmg = Math.max(25, Math.floor(enemyAtk * 2.5) - Math.floor(defensePower / 4));
                             isSpecialAttack = true;
                             specialAttackLog = `<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">⚔️ TRẢM PHONG!</span> Igris vung đại kiếm tạo ra luồng kiếm khí ác liệt, gây ${Math.floor(dmg)} sát thương!`;
                         } else if (rand <= 0.30) {
-                            // KỸ NĂNG 2: Liên Hoàn Kiếm
                             dmg = Math.max(30, Math.floor(enemyAtk * 2.8) - Math.floor(defensePower / 2));
                             isSpecialAttack = true;
                             specialAttackLog = `<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">🌪️ LIÊN HOÀN KIẾM!</span> Igris áp sát chớp nhoáng và chém liên tục, giáng ${Math.floor(dmg)} sát thương!`;
-                        } else if (rand <= 0.45) {
-                            // KỸ NĂNG 3: Uy Áp Kẻ Thống Trị (Gây Choáng)
+                        } else if (rand <= 0.45) { // Đã vá lỗi dư ngoặc tại đây!
                             dmg = Math.max(10, Math.floor(enemyAtk * 1.5) - Math.floor(defensePower / 2));
                             isSpecialAttack = true;
-                            isPlayerStunned = true; // <--- Kích hoạt trạng thái Choáng
+                            isPlayerStunned = true; 
                             specialAttackLog = `<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">👁️ UY ÁP KẺ THỐNG TRỊ!</span> Ánh mắt của Igris xuyên thấu tâm can, gây ${Math.floor(dmg)} sát thương và làm bạn <span style="color:yellow; text-shadow: 0 0 5px yellow;">CHOÁNG VÁNG</span>!`;
                         }
                         break;
@@ -1254,24 +1247,15 @@ window.unequipItem = async function(slot, doSave = true) {
 
         // --- XỬ LÝ SÁT THƯƠNG GÁNH CHỊU ---
         if (dmg > 0) {
-            // Giáp tay
-            if (currentUser.equipped && currentUser.equipped.shield && currentUser.equipped.shield.name === "Shield") {
-                dmg = dmg * 0.985;
-            }
-            // Áo choàng Tiên Băng
-            if (currentUser.equipped && currentUser.equipped.accessory && currentUser.equipped.accessory.name === "Ice Elf Cloak") {
-                dmg = dmg * 0.95;
-            }
-
-            // Trang bị mới của Igris:
-            if (currentUser.equipped && currentUser.equipped.helmet && currentUser.equipped.helmet.name === "Mũ bảo hộ của hiệp sĩ đỏ") dmg *= 0.92; // Giảm 8%
-            if (currentUser.equipped && currentUser.equipped.gloves && currentUser.equipped.gloves.name === "Bao tay của kẻ thống trị") dmg *= 0.97; // Giảm 3%
+            if (currentUser.equipped && currentUser.equipped.shield && currentUser.equipped.shield.name === "Shield") dmg *= 0.985;
+            if (currentUser.equipped && currentUser.equipped.accessory && currentUser.equipped.accessory.name === "Ice Elf Cloak") dmg *= 0.95;
+            if (currentUser.equipped && currentUser.equipped.helmet && currentUser.equipped.helmet.name === "Mũ bảo hộ của hiệp sĩ đỏ") dmg *= 0.92;
+            if (currentUser.equipped && currentUser.equipped.gloves && currentUser.equipped.gloves.name === "Bao tay của kẻ thống trị") dmg *= 0.97;
             
             dmg = Math.floor(dmg);
             triggerPlayerShake();
             currentUser.hp = Math.max(0, currentUser.hp - dmg);
             
-            // Xuất log đánh đặc biệt hoặc đánh thường
             if (isSpecialAttack) {
                 logBattle(specialAttackLog);
             } else {
@@ -1279,7 +1263,6 @@ window.unequipItem = async function(slot, doSave = true) {
             }
         }
 
-        // Hiệu ứng trang bị hồi mana
         if (currentUser.hp > 0 && currentUser.equipped && currentUser.equipped.accessory && currentUser.equipped.accessory.name === "Essence of Magic") {
             let manaRegen = Math.max(1, Math.floor(currentUser.maxMp * 0.02));
             currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + manaRegen);
@@ -1294,7 +1277,7 @@ window.unequipItem = async function(slot, doSave = true) {
             resetToButtonMode(); 
             
             if (currentRedGateId) {
-                currentRedGateId = null; // Phá vỡ phong ấn Cổng Đỏ
+                currentRedGateId = null; 
                 document.getElementById('dDungeonTitle').style.color = "#ffcc00"; 
                 document.getElementById('dDungeonTitle').style.textShadow = "none";
                 document.getElementById('btnExitDungeon').classList.remove('hidden');
@@ -1310,16 +1293,16 @@ window.unequipItem = async function(slot, doSave = true) {
         } else {
             // XỬ LÝ HIỆU ỨNG CHOÁNG CỦA IGRIS
             if (isPlayerStunned) {
-                isPlayerStunned = false; // Xóa trạng thái choáng để chuẩn bị cho lượt sau
-                isMyTurn = false; // Tiếp tục khóa nút của người chơi
+                isPlayerStunned = false; 
+                isMyTurn = false; 
                 updateCombatUI();
                 
                 setTimeout(() => {
                     logBattle(`<span style="color:yellow; font-weight:bold;">Tâm trí bạn trở nên trống rỗng... Bạn đã bị mất lượt!</span>`);
-                    setTimeout(enemyTurn, 1200); // Tự động gọi Boss đánh tiếp hiệp 2
+                    setTimeout(enemyTurn, 1200); 
                 }, 1000);
             } else {
-                isMyTurn = true; // Nếu không bị choáng, trả lại nút bấm bình thường
+                isMyTurn = true; 
                 updateCombatUI();
             }
         }
