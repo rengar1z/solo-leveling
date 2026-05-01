@@ -170,6 +170,63 @@
             animation: fireGlow 0.4s infinite alternate !important;
             border-radius: 2px;
         }
+
+        /* --- HIỆU ỨNG ITEM KHO ĐỒ --- */
+        .item-icon-wrapper {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        
+        .item-img-premium {
+            width: 60px; /* Phóng to ảnh gấp đôi */
+            height: 60px;
+            object-fit: cover;
+            border: 2px solid #00bfff;
+            border-radius: 8px;
+            background: radial-gradient(circle, #003366, #000);
+            box-shadow: 0 0 10px rgba(0, 191, 255, 0.4);
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+            vertical-align: middle;
+        }
+
+        /* Khi rê chuột hoặc chạm vào ảnh */
+        .item-icon-wrapper:hover .item-img-premium,
+        .item-icon-wrapper:active .item-img-premium {
+            transform: scale(1.15); /* Phóng to nhẹ */
+            border-color: gold;
+            box-shadow: 0 0 20px gold;
+            z-index: 10;
+        }
+
+        /* Bảng thông tin (Tooltip) ẩn đi lúc bình thường */
+        .item-tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            left: 75px; /* Hiện ra bên phải của tấm ảnh */
+            top: 50%;
+            transform: translateY(-50%);
+            width: 220px;
+            background: rgba(0, 10, 30, 0.95);
+            border: 1px solid gold;
+            box-shadow: 0 0 15px gold;
+            color: #fff;
+            padding: 12px;
+            border-radius: 6px;
+            z-index: 999;
+            transition: 0.3s;
+            pointer-events: none; /* Tránh cản trở việc click nút */
+            text-align: left;
+            line-height: 1.4;
+        }
+
+        /* Bật Tooltip lên khi chạm/hover */
+        .item-icon-wrapper:hover .item-tooltip,
+        .item-icon-wrapper:active .item-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -981,7 +1038,7 @@
 
     window.renderBag = function() {
         if (!currentUser.inventory) currentUser.inventory = [];
-        if (!currentUser.equipped) currentUser.equipped = { weapon: null, shield: null, accessory: null };
+        if (!currentUser.equipped) currentUser.equipped = { weapon: null, shield: null, accessory: null, helmet: null, gloves: null };
         if (currentUser.cash === undefined) currentUser.cash = 0;
         
         // Cập nhật cho tài khoản cũ chưa có ô Helmet và Gloves
@@ -1005,40 +1062,75 @@
         // 2. DỌN TÚI ĐỒ
         currentUser.inventory = currentUser.inventory.filter(itemName => ITEM_DATA[itemName]);
 
-        // Render đồ đang mặc (Thêm helmet và gloves)
+        // Render đồ ĐANG MẶC
         ['weapon', 'shield', 'accessory', 'helmet', 'gloves'].forEach(slot => {
             const itemObj = currentUser.equipped[slot];
             if (itemObj) {
                 const itemData = ITEM_DATA[itemObj.name];
-                eqArea.innerHTML += `<div class="stat-item" style="border-color: gold; padding: 12px;">
-                    <span style="font-size: 20px;">
-                        <img src="${itemData.img}" style="width: 30px; height: 30px; vertical-align: middle; margin-right: 8px; border: 1px solid #00bfff; border-radius: 4px;"> 
-                        <b>${itemObj.name}</b> <br><small style="color:#ccc; font-size:16px;">${itemData.effect}</small>
-                    </span>
-                    <button class="add-btn" style="width: 60px; height: 35px; font-size: 16px;" onclick="unequipItem('${slot}')">THÁO</button>
+                eqArea.innerHTML += `
+                <div class="stat-item" style="border-color: gold; padding: 12px;">
+                    <div style="display: flex; gap: 15px; align-items: center; flex: 1;">
+                        <!-- KHUNG ẢNH VÀ TOOLTIP -->
+                        <div class="item-icon-wrapper">
+                            <img src="${itemData.img}" class="item-img-premium">
+                            <div class="item-tooltip">
+                                <h4 style="color: gold; margin: 0 0 5px 0; font-size: 20px;">${itemObj.name}</h4>
+                                <span style="color: #00bfff; font-size: 16px;">[ ${slot.toUpperCase()} ]</span><br>
+                                <span style="color: #ff4d4d; font-size: 16px;">STR: +${itemData.str} | VIT: +${itemData.vit}</span><br>
+                                <span style="color: #00ff00; font-size: 16px;">MP: +${itemData.mp}</span><br>
+                                <hr style="border-color: #444; margin: 8px 0;">
+                                <span style="color: #ccc; font-size: 14px;">${itemData.effect}</span>
+                            </div>
+                        </div>
+                        <!-- TÊN VẬT PHẨM BÊN NGOÀI -->
+                        <div style="display: flex; flex-direction: column;">
+                            <b style="font-size: 22px; color: gold;">${itemObj.name}</b>
+                            <small style="color:#aaa; font-size:16px;">Đang trang bị</small>
+                        </div>
+                    </div>
+                    <button class="add-btn" style="width: 70px; height: 35px; font-size: 16px;" onclick="unequipItem('${slot}')">THÁO</button>
                 </div>`;
             } else {
-                eqArea.innerHTML += `<div class="stat-item" style="opacity: 0.5; padding: 12px; justify-content: center;">
-                    <span>Trống (${slot.toUpperCase()})</span>
+                eqArea.innerHTML += `
+                <div class="stat-item" style="opacity: 0.5; padding: 15px; justify-content: center;">
+                    <span style="font-size: 18px;">Trống (${slot.toUpperCase()})</span>
                 </div>`;
             }
         });
 
-        // Render túi đồ
+        // Render TÚI ĐỒ (Inventory)
         if (currentUser.inventory.length === 0) {
-            invArea.innerHTML = '<p style="color: #aaa; text-align: center; font-size: 20px;">Túi đồ trống</p>';
+            invArea.innerHTML = '<p style="color: #aaa; text-align: center; font-size: 20px; padding: 20px;">Túi đồ trống</p>';
         } else {
             currentUser.inventory.forEach((itemName, index) => {
                 const itemData = ITEM_DATA[itemName];
                 const sellPrice = itemData.sellPrice || 10;
-                invArea.innerHTML += `<div class="stat-item" style="padding: 12px; display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-size: 20px; flex: 1;">
-                        <img src="${itemData.img}" style="width: 30px; height: 30px; vertical-align: middle; margin-right: 8px; border: 1px solid #00bfff; border-radius: 4px;"> 
-                        <b>${itemName}</b> <br><small style="color:#ccc; font-size:16px;">${itemData.effect}</small>
-                    </span>
+                invArea.innerHTML += `
+                <div class="stat-item" style="padding: 12px;">
+                    <div style="display: flex; gap: 15px; align-items: center; flex: 1;">
+                        <!-- KHUNG ẢNH VÀ TOOLTIP -->
+                        <div class="item-icon-wrapper">
+                            <img src="${itemData.img}" class="item-img-premium">
+                            <div class="item-tooltip">
+                                <h4 style="color: gold; margin: 0 0 5px 0; font-size: 20px;">${itemName}</h4>
+                                <span style="color: #00bfff; font-size: 16px;">[ ${itemData.type.toUpperCase()} ]</span><br>
+                                <span style="color: #ff4d4d; font-size: 16px;">STR: +${itemData.str} | VIT: +${itemData.vit}</span><br>
+                                <span style="color: #00ff00; font-size: 16px;">MP: +${itemData.mp}</span><br>
+                                <hr style="border-color: #444; margin: 8px 0;">
+                                <span style="color: #ccc; font-size: 14px;">${itemData.effect}</span><br>
+                                <span style="color: yellow; font-size: 14px;">Giá bán: ${sellPrice} Cash</span>
+                            </div>
+                        </div>
+                        <!-- TÊN VẬT PHẨM BÊN NGOÀI -->
+                        <div style="display: flex; flex-direction: column;">
+                            <b style="font-size: 20px; color: #fff;">${itemName}</b>
+                            <small style="color:#aaa; font-size:16px;">${itemData.effect.length > 25 ? itemData.effect.substring(0, 25) + '...' : itemData.effect}</small>
+                        </div>
+                    </div>
+                    <!-- NÚT BẤM -->
                     <div style="display: flex; flex-direction: column; gap: 5px;">
-                        <button class="add-btn" style="width: 70px; height: 30px; font-size: 14px;" onclick="equipItem(${index})">MẶC</button>
-                        <button class="add-btn" style="width: 70px; height: 30px; font-size: 14px; background: #ff4d4d; border-color: #cc0000; color: #fff;" onclick="sellItem(${index}, ${sellPrice})">BÁN (${sellPrice})</button>
+                        <button class="add-btn" style="width: 80px; height: 32px; font-size: 16px;" onclick="equipItem(${index})">MẶC</button>
+                        <button class="add-btn" style="width: 80px; height: 32px; font-size: 16px; background: #ff4d4d; border-color: #cc0000; color: #fff;" onclick="sellItem(${index}, ${sellPrice})">BÁN (${sellPrice})</button>
                     </div>
                 </div>`;
             });
