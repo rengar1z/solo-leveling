@@ -445,6 +445,24 @@
             color: #000;
             box-shadow: 0 0 15px #8eefff;
         }
+
+        /* --- HIỆU ỨNG RAGE MODE (KHÔNG CẦN ĐỔI ẢNH) --- */
+        @keyframes rageAuraPulsate {
+            0% { 
+                filter: drop-shadow(0 0 15px #ff0000) sepia(0.5) saturate(2) hue-rotate(-15deg); 
+                transform: scale(1.02); 
+            }
+            100% { 
+                filter: drop-shadow(0 0 35px #ff0000) drop-shadow(0 0 20px #ff4d4d) sepia(0.8) saturate(3) hue-rotate(-25deg); 
+                transform: scale(1.08); 
+            }
+        }
+
+        .boss-enraged-img {
+            animation: rageAuraPulsate 0.6s infinite alternate !important;
+            border-color: #ff0000 !important;
+            box-shadow: inset 0 0 20px rgba(255, 0, 0, 0.5), 0 0 20px rgba(255, 0, 0, 0.5) !important;
+        }
     </style>
 </head>
 <body>
@@ -786,33 +804,23 @@
         "ice_world": {
             name: "CỔNG ĐỎ: THẾ GIỚI BĂNG GIÁ",
             themeColor: "#00ffff", // Màu xanh băng
-            rareDrops: ["Baruka's Dagger", "Ice Elf Cloak"], // Đồ hiếm riêng của cổng này
+            rareDrops: ["Baruka's Dagger", "Ice Elf Cloak"], 
             stages: [
                 { name: "Tiên Băng Trinh Sát", hp: 300, atk: 45, def: 20, exp: 100, img: "bot/elf1.PNG" },
                 { name: "Tiên Băng Cung Thủ", hp: 550, atk: 55, def: 25, exp: 150, img: "bot/elf2.PNG" },
                 { name: "Gấu Băng", hp: 700, atk: 60, def: 30, exp: 250, img: "bot/gaubang.PNG" },
                 { name: "Thủ Lĩnh Gấu Băng", hp: 1000, atk: 75, def: 35, exp: 400, img: "bot/thulinhgaubang.PNG" },
-                { 
-                name: "BOSS: Thủ Lĩnh Vua Tiên Băng", hp: 1800, atk: 120, def: 60, exp: 2000, 
-                img: "boss/bakura.PNG", // <--- Hình dạng lúc chưa nổi điên
-                enrageImg: "boss/bakura_rage.png", // <--- HÌNH ẢNH BIẾN HÌNH BẠN MUỐN ĐỔI Ở ĐÂY
-                isBoss: true, bossType: "ice_king" 
-                }
+                { name: "BOSS: Thủ Lĩnh Vua Tiên Băng", hp: 1800, atk: 120, def: 60, exp: 2000, img: "boss/bakura.PNG", isBoss: true, bossType: "ice_king" }
             ]
         },
         "fire_hell": {
             name: "CỔNG ĐỎ: HỎA NGỤC CHIẾN",
             themeColor: "#ff4d4d", // Màu đỏ lửa
-            rareDrops: ["Vulcan's Sword", "Demon Horn"], // Đồ hiếm giả định cho cổng sau này
+            rareDrops: ["Vulcan's Sword", "Demon Horn"], 
             stages: [
                 { name: "Quỷ Lửa Tinh Nhuệ", hp: 300, atk: 60, def: 20, exp: 150, img: "bot/HanSongYi.jpg" },
                 { name: "Chó Săn Địa Ngục", hp: 400, atk: 70, def: 25, exp: 200, img: "bot/HanSongYi.jpg" },
-                { 
-                name: "BOSS: Chúa Tể Dung Nham", hp: 2500, atk: 150, def: 80, exp: 3000, 
-                img: "char/HanSongYi.jpg", // <--- Hình dạng lúc chưa nổi điên
-                enrageImg: "char/SonKihoon.jpg", // <--- HÌNH ẢNH BIẾN HÌNH BẠN MUỐN ĐỔI Ở ĐÂY
-                isBoss: true, bossType: "fire_lord" 
-                }
+                { name: "BOSS: Chúa Tể Dung Nham", hp: 2500, atk: 150, def: 80, exp: 3000, img: "char/HanSongYi.jpg", isBoss: true, bossType: "fire_lord" }
             ]
         },
         "red_knight_tomb": {
@@ -823,11 +831,7 @@
                 { name: "Hiệp Sĩ Đỏ Gác Cổng", hp: 400, atk: 70, def: 30, exp: 200, img: "bot/HanSongYi.jpg" },
                 { name: "Hiệp Sĩ Đỏ Tinh Nhuệ", hp: 600, atk: 85, def: 40, exp: 300, img: "bot/HanSongYi.jpg" },
                 { name: "Hiệp Sĩ Đỏ Cận Vệ", hp: 800, atk: 100, def: 50, exp: 450, img: "bot/HanSongYi.jpg" },
-                { name: "BOSS: Tư Lệnh Huyết Đỏ Igris", hp: 3500, atk: 180, def: 100, exp: 5000, 
-                  img: "boss/igris.PNG", 
-                  enrageImg: "boss/igris_rage.PNG", 
-                  isBoss: true, bossType: "igris" 
-                }
+                { name: "BOSS: Tư Lệnh Huyết Đỏ Igris", hp: 3500, atk: 180, def: 100, exp: 5000, img: "boss/igris.PNG", isBoss: true, bossType: "igris" }
             ]
         }
     };
@@ -1196,35 +1200,35 @@
         const eHpBarBox = eHpBar.parentElement; 
 
         // --- CƠ CHẾ NỔI ĐIÊN (ENRAGE) CHO BOSS ---
-        
+        const eHpBarBox = eHpBar.parentElement; 
+        const eImgElement = document.getElementById(pre + 'e-img');
+
         // Bước 1: Kiểm tra xem Boss đã chạm mốc 50% máu chưa và có MỚI nổi điên lần đầu không
         if (enemy.isBoss && ePercent <= 50 && !enemy.isEnraged) {
-            enemy.isEnraged = true; // Khóa trạng thái lại, từ giờ đến cuối trận sẽ luôn là true
+            enemy.isEnraged = true; // Khóa trạng thái lại
             
             const log = document.getElementById(pre + 'battleLog');
-            log.innerHTML = `<span style="color:red; font-size:18px; font-weight:bold; text-shadow: 0 0 10px red;">⚠️ CẢNH BÁO: ${enemy.name.toUpperCase()} ĐÃ NỔI ĐIÊN! SÁT THƯƠNG TĂNG ĐỘT BIẾN!</span><br>` + log.innerHTML;
+            log.innerHTML = `<span style="color:red; font-size:18px; font-weight:bold; text-shadow: 0 0 10px red;">⚠️ CẢNH BÁO: ${enemy.name.toUpperCase()} ĐÃ BỘC PHÁT SÁT KHÍ! SÁT THƯƠNG TĂNG ĐỘT BIẾN!</span><br>` + log.innerHTML;
             
-            // Tăng 30% sức mạnh tấn công (Buff vĩnh viễn cho đến khi Boss chết)
+            // Tăng 30% sức mạnh tấn công
             enemy.atk = Math.floor(enemy.atk * 1.3); 
             
-            // ĐỔI SANG HÌNH ẢNH RAGE (Giữ nguyên đến hết trận)
-            const eImgElement = document.getElementById(pre + 'e-img');
-            if (enemy.enrageImg) {
-                eImgElement.src = enemy.enrageImg;
-                eImgElement.classList.add('shake'); 
-                setTimeout(() => eImgElement.classList.remove('shake'), 400);
-            }
+            // Lắc màn hình để tạo lực giật lúc biến hình
+            eImgElement.classList.add('shake'); 
+            setTimeout(() => eImgElement.classList.remove('shake'), 400);
         }
 
-        // Bước 2: Hiển thị giao diện phụ thuộc vào việc Boss đang điên hay bình thường (Mặc kệ số máu hiện tại)
+        // Bước 2: Bật/Tắt giao diện phụ thuộc vào việc Boss đang điên hay bình thường
         if (enemy.isBoss && enemy.isEnraged) {
-            // Boss đã nổi điên: Duy trì viền lửa và màu máu sậm
+            // Boss đã nổi điên: Duy trì viền lửa thanh máu và phủ Hào quang đỏ lên ảnh
             eHpBar.style.background = "linear-gradient(90deg, #660000, #cc0000)";
             eHpBarBox.classList.add('enraged-glow');
+            eImgElement.classList.add('boss-enraged-img'); // Bật hiệu ứng CSS
         } else {
-            // Quái thường hoặc Boss chưa nổi điên: Thanh máu đỏ bình thường
+            // Quái thường hoặc Boss chưa nổi điên: Trạng thái bình thường
             eHpBar.style.background = "#ff0000";
             eHpBarBox.classList.remove('enraged-glow');
+            eImgElement.classList.remove('boss-enraged-img'); // Tắt hiệu ứng CSS
         }
 
         // Quản lý các nút tấn công
@@ -1971,16 +1975,16 @@ window.unequipItem = async function(slot, doSave = true) {
         const imagesToLoad = [];
 
         // 1. Thu thập ảnh từ ARENA (Thợ săn)
-        enemies.forEach(e => {
-            if (e.img) imagesToLoad.push(e.img);
-            if (e.enrageImg) imagesToLoad.push(e.enrageImg); 
-        });
+        if (typeof enemies !== 'undefined') {
+            enemies.forEach(e => {
+                if (e.img) imagesToLoad.push(e.img);
+            });
+        }
 
         // 2. Thu thập ảnh từ CỔNG ĐỎ (Red Gates)
         for (const key in RED_GATES) {
             RED_GATES[key].stages.forEach(stage => {
                 if (stage.img) imagesToLoad.push(stage.img);
-                if (stage.enrageImg) imagesToLoad.push(stage.enrageImg);
             });
         }
 
@@ -1988,11 +1992,10 @@ window.unequipItem = async function(slot, doSave = true) {
         for (const key in dungeonData) {
             dungeonData[key].stages.forEach(stage => {
                 if (stage.img) imagesToLoad.push(stage.img);
-                if (stage.enrageImg) imagesToLoad.push(stage.enrageImg);
             });
         }
 
-        // Lọc bỏ các ảnh bị trùng lặp (để không tải 1 ảnh nhiều lần)
+        // Lọc bỏ các ảnh bị trùng lặp
         const uniqueImages = [...new Set(imagesToLoad)];
         
         // Tiến hành tải ngầm
@@ -2002,10 +2005,10 @@ window.unequipItem = async function(slot, doSave = true) {
             loadedCount++;
         });
 
-        console.log(`[Hệ thống] Đã tải trước ${loadedCount} hình ảnh thợ săn và quái vật vào bộ nhớ đệm!`);
+        console.log(`[Hệ thống] Đã tải trước ${loadedCount} hình ảnh gốc vào bộ nhớ đệm!`);
     }
 
-    // Kích hoạt ngay khi web vừa chạy
+    // Kích hoạt sau khi toàn bộ code đã được đọc xong
     preloadGameImages();
 
     setTimeout(startNewBattle, 2000);
