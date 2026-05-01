@@ -712,7 +712,7 @@
                         
                         <!-- Costume 1 -->
                         <div class="card costume-card" style="text-align: center; border-color: gold; padding: 15px;">
-                            <img src="costume_black_suit_icon.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid gold; margin-bottom: 10px;">
+                            <img src="cos/Sung_Jinwoo_Black_Suit.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid gold; margin-bottom: 10px;">
                             <h4 style="color: gold; margin: 0;">Bộ Vest Đen Ám Sát</h4>
                             <p style="color: #ccc; font-size: 14px; min-height: 45px;">Thay đổi Avatar. Tăng 50 STR, 20 VIT.</p>
                             <button id="btn-costume_black_suit" class="btn-system" style="width: 100%; border-color: gold; font-size: 16px; font-weight: bold; transition: 0.3s;" onclick="handleCostume('costume_black_suit')">MUA (5000 CASH)</button>
@@ -720,10 +720,10 @@
 
                         <!-- Costume 2 -->
                         <div class="card costume-card" style="text-align: center; border-color: #8eefff; padding: 15px;">
-                            <img src="costume_monarch_icon.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid #8eefff; margin-bottom: 10px;">
-                            <h4 style="color: #8eefff; margin: 0;">Giáp Hoàng Đế Bóng Tối</h4>
+                            <img src="cos/Sung_Jinwoo_Mining_Work.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid #8eefff; margin-bottom: 10px;">
+                            <h4 style="color: #8eefff; margin: 0;">Mining Work Clothes</h4>
                             <p style="color: #ccc; font-size: 14px; min-height: 45px;">Thay đổi Avatar. Tăng 150 STR, 100 VIT.</p>
-                            <button id="btn-costume_monarch" class="btn-system" style="width: 100%; border-color: #8eefff; font-size: 16px; font-weight: bold; transition: 0.3s;" onclick="handleCostume('costume_monarch')">MUA (15000 CASH)</button>
+                            <button id="btn-costume_Mining Work Clothes" class="btn-system" style="width: 100%; border-color: #8eefff; font-size: 16px; font-weight: bold; transition: 0.3s;" onclick="handleCostume('costume_Mining Work Clothes')">MUA (15000 CASH)</button>
                         </div>
                         
                         <!-- Sau này bạn cứ copy block <div class="card costume-card"> dán tiếp vào đây, nó sẽ tự đẩy dài ra bên phải -->
@@ -945,7 +945,7 @@
         "Bao tay của kẻ thống trị": { type: "gloves", name: "Bao tay của kẻ thống trị", str: 20, vit: 10, mp: 0, effect: "Giảm 3% sát thương gánh chịu", img: "wp/dagger.png", sellPrice: 1500 },
         // DỮ LIỆU COSTUME MỚI (Lưu ý: Thuộc tính avatar dùng để đổi ảnh nhân vật)
         "Bộ Vest Đen Ám Sát": { type: "costume", name: "Bộ Vest Đen Ám Sát", str: 50, vit: 20, mp: 0, effect: "Đổi Avatar thành Vest Đen", img: "cos/Sung_Jinwoo_Black_Suit.png", avatar: "cos/Sung_Jinwoo_Black_Suit.png", sellPrice: 2500 },
-        "Giáp Hoàng Đế Bóng Tối": { type: "costume", name: "Giáp Hoàng Đế Bóng Tối", str: 150, vit: 100, mp: 100, effect: "Đổi Avatar thành Shadow Monarch", img: "cos/Sung_Jinwoo_Mining_Work.png", avatar: "cos/Sung_Jinwoo_Mining_Work.png", sellPrice: 7500 }
+        "Mining Work Clothes": { type: "costume", name: "Mining Work Clothes", str: 150, vit: 100, mp: 100, effect: "Đổi Avatar thành Mining Work Clothes", img: "cos/Sung_Jinwoo_Mining_Work.png", avatar: "cos/Sung_Jinwoo_Mining_Work.png", sellPrice: 7500 }
 };
 
     // --- DỮ LIỆU CỬA HÀNG ---
@@ -957,7 +957,7 @@
         "hp_potion_high": { name: "HP Potion (Lớn)", price: 700, type: "heal", amount: 2000, stat: "hp", maxStat: "maxHp" },
         "mp_potion_high": { name: "MP Potion (Lớn)", price: 500, type: "heal", amount: 1000, stat: "mp", maxStat: "maxMp" },
         "costume_black_suit": { name: "Bộ Vest Đen Ám Sát", price: 5000, type: "item", itemId: "Bộ Vest Đen Ám Sát" },
-        "costume_monarch": { name: "Giáp Hoàng Đế Bóng Tối", price: 15000, type: "item", itemId: "Giáp Hoàng Đế Bóng Tối" }
+        "costume_Mining Work Clothes": { name: "Giáp Hoàng Đế Bóng Tối", price: 15000, type: "item", itemId: "Mining Work Clothes" }
     };
 
     window.buyShopItem = async function(itemId) {
