@@ -439,6 +439,7 @@
     let dCurrentStage = 0;
     let currentRedGateId = null; // Trạng thái lưu ID của cổng đỏ hiện tại
     let rgCurrentStage = 0;
+    let isPlayerStunned = false;
 
     // --- DỮ LIỆU HẦM NGỤC ---
     const dungeonData = {
@@ -1240,11 +1241,12 @@ window.unequipItem = async function(slot, doSave = true) {
                             dmg = Math.max(30, Math.floor(enemyAtk * 2.8) - Math.floor(defensePower / 2));
                             isSpecialAttack = true;
                             specialAttackLog = `<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">🌪️ LIÊN HOÀN KIẾM!</span> Igris áp sát chớp nhoáng và chém liên tục, giáng ${Math.floor(dmg)} sát thương!`;
-                        } else if (rand <= 0.45) {
-                            // KỸ NĂNG 3: Uy Áp Kẻ Thống Trị
-                            dmg = Math.max(15, Math.floor(enemyAtk * 2.0) - Math.floor(defensePower / 2));
+                        } } else if (rand <= 0.45) {
+                            // KỸ NĂNG 3: Uy Áp Kẻ Thống Trị (Gây Choáng)
+                            dmg = Math.max(10, Math.floor(enemyAtk * 1.5) - Math.floor(defensePower / 2));
                             isSpecialAttack = true;
-                            specialAttackLog = `<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">👁️ UY ÁP KẺ THỐNG TRỊ!</span> Ánh mắt của Igris xuyên thấu tâm can, tạo áp lực kinh hoàng gây ${Math.floor(dmg)} sát thương!`;
+                            isPlayerStunned = true; // <--- Kích hoạt trạng thái Choáng
+                            specialAttackLog = `<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">👁️ UY ÁP KẺ THỐNG TRỊ!</span> Ánh mắt của Igris xuyên thấu tâm can, gây ${Math.floor(dmg)} sát thương và làm bạn <span style="color:yellow; text-shadow: 0 0 5px yellow;">CHOÁNG VÁNG</span>!`;
                         }
                         break;
                 }
@@ -1307,8 +1309,20 @@ window.unequipItem = async function(slot, doSave = true) {
                 if(btnFind) btnFind.disabled = false;
             }
         } else {
-            isMyTurn = true;
-            updateCombatUI();
+            // XỬ LÝ HIỆU ỨNG CHOÁNG CỦA IGRIS
+            if (isPlayerStunned) {
+                isPlayerStunned = false; // Xóa trạng thái choáng để chuẩn bị cho lượt sau
+                isMyTurn = false; // Tiếp tục khóa nút của người chơi
+                updateCombatUI();
+                
+                setTimeout(() => {
+                    logBattle(`<span style="color:yellow; font-weight:bold;">Tâm trí bạn trở nên trống rỗng... Bạn đã bị mất lượt!</span>`);
+                    setTimeout(enemyTurn, 1200); // Tự động gọi Boss đánh tiếp hiệp 2
+                }, 1000);
+            } else {
+                isMyTurn = true; // Nếu không bị choáng, trả lại nút bấm bình thường
+                updateCombatUI();
+            }
         }
     }
 
@@ -1431,7 +1445,8 @@ window.unequipItem = async function(slot, doSave = true) {
         const randIdx = Math.floor(Math.random() * enemies.length);
         const template = enemies[randIdx];
         enemy = { ...template, maxHp: template.hp };
-        isMyTurn = true; 
+        isMyTurn = true;
+        isPlayerStunned = false;
 
         document.getElementById('e-name').innerText = enemy.name;
         document.getElementById('e-img').src = enemy.img;
@@ -1463,6 +1478,7 @@ window.unequipItem = async function(slot, doSave = true) {
         const stageData = dungeonData[dCurrentId].stages[dCurrentStage];
         enemy = { ...stageData, maxHp: stageData.hp };
         isMyTurn = true;
+        isPlayerStunned = false;
 
         document.getElementById('dStageText').innerText = `Ải ${dCurrentStage + 1}/${dungeonData[dCurrentId].stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
         if(enemy.isBoss) {
@@ -1506,6 +1522,7 @@ window.unequipItem = async function(slot, doSave = true) {
         const stageData = gateData.stages[rgCurrentStage];
         enemy = { ...stageData, maxHp: stageData.hp };
         isMyTurn = true;
+        isPlayerStunned = false;
 
         document.getElementById('dStageText').innerText = `Ải ${rgCurrentStage + 1}/${gateData.stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
         document.getElementById('dStageText').style.color = gateData.themeColor;
