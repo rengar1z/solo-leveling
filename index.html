@@ -353,7 +353,9 @@
             margin-left: 15px;
             color: #fff;
             text-shadow: 0 0 10px #8eefff;
-            flex: 1;
+            /* Đã xóa flex: 1; để nút không bị đẩy ra xa */
+            width: 100px; /* Thêm độ rộng cố định để các nút + luôn thẳng cột dọc */
+            text-align: left;
         }
         .sl-points-block {
             justify-content: flex-end;
