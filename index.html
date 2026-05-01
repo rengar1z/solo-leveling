@@ -1558,12 +1558,6 @@ window.unequipItem = async function(slot, doSave = true) {
         startRedGateStage();
     }
 
-    window.startNextRedGateStage = function() {
-        if (currentUser.hp <= 0) return alert("Hết máu rồi, không thể đi tiếp!");
-        rgCurrentStage++;
-        startRedGateStage();
-}
-
     window.startNextStage = function() {
         if (currentUser.hp <= 0) return alert("Bạn không thể đi tiếp khi hết máu!");
         dCurrentStage++;
