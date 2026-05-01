@@ -487,6 +487,21 @@
                 isBoss: true, bossType: "fire_lord" 
                 }
             ]
+        },
+        "red_knight_tomb": {
+            name: "CỔNG ĐỎ: NƠI AN NGHỈ CỦA HIỆP SĨ ĐỎ",
+            themeColor: "#cc0000", // Đỏ sậm rùng rợn
+            rareDrops: ["Đại kiếm của Ma Vương", "Mũ bảo hộ của hiệp sĩ đỏ", "Bao tay của kẻ thống trị"], 
+            stages: [
+                { name: "Hiệp Sĩ Đỏ Gác Cổng", hp: 400, atk: 70, def: 30, exp: 200, img: "enemy.png" },
+                { name: "Hiệp Sĩ Đỏ Tinh Nhuệ", hp: 600, atk: 85, def: 40, exp: 300, img: "enemy.png" },
+                { name: "Hiệp Sĩ Đỏ Cận Vệ", hp: 800, atk: 100, def: 50, exp: 450, img: "enemy.png" },
+                { name: "BOSS: Tư Lệnh Huyết Đỏ Igris", hp: 3500, atk: 180, def: 100, exp: 5000, 
+                  img: "igris_normal.png", 
+                  enrageImg: "igris_rage.png", 
+                  isBoss: true, bossType: "igris" 
+                }
+            ]
         }
     };
 
@@ -498,6 +513,10 @@
         // Đồ hiếm Red Gate:
         "Baruka's Dagger": { type: "weapon", name: "Baruka's Dagger", str: 35, vit: 0, mp: 20, effect: "Vũ khí của Vua Tiên Băng. Tăng 10% ST đòn thường", img: "wp/dagger.png",sellPrice: 1500 },
         "Ice Elf Cloak": { type: "accessory", name: "Ice Elf Cloak", str: 5, vit: 15, mp: 0, effect: "Giảm 5% sát thương gánh chịu", img: "wp/dagger.png", sellPrice: 700 }
+        // Đồ hiếm của Igris:
+        "Đại kiếm của Ma Vương": { type: "weapon", name: "Đại kiếm của Ma Vương", str: 60, vit: 0, mp: 0, effect: "Vũ khí của Igris. Tăng 15% ST đòn thường", img: "wp/dagger.png", sellPrice: 2000 },
+        "Mũ bảo hộ của hiệp sĩ đỏ": { type: "helmet", name: "Mũ bảo hộ của hiệp sĩ đỏ", str: 10, vit: 25, mp: 0, effect: "Giảm 8% sát thương gánh chịu", img: "wp/dagger.png", sellPrice: 1200 },
+        "Bao tay của kẻ thống trị": { type: "gloves", name: "Bao tay của kẻ thống trị", str: 20, vit: 10, mp: 0, effect: "Giảm 3% sát thương gánh chịu", img: "wp/dagger.png", sellPrice: 1500 }
         
 };
 
@@ -964,6 +983,10 @@
         if (!currentUser.inventory) currentUser.inventory = [];
         if (!currentUser.equipped) currentUser.equipped = { weapon: null, shield: null, accessory: null };
         if (currentUser.cash === undefined) currentUser.cash = 0;
+        
+        // Cập nhật cho tài khoản cũ chưa có ô Helmet và Gloves
+        if (currentUser.equipped.helmet === undefined) currentUser.equipped.helmet = null;
+        if (currentUser.equipped.gloves === undefined) currentUser.equipped.gloves = null;
 
         const eqArea = document.getElementById('equippedArea');
         const invArea = document.getElementById('inventoryArea');
@@ -972,18 +995,18 @@
         eqArea.innerHTML = '';
         invArea.innerHTML = '';
 
-        // 1. TỰ ĐỘNG DỌN RÁC: Xóa các trang bị bị lỗi khỏi ô đang mặc
-        ['weapon', 'shield', 'accessory'].forEach(slot => {
+        // 1. TỰ ĐỘNG DỌN RÁC
+        ['weapon', 'shield', 'accessory', 'helmet', 'gloves'].forEach(slot => {
             if (currentUser.equipped[slot] && !ITEM_DATA[currentUser.equipped[slot].name]) {
-                currentUser.equipped[slot] = null; // Quét sạch đồ lỗi
+                currentUser.equipped[slot] = null;
             }
         });
 
-        // 2. TỰ ĐỘNG DỌN RÁC: Xóa các vật phẩm bóng ma khỏi túi đồ
+        // 2. DỌN TÚI ĐỒ
         currentUser.inventory = currentUser.inventory.filter(itemName => ITEM_DATA[itemName]);
 
-        // Render đồ đang mặc
-        ['weapon', 'shield', 'accessory'].forEach(slot => {
+        // Render đồ đang mặc (Thêm helmet và gloves)
+        ['weapon', 'shield', 'accessory', 'helmet', 'gloves'].forEach(slot => {
             const itemObj = currentUser.equipped[slot];
             if (itemObj) {
                 const itemData = ITEM_DATA[itemObj.name];
@@ -1113,6 +1136,7 @@ window.unequipItem = async function(slot, doSave = true) {
         if (currentUser.equipped && currentUser.equipped.weapon) {
             if (currentUser.equipped.weapon.name === "Dagger") dmg *= 1.02;
             if (currentUser.equipped.weapon.name === "Baruka's Dagger") dmg *= 1.05; // Đồ mới tăng 5%
+            if (currentUser.equipped.weapon.name === "Đại kiếm của Ma Vương") dmg *= 1.15;
 }
         dmg = Math.floor(dmg);
 
@@ -1167,7 +1191,9 @@ window.unequipItem = async function(slot, doSave = true) {
                     logBattle(`<span style="color:#00ff00; font-weight:bold; text-shadow: 0 0 5px #00ff00;">✨ HƠI THỞ MÙA ĐÔNG!</span> Vua Tiên Băng hấp thụ sương giá ngàn năm, đột ngột hồi phục ${healAmount} HP!`);
                 } else if (enemy.bossType === "fire_lord") {
                     logBattle(`<span style="color:#ff9900; font-weight:bold; text-shadow: 0 0 5px #ff9900;">🌋 DUNG NHAM TRỖI DẬY!</span> Chúa Tể tắm trong biển lửa, đột ngột hồi phục ${healAmount} HP!`);
-                }
+                } else if (enemy.bossType === "igris") {
+                    // KỸ NĂNG HỒI PHỤC DUY NHẤT LÚC RAGE CỦA IGRIS
+                    logBattle(`<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">🩸 HUYẾT TẾ!</span> Igris bộc phát hào quang đỏ, hấp thụ máu và hồi phục ${healAmount} HP!`);
             } 
             // NẾU CHƯA ĐỦ ĐIỀU KIỆN HOẶC ĐÃ HỒI MÁU XONG RỒI THÌ MỚI ĐÁNH
             else {
@@ -1185,7 +1211,7 @@ window.unequipItem = async function(slot, doSave = true) {
                             dmg = Math.max(15, Math.floor(enemyAtk * 2.0) - Math.floor(defensePower / 2)); 
                             isSpecialAttack = true;
                             specialAttackLog = `<span style="color:#00ffff; font-weight:bold; text-shadow: 0 0 5px #00ffff;">🧊 GIÁO BĂNG ĐOẠT MỆNH!</span> Một ngọn giáo băng đâm xuyên qua bạn, gây ${Math.floor(dmg)} sát thương chí mạng!`;
-                        }
+                        } 
                         break;
 
                     // 2. BOSS CỔNG LỬA
@@ -1199,6 +1225,26 @@ window.unequipItem = async function(slot, doSave = true) {
                             dmg = Math.max(25, Math.floor(enemyAtk * 2.5) - Math.floor(defensePower / 2)); 
                             isSpecialAttack = true;
                             specialAttackLog = `<span style="color:#ff4d4d; font-weight:bold; text-shadow: 0 0 5px #ff4d4d;">☄️ MƯA LƯU TINH!</span> Những tảng đá rực lửa giáng từ trên cao xuống, gây ${Math.floor(dmg)} sát thương!`;
+                        }
+                        break;
+
+                        // 3. BOSS IGRIS
+                    case "igris":
+                        if (rand <= 0.15) {
+                            // KỸ NĂNG 1: Trảm Phong
+                            dmg = Math.max(25, Math.floor(enemyAtk * 2.5) - Math.floor(defensePower / 4));
+                            isSpecialAttack = true;
+                            specialAttackLog = `<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">⚔️ TRẢM PHONG!</span> Igris vung đại kiếm tạo ra luồng kiếm khí ác liệt, gây ${Math.floor(dmg)} sát thương!`;
+                        } else if (rand <= 0.30) {
+                            // KỸ NĂNG 2: Liên Hoàn Kiếm
+                            dmg = Math.max(30, Math.floor(enemyAtk * 2.8) - Math.floor(defensePower / 2));
+                            isSpecialAttack = true;
+                            specialAttackLog = `<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">🌪️ LIÊN HOÀN KIẾM!</span> Igris áp sát chớp nhoáng và chém liên tục, giáng ${Math.floor(dmg)} sát thương!`;
+                        } else if (rand <= 0.45) {
+                            // KỸ NĂNG 3: Uy Áp Kẻ Thống Trị
+                            dmg = Math.max(15, Math.floor(enemyAtk * 2.0) - Math.floor(defensePower / 2));
+                            isSpecialAttack = true;
+                            specialAttackLog = `<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">👁️ UY ÁP KẺ THỐNG TRỊ!</span> Ánh mắt của Igris xuyên thấu tâm can, tạo áp lực kinh hoàng gây ${Math.floor(dmg)} sát thương!`;
                         }
                         break;
                 }
@@ -1215,6 +1261,10 @@ window.unequipItem = async function(slot, doSave = true) {
             if (currentUser.equipped && currentUser.equipped.accessory && currentUser.equipped.accessory.name === "Ice Elf Cloak") {
                 dmg = dmg * 0.95;
             }
+
+            // Trang bị mới của Igris:
+            if (currentUser.equipped && currentUser.equipped.helmet && currentUser.equipped.helmet.name === "Mũ bảo hộ của hiệp sĩ đỏ") dmg *= 0.92; // Giảm 8%
+            if (currentUser.equipped && currentUser.equipped.gloves && currentUser.equipped.gloves.name === "Bao tay của kẻ thống trị") dmg *= 0.97; // Giảm 3%
             
             dmg = Math.floor(dmg);
             triggerPlayerShake();
@@ -1473,7 +1523,9 @@ window.unequipItem = async function(slot, doSave = true) {
                 introLog += `<br><span style="color:#00ffff; font-style:italic; font-weight:bold; text-shadow: 0 0 5px #00ffff;">"Vua của tiên băng đang nhìn bạn bằng ánh mắt khinh bỉ..."</span>`;
             } else if (enemy.bossType === "fire_lord") {
                 introLog += `<br><span style="color:#ff4d4d; font-style:italic; font-weight:bold; text-shadow: 0 0 5px #ff0000;">"Chúa Tể Dung Nham gầm rống, nhiệt độ bỗng chốc tăng lên dữ dội..."</span>`;
-            }
+            } else if (enemy.bossType === "igris") {
+                // LỜI THOẠI CỦA IGRIS
+                introLog += `<br><span style="color:#cc0000; font-style:italic; font-weight:bold; text-shadow: 0 0 5px #cc0000;">"Thề nguyện trung thành với Quân Vương Bóng Tối. Tôi là thanh kiếm của ngài...."</span>`;
         }
         
         document.getElementById('d-battleLog').innerHTML = introLog;
