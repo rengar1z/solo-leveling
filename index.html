@@ -463,6 +463,38 @@
             border-color: #ff0000 !important;
             box-shadow: inset 0 0 20px rgba(255, 0, 0, 0.5), 0 0 20px rgba(255, 0, 0, 0.5) !important;
         }
+
+        /* Thanh cuộn dành riêng cho kho đồ */
+        #inventoryArea::-webkit-scrollbar { width: 6px; }
+        #inventoryArea::-webkit-scrollbar-track { background: rgba(0, 30, 60, 0.5); border-radius: 4px; }
+        #inventoryArea::-webkit-scrollbar-thumb { background: #00bfff; border-radius: 4px; box-shadow: 0 0 5px #00bfff; }
+
+        /* --- CSS MỚI: THANH CUỘN NGANG CHO CỬA HÀNG COSTUME --- */
+        .costume-scroll-container {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto; /* Cho phép cuộn ngang */
+            flex-wrap: nowrap; /* Cấm rớt dòng */
+            padding-bottom: 15px;
+            justify-content: flex-start; 
+        }
+        .costume-scroll-container::-webkit-scrollbar {
+            height: 8px; /* Độ dày thanh cuộn ngang */
+        }
+        .costume-scroll-container::-webkit-scrollbar-track {
+            background: rgba(0, 30, 60, 0.5);
+            border-radius: 4px;
+        }
+        .costume-scroll-container::-webkit-scrollbar-thumb {
+            background: #ffcc00; /* Màu vàng Gold cho sang trọng */
+            border-radius: 4px;
+            box-shadow: 0 0 5px #ffcc00;
+        }
+        /* Ép kích thước thẻ Costume để không bị bóp méo khi có quá nhiều đồ */
+        .costume-card {
+            flex: 0 0 260px; /* Rộng cố định 260px */
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -674,23 +706,27 @@
                     </div>
 
                     <h3 style="color: #ffcc00; border-bottom: 1px solid rgba(255, 204, 0, 0.5); padding-bottom: 5px;">👔 CỬA HÀNG TRANG PHỤC (COSTUME)</h3>
-                    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                    
+                    <!-- Khung trượt ngang -->
+                    <div class="costume-scroll-container">
                         
                         <!-- Costume 1 -->
-                        <div class="card" style="width: 45%; text-align: center; border-color: gold; padding: 10px;">
+                        <div class="card costume-card" style="text-align: center; border-color: gold; padding: 15px;">
                             <img src="costume_black_suit_icon.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid gold; margin-bottom: 10px;">
                             <h4 style="color: gold; margin: 0;">Bộ Vest Đen Ám Sát</h4>
-                            <p style="color: #ccc; font-size: 14px; min-height: 40px;">Thay đổi Avatar. Tăng 50 STR, 20 VIT.</p>
+                            <p style="color: #ccc; font-size: 14px; min-height: 45px;">Thay đổi Avatar. Tăng 50 STR, 20 VIT.</p>
                             <button id="btn-costume_black_suit" class="btn-system" style="width: 100%; border-color: gold; font-size: 16px; font-weight: bold; transition: 0.3s;" onclick="handleCostume('costume_black_suit')">MUA (5000 CASH)</button>
                         </div>
 
                         <!-- Costume 2 -->
-                        <div class="card" style="width: 45%; text-align: center; border-color: #8eefff; padding: 10px;">
+                        <div class="card costume-card" style="text-align: center; border-color: #8eefff; padding: 15px;">
                             <img src="costume_monarch_icon.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid #8eefff; margin-bottom: 10px;">
                             <h4 style="color: #8eefff; margin: 0;">Giáp Hoàng Đế Bóng Tối</h4>
-                            <p style="color: #ccc; font-size: 14px; min-height: 40px;">Thay đổi Avatar. Tăng 150 STR, 100 VIT.</p>
+                            <p style="color: #ccc; font-size: 14px; min-height: 45px;">Thay đổi Avatar. Tăng 150 STR, 100 VIT.</p>
                             <button id="btn-costume_monarch" class="btn-system" style="width: 100%; border-color: #8eefff; font-size: 16px; font-weight: bold; transition: 0.3s;" onclick="handleCostume('costume_monarch')">MUA (15000 CASH)</button>
                         </div>
+                        
+                        <!-- Sau này bạn cứ copy block <div class="card costume-card"> dán tiếp vào đây, nó sẽ tự đẩy dài ra bên phải -->
 
                     </div>
                 </div>
@@ -1524,7 +1560,6 @@
         
         if (currentUser.equipped.helmet === undefined) currentUser.equipped.helmet = null;
         if (currentUser.equipped.gloves === undefined) currentUser.equipped.gloves = null;
-        // Bổ sung cho tài khoản cũ ô Costume
         if (currentUser.equipped.costume === undefined) currentUser.equipped.costume = null;
 
         const eqArea = document.getElementById('equippedArea');
@@ -1533,7 +1568,7 @@
         
         eqArea.innerHTML = ''; invArea.innerHTML = '';
 
-        // TỰ ĐỘNG DỌN RÁC (Đã bổ sung ô 'costume')
+        // TỰ ĐỘNG DỌN RÁC (Vẫn giữ costume ở đây để dọn rác data nếu cần)
         ['weapon', 'shield', 'accessory', 'helmet', 'gloves', 'costume'].forEach(slot => {
             if (currentUser.equipped[slot] && !ITEM_DATA[currentUser.equipped[slot].name]) {
                 currentUser.equipped[slot] = null;
@@ -1543,8 +1578,8 @@
         // DỌN TÚI ĐỒ
         currentUser.inventory = currentUser.inventory.filter(itemName => ITEM_DATA[itemName]);
 
-        // Render đồ ĐANG MẶC (Đã bổ sung ô 'costume')
-        ['weapon', 'shield', 'accessory', 'helmet', 'gloves', 'costume'].forEach(slot => {
+        // ĐÃ XÓA 'costume' KHỎI MẢNG NÀY ĐỂ NÓ KHÔNG CÒN HIỆN TRONG KHO ĐỒ NỮA
+        ['weapon', 'shield', 'accessory', 'helmet', 'gloves'].forEach(slot => {
             const itemObj = currentUser.equipped[slot];
             if (itemObj) {
                 const itemData = ITEM_DATA[itemObj.name];
