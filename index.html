@@ -1212,6 +1212,25 @@
         if (enemy) updateCombatUI();
         if (document.getElementById('cashText')) document.getElementById('cashText').innerText = currentUser.cash;
         if (window.renderBag) window.renderBag();
+
+        // Dán đoạn này vào trong cùng của hàm function render() {}
+        window.updatePlayerAvatar = function() {
+        let defaultAvatar = "char/Sungjinwoo.png"; // <-- Đổi lại tên file gốc của bạn nếu khác
+        if (currentUser.equipped && currentUser.equipped.costume) {
+            const costumeName = currentUser.equipped.costume.name;
+            if (ITEM_DATA[costumeName] && ITEM_DATA[costumeName].avatar) {
+                defaultAvatar = ITEM_DATA[costumeName].avatar;
+            }
+        }
+        
+        // Quét toàn bộ Avatar trong ARENA và DUNGEON để ép nó đổi ảnh
+        const pImg = document.getElementById('p-img');
+        const dpImg = document.getElementById('d-p-img');
+        if (pImg) pImg.src = defaultAvatar;
+        if (dpImg) dpImg.src = defaultAvatar;
+    };
+    updatePlayerAvatar(); // Kích hoạt ngay lập tức
+    }
     }
 
     // --- TAB ĐIỀU HƯỚNG ---
@@ -1321,25 +1340,8 @@
                 btnTanSat.style.cursor = "pointer";
             }
         }
-
-        // Dán đoạn này vào trong cùng của hàm function render() {}
-    window.updatePlayerAvatar = function() {
-        let defaultAvatar = "char/Sungjinwoo.png"; // <-- Đổi lại tên file gốc của bạn nếu khác
-        if (currentUser.equipped && currentUser.equipped.costume) {
-            const costumeName = currentUser.equipped.costume.name;
-            if (ITEM_DATA[costumeName] && ITEM_DATA[costumeName].avatar) {
-                defaultAvatar = ITEM_DATA[costumeName].avatar;
-            }
-        }
-        
-        // Quét toàn bộ Avatar trong ARENA và DUNGEON để ép nó đổi ảnh
-        const pImg = document.getElementById('p-img');
-        const dpImg = document.getElementById('d-p-img');
-        if (pImg) pImg.src = defaultAvatar;
-        if (dpImg) dpImg.src = defaultAvatar;
-    };
-    updatePlayerAvatar(); // Kích hoạt ngay lập tức
     }
+
 
     function triggerShake() {
         const eImg = document.getElementById(getPrefix() + 'e-img');
