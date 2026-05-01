@@ -723,7 +723,7 @@
                             <img src="cos/Sung_Jinwoo_Mining_Work.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid #8eefff; margin-bottom: 10px;">
                             <h4 style="color: #8eefff; margin: 0;">Mining Work Clothes</h4>
                             <p style="color: #ccc; font-size: 14px; min-height: 45px;">Thay đổi Avatar. Tăng 150 STR, 100 VIT.</p>
-                            <button id="btn-costume_Mining Work Clothes" class="btn-system" style="width: 100%; border-color: #8eefff; font-size: 16px; font-weight: bold; transition: 0.3s;" onclick="handleCostume('costume_Mining Work Clothes')">MUA (15000 CASH)</button>
+                            <button id="btn-costume_mining" class="btn-system" style="width: 100%; border-color: #8eefff; font-size: 16px; font-weight: bold; transition: 0.3s;" onclick="handleCostume('costume_mining')">MUA (15000 CASH)</button>
                         </div>
                         
                         <!-- Sau này bạn cứ copy block <div class="card costume-card"> dán tiếp vào đây, nó sẽ tự đẩy dài ra bên phải -->
@@ -957,7 +957,7 @@
         "hp_potion_high": { name: "HP Potion (Lớn)", price: 700, type: "heal", amount: 2000, stat: "hp", maxStat: "maxHp" },
         "mp_potion_high": { name: "MP Potion (Lớn)", price: 500, type: "heal", amount: 1000, stat: "mp", maxStat: "maxMp" },
         "costume_black_suit": { name: "Bộ Vest Đen Ám Sát", price: 5000, type: "item", itemId: "Bộ Vest Đen Ám Sát" },
-        "costume_Mining Work Clothes": { name: "Giáp Hoàng Đế Bóng Tối", price: 15000, type: "item", itemId: "Mining Work Clothes" }
+        "costume_mining": { name: "Trang phục Thợ Mỏ", price: 15000, type: "item", itemId: "Mining Work Clothes" }
     };
 
     window.buyShopItem = async function(itemId) {
@@ -1314,7 +1314,7 @@
         updatePlayerAvatar(); // Kích hoạt ngay lập tức
         // XỬ LÝ MÀU SẮC VÀ CHỮ CỦA NÚT COSTUME TRONG SHOP
         if (!currentUser.ownedCostumes) currentUser.ownedCostumes = [];
-        const costumes = ["costume_black_suit", "Mining Work Clothes"];
+        const costumes = ["costume_black_suit", "costume_mining"];
         
         costumes.forEach(shopId => {
             const btn = document.getElementById('btn-' + shopId);
