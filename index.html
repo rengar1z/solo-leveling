@@ -1160,7 +1160,7 @@ window.unequipItem = async function(slot, doSave = true) {
                     
                     } else if (rand <= 0.45 && enemy.hp < enemy.maxHp * 0.5) { 
                         // KỸ NĂNG 3: Hơi Thở Mùa Đông (15% Tỷ lệ - Chỉ dùng khi HP < 50%)
-                        let healAmount = 300;
+                        let healAmount = 1000;
                         enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
                         logBattle(`<span style="color:#00ff00; font-weight:bold;">✨ Hơi Thở Mùa Đông!</span> Vua Tiên Băng hấp thụ sương giá, hồi phục ${healAmount} HP!`);
                         dmg = 0; // Hồi máu thì mất lượt đánh
@@ -1183,7 +1183,7 @@ window.unequipItem = async function(slot, doSave = true) {
 
                     } else if (rand <= 0.45 && enemy.hp < enemy.maxHp * 0.4) {
                         // KỸ NĂNG 3: Dung Nham Trỗi Dậy (15% Tỷ lệ - Chỉ dùng khi HP < 40%)
-                        let healAmount = 450; 
+                        let healAmount = 1200; 
                         enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
                         logBattle(`<span style="color:#ff9900; font-weight:bold;">🌋 Dung Nham Trỗi Dậy!</span> Chúa Tể gầm thét, tắm trong biển dung nham để hồi phục ${healAmount} HP!`);
                         dmg = 0;
