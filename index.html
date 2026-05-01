@@ -227,6 +227,135 @@
             visibility: visible;
             opacity: 1;
         }
+
+        /* --- SOLO LEVELING STATUS UI --- */
+        .sl-box {
+            border: 1px solid rgba(142, 239, 255, 0.4);
+            border-radius: 2px;
+            padding: 20px;
+            margin-top: 15px;
+            background: rgba(0, 20, 50, 0.3);
+            box-shadow: inset 0 0 15px rgba(0, 191, 255, 0.05);
+        }
+        .sl-top-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .sl-status-block {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .sl-icon-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #8eefff;
+            text-shadow: 0 0 10px #8eefff;
+        }
+        .sl-bar-col {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        .sl-bar-outer {
+            width: 160px;
+            height: 10px;
+            border: 2px solid rgba(142, 239, 255, 0.7);
+            border-radius: 10px;
+            padding: 2px;
+            box-shadow: 0 0 8px rgba(142, 239, 255, 0.4);
+        }
+        
+        /* Ghi đè màu thanh HP/MP cũ thành xanh Neon */
+        #hpBar, #mpBar {
+            height: 100%;
+            background: #8eefff !important; 
+            border-radius: 5px;
+            box-shadow: 0 0 12px #8eefff !important;
+            transition: width 0.4s ease;
+        }
+        
+        .sl-bar-text {
+            font-size: 14px;
+            margin-top: 5px;
+            color: #fff;
+            text-shadow: 0 0 5px #8eefff;
+        }
+        
+        .sl-stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px 40px;
+            padding: 25px 40px;
+        }
+        .sl-stat-item {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .sl-stat-item:hover {
+            transform: scale(1.02);
+        }
+        .sl-stat-item:hover .sl-stat-label, .sl-stat-item:hover .sl-stat-val {
+            text-shadow: 0 0 15px #fff;
+        }
+        .sl-stat-icon {
+            font-size: 28px;
+            margin-right: 15px;
+            filter: drop-shadow(0 0 5px #8eefff);
+        }
+        .sl-stat-label {
+            width: 60px;
+            color: #fff;
+            text-shadow: 0 0 8px #8eefff;
+        }
+        .sl-stat-val {
+            font-size: 36px;
+            font-weight: bold;
+            margin-left: 15px;
+            color: #fff;
+            text-shadow: 0 0 10px #8eefff;
+            flex: 1;
+        }
+        .sl-points-block {
+            justify-content: flex-end;
+            text-align: right;
+            cursor: default;
+        }
+        .sl-points-block:hover { transform: none; }
+        .sl-points-label {
+            font-size: 14px;
+            line-height: 1.2;
+            color: #8eefff;
+            margin-right: 15px;
+            text-transform: uppercase;
+        }
+        .sl-points-val {
+            font-size: 48px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 15px #8eefff;
+        }
+        /* Nút cộng điểm nâng cấp giao diện tròn */
+        .sl-stat-item .add-btn {
+            background: transparent;
+            border: 1px solid #8eefff;
+            color: #8eefff;
+            box-shadow: inset 0 0 5px #8eefff;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+        .sl-stat-item .add-btn:hover:not(:disabled) {
+            background: #8eefff;
+            color: #000;
+            box-shadow: 0 0 15px #8eefff;
+        }
     </style>
 </head>
 <body>
@@ -252,7 +381,10 @@
 <div class="wrapper hidden" id="gameWrap">
     <div class="panel" style="width: 100%;"> <h1>STATUS</h1>
         <div class="row"><span>NAME: <span id="playerName"></span></span><span>LEVEL: <span id="level"></span></span></div>
-        <div class="row"><span>JOB: <span id="job" class="sh-title"></span></span><span>CASH: <span id="cashText" style="color: gold; text-shadow: 0 0 5px gold;">0</span></span></div>
+        <div class="row">
+            <span>JOB: <span id="job" class="sh-title"></span></span>
+        </div>
+        
         <div class="row small">
             <span>TITLE:</span>
             <select id="titleSelect" class="sh-title" onchange="updateTitle()">
@@ -266,28 +398,74 @@
             </select>
         </div>
         
-        <div>HP: <span id="hpDisplay"></span></div>
-        <div class="barbox"><div class="bar" id="hpBar"></div></div>
-        
-        <div>MP: <span id="mpDisplay"></span></div>
-        <div class="barbox"><div class="bar" id="mpBar"></div></div>
-        
+        <!-- Thanh EXP giữ nguyên màu vàng/cam cũ -->
         <div>EXP: <span id="expText"></span></div>
-        <div class="barbox"><div class="bar" id="expBar"></div></div>
+        <div class="barbox" style="margin-bottom: 5px;"><div class="bar" id="expBar"></div></div>
 
-        <div class="stats">
-            <div class="stat-item" onclick="showStatDetail('STRENGTH')"><span>STRENGTH: <span id="str">0</span></span><button class="add-btn" onclick="upgradeStat(event, 'str')">+</button></div>
-            <div class="stat-item" onclick="showStatDetail('VITALITY')"><span>VITALITY: <span id="vit">0</span></span><button class="add-btn" onclick="upgradeStat(event, 'vit')">+</button></div>
-            <div class="stat-item" onclick="showStatDetail('AGILITY')"><span>AGILITY: <span id="agi">0</span></span><button class="add-btn" onclick="upgradeStat(event, 'agi')">+</button></div>
-            <div class="stat-item" onclick="showStatDetail('INTELLIGENCE')"><span>INTELLIGENCE: <span id="int">0</span></span><button class="add-btn" onclick="upgradeStat(event, 'int')">+</button></div>
-            <div class="stat-item" onclick="showStatDetail('SENSE')"><span>SENSE: <span id="sense">0</span></span><button class="add-btn" onclick="upgradeStat(event, 'sense')">+</button></div>
-
-            <div style="margin-top: 15px; color: gold; font-weight: bold;">AVAILABLE POINTS: <span id="points">0</span></div>
-
-            <div id="statDetail" class="card hidden" style="margin-top: 20px; border-color: #00bfff; background: rgba(0, 30, 60, 0.8);">
-                <h3 id="statDetName" style="color: #00bfff; margin-top: 0; text-transform: uppercase;"></h3>
-                <p id="statDetDesc" style="font-size: 16px; color: #eee; line-height: 1.4;"></p>
+        <!-- ================= KHUNG GIAO DIỆN MỚI (TOP) ================= -->
+        <div class="sl-box sl-top-row">
+            <!-- HP -->
+            <div class="sl-status-block">
+                <div class="sl-icon-col">
+                    <span style="font-size:24px;">➕</span>
+                    <span style="font-size:14px; font-weight:bold;">HP</span>
+                </div>
+                <div class="sl-bar-col">
+                    <div class="sl-bar-outer"><div id="hpBar"></div></div>
+                    <div class="sl-bar-text" id="hpDisplay">100/100</div>
+                </div>
             </div>
+            
+            <!-- MP -->
+            <div class="sl-status-block">
+                <div class="sl-icon-col">
+                    <span style="font-size:24px;">🧪</span>
+                    <span style="font-size:14px; font-weight:bold;">MP</span>
+                </div>
+                <div class="sl-bar-col">
+                    <div class="sl-bar-outer"><div id="mpBar"></div></div>
+                    <div class="sl-bar-text" id="mpDisplay">10/10</div>
+                </div>
+            </div>
+
+            <!-- FATIGUE -> ĐỔI THÀNH CASH -->
+            <div class="sl-status-block" style="flex-direction: column; gap: 5px;">
+                <span style="font-size:28px; filter: drop-shadow(0 0 10px #8eefff);">💠</span>
+                <span style="font-size:16px; font-weight:bold; color: #8eefff; text-shadow: 0 0 5px #8eefff;">CASH: <span id="cashText" style="color: #fff;">0</span></span>
+            </div>
+        </div>
+
+        <!-- ================= KHUNG GIAO DIỆN MỚI (CHỈ SỐ) ================= -->
+        <div class="sl-box sl-stat-grid">
+            <div class="sl-stat-item" onclick="showStatDetail('STRENGTH')">
+                <span class="sl-stat-icon">🏋️</span> <span class="sl-stat-label">STR:</span> <span class="sl-stat-val" id="str">0</span> <button class="add-btn" onclick="upgradeStat(event, 'str')">+</button>
+            </div>
+            
+            <div class="sl-stat-item" onclick="showStatDetail('VITALITY')">
+                <span class="sl-stat-icon">💖</span> <span class="sl-stat-label">VIT:</span> <span class="sl-stat-val" id="vit">0</span> <button class="add-btn" onclick="upgradeStat(event, 'vit')">+</button>
+            </div>
+            
+            <div class="sl-stat-item" onclick="showStatDetail('AGILITY')">
+                <span class="sl-stat-icon">👟</span> <span class="sl-stat-label">AGI:</span> <span class="sl-stat-val" id="agi">0</span> <button class="add-btn" onclick="upgradeStat(event, 'agi')">+</button>
+            </div>
+            
+            <div class="sl-stat-item" onclick="showStatDetail('INTELLIGENCE')">
+                <span class="sl-stat-icon">🧠</span> <span class="sl-stat-label">INT:</span> <span class="sl-stat-val" id="int">0</span> <button class="add-btn" onclick="upgradeStat(event, 'int')">+</button>
+            </div>
+            
+            <div class="sl-stat-item" onclick="showStatDetail('SENSE')">
+                <span class="sl-stat-icon">👁️</span> <span class="sl-stat-label">PER:</span> <span class="sl-stat-val" id="sense">0</span> <button class="add-btn" onclick="upgradeStat(event, 'sense')">+</button>
+            </div>
+            
+            <div class="sl-stat-item sl-points-block">
+                <span class="sl-points-label">Available<br>Ability<br>Points:</span> <span class="sl-points-val" id="points">0</span>
+            </div>
+        </div>
+
+        <!-- Box mô tả kỹ năng (ẩn đi khi không trỏ vào) -->
+        <div id="statDetail" class="card hidden" style="margin-top: 10px; border-color: #8eefff; background: rgba(0, 30, 60, 0.8); box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);">
+            <h3 id="statDetName" style="color: #8eefff; margin-top: 0; text-transform: uppercase;"></h3>
+            <p id="statDetDesc" style="font-size: 16px; color: #eee; line-height: 1.4; margin-bottom: 0;"></p>
         </div>
 
         <div class="tabs-container">
