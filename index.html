@@ -463,7 +463,12 @@
             stages: [
                 { name: "Tiên Băng Trinh Sát", hp: 200, atk: 45, def: 20, exp: 100, img: "HanSongYi.jpg" },
                 { name: "Tiên Băng Cầm Giáo", hp: 350, atk: 55, def: 25, exp: 150, img: "HanSongYi.jpg" },
-                { name: "BOSS: Thủ Lĩnh Vua Tiên Băng", hp: 1800, atk: 120, def: 60, exp: 2000, img: "HanSongYi.jpg", isBoss: true, bossType: "ice_king" }
+                { 
+                name: "BOSS: Thủ Lĩnh Vua Tiên Băng", hp: 1800, atk: 120, def: 60, exp: 2000, 
+                img: "vuatienbang_thuong.png", // <--- Hình dạng lúc chưa nổi điên
+                enrageImg: "SonKihoon.jpg", // <--- HÌNH ẢNH BIẾN HÌNH BẠN MUỐN ĐỔI Ở ĐÂY
+                isBoss: true, bossType: "ice_king" 
+                }
             ]
         },
         "fire_hell": {
@@ -473,7 +478,12 @@
             stages: [
                 { name: "Quỷ Lửa Tinh Nhuệ", hp: 300, atk: 60, def: 20, exp: 150, img: "HanSongYi.jpg" },
                 { name: "Chó Săn Địa Ngục", hp: 400, atk: 70, def: 25, exp: 200, img: "HanSongYi.jpg" },
-                { name: "BOSS: Chúa Tể Dung Nham", hp: 2500, atk: 150, def: 80, exp: 3000, img: "HanSongYi.jpg", isBoss: true, bossType: "fire_lord" }
+                { 
+                name: "BOSS: Chúa Tể Dung Nham", hp: 2500, atk: 150, def: 80, exp: 3000, 
+                img: "HanSongYi.jpg", // <--- Hình dạng lúc chưa nổi điên
+                enrageImg: "SonKihoon.jpg", // <--- HÌNH ẢNH BIẾN HÌNH BẠN MUỐN ĐỔI Ở ĐÂY
+                isBoss: true, bossType: "fire_lord" 
+                }
             ]
         }
     };
@@ -821,34 +831,36 @@
         const eHpBarBox = eHpBar.parentElement; 
 
         // --- CƠ CHẾ NỔI ĐIÊN (ENRAGE) CHO BOSS ---
-        if (enemy.isBoss && ePercent <= 50) { // <--- Sửa thành 50 ở đây (Kích hoạt khi HP <= 50%)
-            // Đổi thanh máu sang màu đỏ sậm
+        
+        // Bước 1: Kiểm tra xem Boss đã chạm mốc 50% máu chưa và có MỚI nổi điên lần đầu không
+        if (enemy.isBoss && ePercent <= 50 && !enemy.isEnraged) {
+            enemy.isEnraged = true; // Khóa trạng thái lại, từ giờ đến cuối trận sẽ luôn là true
+            
+            const log = document.getElementById(pre + 'battleLog');
+            log.innerHTML = `<span style="color:red; font-size:18px; font-weight:bold; text-shadow: 0 0 10px red;">⚠️ CẢNH BÁO: ${enemy.name.toUpperCase()} ĐÃ NỔI ĐIÊN! SÁT THƯƠNG TĂNG ĐỘT BIẾN!</span><br>` + log.innerHTML;
+            
+            // Tăng 30% sức mạnh tấn công (Buff vĩnh viễn cho đến khi Boss chết)
+            enemy.atk = Math.floor(enemy.atk * 1.3); 
+            
+            // ĐỔI SANG HÌNH ẢNH RAGE (Giữ nguyên đến hết trận)
+            const eImgElement = document.getElementById(pre + 'e-img');
+            if (enemy.enrageImg) {
+                eImgElement.src = enemy.enrageImg;
+                eImgElement.classList.add('shake'); 
+                setTimeout(() => eImgElement.classList.remove('shake'), 400);
+            }
+        }
+
+        // Bước 2: Hiển thị giao diện phụ thuộc vào việc Boss đang điên hay bình thường (Mặc kệ số máu hiện tại)
+        if (enemy.isBoss && enemy.isEnraged) {
+            // Boss đã nổi điên: Duy trì viền lửa và màu máu sậm
             eHpBar.style.background = "linear-gradient(90deg, #660000, #cc0000)";
-            
-            // "Châm lửa" bọc quanh toàn bộ thanh máu
             eHpBarBox.classList.add('enraged-glow');
-            
-            // Kích hoạt trạng thái nổi điên 1 lần duy nhất
-            if (!enemy.isEnraged) {
-                enemy.isEnraged = true;
-                const log = document.getElementById(pre + 'battleLog');
-                log.innerHTML = `<span style="color:red; font-size:18px; font-weight:bold; text-shadow: 0 0 10px red;">⚠️ CẢNH BÁO: ${enemy.name.toUpperCase()} ĐÃ NỔI ĐIÊN! SÁT THƯƠNG TĂNG ĐỘT BIẾN!</span><br>` + log.innerHTML;
-                
-                // Tăng 30% sức mạnh tấn công
-                enemy.atk = Math.floor(enemy.atk * 1.3); 
-            }
         } else {
-            // Thanh máu bình thường
+            // Quái thường hoặc Boss chưa nổi điên: Thanh máu đỏ bình thường
             eHpBar.style.background = "#ff0000";
-            
-            // Tắt hiệu ứng lửa
             eHpBarBox.classList.remove('enraged-glow');
-            
-            // Tắt nổi điên nếu Boss hồi máu vượt mức 50%
-            if (ePercent > 50 && enemy.isEnraged) { // <--- Sửa thành 50 ở đây (Tắt đi nếu hồi máu vượt 50%)
-                enemy.isEnraged = false;
-                enemy.atk = Math.floor(enemy.atk / 1.3); // Trả lại sức mạnh cũ
-            }
+        }
         }
 
         // Quản lý các nút tấn công
@@ -1141,54 +1153,54 @@ window.unequipItem = async function(slot, doSave = true) {
 
         // --- CƠ CHẾ KỸ NĂNG CỦA CÁC BOSS CỔNG ĐỎ ---
         if (currentRedGateId && enemy.isBoss) {
-            let rand = Math.random(); // Lấy tỷ lệ từ 0 đến 1
+            
+            // ƯU TIÊN SỐ 1: KIỂM TRA ĐIỀU KIỆN HỒI MÁU (Dưới 50% máu và chưa xài lần nào)
+            if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasHealed) {
+                let healAmount = Math.floor(enemy.maxHp * 0.30);
+                
+                enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
+                enemy.hasHealed = true; // Khóa lại, đánh dấu là đã xài
+                dmg = 0; // Mất lượt đánh để tập trung hồi máu
+                
+                if (enemy.bossType === "ice_king") {
+                    logBattle(`<span style="color:#00ff00; font-weight:bold; text-shadow: 0 0 5px #00ff00;">✨ HƠI THỞ MÙA ĐÔNG!</span> Vua Tiên Băng hấp thụ sương giá ngàn năm, đột ngột hồi phục ${healAmount} HP!`);
+                } else if (enemy.bossType === "fire_lord") {
+                    logBattle(`<span style="color:#ff9900; font-weight:bold; text-shadow: 0 0 5px #ff9900;">🌋 DUNG NHAM TRỖI DẬY!</span> Chúa Tể tắm trong biển lửa, đột ngột hồi phục ${healAmount} HP!`);
+                }
+            } 
+            // NẾU CHƯA ĐỦ ĐIỀU KIỆN HOẶC ĐÃ HỒI MÁU XONG RỒI THÌ MỚI ĐÁNH
+            else {
+                let rand = Math.random(); // Lấy tỷ lệ từ 0 đến 1
 
-            switch(enemy.bossType) {
-                // 1. BOSS CỔNG BĂNG
-                case "ice_king":
-                    if (rand <= 0.15) { 
-                        // KỸ NĂNG 1: Bão Tuyết Tuyệt Mệnh (15% Tỷ lệ)
-                        dmg = Math.max(10, Math.floor(enemyAtk * 1.8) - Math.floor(defensePower / 3)); 
-                        isSpecialAttack = true;
-                        specialAttackLog = `<span style="color:#00ffff; font-weight:bold; text-shadow: 0 0 5px #00ffff;">❄️ BÃO TUYẾT TUYỆT MỆNH!</span> Vua Tiên Băng vung tay, bão tuyết xé toạc giáp của bạn, gây ${Math.floor(dmg)} sát thương!`;
-                    
-                    } else if (rand <= 0.30) {
-                        // KỸ NĂNG 2 (MỚI): Giáo Băng Đoạt Mệnh (15% Tỷ lệ)
-                        dmg = Math.max(15, Math.floor(enemyAtk * 2.0) - Math.floor(defensePower / 2)); 
-                        isSpecialAttack = true;
-                        specialAttackLog = `<span style="color:#00ffff; font-weight:bold; text-shadow: 0 0 5px #00ffff;">🧊 GIÁO BĂNG ĐOẠT MỆNH!</span> Một ngọn giáo băng đâm xuyên qua bạn, gây ${Math.floor(dmg)} sát thương chí mạng!`;
-                    
-                    } else if (rand <= 0.45 && enemy.hp < enemy.maxHp * 0.5) { 
-                        // KỸ NĂNG 3: Hơi Thở Mùa Đông (15% Tỷ lệ - Chỉ dùng khi HP < 50%)
-                        let healAmount = 1000;
-                        enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
-                        logBattle(`<span style="color:#00ff00; font-weight:bold;">✨ Hơi Thở Mùa Đông!</span> Vua Tiên Băng hấp thụ sương giá, hồi phục ${healAmount} HP!`);
-                        dmg = 0; // Hồi máu thì mất lượt đánh
-                    }
-                    break;
+                switch(enemy.bossType) {
+                    // 1. BOSS CỔNG BĂNG
+                    case "ice_king":
+                        if (rand <= 0.15) { 
+                            dmg = Math.max(10, Math.floor(enemyAtk * 1.8) - Math.floor(defensePower / 3)); 
+                            isSpecialAttack = true;
+                            specialAttackLog = `<span style="color:#00ffff; font-weight:bold; text-shadow: 0 0 5px #00ffff;">❄️ BÃO TUYẾT TUYỆT MỆNH!</span> Vua Tiên Băng vung tay, bão tuyết xé toạc giáp của bạn, gây ${Math.floor(dmg)} sát thương!`;
+                        
+                        } else if (rand <= 0.30) {
+                            dmg = Math.max(15, Math.floor(enemyAtk * 2.0) - Math.floor(defensePower / 2)); 
+                            isSpecialAttack = true;
+                            specialAttackLog = `<span style="color:#00ffff; font-weight:bold; text-shadow: 0 0 5px #00ffff;">🧊 GIÁO BĂNG ĐOẠT MỆNH!</span> Một ngọn giáo băng đâm xuyên qua bạn, gây ${Math.floor(dmg)} sát thương chí mạng!`;
+                        }
+                        break;
 
-                // 2. BOSS CỔNG LỬA
-                case "fire_lord":
-                    if (rand <= 0.15) {
-                        // KỸ NĂNG 1: Cột Lửa Hủy Diệt (15% Tỷ lệ)
-                        dmg = Math.max(20, Math.floor(enemyAtk * 2.2) - Math.floor(defensePower / 4)); 
-                        isSpecialAttack = true;
-                        specialAttackLog = `<span style="color:#ff4d4d; font-weight:bold; text-shadow: 0 0 5px #ff4d4d;">🔥 CỘT LỬA HỦY DIỆT!</span> Chúa Tể Dung Nham thiêu rụi không gian, giáng ${Math.floor(dmg)} sát thương tàn khốc!`;
-                    
-                    } else if (rand <= 0.30) {
-                        // KỸ NĂNG 2 (MỚI): Mưa Lưu Tinh (15% Tỷ lệ)
-                        dmg = Math.max(25, Math.floor(enemyAtk * 2.5) - Math.floor(defensePower / 2)); 
-                        isSpecialAttack = true;
-                        specialAttackLog = `<span style="color:#ff4d4d; font-weight:bold; text-shadow: 0 0 5px #ff4d4d;">☄️ MƯA LƯU TINH!</span> Những tảng đá rực lửa giáng từ trên cao xuống, gây ${Math.floor(dmg)} sát thương!`;
-
-                    } else if (rand <= 0.45 && enemy.hp < enemy.maxHp * 0.4) {
-                        // KỸ NĂNG 3: Dung Nham Trỗi Dậy (15% Tỷ lệ - Chỉ dùng khi HP < 40%)
-                        let healAmount = 1200; 
-                        enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
-                        logBattle(`<span style="color:#ff9900; font-weight:bold;">🌋 Dung Nham Trỗi Dậy!</span> Chúa Tể gầm thét, tắm trong biển dung nham để hồi phục ${healAmount} HP!`);
-                        dmg = 0;
-                    }
-                    break;
+                    // 2. BOSS CỔNG LỬA
+                    case "fire_lord":
+                        if (rand <= 0.15) {
+                            dmg = Math.max(20, Math.floor(enemyAtk * 2.2) - Math.floor(defensePower / 4)); 
+                            isSpecialAttack = true;
+                            specialAttackLog = `<span style="color:#ff4d4d; font-weight:bold; text-shadow: 0 0 5px #ff4d4d;">🔥 CỘT LỬA HỦY DIỆT!</span> Chúa Tể Dung Nham thiêu rụi không gian, giáng ${Math.floor(dmg)} sát thương tàn khốc!`;
+                        
+                        } else if (rand <= 0.30) {
+                            dmg = Math.max(25, Math.floor(enemyAtk * 2.5) - Math.floor(defensePower / 2)); 
+                            isSpecialAttack = true;
+                            specialAttackLog = `<span style="color:#ff4d4d; font-weight:bold; text-shadow: 0 0 5px #ff4d4d;">☄️ MƯA LƯU TINH!</span> Những tảng đá rực lửa giáng từ trên cao xuống, gây ${Math.floor(dmg)} sát thương!`;
+                        }
+                        break;
+                }
             }
         }
 
