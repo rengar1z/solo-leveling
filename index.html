@@ -492,14 +492,14 @@
         "red_knight_tomb": {
             name: "CỔNG ĐỎ: NƠI AN NGHỈ CỦA HIỆP SĨ ĐỎ",
             themeColor: "#cc0000", // Đỏ sậm rùng rợn
-            rareDrops: ["Đại kiếm của Ma Vương", "Mũ bảo hộ của hiệp sĩ đỏ", "Bao tay của kẻ thống trị"], 
+            rareDrops: ["Trường Kiếm của Igris", "Mũ bảo hộ của hiệp sĩ đỏ", "Bao tay của kẻ thống trị"], 
             stages: [
-                { name: "Hiệp Sĩ Đỏ Gác Cổng", hp: 400, atk: 70, def: 30, exp: 200, img: "enemy.png" },
-                { name: "Hiệp Sĩ Đỏ Tinh Nhuệ", hp: 600, atk: 85, def: 40, exp: 300, img: "enemy.png" },
-                { name: "Hiệp Sĩ Đỏ Cận Vệ", hp: 800, atk: 100, def: 50, exp: 450, img: "enemy.png" },
+                { name: "Hiệp Sĩ Đỏ Gác Cổng", hp: 400, atk: 70, def: 30, exp: 200, img: "bot/HanSongYi.jpg" },
+                { name: "Hiệp Sĩ Đỏ Tinh Nhuệ", hp: 600, atk: 85, def: 40, exp: 300, img: "bot/HanSongYi.jpg" },
+                { name: "Hiệp Sĩ Đỏ Cận Vệ", hp: 800, atk: 100, def: 50, exp: 450, img: "bot/HanSongYi.jpg" },
                 { name: "BOSS: Tư Lệnh Huyết Đỏ Igris", hp: 3500, atk: 180, def: 100, exp: 5000, 
-                  img: "igris_normal.png", 
-                  enrageImg: "igris_rage.png", 
+                  img: "igris.PNG", 
+                  enrageImg: "igris_rage.PNG", 
                   isBoss: true, bossType: "igris" 
                 }
             ]
@@ -515,7 +515,7 @@
         "Baruka's Dagger": { type: "weapon", name: "Baruka's Dagger", str: 35, vit: 0, mp: 20, effect: "Vũ khí của Vua Tiên Băng. Tăng 10% ST đòn thường", img: "wp/dagger.png",sellPrice: 1500 },
         "Ice Elf Cloak": { type: "accessory", name: "Ice Elf Cloak", str: 5, vit: 15, mp: 0, effect: "Giảm 5% sát thương gánh chịu", img: "wp/dagger.png", sellPrice: 700 }
         // Đồ hiếm của Igris:
-        "Đại kiếm của Ma Vương": { type: "weapon", name: "Đại kiếm của Ma Vương", str: 60, vit: 0, mp: 0, effect: "Vũ khí của Igris. Tăng 15% ST đòn thường", img: "wp/dagger.png", sellPrice: 2000 },
+        "Trường Kiếm của Igris": { type: "weapon", name: "Trường Kiếm của Igris", str: 60, vit: 0, mp: 0, effect: "Vũ khí của Igris. Tăng 15% ST đòn thường", img: "wp/redsword.png", sellPrice: 2000 },
         "Mũ bảo hộ của hiệp sĩ đỏ": { type: "helmet", name: "Mũ bảo hộ của hiệp sĩ đỏ", str: 10, vit: 25, mp: 0, effect: "Giảm 8% sát thương gánh chịu", img: "wp/dagger.png", sellPrice: 1200 },
         "Bao tay của kẻ thống trị": { type: "gloves", name: "Bao tay của kẻ thống trị", str: 20, vit: 10, mp: 0, effect: "Giảm 3% sát thương gánh chịu", img: "wp/dagger.png", sellPrice: 1500 }
         
@@ -1137,7 +1137,7 @@ window.unequipItem = async function(slot, doSave = true) {
         if (currentUser.equipped && currentUser.equipped.weapon) {
             if (currentUser.equipped.weapon.name === "Dagger") dmg *= 1.02;
             if (currentUser.equipped.weapon.name === "Baruka's Dagger") dmg *= 1.05; // Đồ mới tăng 5%
-            if (currentUser.equipped.weapon.name === "Đại kiếm của Ma Vương") dmg *= 1.15;
+            if (currentUser.equipped.weapon.name === "Trường Kiếm của Igris") dmg *= 1.15;
 }
         dmg = Math.floor(dmg);
 
