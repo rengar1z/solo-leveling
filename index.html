@@ -678,20 +678,18 @@
                         
                         <!-- Costume 1 -->
                         <div class="card" style="width: 45%; text-align: center; border-color: gold; padding: 10px;">
-                            <img src="cos/Sung_Jinwoo_Black_Suit.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid gold; margin-bottom: 10px;">
+                            <img src="costume_black_suit_icon.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid gold; margin-bottom: 10px;">
                             <h4 style="color: gold; margin: 0;">Bộ Vest Đen Ám Sát</h4>
                             <p style="color: #ccc; font-size: 14px; min-height: 40px;">Thay đổi Avatar. Tăng 50 STR, 20 VIT.</p>
-                            <p style="color: gold; font-weight: bold; font-size: 18px;">Giá: 5000 Cash</p>
-                            <button class="btn-system" style="width: 100%; border-color: gold; color: gold !important; font-size: 16px;" onclick="buyShopItem('costume_black_suit')">MUA CẤT VÀO TÚI</button>
+                            <button id="btn-costume_black_suit" class="btn-system" style="width: 100%; border-color: gold; font-size: 16px; font-weight: bold; transition: 0.3s;" onclick="handleCostume('costume_black_suit')">MUA (5000 CASH)</button>
                         </div>
 
                         <!-- Costume 2 -->
                         <div class="card" style="width: 45%; text-align: center; border-color: #8eefff; padding: 10px;">
-                            <img src="cos/Sung_Jinwoo_Mining_Work.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid #8eefff; margin-bottom: 10px;">
+                            <img src="costume_monarch_icon.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid #8eefff; margin-bottom: 10px;">
                             <h4 style="color: #8eefff; margin: 0;">Giáp Hoàng Đế Bóng Tối</h4>
                             <p style="color: #ccc; font-size: 14px; min-height: 40px;">Thay đổi Avatar. Tăng 150 STR, 100 VIT.</p>
-                            <p style="color: gold; font-weight: bold; font-size: 18px;">Giá: 15000 Cash</p>
-                            <button class="btn-system" style="width: 100%; border-color: #8eefff; color: #8eefff !important; font-size: 16px;" onclick="buyShopItem('costume_monarch')">MUA CẤT VÀO TÚI</button>
+                            <button id="btn-costume_monarch" class="btn-system" style="width: 100%; border-color: #8eefff; font-size: 16px; font-weight: bold; transition: 0.3s;" onclick="handleCostume('costume_monarch')">MUA (15000 CASH)</button>
                         </div>
 
                     </div>
@@ -934,6 +932,7 @@
             return alert(`Bạn không đủ Cash để mua ${item.name}! Cần ${item.price} Cash.`);
         }
 
+        // Chỉ xử lý mua vật phẩm hồi phục (HP/MP)
         if (item.type === "heal") {
             if (currentUser[item.stat] >= currentUser[item.maxStat]) {
                 return alert(`${item.stat.toUpperCase()} của bạn đã đầy, không thể dùng thêm!`);
@@ -941,19 +940,60 @@
             currentUser.cash -= item.price;
             currentUser[item.stat] = Math.min(currentUser[item.maxStat], currentUser[item.stat] + item.amount);
             alert(`Mua thành công! Bạn đã sử dụng ${item.name} và hồi phục ${item.amount} ${item.stat.toUpperCase()}.`);
+            
+            await set(ref(db, 'users/' + currentUser.username), currentUser);
+            render();
+            if (window.renderBag) window.renderBag();
         } 
-        // Logic mới: Mua Costume (Item) cất vào túi đồ
-        else if (item.type === "item") {
-            currentUser.cash -= item.price;
-            currentUser.inventory.push(item.itemId);
-            alert(`Mua thành công [${item.name}]! Vật phẩm đã được chuyển vào Túi đồ.`);
-        }
-        
-        await set(ref(db, 'users/' + currentUser.username), currentUser);
-        render();
-        if (window.renderBag) window.renderBag();
     };
 
+    // --- HỆ THỐNG TỦ ĐỒ (COSTUME) ---
+    window.handleCostume = async function(shopId) {
+        if (!currentUser.ownedCostumes) currentUser.ownedCostumes = [];
+        
+        const shopItem = SHOP_DATA[shopId];
+        const itemId = shopItem.itemId;
+        const itemData = ITEM_DATA[itemId];
+
+        // TRƯỜNG HỢP 1: ĐANG MẶC -> BẤM ĐỂ THÁO RA
+        if (currentUser.equipped.costume && currentUser.equipped.costume.name === itemId) {
+            currentUser.str -= itemData.str;
+            currentUser.vit -= itemData.vit;
+            currentUser.maxMp -= itemData.mp;
+            currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
+            if (itemData.vit > 0) {
+                currentUser.maxHp -= itemData.vit * 10;
+                currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
+            }
+            currentUser.equipped.costume = null;
+        }
+        // TRƯỜNG HỢP 2: ĐÃ MUA NHƯNG CHƯA MẶC -> BẤM ĐỂ MẶC
+        else if (currentUser.ownedCostumes.includes(itemId)) {
+            // Nếu đang mặc bộ khác thì tự động tháo bộ cũ ra trước
+            if (currentUser.equipped.costume) {
+                const oldData = ITEM_DATA[currentUser.equipped.costume.name];
+                currentUser.str -= oldData.str; currentUser.vit -= oldData.vit;
+                currentUser.maxMp -= oldData.mp; currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
+                if (oldData.vit > 0) { currentUser.maxHp -= oldData.vit * 10; currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp); }
+            }
+            // Mặc bộ mới vào
+            currentUser.equipped.costume = { name: itemId };
+            currentUser.str += itemData.str; currentUser.vit += itemData.vit;
+            currentUser.maxMp += itemData.mp; currentUser.mp += itemData.mp;
+            if (itemData.vit > 0) { currentUser.maxHp += itemData.vit * 10; currentUser.hp += itemData.vit * 10; }
+        }
+        // TRƯỜNG HỢP 3: CHƯA SỞ HỮU -> BẤM ĐỂ MUA
+        else {
+            if (currentUser.cash < shopItem.price) return alert(`Không đủ Cash! Cần ${shopItem.price} Cash.`);
+            currentUser.cash -= shopItem.price;
+            currentUser.ownedCostumes.push(itemId);
+            alert(`Đã mua [${shopItem.name}] thành công! Bấm MẶC TRANG PHỤC để sử dụng.`);
+        }
+
+        await set(ref(db, 'users/' + currentUser.username), currentUser);
+        render(); // Gọi render để nút bấm đổi màu lập tức
+    };
+    
     const enemies = [
         { name: "Hwang Dongsoo", hp: 2000, atk: 300, def: 200, exp: 2000, img: "char/Sung_Jinwoo_Black_Suit.jpg" },
         { name: "Yoo Jinho", hp: 150, atk: 25, def: 15, exp: 50, img: "char/Yoo Jinho.png" },
@@ -1235,7 +1275,38 @@
         if (pImg) pImg.src = defaultAvatar;
         if (dpImg) dpImg.src = defaultAvatar;
     };
-    updatePlayerAvatar(); // Kích hoạt ngay lập tức
+        updatePlayerAvatar(); // Kích hoạt ngay lập tức
+        // XỬ LÝ MÀU SẮC VÀ CHỮ CỦA NÚT COSTUME TRONG SHOP
+        if (!currentUser.ownedCostumes) currentUser.ownedCostumes = [];
+        const costumes = ["costume_black_suit", "costume_monarch"];
+        
+        costumes.forEach(shopId => {
+            const btn = document.getElementById('btn-' + shopId);
+            if (btn) {
+                const itemId = SHOP_DATA[shopId].itemId;
+                // Nếu đang mặc
+                if (currentUser.equipped && currentUser.equipped.costume && currentUser.equipped.costume.name === itemId) {
+                    btn.innerText = "ĐANG SỬ DỤNG (THÁO)";
+                    btn.style.background = "#fff";
+                    btn.style.color = "#000";
+                    btn.style.textShadow = "none";
+                } 
+                // Nếu đã mua rồi
+                else if (currentUser.ownedCostumes.includes(itemId)) {
+                    btn.innerText = "MẶC TRANG PHỤC";
+                    btn.style.background = "transparent";
+                    btn.style.color = "#00ff00"; 
+                    btn.style.borderColor = "#00ff00";
+                } 
+                // Nếu chưa mua
+                else {
+                    btn.innerText = `MUA (${SHOP_DATA[shopId].price} CASH)`;
+                    btn.style.background = "transparent";
+                    btn.style.color = shopId === "costume_black_suit" ? "gold" : "#8eefff";
+                    btn.style.borderColor = shopId === "costume_black_suit" ? "gold" : "#8eefff";
+                }
+            }
+        });
     }
     
 
