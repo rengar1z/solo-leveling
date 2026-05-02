@@ -2162,13 +2162,14 @@ window.unequipItem = async function(slot, doSave = true) {
         if (currentUser.skills["Phát Triển Cấp Tốc"] > 0) {
             enemyExp += Math.floor(enemyExp * 0.10 * currentUser.skills["Phát Triển Cấp Tốc"]);
         }
+        logBattle(`<span style="color:#00ff00">Chiến thắng! Nhận ${enemyExp} EXP và ${rewardCash} CASH.</span>${regenLog}`);
         currentUser.exp += enemyExp;
 
-        logBattle(`<span style="color:#00ff00">Chiến thắng! Nhận ${enemyExp} EXP và ${rewardCash} CASH.</span>${regenLog}`);
-
         // Logic rớt đồ tự động lấy theo loại Cổng Đỏ hiện tại
+        // KÍCH HOẠT: BÀN TAY MAY MẮN (+10% Tỷ lệ rớt đồ)
+        let luckBonus = (currentUser.skills["Bàn Tay May Mắn"] > 0) ? 0.10 : 0;
         if (currentRedGateId) {
-            let dropChance = enemy.isBoss ? 1.0 : 0.05; 
+            let dropChance = (enemy.isBoss ? 1.0 : 0.05) + luckBonus; 
             if (Math.random() <= dropChance) {
                 const rareItems = RED_GATES[currentRedGateId].rareDrops;
                 const droppedItem = rareItems[Math.floor(Math.random() * rareItems.length)];
@@ -2176,7 +2177,8 @@ window.unequipItem = async function(slot, doSave = true) {
                 logBattle(`<span style="color:${RED_GATES[currentRedGateId].themeColor}; font-size:18px;">✨ CỔNG ĐỎ RƠI ĐỒ HIẾM: <b>${droppedItem}</b>!</span>`);
             }
         } else if (isDungeonMode && enemy.isBoss) {
-            if (Math.random() <= 0.10) { 
+            let dropChance = 0.10 + luckBonus; // Mặc định 10% + buff
+            if (Math.random() <= dropChance) { 
                 const items = ["Dagger", "Shield", "Essence of Magic"];
                 const droppedItem = items[Math.floor(Math.random() * items.length)];
                 currentUser.inventory.push(droppedItem);
