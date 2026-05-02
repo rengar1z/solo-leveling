@@ -1727,45 +1727,77 @@ window.unequipItem = async function(slot, doSave = true) {
     }
 }
 
-    // --- CHIÊU THỨC ---
+    // --- HỆ THỐNG TÍNH TOÁN SÁT THƯƠNG CHUẨN ---
+    function calcPlayerDamage(skillMulti) {
+        // 1. STR & PER: Sát thương dao động dựa trên Độ chính xác
+        let maxDmg = currentUser.str * skillMulti;
+        let precision = Math.min(0.95, 0.5 + (currentUser.sense * 0.005));
+        let minDmg = maxDmg * precision;
+        let finalDmg = Math.floor(Math.random() * (maxDmg - minDmg + 1) + minDmg);
+
+        // Trừ phòng ngự của quái vật
+        finalDmg = Math.max(5, finalDmg - enemy.def);
+
+        // Nội tại Vũ khí
+        if (currentUser.equipped && currentUser.equipped.weapon) {
+            if (currentUser.equipped.weapon.name === "Dagger") finalDmg *= 1.02;
+            if (currentUser.equipped.weapon.name === "Baruka's Dagger") finalDmg *= 1.10;
+            if (currentUser.equipped.weapon.name === "Trường Kiếm của Igris") finalDmg *= 1.15;
+        }
+
+        // 2. AGI: Tính toán Bạo kích
+        let critRate = currentUser.agi * 0.5;
+        let critMulti = 1.5 + (currentUser.agi * 0.01);
+        let isCrit = false;
+
+        if (Math.random() * 100 < critRate) {
+            finalDmg = finalDmg * critMulti;
+            isCrit = true;
+        }
+
+        return { dmg: Math.floor(finalDmg), isCrit: isCrit };
+    }
+
+    // --- CẬP NHẬT CÁC CHIÊU THỨC CHIẾN ĐẤU ---
     window.playerAttack = function() {
         if (!isMyTurn || enemy.hp <= 0) return;
         const btnAttack = document.getElementById(getPrefix() + 'btnAttack');
         if (!btnAttack.classList.contains('icon-mode')) {
             switchToIconMode(); logBattle("Sẵn sàng! Hãy chọn kỹ năng để tấn công."); return; 
-    }
+        }
     
-        let dmg = Math.max(5, (currentUser.str * 2) - enemy.def);
-        if (currentUser.equipped && currentUser.equipped.weapon) {
-            if (currentUser.equipped.weapon.name === "Dagger") dmg *= 1.02;
-            if (currentUser.equipped.weapon.name === "Baruka's Dagger") dmg *= 1.05; // Đồ mới tăng 5%
-            if (currentUser.equipped.weapon.name === "Trường Kiếm của Igris") dmg *= 1.15;
-}
-        dmg = Math.floor(dmg);
-
-        enemy.hp = Math.max(0, enemy.hp - dmg);
+        let hit = calcPlayerDamage(2.0); // Đánh thường (Hệ số x2)
+        enemy.hp = Math.max(0, enemy.hp - hit.dmg);
         triggerShake();
-        logBattle(`Bạn chém ${enemy.name}, gây ${dmg} sát thương!`);
+
+        let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 BẠO KÍCH!</span> ` : "";
+        logBattle(`${critLog}Bạn chém ${enemy.name}, gây <span style="color:#ff4d4d">${hit.dmg}</span> sát thương!`);
         updateCombatUI(); checkBattleEnd(); 
-};
+    };
 
     window.useDaggerRush = function() {
         if (!isMyTurn || enemy.hp <= 0 || currentUser.mp < 35) { if(currentUser.mp < 35) logBattle("<span style='color:orange'>Không đủ MP để dùng Dagger Rush!</span>"); return; }
         currentUser.mp -= 35; 
-        let dmg = Math.max(5, (currentUser.str * 2.5) - enemy.def); 
+        
+        let hit = calcPlayerDamage(2.8); // Dagger Rush (Hệ số x2.8)
+        enemy.hp = Math.max(0, enemy.hp - hit.dmg);
         triggerShake();
-        logBattle(`Bạn dùng <span style="color:#4a90e2">Dagger Rush</span> gây ${Math.floor(dmg)} sát thương!`);
-        enemy.hp = Math.max(0, enemy.hp - dmg);
+
+        let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 BẠO KÍCH KÉP!</span> ` : "";
+        logBattle(`${critLog}Dùng <span style="color:#4a90e2">Dagger Rush</span> gây <span style="color:#ff4d4d">${hit.dmg}</span> sát thương!`);
         updateCombatUI(); checkBattleEnd(); 
     };
 
     window.useTanSat = function() {
         if (!isMyTurn || enemy.hp <= 0 || currentUser.mp < 50) { if(currentUser.mp < 50) logBattle("<span style='color:orange'>Không đủ MP để dùng Tàn Sát!</span>"); return; }
         currentUser.mp -= 50; 
-        let dmg = Math.max(10, (currentUser.str * 4) - enemy.def); 
+        
+        let hit = calcPlayerDamage(4.5); // Tàn Sát (Hệ số x4.5)
+        enemy.hp = Math.max(0, enemy.hp - hit.dmg);
         triggerShake();
-        logBattle(`<span style="color:#ff4d4d">TÀN SÁT!!!</span> Gây ${Math.floor(dmg)} sát thương chí mạng!`);
-        enemy.hp = Math.max(0, enemy.hp - dmg);
+
+        let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 TỬ HUYỆT!</span> ` : "";
+        logBattle(`${critLog}<span style="color:#ff4d4d">TÀN SÁT!!!</span> Gây <span style="color:#ff0000; font-size:18px;">${hit.dmg}</span> sát thương!`);
         updateCombatUI(); checkBattleEnd();
     };
 
@@ -1774,7 +1806,10 @@ window.unequipItem = async function(slot, doSave = true) {
 
         const defensePower = currentUser.vit || 0; 
         const enemyAtk = enemy.atk || 10;
-        let dmg = Math.max(2, enemyAtk - Math.floor(defensePower / 2));
+        
+        // 4. VITALITY: Chuyển hóa thành tỷ lệ phần trăm miễn thương (Tối đa giảm 60% sát thương)
+        let vitDmgReduction = Math.min(0.60, defensePower * 0.001);
+        let dmg = Math.max(2, Math.floor(enemyAtk * (1 - vitDmgReduction)));
         
         let isSpecialAttack = false;
         let specialAttackLog = "";
