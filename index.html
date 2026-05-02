@@ -1207,7 +1207,7 @@
         alert(`Tẩy điểm thành công! Bạn nhận lại ${refundedPoints} Điểm Kỹ Năng.`);
     };
 
-    // --- HIỂN THỊ DANH SÁCH SKILL ĐA NHÁNH ---
+    // --- HIỂN THỊ DANH SÁCH SKILL ĐA NHÁNH (CÓ CƠ CHẾ KHÓA LỚP) ---
     window.renderSkills = function() {
         // Tự động vá lỗi: Thêm skill mới cho tài khoản cũ
         Object.keys(skillData).forEach(s => { if (currentUser.skills[s] === undefined) currentUser.skills[s] = 0; });
@@ -1216,14 +1216,28 @@
         const list = document.getElementById('skillList');
         if (!list) return;
         
+        // 1. TÌM XEM NGƯỜI CHƠI ĐANG CHƠI NHÁNH NÀO
+        let currentClass = null;
+        for (let s in currentUser.skills) {
+            if (currentUser.skills[s] > 0 && skillData[s] && skillData[s].branch !== "Chung") {
+                currentClass = skillData[s].branch; // Xác định hệ phái hiện tại
+                break;
+            }
+        }
+
         // Render Nút Tẩy Điểm
-        let html = `<div style="text-align: right; margin-bottom: 15px;"><button onclick="resetSkills()" style="background: #ff4d4d; border-color: #cc0000; color: #fff; font-size: 16px;">🔄 TẨY ĐIỂM BẢN THÂN (1000 CASH)</button></div>`;
+        let html = `<div style="text-align: right; margin-bottom: 15px;"><button onclick="resetSkills()" style="background: #ff4d4d; border-color: #cc0000; color: #fff; font-size: 16px;">🔄 TẨY ĐIỂM ĐỔI NHÁNH (1000 CASH)</button></div>`;
 
         // Render từng Nhánh Kỹ năng
         const branches = ["Sát Thủ", "Pháp Sư", "Đấu Sĩ", "Chung"];
         branches.forEach(branch => {
             let branchColor = branch === 'Sát Thủ' ? '#4a90e2' : branch === 'Pháp Sư' ? '#9933ff' : branch === 'Đấu Sĩ' ? '#ff4d4d' : '#8eefff';
-            html += `<h3 style="color: ${branchColor}; border-bottom: 1px solid ${branchColor}; margin-top: 20px; padding-bottom: 5px;">[ NHÁNH ${branch.toUpperCase()} ]</h3>`;
+            
+            // Nếu đã chọn nhánh khác, và nhánh đang vẽ không phải nhánh Chung -> Khóa lại
+            let isBranchLocked = (currentClass !== null && currentClass !== branch && branch !== "Chung");
+            let displayColor = isBranchLocked ? '#555' : branchColor; // Nhánh bị khóa sẽ chuyển màu xám
+            
+            html += `<h3 style="color: ${displayColor}; border-bottom: 1px solid ${displayColor}; margin-top: 20px; padding-bottom: 5px;">[ NHÁNH ${branch.toUpperCase()} ] ${isBranchLocked ? '<span style="color:red; font-size:16px;">(ĐÃ KHÓA)</span>' : ''}</h3>`;
             
             Object.keys(skillData).forEach(s => {
                 const data = skillData[s];
@@ -1231,16 +1245,19 @@
                     const lv = currentUser.skills[s];
                     const isMax = lv >= data.maxLv;
                     
+                    // Nút nâng cấp chỉ mở khi: Đủ điểm, chưa Max, VÀ nhánh không bị khóa
+                    let canUpgrade = currentUser.skillPoints >= data.cost && !isMax && !isBranchLocked;
+                    
                     html += `
-                        <div class="skill-item ${lv === 0 ? 'locked' : 'unlocked'}" onclick="showSkillDetail('${s}')" style="border-color: ${lv > 0 ? branchColor : '#333'};">
+                        <div class="skill-item ${lv === 0 ? 'locked' : 'unlocked'}" onclick="showSkillDetail('${s}')" style="border-color: ${lv > 0 ? displayColor : '#333'}; opacity: ${isBranchLocked ? 0.4 : 1}; pointer-events: ${isBranchLocked ? 'none' : 'auto'};">
                             <div style="display: flex; align-items: center;">
-                                <img src="${data.icon}" style="width: 35px; height: 35px; margin-right: 15px; border-radius: 5px; border: 1px solid ${branchColor};">
+                                <img src="${data.icon}" style="width: 35px; height: 35px; margin-right: 15px; border-radius: 5px; border: 1px solid ${displayColor}; filter: ${isBranchLocked ? 'grayscale(1)' : 'none'};">
                                 <div style="display: flex; flex-direction: column;">
                                     <span>${s} ${isMax ? '<span style="color: gold;">[MAX]</span>' : `(Lv.${lv}/${data.maxLv})`}</span>
                                     ${!isMax ? `<small style="color: #aaa; font-size: 12px;">Cần: ${data.cost} Điểm</small>` : ''}
                                 </div>
                             </div>
-                            <button class="add-skill-btn" onclick="upgradeSkill(event, '${s}')" ${(currentUser.skillPoints >= data.cost && !isMax) ? '' : 'disabled'} style="background: ${branchColor}; color: #000;">+</button>
+                            <button class="add-skill-btn" onclick="upgradeSkill(event, '${s}')" ${canUpgrade ? '' : 'disabled'} style="background: ${displayColor}; color: #000;">+</button>
                         </div>
                     `;
                 }
@@ -1249,9 +1266,23 @@
         list.innerHTML = html;
     };
 
+    // --- LOGIC NÂNG CẤP SKILL KẾT HỢP KHÓA NHÁNH ---
     window.upgradeSkill = async function(e, name) {
         e.stopPropagation(); 
         const data = skillData[name];
+
+        // Bảo mật 2 lớp: Check lại xem có đang cộng nhầm vào nhánh bị khóa không
+        let currentClass = null;
+        for (let s in currentUser.skills) {
+            if (currentUser.skills[s] > 0 && skillData[s] && skillData[s].branch !== "Chung") {
+                currentClass = skillData[s].branch;
+                break;
+            }
+        }
+        if (currentClass !== null && currentClass !== data.branch && data.branch !== "Chung") {
+            return alert(`Bạn đang theo nhánh [${currentClass}]! Hãy dùng Tẩy Điểm nếu muốn chơi nhánh [${data.branch}].`);
+        }
+
         if (currentUser.skillPoints >= data.cost && currentUser.skills[name] < data.maxLv) {
             currentUser.skills[name]++;
             currentUser.skillPoints -= data.cost;
