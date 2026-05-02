@@ -1943,11 +1943,13 @@ window.unequipItem = async function(slot, doSave = true) {
                 switch(enemy.bossType) {
                     case "ice_king":
                         if (rand <= 0.15) { 
-                            dmg = Math.max(10, Math.floor(enemyAtk * 1.8) - Math.floor(defensePower / 3)); 
+                            let rawDmg = enemyAtk * 1.8; // Gấp 1.8 lần ST cơ bản
+                            dmg = Math.max(10, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                             isSpecialAttack = true;
                             specialAttackLog = `<span style="color:#00ffff; font-weight:bold; text-shadow: 0 0 5px #00ffff;">❄️ BÃO TUYẾT TUYỆT MỆNH!</span> Vua Tiên Băng vung tay, bão tuyết xé toạc giáp của bạn, gây ${Math.floor(dmg)} sát thương!`;
                         } else if (rand <= 0.30) {
-                            dmg = Math.max(15, Math.floor(enemyAtk * 2.0) - Math.floor(defensePower / 2)); 
+                            let rawDmg = enemyAtk * 2.2; 
+                            dmg = Math.max(15, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                             isSpecialAttack = true;
                             specialAttackLog = `<span style="color:#00ffff; font-weight:bold; text-shadow: 0 0 5px #00ffff;">🧊 GIÁO BĂNG ĐOẠT MỆNH!</span> Một ngọn giáo băng đâm xuyên qua bạn, gây ${Math.floor(dmg)} sát thương chí mạng!`;
                         } 
@@ -1955,11 +1957,13 @@ window.unequipItem = async function(slot, doSave = true) {
 
                     case "fire_lord":
                         if (rand <= 0.15) {
-                            dmg = Math.max(20, Math.floor(enemyAtk * 2.2) - Math.floor(defensePower / 4)); 
+                            let rawDmg = enemyAtk * 2.5; 
+                            dmg = Math.max(20, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                             isSpecialAttack = true;
                             specialAttackLog = `<span style="color:#ff4d4d; font-weight:bold; text-shadow: 0 0 5px #ff4d4d;">🔥 CỘT LỬA HỦY DIỆT!</span> Chúa Tể Dung Nham thiêu rụi không gian, giáng ${Math.floor(dmg)} sát thương tàn khốc!`;
                         } else if (rand <= 0.30) {
-                            dmg = Math.max(25, Math.floor(enemyAtk * 2.5) - Math.floor(defensePower / 2)); 
+                            let rawDmg = enemyAtk * 2.8; 
+                            dmg = Math.max(25, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                             isSpecialAttack = true;
                             specialAttackLog = `<span style="color:#ff4d4d; font-weight:bold; text-shadow: 0 0 5px #ff4d4d;">☄️ MƯA LƯU TINH!</span> Những tảng đá rực lửa giáng từ trên cao xuống, gây ${Math.floor(dmg)} sát thương!`;
                         }
@@ -1967,15 +1971,18 @@ window.unequipItem = async function(slot, doSave = true) {
 
                     case "igris":
                         if (rand <= 0.15) {
-                            dmg = Math.max(25, Math.floor(enemyAtk * 2.5) - Math.floor(defensePower / 4));
+                            let rawDmg = enemyAtk * 3.0; // Igris chém cực kỳ rát
+                            dmg = Math.max(25, Math.floor(rawDmg * (1 - vitDmgReduction)));
                             isSpecialAttack = true;
                             specialAttackLog = `<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">⚔️ TRẢM PHONG!</span> Igris vung đại kiếm tạo ra luồng kiếm khí ác liệt, gây ${Math.floor(dmg)} sát thương!`;
                         } else if (rand <= 0.30) {
-                            dmg = Math.max(30, Math.floor(enemyAtk * 2.8) - Math.floor(defensePower / 2));
+                            let rawDmg = enemyAtk * 3.5;
+                            dmg = Math.max(30, Math.floor(rawDmg * (1 - vitDmgReduction)));
                             isSpecialAttack = true;
                             specialAttackLog = `<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">🌪️ LIÊN HOÀN KIẾM!</span> Igris áp sát chớp nhoáng và chém liên tục, giáng ${Math.floor(dmg)} sát thương!`;
-                        } else if (rand <= 0.45) { // Đã vá lỗi dư ngoặc tại đây!
-                            dmg = Math.max(10, Math.floor(enemyAtk * 1.5) - Math.floor(defensePower / 2));
+                        } else if (rand <= 0.45) {
+                            let rawDmg = enemyAtk * 1.5;
+                            dmg = Math.max(10, Math.floor(rawDmg * (1 - vitDmgReduction)));
                             isSpecialAttack = true;
                             isPlayerStunned = true; 
                             specialAttackLog = `<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">👁️ UY ÁP KẺ THỐNG TRỊ!</span> Ánh mắt của Igris xuyên thấu tâm can, gây ${Math.floor(dmg)} sát thương và làm bạn <span style="color:yellow; text-shadow: 0 0 5px yellow;">CHOÁNG VÁNG</span>!`;
