@@ -964,16 +964,19 @@
 
         // --- NHÁNH SÁT THỦ (TỐC ĐỘ / BẠO KÍCH) ---
         "Bước Chân Bóng Tối": { branch: "Sát Thủ", type: "passive", maxLv: 1, cost: 5, desc: "Có 10% cơ hội né tránh hoàn toàn đòn đánh.", icon: "skill/tanghinh.jpg" },
+        "Nhát Chém Tử Thần": { branch: "Sát Thủ", type: "passive", maxLv: 1, cost: 10, desc: "[Bị động] Tăng thêm 30% Sát thương Bạo Kích.", icon: "skill/amsat.jpg" },
         "Ném Dao": { branch: "Sát Thủ", type: "active", maxLv: 1, cost: 5, mp: 20, func: "useDaggerThrow", desc: "Phóng dao gây ST. 30% gây Choáng.", icon: "skill/dagger.jpg" },
         "Dagger Rush": { branch: "Sát Thủ", type: "active", maxLv: 1, cost: 10, mp: 35, func: "useDaggerRush", desc: "Tung loạt dao găm chớp nhoáng.", icon: "skill/dagger.jpg" },
         "Tàn sát": { branch: "Sát Thủ", type: "active", maxLv: 1, cost: 15, mp: 50, func: "useTanSat", desc: "Nhắm vào tử huyệt, tăng 20% Tỷ lệ Bạo.", icon: "skill/amsat.jpg" },
 
         // --- NHÁNH PHÁP SƯ (XUYÊN GIÁP) ---
         "Lõi Ma Thuật": { branch: "Pháp Sư", type: "passive", maxLv: 1, cost: 5, desc: "[Bị động] Kích hoạt lõi ma lực. Tăng 25% sát thương cho mọi kỹ năng Phép Thuật (INT).", icon: "skill/amsat.jpg" },
+        "Hút Ma Lực": { branch: "Pháp Sư", type: "active", maxLv: 1, cost: 10, mp: 10, func: "useManaDrain", desc: "Gây ST Phép. Hồi MP bằng 50% ST gây ra.", icon: "skill/amsat.jpg" },
         "Bão Cầu Lửa": { branch: "Pháp Sư", type: "active", maxLv: 1, cost: 10, mp: 30, func: "useFireStorm", desc: "Cầu lửa thiêu rụi. ST tính bằng INT.", icon: "skill/amsat.jpg" },
         "Trích Xuất Bóng Tối": { branch: "Pháp Sư", type: "active", maxLv: 1, cost: 15, mp: 60, func: "useShadowStrike", desc: "ST Phép (INT). Bỏ qua 50% Giáp.", icon: "skill/amsat.jpg" },
 
         // --- NHÁNH ĐẤU SĨ (HÚT MÁU / BERSERKER) ---
+        "Cơ Thể Thép": { branch: "Đấu Sĩ", type: "passive", maxLv: 1, cost: 10, desc: "[Bị động] Lớp da cứng như thép, giảm 20% sát thương gánh chịu.", icon: "skill/amsat.jpg" }, // <--- THÊM VÀO ĐÂY
         "Sát Khí": { branch: "Đấu Sĩ", type: "passive", maxLv: 1, cost: 5, desc: "Khi HP < 30%, sát thương gây ra tăng 20%.", icon: "skill/amsat.jpg" },
         "Hấp Huyết": { branch: "Đấu Sĩ", type: "active", maxLv: 1, cost: 10, mp: 40, func: "useBloodThirst", desc: "Gây ST Vật Lý. Hồi máu dựa trên ST và VIT.", icon: "skill/amsat.jpg" },
         "Thịnh Nộ Quân Vương": { branch: "Đấu Sĩ", type: "active", maxLv: 1, cost: 20, mp: 100, func: "useMonarchWrath", desc: "Tế 10% HP hiện tại. Xuyên 80% Giáp.", icon: "skill/amsat.jpg" }
@@ -1793,13 +1796,18 @@ window.unequipItem = async function(slot, doSave = true) {
         // 4. AGI: Tính toán Bạo kích
         let critRate = (currentUser.agi * 0.5) + (config.bonusCritRate || 0);
         let critMulti = 1.5 + (currentUser.agi * 0.01);
-        let isCrit = false;
+        
+        // ---> BUFF CỦA NHÁNH SÁT THỦ <---
+        if (currentUser.skills["Nhát Chém Tử Thần"] > 0) {
+            critMulti += 0.30; // Cộng thẳng 30% Sát thương Bạo Kích
+        }
 
+        let isCrit = false;
         if (Math.random() * 100 < critRate) {
             finalDmg = finalDmg * critMulti;
             isCrit = true;
         }
-
+        
         // 5. BỊ ĐỘNG: SÁT KHÍ (Buff 20% sát thương khi máu đỏ)
         if (currentUser.skills["Sát Khí"] > 0 && currentUser.hp <= currentUser.maxHp * 0.3) {
             finalDmg *= 1.20; 
@@ -1857,6 +1865,24 @@ window.unequipItem = async function(slot, doSave = true) {
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 XUYÊN THẤU!</span> ` : "";
         logBattle(`${critLog}<span style="color:#9933ff; text-shadow: 0 0 5px #9933ff;">TRÍCH XUẤT BÓNG TỐI!</span> Phá giáp địch, gây <span style="color:#9933ff">${hit.dmg}</span> sát thương Phép!`);
+        updateCombatUI(); checkBattleEnd();
+    };
+
+    // --- BỔ SUNG CHIÊU PHÁP SƯ: HÚT MA LỰC ---
+    window.useManaDrain = function() {
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 10) { if(currentUser.mp < 10) logBattle("<span style='color:orange'>Thiếu 10 MP!</span>"); return; }
+        currentUser.mp -= 10; 
+        
+        let hit = calcPlayerDamage({ multi: 1.8, stat: 'int' }); 
+        enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
+        
+        // Hồi lại MP bằng 50% Sát thương gây ra
+        let manaHeal = Math.floor(hit.dmg * 0.5);
+        currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + manaHeal);
+
+        let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 BẠO KÍCH!</span> ` : "";
+        logBattle(`${critLog}<span style="color:#00bfff;">HÚT MA LỰC!</span> Gây ${hit.dmg} ST Phép, đoạt lại <span style="color:#00bfff">${manaHeal} MP</span>!`);
+        
         updateCombatUI(); checkBattleEnd();
     };
 
@@ -2021,6 +2047,12 @@ window.unequipItem = async function(slot, doSave = true) {
 
         // --- XỬ LÝ SÁT THƯƠNG GÁNH CHỊU ---
         if (dmg > 0) {
+            // ---> BUFF CỦA NHÁNH ĐẤU SĨ <---
+            if (currentUser.skills["Cơ Thể Thép"] > 0) {
+                dmg *= 0.80; // Giảm ngay 20% sát thương trước khi tính Giáp
+            }
+
+            // (Giữ nguyên các hiệu ứng khiên và đồ đạc bên dưới)
             if (currentUser.equipped && currentUser.equipped.shield && currentUser.equipped.shield.name === "Shield") dmg *= 0.985;
             if (currentUser.equipped && currentUser.equipped.accessory && currentUser.equipped.accessory.name === "Ice Elf Cloak") dmg *= 0.95;
             if (currentUser.equipped && currentUser.equipped.helmet && currentUser.equipped.helmet.name === "Mũ bảo hộ của hiệp sĩ đỏ") dmg *= 0.92;
