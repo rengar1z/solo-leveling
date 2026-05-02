@@ -2546,6 +2546,7 @@
         isMyTurn = true;
         isPlayerStunned = false;
         isEnemyStunned = false; // <--- THÊM DÒNG NÀY ĐỂ GIẢI CHOÁNG QUÁI MỚI
+        hasUsedGuts = false;
 
         document.getElementById('e-name').innerText = enemy.name;
         document.getElementById('e-img').src = enemy.img;
@@ -2579,6 +2580,7 @@
         isMyTurn = true;
         isPlayerStunned = false;
         isEnemyStunned = false;
+        hasUsedGuts = false;
 
         document.getElementById('dStageText').innerText = `Ải ${dCurrentStage + 1}/${dungeonData[dCurrentId].stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
         if(enemy.isBoss) {
@@ -2624,6 +2626,7 @@
         isMyTurn = true;
         isPlayerStunned = false;
         isEnemyStunned = false;
+        hasUsedGuts = false;
         
         document.getElementById('dStageText').innerText = `Ải ${rgCurrentStage + 1}/${gateData.stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
         document.getElementById('dStageText').style.color = gateData.themeColor;
