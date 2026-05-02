@@ -1529,7 +1529,7 @@
 
         // 1. Luôn thêm nút Đánh Thường đầu tiên
         skillRow.innerHTML += `
-            <button class="icon-mode combat-skill-btn" onclick="playerAttack()" style="border-color: #00bfff;">
+            <button id="${pre}btnAttack" class="icon-mode combat-skill-btn" onclick="playerAttack()" style="border-color: #00bfff;">
                 <img src="skill/attack.jpg">
                 <div class="skill-tooltip" style="border-color: #00bfff; box-shadow: 0 0 15px #00bfff;">
                     <h4 style="color: #00bfff; margin: 0 0 5px 0; font-size: 18px;">TẤN CÔNG (STR)</h4>
@@ -1537,7 +1537,7 @@
                 </div>
             </button>
         `;
-
+        
         // 2. Quét Database, ai học chiêu CHỦ ĐỘNG nào thì vẽ nút chiêu đó ra
         for (let s in currentUser.skills) {
             const data = skillData[s];
@@ -1884,6 +1884,21 @@ window.unequipItem = async function(slot, doSave = true) {
         updateCombatUI(); checkBattleEnd(); 
     };
 
+    // --- BỔ SUNG CHIÊU THỨC BỊ THIẾU: BÃO CẦU LỬA ---
+    window.useFireStorm = function() {
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 30) { if(currentUser.mp < 30) logBattle("<span style='color:orange'>Thiếu 30 MP!</span>"); return; }
+        currentUser.mp -= 30; 
+        
+        // Cầu lửa: Sát thương Phép hệ số 2.0 (INT) và xuyên 20% Giáp
+        let hit = calcPlayerDamage({ multi: 2.0, stat: 'int', ignoreDef: 0.2 }); 
+        enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
+        
+        let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 BẠO KÍCH!</span> ` : "";
+        logBattle(`${critLog}Ném <span style="color:#ff9900; text-shadow: 0 0 5px #ff9900;">Bão Cầu Lửa</span> bùng nổ, gây <span style="color:#ff9900">${hit.dmg}</span> ST Phép!`);
+        
+        updateCombatUI(); checkBattleEnd();
+    };
+    
     // --- KỸ NĂNG TỐI THƯỢNG (THỊNH NỘ QUÂN VƯƠNG) ---
     window.useMonarchWrath = function() {
         if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 100) { if(currentUser.mp < 100) logBattle("<span style='color:orange'>Thiếu 100 MP!</span>"); return; }
