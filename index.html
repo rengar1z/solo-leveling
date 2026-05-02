@@ -177,6 +177,34 @@
             opacity: 1;
             bottom: 125%; /* Hiệu ứng trôi nhẹ lên trên khi hover */
         }
+
+        /* --- HIỆU ỨNG TOOLTIP CHO DANH SÁCH SKILL --- */
+        .skill-list-tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 80%; /* Nổi lên phía trên skill */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 260px;
+            background: rgba(0, 10, 30, 0.98);
+            color: #fff;
+            padding: 15px;
+            border-radius: 6px;
+            z-index: 1000;
+            transition: 0.2s ease-in-out;
+            pointer-events: none; /* Cực kỳ quan trọng để không chặn lúc bấm nút + */
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        /* Khi rê chuột vào thẻ skill thì Tooltip bay lên hiện ra */
+        .skill-item:hover .skill-list-tooltip {
+            visibility: visible;
+            opacity: 1;
+            bottom: 105%; 
+        }
+        
         .hidden-skill { display: none !important; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -734,11 +762,6 @@
                 <div id="tab-skills" class="tab-panel">
                     <h2 style="color: #00bfff;">SKILL POINTS: <span id="skPoints">0</span></h2>
                     <div id="skillList" class="skill-list"></div>
-                    <div id="skillDetail" class="card hidden" style="margin-top: 20px; border-color: gold;">
-                        <h3 id="detName" style="color: gold; margin-top: 0;"></h3>
-                        <p id="detDesc" style="font-size: 18px; color: #eee;"></p>
-                        <p id="detReq" style="color: #ff4d4d; font-weight: bold;"></p>
-                    </div>
                 </div>
 
                 <div id="tab-logs" class="tab-panel">
@@ -1254,7 +1277,24 @@
                     }
 
                     html += `
-                        <div class="skill-item ${lv === 0 ? 'locked' : 'unlocked'}" onclick="showSkillDetail('${s}')" style="border-color: ${lv > 0 ? displayColor : '#333'}; opacity: ${isBranchLocked ? 0.4 : 1}; pointer-events: ${isBranchLocked ? 'none' : 'auto'};">
+                        let dynamicText = "";
+                    if (lv > 0 && data.maxLv > 1) {
+                        if (s === "Phát Triển Cấp Tốc") dynamicText = `<br><span style="color:#00ff00; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 10}% EXP</span>`;
+                        if (s === "Thợ Săn Tiền Thưởng") dynamicText = `<br><span style="color:gold; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 15}% CASH</span>`;
+                        if (s === "Siêu Giác Quan") dynamicText = `<br><span style="color:#8eefff; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 5}% Né Đòn</span>`;
+                        if (s === "Thể Chất Siêu Phàm") dynamicText = `<br><span style="color:#ff4d4d; font-size:14px; font-weight:bold;">↳ Đã cộng vĩnh viễn: +${lv * 5} STR/VIT</span>`;
+                    }
+
+                    html += `
+                        <div class="skill-item ${lv === 0 ? 'locked' : 'unlocked'}" style="position: relative; border-color: ${lv > 0 ? displayColor : '#333'}; opacity: ${isBranchLocked ? 0.4 : 1}; pointer-events: ${isBranchLocked ? 'none' : 'auto'};">
+                            
+                            <!-- BẢNG TOOLTIP ẨN (SẼ HIỆN KHI RÊ CHUỘT) -->
+                            <div class="skill-list-tooltip" style="border: 1px solid ${displayColor}; box-shadow: 0 0 15px ${displayColor};">
+                                <h4 style="color: ${displayColor}; margin: 0 0 5px 0; font-size: 20px; text-transform: uppercase;">${s}</h4>
+                                <span style="color: #ccc; font-size: 15px;">${data.desc}</span>
+                                ${data.mp ? `<br><hr style="border-color: #444; margin: 8px 0;"><span style="color: #00bfff; font-size: 14px; font-weight:bold;">Tiêu hao: ${data.mp} MP</span>` : ''}
+                            </div>
+
                             <div style="display: flex; align-items: center;">
                                 <img src="${data.icon}" style="width: 35px; height: 35px; margin-right: 15px; border-radius: 5px; border: 1px solid ${displayColor}; filter: ${isBranchLocked ? 'grayscale(1)' : 'none'};">
                                 <div style="display: flex; flex-direction: column;">
@@ -1308,13 +1348,6 @@
             alert(`Bạn cần ${data.cost} điểm kỹ năng để nâng cấp!`);
         }
     };
-
-    window.showSkillDetail = function(name) {
-        document.getElementById('skillDetail').classList.remove('hidden');
-        document.getElementById('detName').innerText = name;
-        document.getElementById('detDesc').innerText = skillData[name].desc;
-        document.getElementById('detReq').innerText = (name === "Tàng Hình" && currentUser.level < 20) ? "ĐIỀU KIỆN: ĐẠT HẠNG B (LEVEL 20)" : "";
-    }
 
     const statDescriptions = {
         'STRENGTH': 'Tăng sức mạnh vật lý. Tăng sát thương tấn công.',
