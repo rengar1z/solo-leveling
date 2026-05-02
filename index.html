@@ -2187,6 +2187,7 @@ window.unequipItem = async function(slot, doSave = true) {
         enemy = { ...template, maxHp: template.hp };
         isMyTurn = true;
         isPlayerStunned = false;
+        isEnemyStunned = false; // <--- THÊM DÒNG NÀY ĐỂ GIẢI CHOÁNG QUÁI MỚI
 
         document.getElementById('e-name').innerText = enemy.name;
         document.getElementById('e-img').src = enemy.img;
@@ -2219,6 +2220,7 @@ window.unequipItem = async function(slot, doSave = true) {
         enemy = { ...stageData, maxHp: stageData.hp };
         isMyTurn = true;
         isPlayerStunned = false;
+        isEnemyStunned = false;
 
         document.getElementById('dStageText').innerText = `Ải ${dCurrentStage + 1}/${dungeonData[dCurrentId].stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
         if(enemy.isBoss) {
