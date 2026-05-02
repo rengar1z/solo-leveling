@@ -783,15 +783,15 @@
                     <h2 style="color: #ff4d4d; text-align: center;">CỔNG HẦM NGỤC</h2>
                     
                     <div id="dungeonListArea">
-                        <div class="dungeon-card" onclick="enterDungeon('troll_village')">
-                            <h3>LÀNG CỦA TROLL</h3>
+                        <div class="dungeon-card" onclick="enterDungeon('goblin_village')">
+                            <h3>LÀNG CỦA GOBLIN</h3>
                             <p style="font-size: 20px; color: #ccc;">Số ải: 5 | Độ khó: Hạng C</p>
                             <button class="tab-btn btn-system" style="border-color: #ff4d4d; color: #ff4d4d !important; font-size: 24px;">TIẾN VÀO HẦM NGỤC</button>
                         </div>
                         </div>
 
                     <div id="dungeonCombatUI" class="hidden">
-                        <h3 id="dDungeonTitle" style="color: #ffcc00; text-align: center; margin-bottom: 5px; font-size: 32px;">Làng Của Troll</h3>
+                        <h3 id="dDungeonTitle" style="color: #ffcc00; text-align: center; margin-bottom: 5px; font-size: 32px;">Làng Của Goblin</h3>
                         <h4 id="dStageText" style="color: #fff; text-align: center; margin-top: 0; font-size: 24px;">Ải 1/5</h4>
                         
                         <div class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(50,0,0,0.4); border-color: #ff4d4d; min-height: 300px;">
@@ -884,11 +884,11 @@
         "troll_village": {
             name: "Làng Của Troll",
             stages: [
-                { name: "Troll Tập Sự", hp: 120, atk: 25, def: 10, exp: 40, img: "bot/troll-1.PNG" },
-                { name: "Troll Ném Đá", hp: 200, atk: 35, def: 15, exp: 60, img: "bot/troll-2.PNG" },
-                { name: "Troll Trinh Sát", hp: 300, atk: 45, def: 20, exp: 90, img: "bot/troll-3.PNG" },
-                { name: "Troll Chiến Binh", hp: 450, atk: 60, def: 30, exp: 150, img: "bot/troll-4.PNG" },
-                { name: "BOSS: Troll Khổng Lồ Đột Biến", hp: 800, atk: 90, def: 45, exp: 500, img: "bot/troll-5.PNG", isBoss: true }
+                { name: "Pháp Sư Yêu Tinh", hp: 120, atk: 25, def: 10, exp: 40, img: "bot/troll-1.PNG" },
+                { name: "Chiến Binh Yêu Tinh Tinh Nhuệ", hp: 200, atk: 35, def: 15, exp: 60, img: "bot/troll-2.PNG" },
+                { name: "Yêu Tinh Máu Lạnh", hp: 300, atk: 45, def: 20, exp: 90, img: "bot/troll-3.PNG" },
+                { name: "Yêu Tinh Mất Trí", hp: 450, atk: 60, def: 30, exp: 150, img: "bot/troll-4.PNG" },
+                { name: "BOSS: Thủ Lĩnh Yêu Tinh Đột Biến", hp: 800, atk: 90, def: 45, exp: 500, img: "bot/troll-5.PNG", isBoss: true }
             ]
         }
     };
@@ -1959,11 +1959,11 @@ window.unequipItem = async function(slot, doSave = true) {
                 document.getElementById('dDungeonTitle').style.color = "#ffcc00"; 
                 document.getElementById('dDungeonTitle').style.textShadow = "none";
             }
-            return; // Dừng tiến trình Làng Troll
+            return; // Dừng tiến trình Làng Goblin
         }
 
-        // RANDOM XUẤT HIỆN CỔNG ĐỎ BẤT KỲ SAU KHI ĐÁNH TROLL
-        if (isDungeonMode && dCurrentId === 'troll_village' && !currentRedGateId) {
+        // RANDOM XUẤT HIỆN CỔNG ĐỎ BẤT KỲ SAU KHI ĐÁNH GOBLIN
+        if (isDungeonMode && dCurrentId === 'goblin_village' && !currentRedGateId) {
             if (Math.random() <= 0.9) { // 10% tỷ lệ
                 const gateKeys = Object.keys(RED_GATES);
                 const randomGateId = gateKeys[Math.floor(Math.random() * gateKeys.length)];
