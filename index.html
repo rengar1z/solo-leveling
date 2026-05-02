@@ -1454,7 +1454,21 @@
         alert(`Tẩy điểm thành công! Hệ thống đã thu hồi các bùa lợi và hoàn trả ${refundedPoints} Điểm Kỹ Năng.`);
     };
 
-    // --- HIỂN THỊ DANH SÁCH SKILL (CẬP NHẬT TRỰC TIẾP % HIỆU QUẢ VÀ TOOLTIP) ---
+    // --- GHI NHỚ TRẠNG THÁI ĐÓNG/MỞ CỦA TỪNG NHÁNH ---
+    window.branchToggleState = window.branchToggleState || {
+        "Chung": true,      // Mặc định cho nhánh Chung mở sẵn
+        "Sát Thủ": false,   // Các nhánh còn lại mặc định thu gọn
+        "Pháp Sư": false,
+        "Đấu Sĩ": false
+    };
+
+    // --- HÀM XỬ LÝ CLICK ĐÓNG/MỞ NHÁNH ---
+    window.toggleSkillBranch = function(branchName) {
+        window.branchToggleState[branchName] = !window.branchToggleState[branchName];
+        renderSkills(); // Tải lại bảng kỹ năng để áp dụng hiệu ứng
+    };
+
+    // --- HIỂN THỊ DANH SÁCH SKILL (ĐÃ THÊM CƠ CHẾ THU GỌN) ---
     window.renderSkills = function() {
         Object.keys(skillData).forEach(s => { if (currentUser.skills[s] === undefined) currentUser.skills[s] = 0; });
 
@@ -1478,7 +1492,19 @@
             let isBranchLocked = (currentClass !== null && currentClass !== branch && branch !== "Chung");
             let displayColor = isBranchLocked ? '#555' : branchColor; 
             
-            html += `<h3 style="color: ${displayColor}; border-bottom: 1px solid ${displayColor}; margin-top: 20px; padding-bottom: 5px;">[ NHÁNH ${branch.toUpperCase()} ] ${isBranchLocked ? '<span style="color:red; font-size:16px;">(ĐÃ KHÓA)</span>' : ''}</h3>`;
+            // Đọc trạng thái xem nhánh này đang được mở hay đóng
+            let isOpen = window.branchToggleState[branch];
+            
+            // KHUNG THANH TIÊU ĐỀ (Click vào để sổ ra hoặc thu gọn)
+            html += `
+                <div style="cursor: pointer; background: rgba(0, 10, 30, 0.8); padding: 12px 15px; margin-top: 15px; border-radius: 6px; border-left: 5px solid ${displayColor}; border-bottom: 1px solid rgba(0,0,0,0.5); box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; justify-content: space-between; align-items: center; transition: 0.2s;" onclick="toggleSkillBranch('${branch}')">
+                    <h3 style="color: ${displayColor}; margin: 0; font-size: 22px; letter-spacing: 1px;">[ NHÁNH ${branch.toUpperCase()} ] ${isBranchLocked ? '<span style="color:red; font-size:16px;">(ĐÃ KHÓA)</span>' : ''}</h3>
+                    <span style="color: ${displayColor}; font-size: 20px; transition: 0.3s; transform: ${isOpen ? 'rotate(90deg)' : 'rotate(0deg)'};">▶</span>
+                </div>
+                
+                <!-- BỌC DANH SÁCH SKILL VÀO MỘT THẺ DIV CÓ CHỨC NĂNG ẨN/HIỆN -->
+                <div style="display: ${isOpen ? 'block' : 'none'}; padding: 10px 0; border-left: 2px dashed ${displayColor}; margin-left: 2px; padding-left: 10px; animation: fadeIn 0.3s ease;">
+            `;
             
             Object.keys(skillData).forEach(s => {
                 const data = skillData[s];
@@ -1487,7 +1513,6 @@
                     const isMax = lv >= data.maxLv;
                     let canUpgrade = currentUser.skillPoints >= data.cost && !isMax && !isBranchLocked;
                     
-                    // 1. TÍNH TOÁN LOGIC CHỈ SỐ Ở BÊN NGOÀI
                     let dynamicText = "";
                     if (lv > 0 && data.maxLv > 1) {
                         if (s === "Phát Triển Cấp Tốc") dynamicText = `<br><span style="color:#00ff00; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 10}% EXP</span>`;
@@ -1496,11 +1521,10 @@
                         if (s === "Thể Chất Siêu Phàm") dynamicText = `<br><span style="color:#ff4d4d; font-size:14px; font-weight:bold;">↳ Đã cộng vĩnh viễn: +${lv * 5} STR/VIT</span>`;
                     }
 
-                    // 2. CỘNG CHUỖI HTML VÀ NHÚNG BIẾN VÀO
                     html += `
-                        <div class="skill-item ${lv === 0 ? 'locked' : 'unlocked'}" style="position: relative; border-color: ${lv > 0 ? displayColor : '#333'}; opacity: ${isBranchLocked ? 0.4 : 1}; pointer-events: ${isBranchLocked ? 'none' : 'auto'};">
+                        <div class="skill-item ${lv === 0 ? 'locked' : 'unlocked'}" style="position: relative; border-color: ${lv > 0 ? displayColor : '#333'}; opacity: ${isBranchLocked ? 0.4 : 1}; pointer-events: ${isBranchLocked ? 'none' : 'auto'}; margin-bottom: 8px; background: rgba(0,0,0,0.6);">
                             
-                            <!-- BẢNG TOOLTIP ẨN (SẼ HIỆN KHI RÊ CHUỘT) -->
+                            <!-- TOOLTIP -->
                             <div class="skill-list-tooltip" style="border: 1px solid ${displayColor}; box-shadow: 0 0 15px ${displayColor};">
                                 <h4 style="color: ${displayColor}; margin: 0 0 5px 0; font-size: 20px; text-transform: uppercase;">${s}</h4>
                                 <span style="color: #ccc; font-size: 15px;">${data.desc}</span>
@@ -1520,7 +1544,11 @@
                     `;
                 }
             });
+
+            // ĐÓNG THẺ DIV CỦA DANH SÁCH SKILL
+            html += `</div>`; 
         });
+        
         list.innerHTML = html;
     };
 
