@@ -1530,20 +1530,6 @@
         }
     };
 
-    const statDescriptions = {
-        'STRENGTH': 'Tăng sức mạnh vật lý. Tăng sát thương tấn công.',
-        'VITALITY': 'Tăng lượng máu (HP) và phòng thủ.',
-        'AGILITY': 'Tăng tốc độ, né tránh và đánh trước.',
-        'INTELLIGENCE': 'Tăng lượng mana (MP) để dùng kỹ năng.',
-        'SENSE': 'Tăng tỷ lệ nhận diện điểm yếu kẻ địch.'
-    };
-
-    window.showStatDetail = function(statName) {
-        document.getElementById('statDetail').classList.remove('hidden');
-        document.getElementById('statDetName').innerText = statName;
-        document.getElementById('statDetDesc').innerText = statDescriptions[statName];
-    };
-
     window.upgradeStat = async function(e, statKey) {
         e.stopPropagation(); 
 
