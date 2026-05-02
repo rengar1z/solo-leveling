@@ -526,22 +526,6 @@
 
         /* ================= GIAO DIỆN CHIẾN ĐẤU (ARENA & DUNGEON) ================= */
 
-/* 1. Hiệu ứng "Thở" cho Avatar để nhìn sống động hơn */
-@keyframes breathe {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.03); }
-}
-.avatar-frame {
-    width: 160px !important; /* To hơn một chút */
-    height: 220px !important;
-    border-radius: 10px;
-    border: 2px solid #333;
-    animation: breathe 3s ease-in-out infinite; /* Áp dụng nhịp thở */
-    box-shadow: 0 0 20px rgba(0,0,0,0.8);
-    object-fit: cover;
-    background: #000;
-}
-
 /* 2. Chữ "VS" rực lửa */
 .vs-text {
     font-size: 60px !important;
@@ -853,25 +837,39 @@
                 <div id="tab-arena" class="tab-panel">
                     <h2 style="color: #00bfff; text-align: center;">KHU VỰC HUẤN LUYỆN TỰ DO</h2>
                     
-                    <div id="combatArea" class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(0,0,0,0.8); min-height: 300px;">
-                        <div style="text-align: center; width: 42%;">
-                            <div id="p-name" style="color: #00bfff; font-weight: bold; margin-bottom: 10px;">SUNG JIN WOO</div>
-                            <img id="p-img" src="char/Sungjinwoo.png" class="avatar-frame" style="filter: drop-shadow(0 0 15px #00bfff); border-color: #00bfff;">
-                            <div style="height: 10px; background: #333; margin: 10px 0;"><div id="p-hp-bar" style="height: 100%; background: #ff0000; width: 100%; transition: 0.3s;"></div></div>
-                            <div id="p-hp-text">HP: 100/100</div>
-                        </div>
-                        <div style="font-size: 40px; color: gold; font-style: italic; align-self: center;">VS</div>
-                        <div style="text-align: center; width: 42%;">
-                            <div id="e-name" style="color: #ff4d4d; font-weight: bold; margin-bottom: 10px;">ĐỐI THỦ</div>
-                            <img id="e-img" src="enemy.png" class="avatar-frame" style="filter: drop-shadow(0 0 15px #ff4d4d); border-color: #ff4d4d;">
-                            <div style="height: 10px; background: #333; margin: 10px 0;"><div id="e-hp-bar" style="height: 100%; background: #ff0000; width: 100%; transition: 0.3s;"></div></div>
-                            <div id="e-hp-text">HP: 100/100</div>
-                        </div>
-                    </div>
+                    <div id="combatArea" class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 30px; background: rgba(0, 15, 30, 0.6); border: 2px solid #00bfff; border-radius: 12px; min-height: 350px; box-shadow: 0 0 30px rgba(0, 191, 255, 0.15);">
+    
+     <!-- NGƯỜI CHƠI -->
+    <div style="text-align: center; width: 40%;">
+        <div id="p-name" style="color: #00bfff; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #00bfff; margin-bottom: 15px; text-transform: uppercase;">SUNG JIN WOO</div>
+        <img id="p-img" src="char/Sungjinwoo.png" class="avatar-frame" style="border-color: #00bfff; box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);">
+        
+        <!-- Thanh máu mới -->
+        <div class="combat-hp-track" style="border-color: #00bfff;">
+            <div id="p-hp-bar" class="combat-hp-fill-player" style="width: 100%;"></div>
+        </div>
+        <div id="p-hp-text" class="combat-hp-text" style="color: #00bfff;">HP: 100/100</div>
+    </div>
 
-                    <div id="battleLog" style="height: 100px; overflow-y: auto; background: rgba(0,0,0,0.5); border: 1px solid #444; margin-top: 10px; padding: 10px; font-size: 14px; color: #ccc; font-family: monospace;">
-                        Sẵn sàng khiêu chiến...
-                    </div>
+    <!-- CHỮ VS (Màu Vàng Gold cho Arena) -->
+    <div class="vs-text" style="color: gold; text-shadow: 0 0 10px #ffcc00, 0 0 20px gold, 0 0 40px #fff;">VS</div>
+
+    <!-- ĐỐI THỦ -->
+    <div style="text-align: center; width: 40%;">
+        <div id="e-name" style="color: #ff4d4d; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #ff4d4d; margin-bottom: 15px; text-transform: uppercase;">ĐỐI THỦ</div>
+        <img id="e-img" src="enemy.png" class="avatar-frame" style="border-color: #ff4d4d; box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);">
+        
+        <!-- Thanh máu mới -->
+        <div class="combat-hp-track" style="border-color: #ff4d4d;">
+            <div id="e-hp-bar" class="combat-hp-fill-enemy" style="width: 100%;"></div>
+        </div>
+        <div id="e-hp-text" class="combat-hp-text" style="color: #ff4d4d;">HP: 100/100</div>
+    </div>
+</div>
+
+<div id="battleLog">
+    Sẵn sàng khiêu chiến...
+</div>
 
                     <div id="actionControls" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px; width: 100%;">
                         <div id="skillRow" style="display: flex; gap: 15px; justify-content: center; align-items: center; width: 100%;">
