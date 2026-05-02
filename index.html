@@ -1174,18 +1174,6 @@
         render();
     }
 
-    const skillData = {
-        "Phát Triển Cấp Tốc": { desc: "Tăng lượng EXP nhận được từ nhiệm vụ thêm 10%.", icon: "https://cdn-icons-png.flaticon.com/512/9483/9483031.png" },
-        "Thể Chất Siêu Phàm": { desc: "Tăng vĩnh viễn chỉ số Strength và Vitality.", icon: "https://cdn-icons-png.flaticon.com/256/1845/1845861.png" },
-        "Tái Tạo": { desc: "Tự động hồi phục HP sau mỗi nhiệm vụ.", icon: "https://cdn-icons-png.flaticon.com/512/15532/15532570.png" },
-        "Trị Thương": { desc: "Sử dụng MP để hồi phục lượng lớn HP ngay lập tức.", icon: "https://cdn-icons-png.flaticon.com/512/687/687529.png" },
-        "Siêu Giác Quan": { desc: "Tăng tỷ lệ né tránh và phát hiện quái vật hiếm.", icon: "https://cdn-icons-png.flaticon.com/512/709/709612.png" },
-        "Gia Tăng Chỉ Số": { desc: "Mỗi cấp tăng thêm điểm tiềm năng khi lên level.", icon: "https://cdn-icons-png.flaticon.com/512/15404/15404233.png" },
-        "Tàng Hình": { desc: "Ẩn thân hoàn toàn khỏi tầm mắt kẻ thù. (Yêu cầu: Hạng B)", icon: "skill/tanghinh.jpg" },
-        "Tàn sát": { desc: "Nhắm vào các điểm quan trọng và gây sát thương chí mạng bằng dao găm.", icon: "skill/amsat.jpg" },
-        "Dagger Rush": { desc: "Tung ra một loạt các đòn tấn công bằng dao găm từ mọi hướng vào mục tiêu.", icon: "skill/dagger.jpg" }
-    };
-
     // --- CHỨC NĂNG TẨY ĐIỂM (RESET SKILLS) ---
     window.resetSkills = async function() {
         if (!confirm("Tẩy điểm kỹ năng sẽ tốn 1000 Cash. Bạn có chắc chắn?")) return;
