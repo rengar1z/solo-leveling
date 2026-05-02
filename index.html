@@ -2173,6 +2173,16 @@
         updateCombatUI(); checkBattleEnd();
     };
 
+    // --- SKILL: PHẢN ĐÒN ---
+    window.useCounterAttack = function() {
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 30) { if(currentUser.mp < 30) logBattle("<span style='color:orange'>Thiếu 30 MP!</span>"); return; }
+        currentUser.mp -= 30; 
+        isPlayerCountering = true; // Bật cờ phản đòn
+        
+        logBattle(`<span style="color:gold; font-weight:bold;">🛡️ Bạn nắm chặt vũ khí, vào thế phòng thủ sẵn sàng phản công!</span>`);
+        updateCombatUI(); checkBattleEnd(); // Chuyển lượt cho quái đánh
+    };
+
     // --- KỸ NĂNG KHỐNG CHẾ (NÉM DAO) ---
     window.useDaggerThrow = function() {
         if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 20) { if(currentUser.mp < 20) logBattle("<span style='color:orange'>Thiếu 20 MP!</span>"); return; }
@@ -2204,6 +2214,20 @@
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 BẠO KÍCH!</span> ` : "";
         logBattle(`${critLog}Ném <span style="color:#ff9900; text-shadow: 0 0 5px #ff9900;">Bão Cầu Lửa</span> bùng nổ, gây <span style="color:#ff9900">${hit.dmg}</span> ST Phép!`);
         
+        updateCombatUI(); checkBattleEnd();
+    };
+
+    // --- SKILL: DAO ĐỘC (POISON DAGGER) ---
+    window.usePoisonDagger = function() {
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 35) { if(currentUser.mp < 35) logBattle("<span style='color:orange'>Thiếu 35 MP!</span>"); return; }
+        currentUser.mp -= 35; 
+        
+        let hit = calcPlayerDamage({ multi: 1.0, stat: 'str' }); // Dame gốc đánh vào
+        enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
+        
+        enemyPoisonTurns += 3; // Cộng dồn 3 lượt trúng độc
+        
+        logBattle(`<span style="color:#00ff00; text-shadow: 0 0 5px #00ff00;">DAO ĐỘC!</span> Gây ${hit.dmg} sát thương và khiến địch <span style="color:#00ff00; font-weight:bold;">[Trúng Độc]</span> 3 lượt tới!`);
         updateCombatUI(); checkBattleEnd();
     };
     
