@@ -2265,7 +2265,8 @@ window.unequipItem = async function(slot, doSave = true) {
         enemy = { ...stageData, maxHp: stageData.hp };
         isMyTurn = true;
         isPlayerStunned = false;
-
+        isEnemyStunned = false;
+        
         document.getElementById('dStageText').innerText = `Ải ${rgCurrentStage + 1}/${gateData.stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
         document.getElementById('dStageText').style.color = gateData.themeColor;
         document.getElementById('d-e-name').innerText = enemy.name;
