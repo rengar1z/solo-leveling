@@ -771,9 +771,7 @@
 
                     <div id="actionControls" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px; width: 100%;">
                         <div id="skillRow" style="display: flex; gap: 15px; justify-content: center; align-items: center; width: 100%;">
-                            <button id="btnAttack" class="tab-btn btn-system" onclick="playerAttack()" style="flex: 1;">TẤN CÔNG</button>
-                            <button id="btnDagger" class="tab-btn btn-system hidden-skill" onclick="useDaggerRush()"></button>
-                            <button id="btnTanSat" class="tab-btn btn-system hidden-skill" onclick="useTanSat()"></button>
+                        <button id="btnAttack" class="tab-btn btn-system" onclick="playerAttack()" style="flex: 1;">TẤN CÔNG</button>
                         </div>
                         <button id="btnFindEnemy" class="tab-btn btn-system" onclick="startNewBattle()" style="width: 100%;">TÌM ĐỐI THỦ MỚI</button>
                     </div>
@@ -878,6 +876,7 @@
     let currentRedGateId = null; // Trạng thái lưu ID của cổng đỏ hiện tại
     let rgCurrentStage = 0;
     let isPlayerStunned = false;
+    let isEnemyStunned = false;
 
     // --- DỮ LIỆU HẦM NGỤC ---
     const dungeonData = {
@@ -1853,6 +1852,44 @@ window.unequipItem = async function(slot, doSave = true) {
         updateCombatUI(); checkBattleEnd();
     };
 
+    // --- KỸ NĂNG KHỐNG CHẾ (NÉM DAO) ---
+    window.useDaggerThrow = function() {
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 20) { if(currentUser.mp < 20) logBattle("<span style='color:orange'>Thiếu 20 MP!</span>"); return; }
+        currentUser.mp -= 20; 
+        
+        let hit = calcPlayerDamage({ multi: 1.5, stat: 'str' }); 
+        enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
+        
+        let effectLog = "";
+        // 30% cơ hội làm choáng
+        if (Math.random() <= 0.30) {
+            isEnemyStunned = true;
+            effectLog = `<span style="color:yellow; font-weight:bold;">✨ Kẻ địch bị điểm huyệt và CHOÁNG!</span>`;
+        }
+
+        logBattle(`Phóng dao gây <span style="color:#ff4d4d">${hit.dmg}</span> sát thương! ${effectLog}`);
+        updateCombatUI(); checkBattleEnd(); 
+    };
+
+    // --- KỸ NĂNG TỐI THƯỢNG (THỊNH NỘ QUÂN VƯƠNG) ---
+    window.useMonarchWrath = function() {
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 100) { if(currentUser.mp < 100) logBattle("<span style='color:orange'>Thiếu 100 MP!</span>"); return; }
+        
+        let hpCost = Math.floor(currentUser.maxHp * 0.10); // Phải cống hiến 10% Max HP
+        if (currentUser.hp <= hpCost) { return logBattle("<span style='color:red'>Không đủ máu để hiến tế! Nguy cơ tử vong!</span>"); }
+
+        currentUser.mp -= 100;
+        currentUser.hp -= hpCost; 
+
+        // Gây sát thương x6 STR và bỏ qua 80% Giáp
+        let hit = calcPlayerDamage({ multi: 6.0, stat: 'str', ignoreDef: 0.8 }); 
+        enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
+
+        let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 HỦY DIỆT!</span> ` : "";
+        logBattle(`<span style="color:#cc0000; font-size:18px; font-weight:bold;">👑 THỊNH NỘ QUÂN VƯƠNG!</span> ${critLog}Đổi ${hpCost} HP lấy đòn sấm sét gây <span style="color:#ff0000; font-size:22px; text-shadow: 0 0 5px red;">${hit.dmg}</span> sát thương!`);
+        updateCombatUI(); checkBattleEnd();
+    };
+
     function enemyTurn() {
         if (!enemy || enemy.hp <= 0 || !currentUser) return;
 
@@ -2087,8 +2124,19 @@ window.unequipItem = async function(slot, doSave = true) {
         if (enemy.hp <= 0) { winBattle(); } 
         else {
             isMyTurn = false;
-            updateCombatUI(); // Khóa nút
-            setTimeout(enemyTurn, 1000);
+            updateCombatUI(); 
+            
+            // Xử lý cơ chế Quái vật bị choáng
+            if (isEnemyStunned) {
+                isEnemyStunned = false; // Xóa hiệu ứng choáng cho lượt sau
+                setTimeout(() => {
+                    logBattle(`<span style="color:yellow; font-weight:bold;">Kẻ địch đang bị choáng, mất lượt!</span>`);
+                    isMyTurn = true;
+                    updateCombatUI(); // Trả lại lượt cho bạn
+                }, 1000);
+            } else {
+                setTimeout(enemyTurn, 1000); // Không choáng thì đánh bình thường
+            }
         }
     }
 
