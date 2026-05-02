@@ -2205,7 +2205,7 @@ window.unequipItem = async function(slot, doSave = true) {
         if (currentUser.skills["Phát Triển Cấp Tốc"] > 0) {
             enemyExp += Math.floor(enemyExp * 0.10 * currentUser.skills["Phát Triển Cấp Tốc"]);
         }
-        
+        logBattle(`<span style="color:#00ff00">Chiến thắng! Nhận ${enemy.exp} EXP và ${rewardCash} CASH.</span>`);
         currentUser.exp += enemyExp;
 
         // Logic rớt đồ tự động lấy theo loại Cổng Đỏ hiện tại
