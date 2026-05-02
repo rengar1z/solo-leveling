@@ -1089,6 +1089,7 @@
     let hasUsedGuts = false;
     let isPlayerCountering = false; // Nhớ trạng thái Phản đòn
     let enemyPoisonTurns = 0;
+    let monarchWrathUses = 0;
 
     // --- DỮ LIỆU HẦM NGỤC (MỨC ĐỘ: TÂN THỦ & CÀY CUỐC) ---
     const dungeonData = {
@@ -2231,25 +2232,39 @@
         updateCombatUI(); checkBattleEnd();
     };
     
-    // --- KỸ NĂNG TỐI THƯỢNG (THỊNH NỘ QUÂN VƯƠNG) ---
+    // --- KỸ NĂNG TỐI THƯỢNG (THỊNH NỘ QUÂN VƯƠNG) - TĂNG 50 MP MỖI LẦN ---
     window.useMonarchWrath = function() {
-        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 100) { if(currentUser.mp < 100) logBattle("<span style='color:orange'>Thiếu 100 MP!</span>"); return; }
-        
+        // Tính toán MP cần thiết: Lần đầu 100, các lần sau cộng thêm 50 (100 -> 150 -> 200...)
+        let baseMpCost = 100;
+        let actualMpCost = baseMpCost + (monarchWrathUses * 50); 
         let hpCost = Math.floor(currentUser.maxHp * 0.10); // Phải cống hiến 10% Max HP
-        if (currentUser.hp <= hpCost) { return logBattle("<span style='color:red'>Không đủ máu để hiến tế! Nguy cơ tử vong!</span>"); }
 
-        currentUser.mp -= 100;
+        if (!enemy || !isMyTurn || enemy.hp <= 0) return;
+        
+        // Kiểm tra xem có đủ MP không
+        if (currentUser.mp < actualMpCost) { 
+            return logBattle(`<span style='color:orange'>Quá tải năng lượng! Lần kích hoạt này đòi hỏi tới ${actualMpCost} MP!</span>`); 
+        }
+
+        // Kiểm tra xem có đủ HP để hiến tế không
+        if (currentUser.hp <= hpCost) { 
+            return logBattle("<span style='color:red'>Không đủ máu để hiến tế! Nguy cơ tử vong!</span>"); 
+        }
+
+        // Trừ HP và MP
+        currentUser.mp -= actualMpCost;
         currentUser.hp -= hpCost; 
+        monarchWrathUses++; // Tăng số đếm xài chiêu lên 1
 
         // Gây sát thương x6 STR và bỏ qua 80% Giáp
         let hit = calcPlayerDamage({ multi: 6.0, stat: 'str', ignoreDef: 0.8 }); 
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
 
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 HỦY DIỆT!</span> ` : "";
-        logBattle(`<span style="color:#cc0000; font-size:18px; font-weight:bold;">👑 THỊNH NỘ QUÂN VƯƠNG!</span> ${critLog}Đổi ${hpCost} HP lấy đòn sấm sét gây <span style="color:#ff0000; font-size:22px; text-shadow: 0 0 5px red;">${hit.dmg}</span> sát thương!`);
+        logBattle(`<span style="color:#cc0000; font-size:18px; font-weight:bold;">👑 THỊNH NỘ QUÂN VƯƠNG!</span> ${critLog}Đổi ${hpCost} HP và ${actualMpCost} MP lấy đòn sấm sét gây <span style="color:#ff0000; font-size:22px; text-shadow: 0 0 5px red;">${hit.dmg}</span> sát thương!`);
+        
         updateCombatUI(); checkBattleEnd();
     };
-
     function enemyTurn() {
         if (!enemy || enemy.hp <= 0 || !currentUser) return;
 
