@@ -1154,6 +1154,30 @@
         "Mining Work Clothes": { rank: "A", type: "costume", name: "Mining Work Clothes", str: 150, vit: 100, mp: 100, effect: "Đổi Avatar thành Mining Work Clothes", img: "cos/Sung_Jinwoo_Mining_Work.png", avatar: "cos/Sung_Jinwoo_Mining_Work.png", sellPrice: 7500 }
     };
 
+    // --- HỆ THỐNG TẠO ĐỒ RANDOM CHỈ SỐ ---
+    function generateItem(itemName) {
+        const base = ITEM_DATA[itemName];
+        if (!base) return null;
+
+        // Hàm random dao động từ 90% đến 120% chỉ số gốc
+        const randomize = (val) => {
+            if (!val || val === 0) return 0;
+            // Chỉ giảm tối đa 5% nhưng cho phép tăng tới 15%
+            const min = Math.floor(val * 0.95);
+            const max = Math.ceil(val * 1.15);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        };
+
+        // Trả về một Object item riêng biệt với UID độc nhất
+        return {
+            uid: Date.now().toString(36) + Math.random().toString(36).substring(2),
+            name: itemName,
+            str: randomize(base.str),
+            vit: randomize(base.vit),
+            mp: randomize(base.mp)
+        };
+    }
+
     // --- DỮ LIỆU CỬA HÀNG ---
     const SHOP_DATA = {
         "hp_potion": { name: "HP Potion (Nhỏ)", price: 50, type: "heal", amount: 100, stat: "hp", maxStat: "maxHp" },
@@ -1828,31 +1852,53 @@
         if (!currentUser.equipped) currentUser.equipped = { weapon: null, shield: null, accessory: null, helmet: null, gloves: null, costume: null };
         if (currentUser.cash === undefined) currentUser.cash = 0;
         
-        if (currentUser.equipped.helmet === undefined) currentUser.equipped.helmet = null;
-        if (currentUser.equipped.gloves === undefined) currentUser.equipped.gloves = null;
-
         const eqArea = document.getElementById('equippedArea');
         const invArea = document.getElementById('inventoryArea');
         if (!eqArea || !invArea) return;
         
         eqArea.innerHTML = ''; invArea.innerHTML = '';
 
-        // TỰ ĐỘNG DỌN RÁC
+        // ==========================================
+        // 1. TỰ ĐỘNG CHUYỂN ĐỔI DATA CŨ SANG DATA MỚI
+        // ==========================================
+        currentUser.inventory = currentUser.inventory.map(item => {
+            if (typeof item === 'string') {
+                const base = ITEM_DATA[item];
+                if (!base) return null;
+                return { uid: Date.now().toString(36) + Math.random().toString(36).substring(2), name: item, str: base.str, vit: base.vit, mp: base.mp };
+            }
+            return item;
+        }).filter(item => item !== null && ITEM_DATA[item.name]);
+
+        // Cập nhật lại đồ đang mặc cho nick cũ
+        ['weapon', 'shield', 'accessory', 'helmet', 'gloves'].forEach(slot => {
+            const eq = currentUser.equipped[slot];
+            if (eq && eq.str === undefined && ITEM_DATA[eq.name]) {
+                const base = ITEM_DATA[eq.name];
+                currentUser.equipped[slot] = { uid: Date.now().toString(36) + Math.random().toString(36).substring(2), name: eq.name, str: base.str, vit: base.vit, mp: base.mp };
+            }
+        });
+
+        // ==========================================
+        // 2. TỰ ĐỘNG DỌN RÁC (XÓA ĐỒ ĐANG MẶC BỊ LỖI)
+        // ==========================================
         ['weapon', 'shield', 'accessory', 'helmet', 'gloves', 'costume'].forEach(slot => {
             if (currentUser.equipped[slot] && !ITEM_DATA[currentUser.equipped[slot].name]) {
                 currentUser.equipped[slot] = null;
             }
         });
 
-        // DỌN TÚI ĐỒ
-        currentUser.inventory = currentUser.inventory.filter(itemName => ITEM_DATA[itemName]);
+        // ==========================================
+        // 3. DỌN TÚI ĐỒ (XÓA ĐỒ TRONG KHO BỊ LỖI)
+        // ==========================================
+        currentUser.inventory = currentUser.inventory.filter(itemObj => ITEM_DATA[itemObj.name]);
 
         // ================= HIỂN THỊ ĐỒ ĐANG TRANG BỊ =================
         ['weapon', 'shield', 'accessory', 'helmet', 'gloves'].forEach(slot => {
             const itemObj = currentUser.equipped[slot];
             if (itemObj) {
                 const itemData = ITEM_DATA[itemObj.name];
-                const rank = itemData.rank || 'D'; // Lấy Rank, mặc định D
+                const rank = itemData.rank || 'D'; 
                 
                 eqArea.innerHTML += `
                 <div class="stat-item rank-${rank}" style="padding: 12px; border-left: 4px solid;">
@@ -1862,8 +1908,8 @@
                             <div class="item-tooltip">
                                 <h4 class="text-rank-${rank}" style="margin: 0 0 5px 0; font-size: 20px;">[CLASS: ${rank}] ${itemObj.name}</h4>
                                 <span style="color: #ccc; font-size: 16px;">TYPE: ${slot.toUpperCase()}</span><br><br>
-                                <span style="color: #ff4d4d; font-size: 16px;">STR: +${itemData.str} | VIT: +${itemData.vit}</span><br>
-                                <span style="color: #00ff00; font-size: 16px;">MP: +${itemData.mp}</span><br>
+                                <span style="color: #ff4d4d; font-size: 16px;">STR: +${itemObj.str} | VIT: +${itemObj.vit}</span><br>
+                                <span style="color: #00ff00; font-size: 16px;">MP: +${itemObj.mp}</span><br>
                                 <hr style="border-color: #444; margin: 8px 0;">
                                 <span class="text-rank-${rank}" style="font-size: 14px;">EFFECT: ${itemData.effect}</span>
                             </div>
@@ -1887,8 +1933,8 @@
         if (currentUser.inventory.length === 0) {
             invArea.innerHTML = '<p style="color: #aaa; text-align: center; font-size: 20px; padding: 20px;">Túi đồ trống</p>';
         } else {
-            currentUser.inventory.forEach((itemName, index) => {
-                const itemData = ITEM_DATA[itemName];
+            currentUser.inventory.forEach((itemObj, index) => {
+                const itemData = ITEM_DATA[itemObj.name];
                 const rank = itemData.rank || 'D';
                 const sellPrice = itemData.sellPrice || 10;
                 
@@ -1898,17 +1944,17 @@
                         <div class="item-icon-wrapper rank-${rank}">
                             <img src="${itemData.img}" class="item-img-premium">
                             <div class="item-tooltip">
-                                <h4 class="text-rank-${rank}" style="margin: 0 0 5px 0; font-size: 20px;">[CLASS: ${rank}] ${itemName}</h4>
+                                <h4 class="text-rank-${rank}" style="margin: 0 0 5px 0; font-size: 20px;">[CLASS: ${rank}] ${itemObj.name}</h4>
                                 <span style="color: #ccc; font-size: 16px;">TYPE: ${itemData.type.toUpperCase()}</span><br><br>
-                                <span style="color: #ff4d4d; font-size: 16px;">STR: +${itemData.str} | VIT: +${itemData.vit}</span><br>
-                                <span style="color: #00ff00; font-size: 16px;">MP: +${itemData.mp}</span><br>
+                                <span style="color: #ff4d4d; font-size: 16px;">STR: +${itemObj.str} | VIT: +${itemObj.vit}</span><br>
+                                <span style="color: #00ff00; font-size: 16px;">MP: +${itemObj.mp}</span><br>
                                 <hr style="border-color: #444; margin: 8px 0;">
                                 <span class="text-rank-${rank}" style="font-size: 14px;">EFFECT: ${itemData.effect}</span><br><br>
                                 <span style="color: yellow; font-size: 14px;">Giá bán: ${sellPrice} Cash</span>
                             </div>
                         </div>
                         <div style="display: flex; flex-direction: column;">
-                            <b class="text-rank-${rank}" style="font-size: 20px;">${itemName}</b>
+                            <b class="text-rank-${rank}" style="font-size: 20px;">${itemObj.name}</b>
                             <small style="color:#aaa; font-size:16px;">Hạng: ${rank}</small>
                         </div>
                     </div>
@@ -1921,84 +1967,69 @@
         }
     }
 
-window.equipItem = async function(index) {
-        const itemName = currentUser.inventory[index];
-        const itemData = ITEM_DATA[itemName];
+    window.equipItem = async function(index) {
+        const itemObj = currentUser.inventory[index];
+        const itemData = ITEM_DATA[itemObj.name];
         const slot = itemData.type;
 
-    // Logic quan trọng: Nếu ô đã có đồ -> Tự động tháo đồ cũ ra trước để tránh bug cộng dồn
-    if (currentUser.equipped[slot]) {
-        await unequipItem(slot, false); // false để chưa save vội
-    }
+        // Nếu ô đã có đồ -> Tự động tháo đồ cũ ra trước
+        if (currentUser.equipped[slot]) {
+            await unequipItem(slot, false); 
+        }
 
-    // Mặc đồ mới
-    currentUser.inventory.splice(index, 1);
-    currentUser.equipped[slot] = { name: itemName };
-    
-    // Cộng chỉ số
-    currentUser.str += itemData.str;
-    currentUser.vit += itemData.vit;
-    currentUser.maxMp += itemData.mp;
-    currentUser.mp += itemData.mp; 
-    if (itemData.vit > 0) {
-        currentUser.maxHp += itemData.vit * 10;
-        currentUser.hp += itemData.vit * 10;
-    }
+        // Mặc đồ mới
+        currentUser.inventory.splice(index, 1);
+        currentUser.equipped[slot] = itemObj;
+        
+        // Cộng chỉ số random của món đồ
+        currentUser.str += itemObj.str;
+        currentUser.vit += itemObj.vit;
+        currentUser.maxMp += itemObj.mp;
+        currentUser.mp += itemObj.mp; 
+        if (itemObj.vit > 0) {
+            currentUser.maxHp += itemObj.vit * 10;
+            currentUser.hp += itemObj.vit * 10;
+        }
 
-    await saveUserData();
-    renderBag();
-}
-
-window.unequipItem = async function(slot, doSave = true) {
-    const itemObj = currentUser.equipped[slot];
-    if (!itemObj) return;
-
-    const itemData = ITEM_DATA[itemObj.name];
-    
-    // Trừ chỉ số
-    currentUser.str -= itemData.str;
-    currentUser.vit -= itemData.vit;
-    currentUser.maxMp -= itemData.mp;
-    currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
-    if (itemData.vit > 0) {
-        currentUser.maxHp -= itemData.vit * 10;
-        currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
-    }
-
-    // Chuyển vào túi
-    currentUser.inventory.push(itemObj.name);
-    currentUser.equipped[slot] = null;
-
-    if (doSave) {
         await saveUserData();
         renderBag();
     }
-}
 
-    //logic sell item
-    window.sellItem = async function(index, price) {
-    const itemName = currentUser.inventory[index];
-    
-    // Hiện bảng hỏi xác nhận để tránh bấm nhầm
-    if (confirm(`Bạn có chắc chắn muốn bán [${itemName}] để lấy ${price} Cash không?`)) {
+    window.unequipItem = async function(slot, doSave = true) {
+        const itemObj = currentUser.equipped[slot];
+        if (!itemObj) return;
         
-        // Trừ đồ trong túi
-        currentUser.inventory.splice(index, 1);
-        
-        // Cộng tiền
-        currentUser.cash += price;
-        
-        // Lưu lên hệ thống
-        await set(ref(db, 'users/' + currentUser.username), currentUser);
-        
-        // Tải lại giao diện Túi đồ và Status (để hiển thị số tiền mới)
-        renderBag();
-        render(); 
-        
-        // Thông báo nho nhỏ (Bạn có thể bỏ dòng này nếu thấy phiền)
-        // alert(`Đã bán ${itemName} thành công!`); 
+        // Trừ chỉ số random của món đồ
+        currentUser.str -= itemObj.str;
+        currentUser.vit -= itemObj.vit;
+        currentUser.maxMp -= itemObj.mp;
+        currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
+        if (itemObj.vit > 0) {
+            currentUser.maxHp -= itemObj.vit * 10;
+            currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
+        }
+
+        // Đẩy lại nguyên Object vào túi
+        currentUser.inventory.push(itemObj);
+        currentUser.equipped[slot] = null;
+
+        if (doSave) {
+            await saveUserData();
+            renderBag();
+        }
     }
-}
+
+    window.sellItem = async function(index, price) {
+        const itemObj = currentUser.inventory[index];
+        if (confirm(`Bạn có chắc chắn muốn bán [${itemObj.name}] để lấy ${price} Cash không?`)) {
+            currentUser.inventory.splice(index, 1);
+            currentUser.cash += price;
+            
+            await set(ref(db, 'users/' + currentUser.username), currentUser);
+            renderBag();
+            render(); 
+        }
+    }
 
     // --- HỆ THỐNG TÍNH TOÁN SÁT THƯƠNG ĐA DỤNG (MULTI-BUILD) ---
     function calcPlayerDamage(config) {
@@ -2394,7 +2425,7 @@ window.unequipItem = async function(slot, doSave = true) {
             if (Math.random() <= dropChance) {
                 const rareItems = RED_GATES[currentRedGateId].rareDrops;
                 const droppedItem = rareItems[Math.floor(Math.random() * rareItems.length)];
-                currentUser.inventory.push(droppedItem);
+                currentUser.inventory.push(generateItem(droppedItem));
                 logBattle(`<span style="color:${RED_GATES[currentRedGateId].themeColor}; font-size:18px;">✨ CỔNG ĐỎ RƠI ĐỒ HIẾM: <b>${droppedItem}</b>!</span>`);
             }
         } else if (isDungeonMode && enemy.isBoss) {
@@ -2402,7 +2433,7 @@ window.unequipItem = async function(slot, doSave = true) {
             if (Math.random() <= dropChance) { 
                 const items = ["Dagger", "Shield", "Essence of Magic"];
                 const droppedItem = items[Math.floor(Math.random() * items.length)];
-                currentUser.inventory.push(droppedItem);
+                currentUser.inventory.push(generateItem(droppedItem));
                 logBattle(`<span style="color:gold; font-size:18px;">🔥 BOSS rơi đồ: <b>${droppedItem}</b>!</span>`);
             }
         }
