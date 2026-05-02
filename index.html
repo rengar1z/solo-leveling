@@ -960,6 +960,31 @@
         "costume_mining": { name: "Trang phục Thợ Mỏ", price: 15000, type: "item", itemId: "Mining Work Clothes" }
     };
 
+    // --- CƠ SỞ DỮ LIỆU KỸ NĂNG ĐA NHÁNH (MULTI-CLASS) ---
+    const skillData = {
+        // --- NHÁNH CHUNG (NỘI TẠI) ---
+        "Phát Triển Cấp Tốc": { branch: "Chung", type: "passive", maxLv: 3, cost: 1, desc: "Tăng lượng EXP nhận được thêm 10%.", icon: "https://cdn-icons-png.flaticon.com/512/9483/9483031.png" },
+        "Thể Chất Siêu Phàm": { branch: "Chung", type: "passive", maxLv: 3, cost: 1, desc: "Tăng vĩnh viễn chỉ số STR và VIT.", icon: "https://cdn-icons-png.flaticon.com/256/1845/1845861.png" },
+        "Tái Tạo": { branch: "Chung", type: "passive", maxLv: 3, cost: 1, desc: "Tự động hồi phục HP sau nhiệm vụ.", icon: "https://cdn-icons-png.flaticon.com/512/15532/15532570.png" },
+        "Siêu Giác Quan": { branch: "Chung", type: "passive", maxLv: 3, cost: 1, desc: "Tăng tỷ lệ né tránh và phát hiện quái.", icon: "https://cdn-icons-png.flaticon.com/512/709/709612.png" },
+        "Gia Tăng Chỉ Số": { branch: "Chung", type: "passive", maxLv: 3, cost: 1, desc: "Mỗi cấp tăng thêm điểm tiềm năng.", icon: "https://cdn-icons-png.flaticon.com/512/15404/15404233.png" },
+
+        // --- NHÁNH SÁT THỦ (TỐC ĐỘ / BẠO KÍCH) ---
+        "Bước Chân Bóng Tối": { branch: "Sát Thủ", type: "passive", maxLv: 1, cost: 5, desc: "Có 10% cơ hội né tránh hoàn toàn đòn đánh.", icon: "skill/tanghinh.jpg" },
+        "Ném Dao": { branch: "Sát Thủ", type: "active", maxLv: 1, cost: 5, mp: 20, func: "useDaggerThrow", desc: "Phóng dao gây ST. 30% gây Choáng.", icon: "skill/dagger.jpg" },
+        "Dagger Rush": { branch: "Sát Thủ", type: "active", maxLv: 1, cost: 10, mp: 35, func: "useDaggerRush", desc: "Tung loạt dao găm chớp nhoáng.", icon: "skill/dagger.jpg" },
+        "Tàn sát": { branch: "Sát Thủ", type: "active", maxLv: 1, cost: 15, mp: 50, func: "useTanSat", desc: "Nhắm vào tử huyệt, tăng 20% Tỷ lệ Bạo.", icon: "skill/amsat.jpg" },
+
+        // --- NHÁNH PHÁP SƯ (XUYÊN GIÁP) ---
+        "Bão Cầu Lửa": { branch: "Pháp Sư", type: "active", maxLv: 1, cost: 10, mp: 30, func: "useFireStorm", desc: "Cầu lửa thiêu rụi. ST tính bằng INT.", icon: "skill/amsat.jpg" },
+        "Trích Xuất Bóng Tối": { branch: "Pháp Sư", type: "active", maxLv: 1, cost: 15, mp: 60, func: "useShadowStrike", desc: "ST Phép (INT). Bỏ qua 50% Giáp.", icon: "skill/amsat.jpg" },
+
+        // --- NHÁNH ĐẤU SĨ (HÚT MÁU / BERSERKER) ---
+        "Sát Khí": { branch: "Đấu Sĩ", type: "passive", maxLv: 1, cost: 5, desc: "Khi HP < 30%, sát thương gây ra tăng 20%.", icon: "skill/amsat.jpg" },
+        "Hấp Huyết": { branch: "Đấu Sĩ", type: "active", maxLv: 1, cost: 10, mp: 40, func: "useBloodThirst", desc: "Gây ST Vật Lý. Hồi máu dựa trên ST và VIT.", icon: "skill/amsat.jpg" },
+        "Thịnh Nộ Quân Vương": { branch: "Đấu Sĩ", type: "active", maxLv: 1, cost: 20, mp: 100, func: "useMonarchWrath", desc: "Tế 10% HP hiện tại. Xuyên 80% Giáp.", icon: "skill/amsat.jpg" }
+    };
+
     window.buyShopItem = async function(itemId) {
         const item = SHOP_DATA[itemId];
         if (!item) return;
@@ -1162,61 +1187,87 @@
         "Dagger Rush": { desc: "Tung ra một loạt các đòn tấn công bằng dao găm từ mọi hướng vào mục tiêu.", icon: "skill/dagger.jpg" }
     };
 
+    // --- CHỨC NĂNG TẨY ĐIỂM (RESET SKILLS) ---
+    window.resetSkills = async function() {
+        if (!confirm("Tẩy điểm kỹ năng sẽ tốn 1000 Cash. Bạn có chắc chắn?")) return;
+        if (currentUser.cash < 1000) return alert("Bạn không đủ 1000 Cash để thực hiện!");
+
+        let refundedPoints = 0;
+        for (let s in currentUser.skills) {
+            let lv = currentUser.skills[s];
+            if (lv > 0 && skillData[s]) {
+                refundedPoints += skillData[s].cost * lv;
+                currentUser.skills[s] = 0; // Đưa level chiêu về 0
+            }
+        }
+
+        currentUser.cash -= 1000;
+        currentUser.skillPoints += refundedPoints;
+        await set(ref(db, 'users/' + currentUser.username), currentUser);
+        render(); 
+        alert(`Tẩy điểm thành công! Bạn nhận lại ${refundedPoints} Điểm Kỹ Năng.`);
+    };
+
+    // --- HIỂN THỊ DANH SÁCH SKILL ĐA NHÁNH ---
     window.renderSkills = function() {
+        // Tự động vá lỗi: Thêm skill mới cho tài khoản cũ
+        Object.keys(skillData).forEach(s => { if (currentUser.skills[s] === undefined) currentUser.skills[s] = 0; });
+
         if (document.getElementById('skPoints')) document.getElementById('skPoints').innerText = currentUser.skillPoints || 0;
         const list = document.getElementById('skillList');
         if (!list) return;
-        list.innerHTML = '';
+        
+        // Render Nút Tẩy Điểm
+        let html = `<div style="text-align: right; margin-bottom: 15px;"><button onclick="resetSkills()" style="background: #ff4d4d; border-color: #cc0000; color: #fff; font-size: 16px;">🔄 TẨY ĐIỂM BẢN THÂN (1000 CASH)</button></div>`;
 
-        Object.keys(currentUser.skills).forEach(s => {
-            const lv = currentUser.skills[s];
-            const maxLvOfThisSkill = (s === "Tàn sát" || s === "Dagger Rush") ? 1 : 3;
-            const isMax = lv >= maxLvOfThisSkill;
-            const cost = (s === "Tàn sát" || s === "Dagger Rush") ? 10 : 1;
-            const canUnlock = (s !== "Tàng Hình" || currentUser.level >= 20);
-
-            const div = document.createElement('div');
-            div.className = `skill-item ${lv === 0 ? 'locked' : 'unlocked'}`;
-            div.onclick = () => showSkillDetail(s);
+        // Render từng Nhánh Kỹ năng
+        const branches = ["Sát Thủ", "Pháp Sư", "Đấu Sĩ", "Chung"];
+        branches.forEach(branch => {
+            let branchColor = branch === 'Sát Thủ' ? '#4a90e2' : branch === 'Pháp Sư' ? '#9933ff' : branch === 'Đấu Sĩ' ? '#ff4d4d' : '#8eefff';
+            html += `<h3 style="color: ${branchColor}; border-bottom: 1px solid ${branchColor}; margin-top: 20px; padding-bottom: 5px;">[ NHÁNH ${branch.toUpperCase()} ]</h3>`;
             
-            const lvDisplay = isMax ? '<span style="color: gold; font-weight: bold;">MAX</span>' : `Lv.${lv}/${maxLvOfThisSkill}`;
-            const iconUrl = skillData[s] ? skillData[s].icon : "";
-
-            div.innerHTML = `
-                <div style="display: flex; align-items: center;">
-                    <img src="${iconUrl}" style="width: 35px; height: 35px; margin-right: 15px; border-radius: 5px; border: 1px solid #00bfff;">
-                    <div style="display: flex; flex-direction: column;">
-                        <span>${s} (${lvDisplay})</span>
-                        ${!isMax ? `<small style="color: #aaa; font-size: 12px;">Yêu cầu: ${cost} điểm</small>` : ''}
-                    </div>
-                </div>
-                <button class="add-skill-btn" onclick="upgradeSkill(event, '${s}')" ${(currentUser.skillPoints >= cost && canUnlock && !isMax) ? '' : 'disabled'}>+</button>
-            `;
-            list.appendChild(div);
+            Object.keys(skillData).forEach(s => {
+                const data = skillData[s];
+                if (data.branch === branch) {
+                    const lv = currentUser.skills[s];
+                    const isMax = lv >= data.maxLv;
+                    
+                    html += `
+                        <div class="skill-item ${lv === 0 ? 'locked' : 'unlocked'}" onclick="showSkillDetail('${s}')" style="border-color: ${lv > 0 ? branchColor : '#333'};">
+                            <div style="display: flex; align-items: center;">
+                                <img src="${data.icon}" style="width: 35px; height: 35px; margin-right: 15px; border-radius: 5px; border: 1px solid ${branchColor};">
+                                <div style="display: flex; flex-direction: column;">
+                                    <span>${s} ${isMax ? '<span style="color: gold;">[MAX]</span>' : `(Lv.${lv}/${data.maxLv})`}</span>
+                                    ${!isMax ? `<small style="color: #aaa; font-size: 12px;">Cần: ${data.cost} Điểm</small>` : ''}
+                                </div>
+                            </div>
+                            <button class="add-skill-btn" onclick="upgradeSkill(event, '${s}')" ${(currentUser.skillPoints >= data.cost && !isMax) ? '' : 'disabled'} style="background: ${branchColor}; color: #000;">+</button>
+                        </div>
+                    `;
+                }
+            });
         });
-    }
+        list.innerHTML = html;
+    };
+
+    window.upgradeSkill = async function(e, name) {
+        e.stopPropagation(); 
+        const data = skillData[name];
+        if (currentUser.skillPoints >= data.cost && currentUser.skills[name] < data.maxLv) {
+            currentUser.skills[name]++;
+            currentUser.skillPoints -= data.cost;
+            await set(ref(db, 'users/' + currentUser.username), currentUser);
+            renderSkills();
+        } else {
+            alert(`Bạn cần ${data.cost} điểm kỹ năng để nâng cấp!`);
+        }
+    };
 
     window.showSkillDetail = function(name) {
         document.getElementById('skillDetail').classList.remove('hidden');
         document.getElementById('detName').innerText = name;
         document.getElementById('detDesc').innerText = skillData[name].desc;
         document.getElementById('detReq').innerText = (name === "Tàng Hình" && currentUser.level < 20) ? "ĐIỀU KIỆN: ĐẠT HẠNG B (LEVEL 20)" : "";
-    }
-
-    window.upgradeSkill = async function(e, name) {
-        e.stopPropagation(); 
-        const cost = (name === "Tàn sát" || name === "Dagger Rush") ? 10 : 1;
-        const maxLevel = (name === "Tàn sát" || name === "Dagger Rush") ? 1 : 3;
-
-        if (currentUser.skillPoints >= cost && currentUser.skills[name] < maxLevel) {
-            if (name === "Tàng Hình" && currentUser.level < 20) return alert("Cần đạt Hạng B (Level 20) để học kỹ năng này!");
-            currentUser.skills[name]++;
-            currentUser.skillPoints -= cost;
-            await set(ref(db, 'users/' + currentUser.username), currentUser);
-            renderSkills();
-        } else if (currentUser.skillPoints < cost) {
-            alert("Bạn cần " + cost + " điểm kỹ năng để học chiêu này!");
-        }
     }
 
     const statDescriptions = {
@@ -1425,36 +1476,23 @@
             eImgElement.classList.remove('boss-enraged-img'); // Tắt hiệu ứng CSS
         }
 
-        // Quản lý các nút tấn công
-        const btnAttack = document.getElementById(pre + 'btnAttack');
-        const btnDagger = document.getElementById(pre + 'btnDagger');
-        const btnTanSat = document.getElementById(pre + 'btnTanSat');
+        // --- CƠ CHẾ KHÓA NÚT THÔNG MINH KHI THIẾU MP ---
+        const btnAttackOld = document.getElementById(pre + 'btnAttack');
+        if (btnAttackOld) btnAttackOld.disabled = !isMyTurn;
 
-        if (btnAttack) btnAttack.disabled = !isMyTurn;
-
-        if (btnDagger && btnDagger.style.display !== "none") {
-            btnDagger.disabled = !isMyTurn; 
-            if (currentUser.mp < 35) {
-                btnDagger.style.filter = "grayscale(1) brightness(0.5)";
-                btnDagger.style.cursor = "not-allowed";
+        const dynamicBtns = document.querySelectorAll(`#${pre === 'd-' ? 'd-skillRow' : 'skillRow'} .combat-skill-btn`);
+        dynamicBtns.forEach(btn => {
+            btn.disabled = !isMyTurn;
+            const cost = parseInt(btn.getAttribute('data-mp') || 0); // Lấy số MP từ Nút
+            if (cost > 0 && currentUser.mp < cost) {
+                btn.style.filter = "grayscale(1) brightness(0.5)"; // Thiếu MP thì bôi xám
+                btn.style.cursor = "not-allowed";
             } else {
-                btnDagger.style.filter = "none";
-                btnDagger.style.cursor = "pointer";
+                btn.style.filter = "none";
+                btn.style.cursor = "pointer";
             }
-        }
-
-        if (btnTanSat && btnTanSat.style.display !== "none") {
-            btnTanSat.disabled = !isMyTurn;
-            if (currentUser.mp < 50) {
-                btnTanSat.style.filter = "grayscale(1) brightness(0.5)";
-                btnTanSat.style.cursor = "not-allowed";
-            } else {
-                btnTanSat.style.filter = "none";
-                btnTanSat.style.cursor = "pointer";
-            }
-        }
+        });
     }
-
 
     function triggerShake() {
         const eImg = document.getElementById(getPrefix() + 'e-img');
@@ -1471,55 +1509,44 @@
         log.innerHTML = msg + "<br>" + log.innerHTML;
     }
 
+    // --- TỰ ĐỘNG SINH NÚT DỰA VÀO KỸ NĂNG ĐÃ HỌC ---
     function switchToIconMode() {
         const pre = getPrefix();
-        const btnAtk = document.getElementById(pre + 'btnAttack');
-        btnAtk.classList.add('icon-mode'); btnAtk.classList.remove('btn-system'); 
-        
-        // Cài đặt Tooltip cho nút ĐÁNH THƯỜNG
-        btnAtk.innerHTML = `
-            <img src="skill/attack.jpg">
-            <div class="skill-tooltip" style="border-color: #00bfff; box-shadow: 0 0 15px #00bfff;">
-                <h4 style="color: #00bfff; margin: 0 0 5px 0; font-size: 18px;">TẤN CÔNG</h4>
-                <span style="color: #ccc; font-size: 14px;">Tấn công vật lý cơ bản lên kẻ địch.</span>
-            </div>
-        `; 
-        btnAtk.style.flex = "none";
+        const skillRow = document.getElementById(pre === 'd-' ? 'd-skillRow' : 'skillRow');
+        skillRow.innerHTML = ''; // Quét sạch thanh kỹ năng
 
-        if (currentUser.skills["Dagger Rush"] > 0) {
-            const btnD = document.getElementById(pre + 'btnDagger');
-            btnD.classList.remove('hidden-skill'); btnD.style.display = "flex"; 
-            btnD.classList.add('icon-mode'); 
-            
-            // Cài đặt Tooltip cho nút DAGGER RUSH
-            btnD.innerHTML = `
-                <img src="skill/dagger.jpg">
-                <div class="skill-tooltip" style="border-color: #4a90e2; box-shadow: 0 0 15px #4a90e2;">
-                    <h4 style="color: #4a90e2; margin: 0 0 5px 0; font-size: 18px;">DAGGER RUSH</h4>
-                    <span style="color: #00ff00; font-size: 14px;">Tiêu hao: 35 MP</span><br>
-                    <hr style="border-color: #444; margin: 5px 0;">
-                    <span style="color: #ccc; font-size: 14px;">Tung một loạt đòn tấn công bằng dao găm với tốc độ chớp nhoáng.</span>
+        // 1. Luôn thêm nút Đánh Thường đầu tiên
+        skillRow.innerHTML += `
+            <button class="icon-mode combat-skill-btn" onclick="playerAttack()" style="border-color: #00bfff;">
+                <img src="skill/attack.jpg">
+                <div class="skill-tooltip" style="border-color: #00bfff; box-shadow: 0 0 15px #00bfff;">
+                    <h4 style="color: #00bfff; margin: 0 0 5px 0; font-size: 18px;">TẤN CÔNG (STR)</h4>
+                    <span style="color: #ccc; font-size: 14px;">Tấn công vật lý cơ bản.</span>
                 </div>
-            `;
+            </button>
+        `;
+
+        // 2. Quét Database, ai học chiêu CHỦ ĐỘNG nào thì vẽ nút chiêu đó ra
+        for (let s in currentUser.skills) {
+            const data = skillData[s];
+            if (currentUser.skills[s] > 0 && data && data.type === 'active') {
+                let color = data.branch === "Sát Thủ" ? "#4a90e2" : data.branch === "Pháp Sư" ? "#9933ff" : data.branch === "Đấu Sĩ" ? "#ff4d4d" : "#00bfff";
+
+                skillRow.innerHTML += `
+                    <button class="icon-mode combat-skill-btn" data-mp="${data.mp}" onclick="window.${data.func}()" style="border-color: ${color};">
+                        <img src="${data.icon}">
+                        <div class="skill-tooltip" style="border-color: ${color}; box-shadow: 0 0 15px ${color};">
+                            <h4 style="color: ${color}; margin: 0 0 5px 0; font-size: 18px;">${s.toUpperCase()}</h4>
+                            <span style="color: #00ff00; font-size: 14px;">Tiêu hao: ${data.mp} MP</span><br>
+                            <hr style="border-color: #444; margin: 5px 0;">
+                            <span style="color: #ccc; font-size: 14px;">${data.desc}</span>
+                        </div>
+                    </button>
+                `;
+            }
         }
 
-        if (currentUser.skills["Tàn sát"] > 0) {
-            const btnT = document.getElementById(pre + 'btnTanSat');
-            btnT.classList.remove('hidden-skill'); btnT.style.display = "flex";
-            btnT.classList.add('icon-mode'); 
-            
-            // Cài đặt Tooltip cho nút TÀN SÁT
-            btnT.innerHTML = `
-                <img src="skill/amsat.jpg">
-                <div class="skill-tooltip" style="border-color: #ff4d4d; box-shadow: 0 0 15px #ff4d4d;">
-                    <h4 style="color: #ff4d4d; margin: 0 0 5px 0; font-size: 18px;">TÀN SÁT</h4>
-                    <span style="color: #00ff00; font-size: 14px;">Tiêu hao: 50 MP</span><br>
-                    <hr style="border-color: #444; margin: 5px 0;">
-                    <span style="color: #ccc; font-size: 14px;">Nhắm vào điểm yếu cốt lõi và tung đòn kết liễu chí mạng.</span>
-                </div>
-            `;
-        }
-
+        // Tắt nút bỏ chạy
         if (isDungeonMode) {
             document.getElementById('btnExitDungeon').disabled = true;
             document.getElementById('btnExitDungeon').style.opacity = "0.4";
@@ -1527,21 +1554,18 @@
             const btnFind = document.getElementById('btnFindEnemy');
             if (btnFind) { btnFind.disabled = true; btnFind.style.opacity = "0.4"; btnFind.innerText = "ĐANG CHIẾN ĐẤU..."; }
         }
+        
+        updateCombatUI(); // Cập nhật màu sắc ngay lập tức
     }
 
     function resetToButtonMode() {
         const pre = getPrefix();
-        const btnAtk = document.getElementById(pre + 'btnAttack');
-        if (btnAtk) {
-            btnAtk.classList.remove('icon-mode'); btnAtk.classList.add('btn-system');
-            btnAtk.innerHTML = "TẤN CÔNG"; btnAtk.style.flex = "1";
-        }
+        const skillRow = document.getElementById(pre === 'd-' ? 'd-skillRow' : 'skillRow');
+        
+        // Trả thanh kỹ năng về Nút bấm Chữ bình thường
+        skillRow.innerHTML = `<button id="${pre}btnAttack" class="tab-btn btn-system" onclick="playerAttack()" style="flex: 1;">TẤN CÔNG</button>`;
 
-        [pre + 'btnDagger', pre + 'btnTanSat'].forEach(id => {
-            const btn = document.getElementById(id);
-            if (btn) { btn.style.display = "none"; btn.classList.add('hidden-skill'); btn.classList.remove('icon-mode'); }
-        });
-
+        // Mở lại nút bỏ chạy
         if (isDungeonMode) {
             document.getElementById('btnExitDungeon').disabled = false;
             document.getElementById('btnExitDungeon').style.opacity = "1";
@@ -1727,26 +1751,34 @@ window.unequipItem = async function(slot, doSave = true) {
     }
 }
 
-    // --- HỆ THỐNG TÍNH TOÁN SÁT THƯƠNG CHUẨN ---
-    function calcPlayerDamage(skillMulti) {
-        // 1. STR & PER: Sát thương dao động dựa trên Độ chính xác
-        let maxDmg = currentUser.str * skillMulti;
+    // --- HỆ THỐNG TÍNH TOÁN SÁT THƯƠNG ĐA DỤNG (MULTI-BUILD) ---
+    function calcPlayerDamage(config) {
+        // config = { multi: 2.0, stat: 'str', ignoreDef: 0, bonusCritRate: 0 }
+        let multi = config.multi || 1.0;
+        let baseStat = currentUser[config.stat || 'str'] || 0; 
+
+        // 1. STR/INT & PER: Sát thương dao động
+        let maxDmg = baseStat * multi;
         let precision = Math.min(0.95, 0.5 + (currentUser.sense * 0.005));
         let minDmg = maxDmg * precision;
         let finalDmg = Math.floor(Math.random() * (maxDmg - minDmg + 1) + minDmg);
 
-        // Trừ phòng ngự của quái vật
-        finalDmg = Math.max(5, finalDmg - enemy.def);
+        // 2. Xử lý Phòng ngự quái vật & Xuyên Giáp (Dành cho Pháp sư)
+        let enemyDef = enemy.def || 0;
+        if (config.ignoreDef) {
+            enemyDef = Math.floor(enemyDef * (1 - config.ignoreDef)); // Xuyên giáp theo %
+        }
+        finalDmg = Math.max(5, finalDmg - enemyDef);
 
-        // Nội tại Vũ khí
-        if (currentUser.equipped && currentUser.equipped.weapon) {
+        // 3. Nội tại Vũ khí (Chỉ áp dụng cho đòn Vật lý - STR)
+        if (config.stat === 'str' && currentUser.equipped && currentUser.equipped.weapon) {
             if (currentUser.equipped.weapon.name === "Dagger") finalDmg *= 1.02;
             if (currentUser.equipped.weapon.name === "Baruka's Dagger") finalDmg *= 1.10;
             if (currentUser.equipped.weapon.name === "Trường Kiếm của Igris") finalDmg *= 1.15;
         }
 
-        // 2. AGI: Tính toán Bạo kích
-        let critRate = currentUser.agi * 0.5;
+        // 4. AGI: Tính toán Bạo kích
+        let critRate = (currentUser.agi * 0.5) + (config.bonusCritRate || 0);
         let critMulti = 1.5 + (currentUser.agi * 0.01);
         let isCrit = false;
 
@@ -1757,47 +1789,67 @@ window.unequipItem = async function(slot, doSave = true) {
 
         return { dmg: Math.floor(finalDmg), isCrit: isCrit };
     }
-
-    // --- CẬP NHẬT CÁC CHIÊU THỨC CHIẾN ĐẤU ---
-    window.playerAttack = function() {
-        if (!isMyTurn || enemy.hp <= 0) return;
-        const btnAttack = document.getElementById(getPrefix() + 'btnAttack');
-        if (!btnAttack.classList.contains('icon-mode')) {
-            switchToIconMode(); logBattle("Sẵn sàng! Hãy chọn kỹ năng để tấn công."); return; 
-        }
     
-        let hit = calcPlayerDamage(2.0); // Đánh thường (Hệ số x2)
-        enemy.hp = Math.max(0, enemy.hp - hit.dmg);
-        triggerShake();
-
+    // --- BỘ KỸ NĂNG VẬT LÝ (SÁT THỦ - STR / AGI) ---
+    window.playerAttack = function() {
+        if (!enemy || !isMyTurn || enemy.hp <= 0) return;
+        const btnAttack = document.getElementById(getPrefix() + 'btnAttack');
+        if (!btnAttack.classList.contains('icon-mode')) { switchToIconMode(); logBattle("Sẵn sàng! Hãy chọn kỹ năng để tấn công."); return; }
+    
+        let hit = calcPlayerDamage({ multi: 2.0, stat: 'str' }); 
+        enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 BẠO KÍCH!</span> ` : "";
-        logBattle(`${critLog}Bạn chém ${enemy.name}, gây <span style="color:#ff4d4d">${hit.dmg}</span> sát thương!`);
+        logBattle(`${critLog}Chém thường gây <span style="color:#ff4d4d">${hit.dmg}</span> sát thương!`);
         updateCombatUI(); checkBattleEnd(); 
     };
 
     window.useDaggerRush = function() {
-        if (!isMyTurn || enemy.hp <= 0 || currentUser.mp < 35) { if(currentUser.mp < 35) logBattle("<span style='color:orange'>Không đủ MP để dùng Dagger Rush!</span>"); return; }
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 35) { if(currentUser.mp < 35) logBattle("<span style='color:orange'>Thiếu 35 MP!</span>"); return; }
         currentUser.mp -= 35; 
-        
-        let hit = calcPlayerDamage(2.8); // Dagger Rush (Hệ số x2.8)
-        enemy.hp = Math.max(0, enemy.hp - hit.dmg);
-        triggerShake();
-
+        let hit = calcPlayerDamage({ multi: 2.8, stat: 'str' }); 
+        enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 BẠO KÍCH KÉP!</span> ` : "";
-        logBattle(`${critLog}Dùng <span style="color:#4a90e2">Dagger Rush</span> gây <span style="color:#ff4d4d">${hit.dmg}</span> sát thương!`);
+        logBattle(`${critLog}<span style="color:#4a90e2">Dagger Rush</span> gây <span style="color:#ff4d4d">${hit.dmg}</span> sát thương!`);
         updateCombatUI(); checkBattleEnd(); 
     };
 
     window.useTanSat = function() {
-        if (!isMyTurn || enemy.hp <= 0 || currentUser.mp < 50) { if(currentUser.mp < 50) logBattle("<span style='color:orange'>Không đủ MP để dùng Tàn Sát!</span>"); return; }
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 50) { if(currentUser.mp < 50) logBattle("<span style='color:orange'>Thiếu 50 MP!</span>"); return; }
         currentUser.mp -= 50; 
-        
-        let hit = calcPlayerDamage(4.5); // Tàn Sát (Hệ số x4.5)
-        enemy.hp = Math.max(0, enemy.hp - hit.dmg);
-        triggerShake();
-
+        // Tàn sát: Nhắm vào điểm yếu nên tăng tĩnh 20% Tỷ lệ Bạo kích
+        let hit = calcPlayerDamage({ multi: 4.5, stat: 'str', bonusCritRate: 20 }); 
+        enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 TỬ HUYỆT!</span> ` : "";
         logBattle(`${critLog}<span style="color:#ff4d4d">TÀN SÁT!!!</span> Gây <span style="color:#ff0000; font-size:18px;">${hit.dmg}</span> sát thương!`);
+        updateCombatUI(); checkBattleEnd();
+    };
+
+    // --- BỘ KỸ NĂNG MỚI: PHÁP SƯ (INT) ---
+    window.useShadowStrike = function() {
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 60) { if(currentUser.mp < 60) logBattle("<span style='color:orange'>Thiếu 60 MP!</span>"); return; }
+        currentUser.mp -= 60; 
+        // Trích xuất: Tính ST bằng INT, bỏ qua 50% Giáp địch
+        let hit = calcPlayerDamage({ multi: 3.5, stat: 'int', ignoreDef: 0.5 }); 
+        enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
+        let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 XUYÊN THẤU!</span> ` : "";
+        logBattle(`${critLog}<span style="color:#9933ff; text-shadow: 0 0 5px #9933ff;">TRÍCH XUẤT BÓNG TỐI!</span> Phá giáp địch, gây <span style="color:#9933ff">${hit.dmg}</span> sát thương Phép!`);
+        updateCombatUI(); checkBattleEnd();
+    };
+
+    // --- BỘ KỸ NĂNG MỚI: ĐẤU SĨ (STR + VIT) ---
+    window.useBloodThirst = function() {
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 40) { if(currentUser.mp < 40) logBattle("<span style='color:orange'>Thiếu 40 MP!</span>"); return; }
+        currentUser.mp -= 40; 
+        // Hấp Huyết: ST vật lý mức trung bình khá
+        let hit = calcPlayerDamage({ multi: 2.5, stat: 'str' }); 
+        enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
+        
+        // Hồi máu = 30% Sát thương gây ra + Scale theo VIT
+        let healAmount = Math.floor(hit.dmg * 0.3) + (currentUser.vit * 2);
+        currentUser.hp = Math.min(currentUser.maxHp, currentUser.hp + healAmount);
+
+        let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 CHÍ MẠNG!</span> ` : "";
+        logBattle(`${critLog}<span style="color:#cc0000">HẤP HUYẾT!</span> Gây ${hit.dmg} ST, hút lại <span style="color:#00ff00">${healAmount} HP</span>!`);
         updateCombatUI(); checkBattleEnd();
     };
 
