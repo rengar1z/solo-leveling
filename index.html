@@ -878,54 +878,48 @@
     let isPlayerStunned = false;
     let isEnemyStunned = false;
 
-    // --- DỮ LIỆU HẦM NGỤC ---
+    // --- DỮ LIỆU HẦM NGỤC (MỨC ĐỘ: TÂN THỦ & CÀY CUỐC) ---
     const dungeonData = {
         "goblin_village": {
             name: "Làng Của Goblin",
             stages: [
-                { name: "Pháp Sư Yêu Tinh", hp: 120, atk: 25, def: 10, exp: 40, img: "bot/Boss_Goblin_Spellcaster.png" },
-                { name: "Chiến Binh Yêu Tinh Tinh Nhuệ", hp: 200, atk: 35, def: 15, exp: 60, img: "bot/Boss_Elite_Goblin_Fighter.png" },
-                { name: "Yêu Tinh Máu Lạnh", hp: 300, atk: 45, def: 20, exp: 90, img: "Boss_Cold_blooded_Hobgoblin.png" },
-                { name: "Yêu Tinh Mất Trí", hp: 450, atk: 60, def: 30, exp: 150, img: "bot/Boss_Mad_Hobgoblin.png" },
-                { name: "BOSS: Thủ Lĩnh Yêu Tinh Đột Biến", hp: 800, atk: 90, def: 45, exp: 500, img: "boss/Boss_Hobgoblin_Leader.png", isBoss: true }
+                { name: "Pháp Sư Yêu Tinh", hp: 150, atk: 25, def: 5, exp: 40, img: "bot/Boss_Goblin_Spellcaster.png" },
+                { name: "Chiến Binh Yêu Tinh", hp: 250, atk: 40, def: 10, exp: 60, img: "bot/Boss_Elite_Goblin_Fighter.png" },
+                { name: "Yêu Tinh Máu Lạnh", hp: 400, atk: 55, def: 15, exp: 90, img: "bot/Boss_Cold-blooded_Hobgoblin.png" },
+                { name: "Yêu Tinh Mất Trí", hp: 600, atk: 75, def: 25, exp: 150, img: "bot/Boss_Mad_Hobgoblin.png" },
+                { name: "BOSS: Thủ Lĩnh Yêu Tinh", hp: 1500, atk: 110, def: 40, exp: 500, img: "boss/Boss_Hobgoblin_Leader.png", isBoss: true }
             ]
         }
     };
 
-    // --- DỮ LIỆU RED DUNGEON ---
+    // --- DỮ LIỆU RED DUNGEON (MỨC ĐỘ: HARDCORE - CẦN CHIẾN THUẬT & BUILD CHUẨN) ---
     const RED_GATES = {
         "ice_world": {
-            name: "CỔNG ĐỎ: THẾ GIỚI BĂNG GIÁ",
-            themeColor: "#00ffff", // Màu xanh băng
-            rareDrops: ["Baruka's Dagger", "Ice Elf Cloak"], 
+            name: "CỔNG ĐỎ: THẾ GIỚI BĂNG GIÁ", themeColor: "#00ffff", rareDrops: ["Baruka's Dagger", "Ice Elf Cloak"], 
             stages: [
-                { name: "Lính cận vệ tộc Tiên Băng", hp: 300, atk: 45, def: 20, exp: 100, img: "bot/linhtienbang.png" },
-                { name: "Đội trưởng đội cận vệ tộc Tiên Băng", hp: 550, atk: 55, def: 25, exp: 150, img: "bot/canvetienbang.png" },
-                { name: "Đội trưởng trinh sát tộc Tiên Băng", hp: 700, atk: 60, def: 30, exp: 250, img: "bot/trinhsattienbang.png" },
-                { name: "Thủ Lĩnh Gấu Băng", hp: 1000, atk: 75, def: 35, exp: 400, img: "bot/thulinhgaubang.png" },
-                { name: "BOSS: Thủ Lĩnh Vua Tiên Băng", hp: 1800, atk: 120, def: 60, exp: 2000, img: "boss/bakura.png", isBoss: true, bossType: "ice_king" }
+                { name: "Lính cận vệ tộc Tiên Băng", hp: 1500, atk: 120, def: 60, exp: 200, img: "bot/linhtienbang.png" },
+                { name: "Đội trưởng đội cận vệ", hp: 2200, atk: 150, def: 80, exp: 300, img: "bot/canvetienbang.png" },
+                { name: "Đội trưởng trinh sát", hp: 3000, atk: 180, def: 100, exp: 400, img: "bot/trinhsattienbang.png" },
+                { name: "Thủ Lĩnh Gấu Băng", hp: 4500, atk: 220, def: 120, exp: 600, img: "bot/thulinhgaubang.png" },
+                { name: "BOSS: Vua Tiên Băng", hp: 10000, atk: 350, def: 180, exp: 3000, img: "boss/bakura.png", isBoss: true, bossType: "ice_king" }
             ]
         },
         "fire_hell": {
-            name: "CỔNG ĐỎ: HỎA NGỤC CHIẾN",
-            themeColor: "#ff4d4d", // Màu đỏ lửa
-            rareDrops: ["Vulcan's Sword", "Demon Horn"], 
+            name: "CỔNG ĐỎ: HỎA NGỤC CHIẾN", themeColor: "#ff4d4d", rareDrops: ["Vulcan's Sword", "Demon Horn"], 
             stages: [
-                { name: "Quỷ Lửa Tinh Nhuệ", hp: 300, atk: 60, def: 20, exp: 150, img: "bot/HanSongYi.jpg" },
-                { name: "Chó Săn Địa Ngục", hp: 400, atk: 70, def: 25, exp: 200, img: "bot/HanSongYi.jpg" },
-                { name: "BOSS: Chúa Tể Dung Nham", hp: 2500, atk: 150, def: 80, exp: 3000, img: "char/HanSongYi.jpg", isBoss: true, bossType: "fire_lord" }
+                { name: "Quỷ Lửa Tinh Nhuệ", hp: 4000, atk: 250, def: 100, exp: 400, img: "bot/HanSongYi.jpg" },
+                { name: "Chó Săn Địa Ngục", hp: 5500, atk: 300, def: 150, exp: 600, img: "bot/HanSongYi.jpg" },
+                { name: "BOSS: Chúa Tể Dung Nham", hp: 18000, atk: 500, def: 250, exp: 5000, img: "char/HanSongYi.jpg", isBoss: true, bossType: "fire_lord" }
             ]
         },
         "red_knight_tomb": {
-            name: "CỔNG ĐỎ: NƠI AN NGHỈ CỦA HIỆP SĨ ĐỎ",
-            themeColor: "#cc0000", // Đỏ sậm rùng rợn
-            rareDrops: ["Trường Kiếm của Igris", "Mũ bảo hộ của hiệp sĩ đỏ", "Bao tay của kẻ thống trị"], 
+            name: "CỔNG ĐỎ: NƠI AN NGHỈ CỦA HIỆP SĨ ĐỎ", themeColor: "#cc0000", rareDrops: ["Trường Kiếm của Igris", "Mũ bảo hộ của hiệp sĩ đỏ", "Bao tay của kẻ thống trị"], 
             stages: [
-                { name: "Hiệp Sĩ Gác Cổng", hp: 400, atk: 70, def: 30, exp: 200, img: "bot/linh.png" },
-                { name: "Hiệp Sĩ Gác Cổng", hp: 450, atk: 75, def: 30, exp: 300, img: "bot/linh.png" },
-                { name: "Hiệp Sĩ Tinh Nhuệ", hp: 600, atk: 85, def: 40, exp: 300, img: "bot/linhtinhnhue.png" },
-                { name: "Hiệp Sĩ Cận Vệ", hp: 800, atk: 100, def: 50, exp: 450, img: "bot/linhcanve.png" },
-                { name: "BOSS: Tư Lệnh Huyết Đỏ Igris", hp: 3500, atk: 220, def: 100, exp: 5000, img: "boss/igris.png", isBoss: true, bossType: "igris" }
+                { name: "Hiệp Sĩ Gác Cổng", hp: 5000, atk: 350, def: 150, exp: 500, img: "bot/linh.png" },
+                { name: "Hiệp Sĩ Gác Cổng", hp: 6000, atk: 400, def: 180, exp: 600, img: "bot/linh.png" },
+                { name: "Hiệp Sĩ Tinh Nhuệ", hp: 8000, atk: 450, def: 200, exp: 800, img: "bot/linhtinhnhue.png" },
+                { name: "Hiệp Sĩ Cận Vệ", hp: 10000, atk: 500, def: 250, exp: 1200, img: "bot/linhcanve.png" },
+                { name: "BOSS: Tư Lệnh Huyết Đỏ Igris", hp: 35000, atk: 800, def: 350, exp: 10000, img: "boss/igris.png", isBoss: true, bossType: "igris" }
             ]
         }
     };
