@@ -1234,7 +1234,7 @@
         alert(`Tẩy điểm thành công! Hệ thống đã thu hồi các bùa lợi và hoàn trả ${refundedPoints} Điểm Kỹ Năng.`);
     };
 
-    // --- HIỂN THỊ DANH SÁCH SKILL (CẬP NHẬT TRỰC TIẾP % HIỆU QUẢ) ---
+    // --- HIỂN THỊ DANH SÁCH SKILL (CẬP NHẬT TRỰC TIẾP % HIỆU QUẢ VÀ TOOLTIP) ---
     window.renderSkills = function() {
         Object.keys(skillData).forEach(s => { if (currentUser.skills[s] === undefined) currentUser.skills[s] = 0; });
 
@@ -1267,7 +1267,7 @@
                     const isMax = lv >= data.maxLv;
                     let canUpgrade = currentUser.skillPoints >= data.cost && !isMax && !isBranchLocked;
                     
-                    // --- ĐOẠN MỚI: IN RA CHỈ SỐ THỰC TẾ THEO CẤP ĐỘ ---
+                    // 1. TÍNH TOÁN LOGIC CHỈ SỐ Ở BÊN NGOÀI
                     let dynamicText = "";
                     if (lv > 0 && data.maxLv > 1) {
                         if (s === "Phát Triển Cấp Tốc") dynamicText = `<br><span style="color:#00ff00; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 10}% EXP</span>`;
@@ -1276,15 +1276,7 @@
                         if (s === "Thể Chất Siêu Phàm") dynamicText = `<br><span style="color:#ff4d4d; font-size:14px; font-weight:bold;">↳ Đã cộng vĩnh viễn: +${lv * 5} STR/VIT</span>`;
                     }
 
-                    html += `
-                        let dynamicText = "";
-                    if (lv > 0 && data.maxLv > 1) {
-                        if (s === "Phát Triển Cấp Tốc") dynamicText = `<br><span style="color:#00ff00; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 10}% EXP</span>`;
-                        if (s === "Thợ Săn Tiền Thưởng") dynamicText = `<br><span style="color:gold; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 15}% CASH</span>`;
-                        if (s === "Siêu Giác Quan") dynamicText = `<br><span style="color:#8eefff; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 5}% Né Đòn</span>`;
-                        if (s === "Thể Chất Siêu Phàm") dynamicText = `<br><span style="color:#ff4d4d; font-size:14px; font-weight:bold;">↳ Đã cộng vĩnh viễn: +${lv * 5} STR/VIT</span>`;
-                    }
-
+                    // 2. CỘNG CHUỖI HTML VÀ NHÚNG BIẾN VÀO
                     html += `
                         <div class="skill-item ${lv === 0 ? 'locked' : 'unlocked'}" style="position: relative; border-color: ${lv > 0 ? displayColor : '#333'}; opacity: ${isBranchLocked ? 0.4 : 1}; pointer-events: ${isBranchLocked ? 'none' : 'auto'};">
                             
