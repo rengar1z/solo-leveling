@@ -1800,6 +1800,17 @@ window.unequipItem = async function(slot, doSave = true) {
             isCrit = true;
         }
 
+        // 5. BỊ ĐỘNG: SÁT KHÍ (Buff 20% sát thương khi máu đỏ)
+        if (currentUser.skills["Sát Khí"] > 0 && currentUser.hp <= currentUser.maxHp * 0.3) {
+            finalDmg *= 1.20; 
+        }
+
+        // 6. BỊ ĐỘNG: LÕI MA THUẬT (Buff 25% Sát Thương Phép)
+        // Nếu đòn đánh có hệ số là 'int' (Phép) và đã học chiêu Lõi Ma Thuật -> Nhân 1.25 ST
+        if (config.stat === 'int' && currentUser.skills["Lõi Ma Thuật"] > 0) {
+            finalDmg *= 1.25; 
+        }
+
         return { dmg: Math.floor(finalDmg), isCrit: isCrit };
     }
     
