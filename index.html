@@ -309,6 +309,52 @@
             opacity: 1;
         }
 
+        /* --- TOOLTIP CHUYÊN DỤNG CHO BẢNG CHỈ SỐ (STATS) --- */
+        .sl-stat-item {
+            position: relative; /* Quan trọng để neo tooltip không bị bay lung tung */
+        }
+        .stat-tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 90%; /* Nổi lên phía trên chỉ số */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 250px;
+            background: rgba(0, 15, 30, 0.95);
+            border: 1px solid #8eefff;
+            box-shadow: 0 0 15px rgba(142, 239, 255, 0.4);
+            color: #fff;
+            padding: 12px;
+            border-radius: 6px;
+            z-index: 1000;
+            transition: 0.3s ease;
+            pointer-events: none; /* Không cản trở việc bấm nút + */
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        /* Mũi tên nhỏ trỏ xuống */
+        .stat-tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%; left: 50%;
+            margin-left: -6px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: #8eefff transparent transparent transparent;
+        }
+
+        /* Khi rê chuột (PC) hoặc chạm (Điện thoại) */
+        .sl-stat-item:hover .stat-tooltip,
+        .sl-stat-item:active .stat-tooltip {
+            visibility: visible;
+            opacity: 1;
+            bottom: 110%; /* Hiệu ứng trôi nhẹ lên */
+        }
+
         /* --- SOLO LEVELING STATUS UI --- */
         .sl-box {
             border: 1px solid rgba(142, 239, 255, 0.4);
@@ -703,24 +749,45 @@
 
         <!-- ================= KHUNG GIAO DIỆN MỚI (CHỈ SỐ) ================= -->
         <div class="sl-box sl-stat-grid">
-            <div class="sl-stat-item" onclick="showStatDetail('STRENGTH')">
+            
+            <div class="sl-stat-item">
                 <span class="sl-stat-icon">🏋️</span> <span class="sl-stat-label">STR:</span> <span class="sl-stat-val" id="str">0</span> <button class="add-btn" onclick="upgradeStat(event, 'str')">+</button>
+                <div class="stat-tooltip">
+                    <h4 style="color: #8eefff; margin: 0 0 5px 0;">STRENGTH (SỨC MẠNH)</h4>
+                    <span style="color: #ccc;">Tăng sát thương vật lý gốc cho đòn đánh thường và bộ kỹ năng nhánh <span style="color: #4a90e2">Sát Thủ</span>, <span style="color: #ff4d4d">Đấu Sĩ</span>.</span>
+                </div>
             </div>
             
-            <div class="sl-stat-item" onclick="showStatDetail('VITALITY')">
+            <div class="sl-stat-item">
                 <span class="sl-stat-icon">💖</span> <span class="sl-stat-label">VIT:</span> <span class="sl-stat-val" id="vit">0</span> <button class="add-btn" onclick="upgradeStat(event, 'vit')">+</button>
+                <div class="stat-tooltip">
+                    <h4 style="color: #8eefff; margin: 0 0 5px 0;">VITALITY (THỂ LỰC)</h4>
+                    <span style="color: #ccc;">Mỗi điểm cộng thêm <span style="color: #00ff00">10 HP tối đa</span> và tăng tỷ lệ miễn thương (giảm sát thương gánh chịu).</span>
+                </div>
             </div>
             
-            <div class="sl-stat-item" onclick="showStatDetail('AGILITY')">
+            <div class="sl-stat-item">
                 <span class="sl-stat-icon">👟</span> <span class="sl-stat-label">AGI:</span> <span class="sl-stat-val" id="agi">0</span> <button class="add-btn" onclick="upgradeStat(event, 'agi')">+</button>
+                <div class="stat-tooltip">
+                    <h4 style="color: #8eefff; margin: 0 0 5px 0;">AGILITY (NHANH NHẸN)</h4>
+                    <span style="color: #ccc;">Mỗi điểm tăng <span style="color: yellow">0.5% Tỷ lệ Bạo kích</span> và cộng thêm sát thương khi bạo kích.</span>
+                </div>
             </div>
             
-            <div class="sl-stat-item" onclick="showStatDetail('INTELLIGENCE')">
+            <div class="sl-stat-item">
                 <span class="sl-stat-icon">🧠</span> <span class="sl-stat-label">INT:</span> <span class="sl-stat-val" id="int">0</span> <button class="add-btn" onclick="upgradeStat(event, 'int')">+</button>
+                <div class="stat-tooltip">
+                    <h4 style="color: #8eefff; margin: 0 0 5px 0;">INTELLIGENCE (TRÍ LỰC)</h4>
+                    <span style="color: #ccc;">Mỗi điểm cộng thêm <span style="color: #00bfff">5 MP tối đa</span>. Cốt lõi tăng sát thương cho kỹ năng nhánh <span style="color: #9933ff">Pháp Sư</span>.</span>
+                </div>
             </div>
             
-            <div class="sl-stat-item" onclick="showStatDetail('SENSE')">
+            <div class="sl-stat-item">
                 <span class="sl-stat-icon">👁️</span> <span class="sl-stat-label">PER:</span> <span class="sl-stat-val" id="sense">0</span> <button class="add-btn" onclick="upgradeStat(event, 'sense')">+</button>
+                <div class="stat-tooltip">
+                    <h4 style="color: #8eefff; margin: 0 0 5px 0;">SENSE (CẢM NHẬN)</h4>
+                    <span style="color: #ccc;">Tăng độ ổn định của đòn đánh (kéo mức sát thương tối thiểu lên gần sát thương tối đa nhất).</span>
+                </div>
             </div>
             
             <div class="sl-stat-item sl-points-block">
