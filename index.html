@@ -588,6 +588,38 @@
 #battleLog::-webkit-scrollbar, #d-battleLog::-webkit-scrollbar { width: 6px; }
 #battleLog::-webkit-scrollbar-track, #d-battleLog::-webkit-scrollbar-track { background: rgba(0,0,0,0.5); }
 #battleLog::-webkit-scrollbar-thumb, #d-battleLog::-webkit-scrollbar-thumb { background: #00bfff; border-radius: 4px; }
+
+    /* ================= HỆ THỐNG MÀU RANK (S, A, B, C, D) ================= */
+        /* Rank S - Vàng Gold Rực Rỡ */
+        .rank-S .item-img-premium { border-color: #ffcc00; box-shadow: 0 0 10px rgba(255, 204, 0, 0.5); }
+        .rank-S:hover .item-img-premium { border-color: #ffcc00; box-shadow: 0 0 25px #ffcc00; }
+        .rank-S .item-tooltip { border-color: #ffcc00; box-shadow: 0 0 15px #ffcc00; }
+        .text-rank-S { color: #ffcc00 !important; text-shadow: 0 0 10px #ffcc00; }
+
+        /* Rank A - Đỏ Huyết */
+        .rank-A .item-img-premium { border-color: #ff4d4d; box-shadow: 0 0 10px rgba(255, 77, 77, 0.5); }
+        .rank-A:hover .item-img-premium { border-color: #ff4d4d; box-shadow: 0 0 25px #ff4d4d; }
+        .rank-A .item-tooltip { border-color: #ff4d4d; box-shadow: 0 0 15px #ff4d4d; }
+        .text-rank-A { color: #ff4d4d !important; text-shadow: 0 0 10px #ff4d4d; }
+
+        /* Rank B - Xanh Dương Neon (Như ảnh Knight Killer) */
+        .rank-B .item-img-premium { border-color: #00bfff; box-shadow: 0 0 10px rgba(0, 191, 255, 0.5); }
+        .rank-B:hover .item-img-premium { border-color: #00bfff; box-shadow: 0 0 25px #00bfff; }
+        .rank-B .item-tooltip { border-color: #00bfff; box-shadow: 0 0 15px #00bfff; }
+        .text-rank-B { color: #00bfff !important; text-shadow: 0 0 10px #00bfff; }
+
+        /* Rank C - Xanh Lá Cây */
+        .rank-C .item-img-premium { border-color: #00ff00; box-shadow: 0 0 10px rgba(0, 255, 0, 0.5); }
+        .rank-C:hover .item-img-premium { border-color: #00ff00; box-shadow: 0 0 20px #00ff00; }
+        .rank-C .item-tooltip { border-color: #00ff00; box-shadow: 0 0 15px #00ff00; }
+        .text-rank-C { color: #00ff00 !important; text-shadow: 0 0 10px #00ff00; }
+
+        /* Rank D - Trắng Xám (Đồ Thường) */
+        .rank-D .item-img-premium { border-color: #aaa; box-shadow: none; }
+        .rank-D:hover .item-img-premium { border-color: #fff; box-shadow: 0 0 15px #fff; }
+        .rank-D .item-tooltip { border-color: #aaa; box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); }
+        .text-rank-D { color: #ccc !important; }
+        
     </style>
 </head>
 <body>
@@ -1041,22 +1073,25 @@
         }
     };
 
-    // --- DỮ LIỆU ITEM ---
+    // --- DỮ LIỆU ITEM (ĐÃ THÊM RANK S, A, B, C, D) ---
     const ITEM_DATA = {
-        "Dagger": { type: "weapon", name: "Dagger", str: 15, vit: 0, mp: 0, effect: "Tăng 2% ST đòn đánh thường", img: "wp/dagger.png", sellPrice: 30 },
-        "Shield": { type: "shield", name: "Shield", str: 0, vit: 5, mp: 0, effect: "Giảm 1.5% ST gánh chịu", img: "wp/shield.png", sellPrice: 45 },
-        "Essence of Magic": { type: "accessory", name: "Essence of Magic", str: 0, vit: 0, mp: 50, effect: "Hồi 2% MP mỗi lượt", img: "wp/essenceofmagic.png", sellPrice: 30 },
+        "Dagger": { rank: "D", type: "weapon", name: "Dagger", str: 15, vit: 0, mp: 0, effect: "Tăng 2% ST đòn đánh thường", img: "wp/dagger.png", sellPrice: 30 },
+        "Shield": { rank: "C", type: "shield", name: "Shield", str: 0, vit: 5, mp: 0, effect: "Giảm 1.5% ST gánh chịu", img: "wp/shield.png", sellPrice: 45 },
+        "Essence of Magic": { rank: "B", type: "accessory", name: "Essence of Magic", str: 0, vit: 0, mp: 50, effect: "Hồi 2% MP mỗi lượt", img: "wp/essenceofmagic.png", sellPrice: 30 },
+        
         // Đồ hiếm Red Gate:
-        "Baruka's Dagger": { type: "weapon", name: "Baruka's Dagger", str: 35, vit: 0, mp: 20, effect: "Vũ khí của Vua Tiên Băng. Tăng 10% ST đòn thường", img: "wp/baruka_dagger.png",sellPrice: 1500 },
-        "Ice Elf Cloak": { type: "accessory", name: "Ice Elf Cloak", str: 5, vit: 15, mp: 0, effect: "Giảm 5% sát thương gánh chịu", img: "wp/dagger.png", sellPrice: 700 },
+        "Baruka's Dagger": { rank: "A", type: "weapon", name: "Baruka's Dagger", str: 35, vit: 0, mp: 20, effect: "Vũ khí của Vua Tiên Băng. Tăng 10% ST đòn thường", img: "wp/baruka_dagger.png", sellPrice: 1500 },
+        "Ice Elf Cloak": { rank: "A", type: "accessory", name: "Ice Elf Cloak", str: 5, vit: 15, mp: 0, effect: "Giảm 5% sát thương gánh chịu", img: "wp/dagger.png", sellPrice: 700 },
+        
         // Đồ hiếm của Igris:
-        "Trường Kiếm của Igris": { type: "weapon", name: "Trường Kiếm của Igris", str: 60, vit: 0, mp: 0, effect: "Vũ khí của Igris. Tăng 15% ST đòn thường", img: "wp/redsword.png", sellPrice: 2000 },
-        "Mũ bảo hộ của hiệp sĩ đỏ": { type: "helmet", name: "Mũ bảo hộ của hiệp sĩ đỏ", str: 10, vit: 25, mp: 0, effect: "Giảm 8% sát thương gánh chịu", img: "wp/dagger.png", sellPrice: 1200 },
-        "Bao tay của kẻ thống trị": { type: "gloves", name: "Bao tay của kẻ thống trị", str: 20, vit: 10, mp: 0, effect: "Giảm 3% sát thương gánh chịu", img: "wp/dagger.png", sellPrice: 1500 },
-        // DỮ LIỆU COSTUME MỚI (Lưu ý: Thuộc tính avatar dùng để đổi ảnh nhân vật)
-        "Bộ Vest Đen Ám Sát": { type: "costume", name: "Bộ Vest Đen Ám Sát", str: 50, vit: 20, mp: 0, effect: "Đổi Avatar thành Vest Đen", img: "cos/Sung_Jinwoo_Black_Suit.png", avatar: "cos/Sung_Jinwoo_Black_Suit.png", sellPrice: 2500 },
-        "Mining Work Clothes": { type: "costume", name: "Mining Work Clothes", str: 150, vit: 100, mp: 100, effect: "Đổi Avatar thành Mining Work Clothes", img: "cos/Sung_Jinwoo_Mining_Work.png", avatar: "cos/Sung_Jinwoo_Mining_Work.png", sellPrice: 7500 }
-};
+        "Trường Kiếm của Igris": { rank: "S", type: "weapon", name: "Trường Kiếm của Igris", str: 60, vit: 0, mp: 0, effect: "Vũ khí của Igris. Tăng 15% ST đòn thường", img: "wp/redsword.png", sellPrice: 2000 },
+        "Mũ bảo hộ của hiệp sĩ đỏ": { rank: "A", type: "helmet", name: "Mũ bảo hộ của hiệp sĩ đỏ", str: 10, vit: 25, mp: 0, effect: "Giảm 8% sát thương gánh chịu", img: "wp/dagger.png", sellPrice: 1200 },
+        "Bao tay của kẻ thống trị": { rank: "A", type: "gloves", name: "Bao tay của kẻ thống trị", str: 20, vit: 10, mp: 0, effect: "Giảm 3% sát thương gánh chịu", img: "wp/dagger.png", sellPrice: 1500 },
+        
+        // Costume:
+        "Bộ Vest Đen Ám Sát": { rank: "B", type: "costume", name: "Bộ Vest Đen Ám Sát", str: 50, vit: 20, mp: 0, effect: "Đổi Avatar thành Vest Đen", img: "cos/Sung_Jinwoo_Black_Suit.png", avatar: "cos/Sung_Jinwoo_Black_Suit.png", sellPrice: 2500 },
+        "Mining Work Clothes": { rank: "A", type: "costume", name: "Mining Work Clothes", str: 150, vit: 100, mp: 100, effect: "Đổi Avatar thành Mining Work Clothes", img: "cos/Sung_Jinwoo_Mining_Work.png", avatar: "cos/Sung_Jinwoo_Mining_Work.png", sellPrice: 7500 }
+    };
 
     // --- DỮ LIỆU CỬA HÀNG ---
     const SHOP_DATA = {
@@ -1748,7 +1783,6 @@
         
         if (currentUser.equipped.helmet === undefined) currentUser.equipped.helmet = null;
         if (currentUser.equipped.gloves === undefined) currentUser.equipped.gloves = null;
-        if (currentUser.equipped.costume === undefined) currentUser.equipped.costume = null;
 
         const eqArea = document.getElementById('equippedArea');
         const invArea = document.getElementById('inventoryArea');
@@ -1756,7 +1790,7 @@
         
         eqArea.innerHTML = ''; invArea.innerHTML = '';
 
-        // TỰ ĐỘNG DỌN RÁC (Vẫn giữ costume ở đây để dọn rác data nếu cần)
+        // TỰ ĐỘNG DỌN RÁC
         ['weapon', 'shield', 'accessory', 'helmet', 'gloves', 'costume'].forEach(slot => {
             if (currentUser.equipped[slot] && !ITEM_DATA[currentUser.equipped[slot].name]) {
                 currentUser.equipped[slot] = null;
@@ -1766,27 +1800,29 @@
         // DỌN TÚI ĐỒ
         currentUser.inventory = currentUser.inventory.filter(itemName => ITEM_DATA[itemName]);
 
-        // ĐÃ XÓA 'costume' KHỎI MẢNG NÀY ĐỂ NÓ KHÔNG CÒN HIỆN TRONG KHO ĐỒ NỮA
+        // ================= HIỂN THỊ ĐỒ ĐANG TRANG BỊ =================
         ['weapon', 'shield', 'accessory', 'helmet', 'gloves'].forEach(slot => {
             const itemObj = currentUser.equipped[slot];
             if (itemObj) {
                 const itemData = ITEM_DATA[itemObj.name];
+                const rank = itemData.rank || 'D'; // Lấy Rank, mặc định D
+                
                 eqArea.innerHTML += `
-                <div class="stat-item" style="border-color: gold; padding: 12px;">
+                <div class="stat-item rank-${rank}" style="padding: 12px; border-left: 4px solid;">
                     <div style="display: flex; gap: 15px; align-items: center; flex: 1;">
-                        <div class="item-icon-wrapper">
+                        <div class="item-icon-wrapper rank-${rank}">
                             <img src="${itemData.img}" class="item-img-premium">
                             <div class="item-tooltip">
-                                <h4 style="color: gold; margin: 0 0 5px 0; font-size: 20px;">${itemObj.name}</h4>
-                                <span style="color: #00bfff; font-size: 16px;">[ ${slot.toUpperCase()} ]</span><br>
+                                <h4 class="text-rank-${rank}" style="margin: 0 0 5px 0; font-size: 20px;">[CLASS: ${rank}] ${itemObj.name}</h4>
+                                <span style="color: #ccc; font-size: 16px;">TYPE: ${slot.toUpperCase()}</span><br><br>
                                 <span style="color: #ff4d4d; font-size: 16px;">STR: +${itemData.str} | VIT: +${itemData.vit}</span><br>
                                 <span style="color: #00ff00; font-size: 16px;">MP: +${itemData.mp}</span><br>
                                 <hr style="border-color: #444; margin: 8px 0;">
-                                <span style="color: #ccc; font-size: 14px;">${itemData.effect}</span>
+                                <span class="text-rank-${rank}" style="font-size: 14px;">EFFECT: ${itemData.effect}</span>
                             </div>
                         </div>
                         <div style="display: flex; flex-direction: column;">
-                            <b style="font-size: 22px; color: gold;">${itemObj.name}</b>
+                            <b class="text-rank-${rank}" style="font-size: 22px;">${itemObj.name}</b>
                             <small style="color:#aaa; font-size:16px;">Đang trang bị</small>
                         </div>
                     </div>
@@ -1800,31 +1836,33 @@
             }
         });
 
-        // Render TÚI ĐỒ (Inventory)
+        // ================= HIỂN THỊ KHO ĐỒ =================
         if (currentUser.inventory.length === 0) {
             invArea.innerHTML = '<p style="color: #aaa; text-align: center; font-size: 20px; padding: 20px;">Túi đồ trống</p>';
         } else {
             currentUser.inventory.forEach((itemName, index) => {
                 const itemData = ITEM_DATA[itemName];
+                const rank = itemData.rank || 'D';
                 const sellPrice = itemData.sellPrice || 10;
+                
                 invArea.innerHTML += `
-                <div class="stat-item" style="padding: 12px;">
+                <div class="stat-item rank-${rank}" style="padding: 12px; border-left: 4px solid;">
                     <div style="display: flex; gap: 15px; align-items: center; flex: 1;">
-                        <div class="item-icon-wrapper">
+                        <div class="item-icon-wrapper rank-${rank}">
                             <img src="${itemData.img}" class="item-img-premium">
                             <div class="item-tooltip">
-                                <h4 style="color: gold; margin: 0 0 5px 0; font-size: 20px;">${itemName}</h4>
-                                <span style="color: #00bfff; font-size: 16px;">[ ${itemData.type.toUpperCase()} ]</span><br>
+                                <h4 class="text-rank-${rank}" style="margin: 0 0 5px 0; font-size: 20px;">[CLASS: ${rank}] ${itemName}</h4>
+                                <span style="color: #ccc; font-size: 16px;">TYPE: ${itemData.type.toUpperCase()}</span><br><br>
                                 <span style="color: #ff4d4d; font-size: 16px;">STR: +${itemData.str} | VIT: +${itemData.vit}</span><br>
                                 <span style="color: #00ff00; font-size: 16px;">MP: +${itemData.mp}</span><br>
                                 <hr style="border-color: #444; margin: 8px 0;">
-                                <span style="color: #ccc; font-size: 14px;">${itemData.effect}</span><br>
+                                <span class="text-rank-${rank}" style="font-size: 14px;">EFFECT: ${itemData.effect}</span><br><br>
                                 <span style="color: yellow; font-size: 14px;">Giá bán: ${sellPrice} Cash</span>
                             </div>
                         </div>
                         <div style="display: flex; flex-direction: column;">
-                            <b style="font-size: 20px; color: #fff;">${itemName}</b>
-                            <small style="color:#aaa; font-size:16px;">${itemData.effect.length > 25 ? itemData.effect.substring(0, 25) + '...' : itemData.effect}</small>
+                            <b class="text-rank-${rank}" style="font-size: 20px;">${itemName}</b>
+                            <small style="color:#aaa; font-size:16px;">Hạng: ${rank}</small>
                         </div>
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 5px;">
