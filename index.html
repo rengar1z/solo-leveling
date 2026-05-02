@@ -877,6 +877,7 @@
     let rgCurrentStage = 0;
     let isPlayerStunned = false;
     let isEnemyStunned = false;
+    let hasUsedGuts = false;
 
     // --- DỮ LIỆU HẦM NGỤC (MỨC ĐỘ: TÂN THỦ & CÀY CUỐC) ---
     const dungeonData = {
@@ -956,11 +957,12 @@
     // --- CƠ SỞ DỮ LIỆU KỸ NĂNG ĐA NHÁNH (MULTI-CLASS) ---
     const skillData = {
         // --- NHÁNH CHUNG (NỘI TẠI) ---
-        "Phát Triển Cấp Tốc": { branch: "Chung", type: "passive", maxLv: 3, cost: 1, desc: "Tăng lượng EXP nhận được thêm 10%.", icon: "https://cdn-icons-png.flaticon.com/512/9483/9483031.png" },
-        "Thể Chất Siêu Phàm": { branch: "Chung", type: "passive", maxLv: 3, cost: 1, desc: "Tăng vĩnh viễn chỉ số STR và VIT.", icon: "https://cdn-icons-png.flaticon.com/256/1845/1845861.png" },
-        "Tái Tạo": { branch: "Chung", type: "passive", maxLv: 3, cost: 1, desc: "Tự động hồi phục HP sau nhiệm vụ.", icon: "https://cdn-icons-png.flaticon.com/512/15532/15532570.png" },
-        "Siêu Giác Quan": { branch: "Chung", type: "passive", maxLv: 3, cost: 1, desc: "Tăng tỷ lệ né tránh và phát hiện quái.", icon: "https://cdn-icons-png.flaticon.com/512/709/709612.png" },
-        "Gia Tăng Chỉ Số": { branch: "Chung", type: "passive", maxLv: 3, cost: 1, desc: "Mỗi cấp tăng thêm điểm tiềm năng.", icon: "https://cdn-icons-png.flaticon.com/512/15404/15404233.png" },
+        "Phát Triển Cấp Tốc": { branch: "Chung", type: "passive", maxLv: 3, cost: 1, desc: "Tăng lượng EXP nhận được thêm 10% mỗi cấp.", icon: "https://cdn-icons-png.flaticon.com/512/9483/9483031.png" },
+        "Thể Chất Siêu Phàm": { branch: "Chung", type: "passive", maxLv: 3, cost: 1, desc: "Khi cộng, tăng ngay lập tức 5 STR và 5 VIT.", icon: "https://cdn-icons-png.flaticon.com/256/1845/1845861.png" },
+        "Siêu Giác Quan": { branch: "Chung", type: "passive", maxLv: 3, cost: 1, desc: "Tăng thêm 5% tỷ lệ né tránh đòn đánh mỗi cấp.", icon: "https://cdn-icons-png.flaticon.com/512/709/709612.png" },
+        "Thợ Săn Tiền Thưởng": { branch: "Chung", type: "passive", maxLv: 3, cost: 2, desc: "Tăng 15% Cash nhận được sau mỗi trận thắng.", icon: "skill/amsat.jpg" },
+        "Bàn Tay May Mắn": { branch: "Chung", type: "passive", maxLv: 1, cost: 5, desc: "Tăng 10% tỷ lệ rớt đồ hiếm khi tiêu diệt Boss.", icon: "skill/amsat.jpg" },
+        "Ý Chí Bất Khuất": { branch: "Chung", type: "passive", maxLv: 1, cost: 10, desc: "Chịu đòn chí tử sẽ không chết, sống sót với 1 HP (1 lần/trận).", icon: "skill/amsat.jpg" },
 
         // --- NHÁNH SÁT THỦ (TỐC ĐỘ / BẠO KÍCH) ---
         "Bước Chân Bóng Tối": { branch: "Sát Thủ", type: "passive", maxLv: 1, cost: 5, desc: "Có 10% cơ hội né tránh hoàn toàn đòn đánh.", icon: "skill/tanghinh.jpg" },
@@ -1257,7 +1259,6 @@
         e.stopPropagation(); 
         const data = skillData[name];
 
-        // Bảo mật 2 lớp: Check lại xem có đang cộng nhầm vào nhánh bị khóa không
         let currentClass = null;
         for (let s in currentUser.skills) {
             if (currentUser.skills[s] > 0 && skillData[s] && skillData[s].branch !== "Chung") {
@@ -1272,8 +1273,19 @@
         if (currentUser.skillPoints >= data.cost && currentUser.skills[name] < data.maxLv) {
             currentUser.skills[name]++;
             currentUser.skillPoints -= data.cost;
+            
+            // --- KÍCH HOẠT: THỂ CHẤT SIÊU PHÀM ---
+            if (name === "Thể Chất Siêu Phàm") {
+                currentUser.str += 5; 
+                currentUser.vit += 5;
+                currentUser.maxHp += 50; 
+                currentUser.hp += 50;
+                alert("Thể Chất Siêu Phàm bộc phát! Tăng vĩnh viễn 5 STR, 5 VIT và 50 Máu tối đa!");
+            }
+
             await set(ref(db, 'users/' + currentUser.username), currentUser);
             renderSkills();
+            render(); 
         } else {
             alert(`Bạn cần ${data.cost} điểm kỹ năng để nâng cấp!`);
         }
@@ -2046,19 +2058,41 @@ window.unequipItem = async function(slot, doSave = true) {
         }
 
         // --- XỬ LÝ SÁT THƯƠNG GÁNH CHỊU ---
-        if (dmg > 0) {
-            // ---> BUFF CỦA NHÁNH ĐẤU SĨ <---
+        let isDodged = false;
+        
+        // 1. KÍCH HOẠT NÉ TRÁNH (Bước Chân Bóng Tối + Siêu Giác Quan)
+        let dodgeChance = 0;
+        if (currentUser.skills["Bước Chân Bóng Tối"] > 0) dodgeChance += 0.10;
+        if (currentUser.skills["Siêu Giác Quan"] > 0) dodgeChance += (0.05 * currentUser.skills["Siêu Giác Quan"]);
+
+        if (dodgeChance > 0 && Math.random() <= dodgeChance) {
+            isDodged = true;
+            dmg = 0; // Xóa sổ sát thương
+            logBattle(`<span style="color:#8eefff; font-weight:bold;">💨 NÉ TRÁNH! Cảm quan nhạy bén giúp bạn lướt qua đòn đánh hoàn hảo!</span>`);
+        }
+
+        if (dmg > 0 && !isDodged) {
+            // 2. KÍCH HOẠT CƠ THỂ THÉP (Giảm 20% sát thương cho Đấu Sĩ)
             if (currentUser.skills["Cơ Thể Thép"] > 0) {
-                dmg *= 0.80; // Giảm ngay 20% sát thương trước khi tính Giáp
+                dmg *= 0.80; 
             }
 
-            // (Giữ nguyên các hiệu ứng khiên và đồ đạc bên dưới)
+            // 3. GIẢM SÁT THƯƠNG TỪ TRANG BỊ
             if (currentUser.equipped && currentUser.equipped.shield && currentUser.equipped.shield.name === "Shield") dmg *= 0.985;
             if (currentUser.equipped && currentUser.equipped.accessory && currentUser.equipped.accessory.name === "Ice Elf Cloak") dmg *= 0.95;
             if (currentUser.equipped && currentUser.equipped.helmet && currentUser.equipped.helmet.name === "Mũ bảo hộ của hiệp sĩ đỏ") dmg *= 0.92;
             if (currentUser.equipped && currentUser.equipped.gloves && currentUser.equipped.gloves.name === "Bao tay của kẻ thống trị") dmg *= 0.97;
             
             dmg = Math.floor(dmg);
+
+            // 4. KÍCH HOẠT Ý CHÍ BẤT KHUẤT (Chống chết sốc 1 lần/trận)
+            if (currentUser.hp - dmg <= 0 && currentUser.skills["Ý Chí Bất Khuất"] > 0 && !hasUsedGuts) {
+                dmg = currentUser.hp - 1; // Khấu trừ lượng sát thương để chừa lại đúng 1 HP
+                hasUsedGuts = true; // Đánh dấu đã dùng, không cho dùng lại lần 2
+                logBattle(`<span style="color:gold; font-weight:bold; font-size:18px; text-shadow: 0 0 5px gold;">🛡️ Ý CHÍ BẤT KHUẤT! Bạn từ chối cái chết và vươn lên với 1 HP!</span>`);
+            }
+
+            // 5. TRỪ MÁU VÀ HIỂN THỊ LOG
             triggerPlayerShake();
             currentUser.hp = Math.max(0, currentUser.hp - dmg);
             
@@ -2116,10 +2150,21 @@ window.unequipItem = async function(slot, doSave = true) {
 
     function winBattle() {
         let rewardCash = currentRedGateId ? Math.floor(enemy.exp * 2.5) : Math.floor(enemy.exp * 1.5);
+        // KÍCH HOẠT: THỢ SĂN TIỀN THƯỞNG
+        if (currentUser.skills["Thợ Săn Tiền Thưởng"] > 0) {
+            let cashBonus = Math.floor(rewardCash * 0.15 * currentUser.skills["Thợ Săn Tiền Thưởng"]);
+            rewardCash += cashBonus;
+        }
         currentUser.cash += rewardCash;
         
-        logBattle(`<span style="color:#00ff00">Chiến thắng! Nhận ${enemy.exp} EXP và ${rewardCash} CASH.</span>`);
-        currentUser.exp += enemy.exp;
+        // KÍCH HOẠT: PHÁT TRIỂN CẤP TỐC
+        let enemyExp = enemy.exp;
+        if (currentUser.skills["Phát Triển Cấp Tốc"] > 0) {
+            enemyExp += Math.floor(enemyExp * 0.10 * currentUser.skills["Phát Triển Cấp Tốc"]);
+        }
+        currentUser.exp += enemyExp;
+
+        logBattle(`<span style="color:#00ff00">Chiến thắng! Nhận ${enemyExp} EXP và ${rewardCash} CASH.</span>${regenLog}`);
 
         // Logic rớt đồ tự động lấy theo loại Cổng Đỏ hiện tại
         if (currentRedGateId) {
