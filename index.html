@@ -1413,18 +1413,15 @@
         if (currentUser.claimedDate === today) return alert('Hôm nay bạn đã rèn luyện rồi!');
         
         const m = getMission();
+        let oldJob = getJob(currentUser.level); // <--- 1. LƯU RANK CŨ VÀO ĐÂY
         currentUser.exp += m.exp;
         let up = false;
 
+        // ... (Vòng lặp while cộng chỉ số bên trong bạn cứ giữ nguyên nhé) ...
         while (currentUser.exp >= currentUser.need) {
             currentUser.exp -= currentUser.need;
             currentUser.level++;
-            currentUser.need += 50;
-            currentUser.maxHp += 20; currentUser.maxMp += 10;
-            currentUser.hp = currentUser.maxHp; currentUser.mp = currentUser.maxMp;
-            currentUser.str += 2; currentUser.agi += 2; currentUser.vit += 2;
-            currentUser.int += 1; currentUser.sense += 1;
-            currentUser.points += 3; currentUser.skillPoints += 2; 
+            //...
             up = true;
         }
 
@@ -1435,14 +1432,43 @@
         
         await set(ref(db, 'users/' + currentUser.username), currentUser);
         render();
-        if (up) showPopup();
+        
+        // 2. GỌI BẢNG THÔNG BÁO Ở ĐÂY
+        if (up) {
+            let newJob = getJob(currentUser.level);
+            showPopup(oldJob, newJob); 
+        }
     }
 
-    function showPopup() {
-        document.getElementById('popupText').innerText = 'Chúc mừng ' + currentUser.username + ' đã đạt Level ' + currentUser.level + '!';
+    window.showPopup = function(oldJob, newJob) {
+        let titleEl = document.querySelector('.popupInner h2');
+        let textEl = document.getElementById('popupText');
+        let popupInner = document.querySelector('.popupInner');
+        
+        // NẾU RANK CŨ KHÁC RANK MỚI => KÍCH HOẠT THĂNG HẠNG!
+        if (oldJob && newJob && oldJob !== newJob) {
+            titleEl.innerText = "RANK UP!";
+            titleEl.style.color = "#00ffff"; // Đổi sang màu Xanh Hệ Thống
+            titleEl.style.textShadow = "0 0 25px #00bfff";
+            popupInner.style.borderColor = "#00ffff";
+            popupInner.style.boxShadow = "0 0 50px #00bfff";
+            
+            textEl.innerHTML = `Tuyệt vời! Bạn đã đột phá giới hạn và thức tỉnh thành<br><span style="color:#00ffff; font-size:45px; font-weight:bold; text-transform:uppercase;">[ ${newJob} ]</span>!`;
+        } 
+        // NẾU CHỈ LÀ LÊN LEVEL BÌNH THƯỜNG
+        else {
+            titleEl.innerText = "LEVEL UP";
+            titleEl.style.color = "gold";
+            titleEl.style.textShadow = "0 0 20px yellow";
+            popupInner.style.borderColor = "gold";
+            popupInner.style.boxShadow = "0 0 50px gold";
+            
+            textEl.innerHTML = `Chúc mừng <b>${currentUser.username}</b> đã đạt <span style="color:gold; font-size:35px;">Level ${currentUser.level}</span>!`;
+        }
+        
         document.getElementById('levelPopup').style.display = 'flex';
-    }
-
+    };
+    
     window.closePopup = function() { document.getElementById('levelPopup').style.display = 'none'; }
 
     window.updateTitle = async function() {
@@ -2729,7 +2755,8 @@
     }
 
     function checkLevelUp() {
-        let leveledUp = false; // Biến theo dõi xem có lên cấp hay không
+        let leveledUp = false; 
+        let oldJob = getJob(currentUser.level); // <--- LƯU LẠI RANK TRƯỚC KHI LÊN CẤP
         
         while (currentUser.exp >= currentUser.need) {
             currentUser.exp -= currentUser.need;
@@ -2742,14 +2769,16 @@
             currentUser.hp = currentUser.maxHp; 
             currentUser.mp = currentUser.maxMp;
             
-            leveledUp = true; // Xác nhận đã lên cấp
+            leveledUp = true; 
         }
         
-        // Nếu có lên cấp thì gọi bảng thông báo Level Up
+        // Nếu có lên cấp thì gọi bảng thông báo mới
         if (leveledUp) {
-            showPopup();
+            let newJob = getJob(currentUser.level); // <--- LẤY RANK SAU KHI LÊN CẤP
+            showPopup(oldJob, newJob); // <--- Truyền 2 Rank vào để hệ thống tự so sánh
         }
     }
+    
     async function saveUserData() {
         await set(ref(db, 'users/' + currentUser.username), currentUser);
         render();
