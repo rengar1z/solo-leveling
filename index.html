@@ -2776,15 +2776,37 @@
             return; // Dừng tiến trình Làng Goblin
         }
 
-        // RANDOM XUẤT HIỆN CỔNG ĐỎ BẤT KỲ SAU KHI ĐÁNH GOBLIN
-        if (isDungeonMode && dCurrentId === 'goblin_village' && !currentRedGateId) {
-            if (Math.random() <= 0.9) { // 10% tỷ lệ
-                const gateKeys = Object.keys(RED_GATES);
-                const randomGateId = gateKeys[Math.floor(Math.random() * gateKeys.length)];
-                
-                logBattle(`<span style="color:red; font-size:18px; font-weight:bold; text-shadow: 0 0 10px red;">[CẢNH BÁO MỨC ĐỘ NGUY HIỂM: A] - MỘT CỔNG ĐỎ BẤT NGỜ XUẤT HIỆN HÚT BẠN VÀO TRONG!</span>`);
-                setTimeout(() => { enterRedGate(randomGateId); }, 2500);
-                return;
+        
+        // --- CƠ CHẾ XUẤT HIỆN CỔNG ĐỎ ĐỘC QUYỀN THEO TỪNG HẦM NGỤC ---
+        if (isDungeonMode && !currentRedGateId) {
+            let spawnedRedGate = null;
+
+            // 1. Hầm Ngục Côn Trùng -> Xuất hiện Cổng Băng Giá (Vua Tiên Băng Baruka)
+            if (dCurrentId === 'insect_dungeon') {
+                if (Math.random() <= 0.9) { // Chuẩn 10% tỷ lệ xuất hiện
+                    spawnedRedGate = "ice_world";
+                }
+            }
+            
+            // 2. Chỗ này là khung mẫu để sau này bạn thêm Cổng Hỏa Ngục hoặc Igris
+            /*
+            else if (dCurrentId === 'goblin_village') {
+                if (Math.random() <= 0.10) { 
+                    spawnedRedGate = "fire_hell"; 
+                }
+            }
+            else if (dCurrentId === 'hapjeong_subway') {
+                if (Math.random() <= 0.05) { // Cổng cấp thấp thì tỷ lệ ra Cổng Đỏ thấp hơn chút (5%)
+                    spawnedRedGate = "red_knight_tomb"; 
+                }
+            }
+            */
+
+            // NẾU TRÚNG TỶ LỆ, KÍCH HOẠT HÚT VÀO CỔNG ĐỎ
+            if (spawnedRedGate) {
+                logBattle(`<span style="color:red; font-size:18px; font-weight:bold; text-shadow: 0 0 10px red;">[CẢNH BÁO MỨC ĐỘ NGUY HIỂM: A] - KHÔNG GIAN SỤP ĐỔ! MỘT CỔNG ĐỎ BẤT NGỜ HÚT BẠN VÀO TRONG!</span>`);
+                setTimeout(() => { enterRedGate(spawnedRedGate); }, 2500);
+                return; // Dừng việc chuyển ải bình thường lại
             }
         }
 
