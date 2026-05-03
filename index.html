@@ -2558,13 +2558,14 @@
             }
             // NẾU KHÔNG CẦN BẢO HỘ THÌ TUNG CHIÊU
             else {
-                // 1. Lời Nguyền Suy Yếu (20% - Phá giáp người chơi trong 3 lượt)
+                // 1. Lời Nguyền Suy Yếu (20% - Giảm 30% giáp người chơi trong 3 lượt)
                 if (rand <= 0.20) {
                     let rawDmg = enemyAtk * 1.5; 
                     dmg = Math.max(10, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                     isSpecialAttack = true;
                     playerArmorBreakTurns = 3; 
-                    specialAttackLog = `<span style="color:#9933ff; font-weight:bold; text-shadow: 0 0 5px #9933ff;">💀 LỜI NGUYỀN SUY YẾU!</span> Kargalgan niệm chú hắc ám, gây ${Math.floor(dmg)} sát thương và <span style="color:red; font-weight:bold;">[PHÁ NÁT GIÁP]</span> của bạn trong 3 lượt!`;
+                    // SỬA LẠI CHỮ THÀNH GIẢM 30%
+                    specialAttackLog = `<span style="color:#9933ff; font-weight:bold; text-shadow: 0 0 5px #9933ff;">💀 LỜI NGUYỀN SUY YẾU!</span> Kargalgan niệm chú hắc ám, gây ${Math.floor(dmg)} sát thương và <span style="color:orange; font-weight:bold;">[GIẢM 30% GIÁP]</span> của bạn trong 3 lượt!`;
                 }
                 // 2. Đoạt Ma Lực (15% - Hút tối đa 50 MP của bạn để tự hồi máu)
                 else if (rand <= 0.35) {
@@ -2744,6 +2745,14 @@
             currentUser.hp = Math.max(0, currentUser.hp - bleedDmg);
             playerBleedTurns--;
             logBattle(`<span style="color:red; font-style:italic;">🩸 Vết thương rỉ máu! Bạn mất thêm ${bleedDmg} HP (Còn ${playerBleedTurns} lượt).</span>`);
+        }
+
+        // --- XỬ LÝ LƯỢT PHÁ GIÁP ---
+        if (playerArmorBreakTurns > 0 && currentUser.hp > 0) {
+            playerArmorBreakTurns--;
+            if (playerArmorBreakTurns === 0) {
+                logBattle(`<span style="color:#aaa; font-style:italic;">🛡️ Lời nguyền suy yếu đã tan biến. Khả năng phòng thủ của bạn trở lại bình thường.</span>`);
+            }
         }
 
         if (currentUser.hp > 0 && currentUser.equipped && currentUser.equipped.accessory && currentUser.equipped.accessory.name === "Essence of Magic") {
@@ -2972,6 +2981,7 @@
         isEnemyStunned = false; // <--- THÊM DÒNG NÀY ĐỂ GIẢI CHOÁNG QUÁI MỚI
         monarchWrathUses = 0;
         playerBleedTurns = 0;
+        playerArmorBreakTurns = 0;
 
         document.getElementById('e-name').innerText = enemy.name;
         document.getElementById('e-img').src = enemy.img;
@@ -3007,6 +3017,7 @@
         isEnemyStunned = false;
         monarchWrathUses = 0;
         playerBleedTurns = 0;
+        playerArmorBreakTurns = 0;
 
         document.getElementById('dStageText').innerText = `Ải ${dCurrentStage + 1}/${dungeonData[dCurrentId].stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
         if(enemy.isBoss) {
@@ -3054,6 +3065,7 @@
         isEnemyStunned = false;
         monarchWrathUses = 0;
         playerBleedTurns = 0;
+        playerArmorBreakTurns = 0;
         
         document.getElementById('dStageText').innerText = `Ải ${rgCurrentStage + 1}/${gateData.stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
         document.getElementById('dStageText').style.color = gateData.themeColor;
