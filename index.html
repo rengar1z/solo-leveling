@@ -2542,6 +2542,58 @@
                 specialAttackLog = `<span style="color:#ffcc00; font-weight:bold;">🌀 VÒNG SIẾT TỬ THẦN!</span> Cơ thể khổng lồ có vảy thép quấn chặt lấy bạn, ép lồng ngực gây ${Math.floor(dmg)} sát thương và làm bạn <span style="color:yellow; text-shadow: 0 0 5px yellow;">[CHOÁNG VÁNG]</span>!`;
             }
         }
+
+        // 4. KỸ NĂNG CỦA BOSS ĐẠI TÙ TRƯỞNG KARGALGAN (A+)
+        if (isDungeonMode && enemy.bossType === "kargalgan") {
+            let rand = Math.random(); 
+            
+            // ƯU TIÊN SỐ 1: KHÚC CA BẢO HỘ (Kích hoạt 1 lần khi HP < 40%)
+            if (enemy.hp < enemy.maxHp * 0.4 && !enemy.hasShielded) {
+                let shieldAmount = Math.floor(enemy.maxHp * 0.20); // Hồi 20% HP
+                enemy.hp = Math.min(enemy.maxHp, enemy.hp + shieldAmount);
+                enemy.hasShielded = true; 
+                dmg = 0; // Lượt này Boss lo buff máu, không tấn công
+                isSpecialAttack = true;
+                specialAttackLog = `<span style="color:#9933ff; font-weight:bold; text-shadow: 0 0 5px #9933ff;">🛡️ KHÚC CA BẢO HỘ!</span> Kargalgan lẩm nhẩm chú ngữ, triệu hồi khiên ma thuật và phục hồi ${shieldAmount} HP!`;
+            }
+            // NẾU KHÔNG CẦN BẢO HỘ THÌ TUNG CHIÊU
+            else {
+                // 1. Lời Nguyền Suy Yếu (20% - Phá giáp người chơi trong 3 lượt)
+                if (rand <= 0.20) {
+                    let rawDmg = enemyAtk * 1.5; 
+                    dmg = Math.max(10, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                    isSpecialAttack = true;
+                    playerArmorBreakTurns = 3; 
+                    specialAttackLog = `<span style="color:#9933ff; font-weight:bold; text-shadow: 0 0 5px #9933ff;">💀 LỜI NGUYỀN SUY YẾU!</span> Kargalgan niệm chú hắc ám, gây ${Math.floor(dmg)} sát thương và <span style="color:red; font-weight:bold;">[PHÁ NÁT GIÁP]</span> của bạn trong 3 lượt!`;
+                }
+                // 2. Đoạt Ma Lực (15% - Hút tối đa 50 MP của bạn để tự hồi máu)
+                else if (rand <= 0.35) {
+                    let rawDmg = enemyAtk * 1.8; 
+                    dmg = Math.max(15, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                    isSpecialAttack = true;
+                    let manaSteal = Math.min(currentUser.mp, 50); // Rút cạn MP của bạn
+                    currentUser.mp -= manaSteal;
+                    enemy.hp = Math.min(enemy.maxHp, enemy.hp + (manaSteal * 10)); // Boss lấy MP của bạn tự hồi lại máu
+                    specialAttackLog = `<span style="color:#00bfff; font-weight:bold; text-shadow: 0 0 5px #00bfff;">✨ ĐOẠT MA LỰC!</span> Bàn tay ma thuật bóp nghẹt bạn, gây ${Math.floor(dmg)} ST và hút cạn <span style="color:#00bfff">${manaSteal} MP</span>!`;
+                }
+                // 3. Khúc Ca Hỏa Long (20% - Sát thương khủng + Cháy)
+                else if (rand <= 0.55) {
+                    let rawDmg = enemyAtk * 2.5; 
+                    dmg = Math.max(50, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                    isSpecialAttack = true;
+                    applyBleedToPlayer = true; 
+                    specialAttackLog = `<span style="color:#ff3300; font-weight:bold; text-shadow: 0 0 5px #ff3300;">🔥 KHÚC CA HỎA LONG!</span> Một cột lửa thiêu rụi tất cả, gây ${Math.floor(dmg)} sát thương và khiến bạn bị <span style="color:#ff3300; font-style:italic;">[THIÊU ĐỐT]</span> 2 lượt!`;
+                } 
+                // 4. Lời Nguyền Trọng Lực (15% - Làm Choáng)
+                else if (rand <= 0.70) {
+                    let rawDmg = enemyAtk * 1.5; 
+                    dmg = Math.max(20, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                    isSpecialAttack = true;
+                    isPlayerStunned = true; 
+                    specialAttackLog = `<span style="color:#9933ff; font-weight:bold;">🌌 LỜI NGUYỀN TRỌNG LỰC!</span> Áp lực đè nát cơ thể bạn, gây ${Math.floor(dmg)} sát thương và làm bạn <span style="color:yellow;">[CHOÁNG VÁNG]</span>!`;
+                }
+            }
+        }
         
         // --- CƠ CHẾ KỸ NĂNG CỦA CÁC BOSS CỔNG ĐỎ ---
         if (currentRedGateId && enemy.isBoss) {
