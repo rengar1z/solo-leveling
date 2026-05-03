@@ -2691,14 +2691,27 @@
     }
 
     function checkLevelUp() {
+        let leveledUp = false; // Biến theo dõi xem có lên cấp hay không
+        
         while (currentUser.exp >= currentUser.need) {
             currentUser.exp -= currentUser.need;
-            currentUser.level++; currentUser.need += 50; currentUser.points += 3; currentUser.skillPoints += 2;
-            currentUser.maxHp += 20; currentUser.maxMp += 10;
-            currentUser.hp = currentUser.maxHp; currentUser.mp = currentUser.maxMp;
+            currentUser.level++; 
+            currentUser.need += 50; 
+            currentUser.points += 3; 
+            currentUser.skillPoints += 2;
+            currentUser.maxHp += 20; 
+            currentUser.maxMp += 10;
+            currentUser.hp = currentUser.maxHp; 
+            currentUser.mp = currentUser.maxMp;
+            
+            leveledUp = true; // Xác nhận đã lên cấp
+        }
+        
+        // Nếu có lên cấp thì gọi bảng thông báo Level Up
+        if (leveledUp) {
+            showPopup();
         }
     }
-
     async function saveUserData() {
         await set(ref(db, 'users/' + currentUser.username), currentUser);
         render();
