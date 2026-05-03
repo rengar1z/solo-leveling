@@ -1050,14 +1050,21 @@
                             <p style="font-size: 20px; color: #ccc;">Số ải: 5 | Độ khó: Hạng C+</p>
                             <button class="tab-btn btn-system" style="border-color: #ff9900; color: #ff9900 !important; font-size: 24px;">TIẾN VÀO HẦM NGỤC</button>
                         </div>
-                        
-                    </div>
 
-                    <div id="dungeonCombatUI" class="hidden">
-                        <h3 id="dDungeonTitle" style="color: #ffcc00; text-align: center; margin-bottom: 5px; font-size: 32px;">Làng Của Goblin</h3>
-                        <h4 id="dStageText" style="color: #fff; text-align: center; margin-top: 0; font-size: 24px;">Ải 1/5</h4>
+                        <!-- CỔNG HỘI THỢ SĂN (HẠNG A+) -->
+                        <div class="dungeon-card" onclick="enterDungeon('hunters_guild_gate')" style="border-color: #9933ff; box-shadow: 0 0 15px rgba(153, 51, 255, 0.4);">
+                            <h3 style="color: #9933ff; text-shadow: 0 0 10px #9933ff;">CỔNG HỘI THỢ SĂN HIGH ORC</h3>
+                            <p style="font-size: 20px; color: #ccc;">Số ải: 5 | Độ khó: Hạng A+</p>
+                            <button class="tab-btn btn-system" style="border-color: #9933ff; color: #9933ff !important; font-size: 24px;">TIẾN VÀO HẦM NGỤC</button>
+                        </div>
                         
-                        <div class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 30px; background: rgba(20, 0, 0, 0.6); border: 2px solid #ff4d4d; border-radius: 12px; min-height: 350px; box-shadow: 0 0 30px rgba(255, 77, 77, 0.2);">
+                        
+                </div>
+
+                        <div id="dungeonCombatUI" class="hidden">
+                            <h3 id="dDungeonTitle" style="color: #ffcc00; text-align: center; margin-bottom: 5px; font-size: 32px;">Làng Của Goblin</h3>
+                            <h4 id="dStageText" style="color: #fff; text-align: center; margin-top: 0; font-size: 24px;">Ải 1/5</h4>
+                            <div class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 30px; background: rgba(20, 0, 0, 0.6); border: 2px solid #ff4d4d; border-radius: 12px; min-height: 350px; box-shadow: 0 0 30px rgba(255, 77, 77, 0.2);">
     
     <!-- NGƯỜI CHƠI -->
     <div style="text-align: center; width: 40%;">
@@ -1160,6 +1167,7 @@
     let enemyPoisonTurns = 0;
     let monarchWrathUses = 0;
     let playerBleedTurns = 0; // <--- THÊM BIẾN NÀY: Theo dõi số lượt bạn bị chảy máu
+    let playerArmorBreakTurns = 0; // <--- THÊM BIẾN NÀY: Đếm số lượt bạn bị Boss phá giáp
 
     // --- DỮ LIỆU HẦM NGỤC (MỨC ĐỘ: TÂN THỦ & CÀY CUỐC) ---
     const dungeonData = {
@@ -1191,6 +1199,16 @@
                 { name: "Nhện Hang Động", hp: 700, atk: 80, def: 30, exp: 150, img: "bot/enemy.png" },
                 { name: "Bò Cạp Tinh Nhuệ", hp: 900, atk: 100, def: 35, exp: 220, img: "bot/Boss_Blue_Poison_Scorpion.png" },
                 { name: "BOSS: Nhện Khổng Lồ", hp: 2500, atk: 140, def: 50, exp: 1000, img: "boss/Boss_Spider_Leader.png", isBoss: true, bossType: "giant_spider" }
+            ]
+        },
+        "hunters_guild_gate": {
+            name: "Cổng Hội Thợ Săn",
+            stages: [
+                { name: "Chiến Binh High Orc", hp: 4000, atk: 250, def: 100, exp: 400, img: "bot/Boss_High_Orc_Butcher.png" },
+                { name: "Chiến Binh High Orc Hung Hãn", hp: 5500, atk: 280, def: 150, exp: 600, img: "bot/Boss_High_Orc_Butcher.png" },
+                { name: "High_Orc_Warden", hp: 4500, atk: 350, def: 80, exp: 700, img: "bot/Boss_High_Orc_Warden.png" },
+                { name: "Cận Vệ Đại Tù Trưởng", hp: 9000, atk: 400, def: 200, exp: 1200, img: "bot/Boss_High_Orc_Headman.png" },
+                { name: "BOSS: Đại Tù Trưởng Kargalgan", hp: 25000, atk: 600, def: 250, exp: 6000, img: "boss/Boss_Almighty_Shaman,_Kargalgan.png", isBoss: true, bossType: "kargalgan" }
             ]
         }
     };
@@ -2443,6 +2461,15 @@
 
         const defensePower = currentUser.vit || 0; 
         const enemyAtk = enemy.atk || 10;
+
+        // --- KÍCH HOẠT HIỆU ỨNG GIẢM GIÁP CỦA BOSS ---
+        let effectiveVit = defensePower;
+        if (playerArmorBreakTurns > 0) {
+            effectiveVit = Math.floor(effectiveVit * 0.7); // Bị giảm 30% Thể lực (VIT)
+        }
+        
+        let vitDmgReduction = Math.min(0.60, effectiveVit * 0.001);
+        let dmg = Math.max(2, Math.floor(enemyAtk * (1 - vitDmgReduction)));
         
         // 4. VITALITY: Chuyển hóa thành tỷ lệ phần trăm miễn thương (Tối đa giảm 60% sát thương)
         let vitDmgReduction = Math.min(0.60, defensePower * 0.001);
