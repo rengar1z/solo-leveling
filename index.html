@@ -1086,7 +1086,6 @@
     let rgCurrentStage = 0;
     let isPlayerStunned = false;
     let isEnemyStunned = false;
-    let hasUsedGuts = false;
     let isPlayerCountering = false; // Nhớ trạng thái Phản đòn
     let enemyPoisonTurns = 0;
     let monarchWrathUses = 0;
@@ -2435,13 +2434,6 @@
                 
                 dmg = Math.floor(dmg);
 
-                // 4. KÍCH HOẠT Ý CHÍ BẤT KHUẤT
-                if (currentUser.hp - dmg <= 0 && currentUser.skills["Ý Chí Bất Khuất"] > 0 && !hasUsedGuts) {
-                    dmg = currentUser.hp - 1; 
-                    hasUsedGuts = true; 
-                    logBattle(`<span style="color:gold; font-weight:bold; font-size:18px; text-shadow: 0 0 5px gold;">🛡️ Ý CHÍ BẤT KHUẤT! Bạn từ chối cái chết và vươn lên với 1 HP!</span>`);
-                }
-
                 // 5. TRỪ MÁU VÀ HIỂN THỊ LOG
                 triggerPlayerShake();
                 currentUser.hp = Math.max(0, currentUser.hp - dmg);
@@ -2645,7 +2637,6 @@
         isMyTurn = true;
         isPlayerStunned = false;
         isEnemyStunned = false; // <--- THÊM DÒNG NÀY ĐỂ GIẢI CHOÁNG QUÁI MỚI
-        hasUsedGuts = false;
         monarchWrathUses = 0;
 
         document.getElementById('e-name').innerText = enemy.name;
@@ -2680,7 +2671,6 @@
         isMyTurn = true;
         isPlayerStunned = false;
         isEnemyStunned = false;
-        hasUsedGuts = false;
         monarchWrathUses = 0;
 
         document.getElementById('dStageText').innerText = `Ải ${dCurrentStage + 1}/${dungeonData[dCurrentId].stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
@@ -2727,7 +2717,6 @@
         isMyTurn = true;
         isPlayerStunned = false;
         isEnemyStunned = false;
-        hasUsedGuts = false;
         monarchWrathUses = 0;
         
         document.getElementById('dStageText').innerText = `Ải ${rgCurrentStage + 1}/${gateData.stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
