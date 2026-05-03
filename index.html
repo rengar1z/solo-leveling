@@ -2447,6 +2447,7 @@
         
         updateCombatUI(); checkBattleEnd();
     };
+    
     function enemyTurn() {
         if (!enemy || enemy.hp <= 0 || !currentUser) return;
 
@@ -2468,11 +2469,8 @@
             effectiveVit = Math.floor(effectiveVit * 0.7); // Bị giảm 30% Thể lực (VIT)
         }
         
+        // [ĐÃ FIX LỖI 1]: Xóa khai báo trùng lặp. Tính toán sát thương gốc tại đây.
         let vitDmgReduction = Math.min(0.60, effectiveVit * 0.001);
-        let dmg = Math.max(2, Math.floor(enemyAtk * (1 - vitDmgReduction)));
-        
-        // 4. VITALITY: Chuyển hóa thành tỷ lệ phần trăm miễn thương (Tối đa giảm 60% sát thương)
-        let vitDmgReduction = Math.min(0.60, defensePower * 0.001);
         let dmg = Math.max(2, Math.floor(enemyAtk * (1 - vitDmgReduction)));
         
         let isSpecialAttack = false;
@@ -2483,37 +2481,30 @@
         // 1. KỸ NĂNG CỦA THỦ LĨNH YÊU TINH (GOBLIN)
         if (isDungeonMode && enemy.bossType === "hobgoblin_leader") {
             let rand = Math.random(); 
-            
-            // 20% Tỷ lệ vung chùy chí mạng
             if (rand <= 0.20) {
-                let rawDmg = enemyAtk * 2.0; // Gấp đôi sát thương
+                let rawDmg = enemyAtk * 2.0; 
                 dmg = Math.max(15, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                 isSpecialAttack = true;
                 specialAttackLog = `<span style="color:#ff6600; font-weight:bold; text-shadow: 0 0 5px #ff6600;">🔨 CHÙY PHÁ SƠN!</span> Thủ Lĩnh Yêu Tinh vung cây chùy khổng lồ đập nát mặt đất, giáng ${Math.floor(dmg)} sát thương tàn bạo!`;
-            } 
-            // 15% Tỷ lệ gầm thét làm choáng
-            else if (rand <= 0.35) {
-                let rawDmg = enemyAtk * 1.2; // Sát thương nhẹ
+            } else if (rand <= 0.35) {
+                let rawDmg = enemyAtk * 1.2; 
                 dmg = Math.max(5, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                 isSpecialAttack = true;
-                isPlayerStunned = true; // Kích hoạt Choáng
+                isPlayerStunned = true; 
                 specialAttackLog = `<span style="color:#ffcc00; font-weight:bold; text-shadow: 0 0 5px #ffcc00;">🗣️ TIẾNG GẦM HUYẾT MẠCH!</span> Tiếng rống chói tai khiến bạn tê liệt, nhận ${Math.floor(dmg)} sát thương và bị <span style="color:yellow; text-shadow: 0 0 5px yellow;">[CHOÁNG VÁNG]</span>!`;
             }
         }
 
+        // 2. KỸ NĂNG CỦA NHỆN KHỔNG LỒ
         if (isDungeonMode && enemy.bossType === "giant_spider") {
             let rand = Math.random(); 
-            
-            // 20% Phun tơ trói (Gây Choáng)
             if (rand <= 0.20) {
                 let rawDmg = enemyAtk * 1.5; 
                 dmg = Math.max(10, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                 isSpecialAttack = true;
-                isPlayerStunned = true; // Làm choáng người chơi
+                isPlayerStunned = true; 
                 specialAttackLog = `<span style="color:#cccccc; font-weight:bold; text-shadow: 0 0 5px #ffffff;">🕸️ PHUN TƠ TRÓI BUỘC!</span> Nhện Khổng Lồ nhả tơ phong tỏa di chuyển của bạn, gây ${Math.floor(dmg)} sát thương và làm bạn bị <span style="color:yellow; text-shadow: 0 0 5px yellow;">[CHOÁNG VÁNG]</span>!`;
-            } 
-            // 20% Cắn nọc độc (Xuyên giáp lớn)
-            else if (rand <= 0.40) {
+            } else if (rand <= 0.40) {
                 let rawDmg = enemyAtk * 2.5; 
                 dmg = Math.max(20, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                 isSpecialAttack = true;
@@ -2521,72 +2512,56 @@
             }
         }
 
-        // 3. KỸ NĂNG CỦA BOSS KASAKA RĂNG NỌC ĐỘC XANH
+        // 3. KỸ NĂNG CỦA BOSS KASAKA
         if (isDungeonMode && enemy.bossType === "kasaka") {
             let rand = Math.random(); 
-            
-            // 20% Tỷ lệ cắn nọc độc (Mượn cờ hiệu rút máu của Igris để làm hiệu ứng độc)
             if (rand <= 0.20) {
                 let rawDmg = enemyAtk * 1.5; 
                 dmg = Math.max(5, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                 isSpecialAttack = true;
-                applyBleedToPlayer = true; // Khiến người chơi mất máu từ từ
+                applyBleedToPlayer = true; 
                 specialAttackLog = `<span style="color:#00ff00; font-weight:bold; text-shadow: 0 0 5px #00ff00;">🐍 NỌC ĐỘC KASAKA!</span> Rắn khổng lồ cắm phập nanh độc vào bạn, gây ${Math.floor(dmg)} sát thương và khiến bạn bị <span style="color:#00ff00; font-style:italic;">[NHIỄM ĐỘC]</span> 2 lượt!`;
-            } 
-            // 15% Tỷ lệ Vòng siết tử thần (Làm choáng)
-            else if (rand <= 0.35) {
+            } else if (rand <= 0.35) {
                 let rawDmg = enemyAtk * 1.2; 
                 dmg = Math.max(3, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                 isSpecialAttack = true;
-                isPlayerStunned = true; // Kích hoạt Choáng
+                isPlayerStunned = true; 
                 specialAttackLog = `<span style="color:#ffcc00; font-weight:bold;">🌀 VÒNG SIẾT TỬ THẦN!</span> Cơ thể khổng lồ có vảy thép quấn chặt lấy bạn, ép lồng ngực gây ${Math.floor(dmg)} sát thương và làm bạn <span style="color:yellow; text-shadow: 0 0 5px yellow;">[CHOÁNG VÁNG]</span>!`;
             }
         }
 
-        // 4. KỸ NĂNG CỦA BOSS ĐẠI TÙ TRƯỞNG KARGALGAN (A+)
+        // 4. KỸ NĂNG CỦA ĐẠI TÙ TRƯỞNG KARGALGAN
         if (isDungeonMode && enemy.bossType === "kargalgan") {
             let rand = Math.random(); 
-            
-            // ƯU TIÊN SỐ 1: KHÚC CA BẢO HỘ (Kích hoạt 1 lần khi HP < 40%)
             if (enemy.hp < enemy.maxHp * 0.4 && !enemy.hasShielded) {
-                let shieldAmount = Math.floor(enemy.maxHp * 0.20); // Hồi 20% HP
+                let shieldAmount = Math.floor(enemy.maxHp * 0.20); 
                 enemy.hp = Math.min(enemy.maxHp, enemy.hp + shieldAmount);
                 enemy.hasShielded = true; 
-                dmg = 0; // Lượt này Boss lo buff máu, không tấn công
+                dmg = 0; 
                 isSpecialAttack = true;
                 specialAttackLog = `<span style="color:#9933ff; font-weight:bold; text-shadow: 0 0 5px #9933ff;">🛡️ KHÚC CA BẢO HỘ!</span> Kargalgan lẩm nhẩm chú ngữ, triệu hồi khiên ma thuật và phục hồi ${shieldAmount} HP!`;
-            }
-            // NẾU KHÔNG CẦN BẢO HỘ THÌ TUNG CHIÊU
-            else {
-                // 1. Lời Nguyền Suy Yếu (20% - Giảm 30% giáp người chơi trong 3 lượt)
+            } else {
                 if (rand <= 0.20) {
                     let rawDmg = enemyAtk * 1.5; 
                     dmg = Math.max(10, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                     isSpecialAttack = true;
                     playerArmorBreakTurns = 3; 
-                    // SỬA LẠI CHỮ THÀNH GIẢM 30%
                     specialAttackLog = `<span style="color:#9933ff; font-weight:bold; text-shadow: 0 0 5px #9933ff;">💀 LỜI NGUYỀN SUY YẾU!</span> Kargalgan niệm chú hắc ám, gây ${Math.floor(dmg)} sát thương và <span style="color:orange; font-weight:bold;">[GIẢM 30% GIÁP]</span> của bạn trong 3 lượt!`;
-                }
-                // 2. Đoạt Ma Lực (15% - Hút tối đa 50 MP của bạn để tự hồi máu)
-                else if (rand <= 0.35) {
+                } else if (rand <= 0.35) {
                     let rawDmg = enemyAtk * 1.8; 
                     dmg = Math.max(15, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                     isSpecialAttack = true;
-                    let manaSteal = Math.min(currentUser.mp, 50); // Rút cạn MP của bạn
+                    let manaSteal = Math.min(currentUser.mp, 50); 
                     currentUser.mp -= manaSteal;
-                    enemy.hp = Math.min(enemy.maxHp, enemy.hp + (manaSteal * 10)); // Boss lấy MP của bạn tự hồi lại máu
+                    enemy.hp = Math.min(enemy.maxHp, enemy.hp + (manaSteal * 10)); 
                     specialAttackLog = `<span style="color:#00bfff; font-weight:bold; text-shadow: 0 0 5px #00bfff;">✨ ĐOẠT MA LỰC!</span> Bàn tay ma thuật bóp nghẹt bạn, gây ${Math.floor(dmg)} ST và hút cạn <span style="color:#00bfff">${manaSteal} MP</span>!`;
-                }
-                // 3. Khúc Ca Hỏa Long (20% - Sát thương khủng + Cháy)
-                else if (rand <= 0.55) {
+                } else if (rand <= 0.55) {
                     let rawDmg = enemyAtk * 2.5; 
                     dmg = Math.max(50, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                     isSpecialAttack = true;
                     applyBleedToPlayer = true; 
                     specialAttackLog = `<span style="color:#ff3300; font-weight:bold; text-shadow: 0 0 5px #ff3300;">🔥 KHÚC CA HỎA LONG!</span> Một cột lửa thiêu rụi tất cả, gây ${Math.floor(dmg)} sát thương và khiến bạn bị <span style="color:#ff3300; font-style:italic;">[THIÊU ĐỐT]</span> 2 lượt!`;
-                } 
-                // 4. Lời Nguyền Trọng Lực (15% - Làm Choáng)
-                else if (rand <= 0.70) {
+                } else if (rand <= 0.70) {
                     let rawDmg = enemyAtk * 1.5; 
                     dmg = Math.max(20, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                     isSpecialAttack = true;
@@ -2598,32 +2573,23 @@
         
         // --- CƠ CHẾ KỸ NĂNG CỦA CÁC BOSS CỔNG ĐỎ ---
         if (currentRedGateId && enemy.isBoss) {
-            
-            // ƯU TIÊN SỐ 1: KIỂM TRA ĐIỀU KIỆN HỒI MÁU
             if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasHealed) {
                 let healAmount = Math.floor(enemy.maxHp * 0.30);
-                
                 enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
                 enemy.hasHealed = true; 
                 dmg = 0; 
+                isSpecialAttack = true;
                 
-                if (enemy.bossType === "ice_king") {
-                    logBattle(`<span style="color:#00ff00; font-weight:bold; text-shadow: 0 0 5px #00ff00;">✨ HƠI THỞ MÙA ĐÔNG!</span> Vua Tiên Băng hấp thụ sương giá ngàn năm, đột ngột hồi phục ${healAmount} HP!`);
-                } else if (enemy.bossType === "fire_lord") {
-                    logBattle(`<span style="color:#ff9900; font-weight:bold; text-shadow: 0 0 5px #ff9900;">🌋 DUNG NHAM TRỖI DẬY!</span> Chúa Tể tắm trong biển lửa, đột ngột hồi phục ${healAmount} HP!`);
-                } else if (enemy.bossType === "igris") {
-                    logBattle(`<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">🩸 HUYẾT TẾ!</span> Igris bộc phát hào quang đỏ, hấp thụ máu và hồi phục ${healAmount} HP!`);
-                }
-            } // Đã vá lỗi thiếu ngoặc của Ưu tiên số 1 tại đây!
-            
-            // NẾU CHƯA ĐỦ ĐIỀU KIỆN HOẶC ĐÃ HỒI MÁU XONG RỒI THÌ MỚI ĐÁNH
+                if (enemy.bossType === "ice_king") specialAttackLog = `<span style="color:#00ff00; font-weight:bold; text-shadow: 0 0 5px #00ff00;">✨ HƠI THỞ MÙA ĐÔNG!</span> Vua Tiên Băng hấp thụ sương giá ngàn năm, đột ngột hồi phục ${healAmount} HP!`;
+                else if (enemy.bossType === "fire_lord") specialAttackLog = `<span style="color:#ff9900; font-weight:bold; text-shadow: 0 0 5px #ff9900;">🌋 DUNG NHAM TRỖI DẬY!</span> Chúa Tể tắm trong biển lửa, đột ngột hồi phục ${healAmount} HP!`;
+                else if (enemy.bossType === "igris") specialAttackLog = `<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">🩸 HUYẾT TẾ!</span> Igris bộc phát hào quang đỏ, hấp thụ máu và hồi phục ${healAmount} HP!`;
+            } 
             else {
                 let rand = Math.random(); 
-
                 switch(enemy.bossType) {
                     case "ice_king":
                         if (rand <= 0.15) { 
-                            let rawDmg = enemyAtk * 1.8; // Gấp 1.8 lần ST cơ bản
+                            let rawDmg = enemyAtk * 1.8; 
                             dmg = Math.max(10, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                             isSpecialAttack = true;
                             specialAttackLog = `<span style="color:#00ffff; font-weight:bold; text-shadow: 0 0 5px #00ffff;">❄️ BÃO TUYẾT TUYỆT MỆNH!</span> Vua Tiên Băng vung tay, bão tuyết xé toạc giáp của bạn, gây ${Math.floor(dmg)} sát thương!`;
@@ -2634,7 +2600,6 @@
                             specialAttackLog = `<span style="color:#00ffff; font-weight:bold; text-shadow: 0 0 5px #00ffff;">🧊 GIÁO BĂNG ĐOẠT MỆNH!</span> Một ngọn giáo băng đâm xuyên qua bạn, gây ${Math.floor(dmg)} sát thương chí mạng!`;
                         } 
                         break;
-
                     case "fire_lord":
                         if (rand <= 0.15) {
                             let rawDmg = enemyAtk * 2.5; 
@@ -2648,7 +2613,6 @@
                             specialAttackLog = `<span style="color:#ff4d4d; font-weight:bold; text-shadow: 0 0 5px #ff4d4d;">☄️ MƯA LƯU TINH!</span> Những tảng đá rực lửa giáng từ trên cao xuống, gây ${Math.floor(dmg)} sát thương!`;
                         }
                         break;
-
                     case "igris":
                         if (rand <= 0.15) {
                             let rawDmg = enemyAtk * 3.0; 
@@ -2666,11 +2630,11 @@
                             isSpecialAttack = true;
                             isPlayerStunned = true; 
                             specialAttackLog = `<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">👁️ UY ÁP KẺ THỐNG TRỊ!</span> Ánh mắt của Igris xuyên thấu tâm can, gây ${Math.floor(dmg)} sát thương và làm bạn <span style="color:yellow; text-shadow: 0 0 5px yellow;">CHOÁNG VÁNG</span>!`;
-                        } else if (rand <= 0.60) { // <--- THÊM CHIÊU THỨC THỨ 4 TẠI ĐÂY
-                            let rawDmg = enemyAtk * 2.5; // Sát thương khá lớn
+                        } else if (rand <= 0.60) { 
+                            let rawDmg = enemyAtk * 2.5; 
                             dmg = Math.max(20, Math.floor(rawDmg * (1 - vitDmgReduction)));
                             isSpecialAttack = true;
-                            applyBleedToPlayer = true; // Bật cờ hiệu rách da chảy máu
+                            applyBleedToPlayer = true; 
                             specialAttackLog = `<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">☄️ ĐỊA CHẤN KIẾM!</span> Igris nhảy vọt lên không trung và giáng đại kiếm xuống mặt đất, gây ${Math.floor(dmg)} sát thương và khiến bạn bị <span style="color:red; font-weight:bold;">[CHẢY MÁU]</span> 2 lượt!`;
                         }
                         break;
@@ -2678,30 +2642,43 @@
             }
         }
 
-        // --- XỬ LÝ SÁT THƯƠNG GÁNH CHỊU ---
+        // --- XỬ LÝ SÁT THƯƠNG GÁNH CHỊU VÀ NÉ TRÁNH/PHẢN ĐÒN ---
         let isDodged = false;
         
-        // 1. KÍCH HOẠT NÉ TRÁNH (Bước Chân Bóng Tối + Siêu Giác Quan)
         let dodgeChance = 0;
         if (currentUser.skills["Bước Chân Bóng Tối"] > 0) dodgeChance += 0.10;
         if (currentUser.skills["Siêu Giác Quan"] > 0) dodgeChance += (0.05 * currentUser.skills["Siêu Giác Quan"]);
 
-        // Đã xóa điều kiện isPlayerInvisible
-        if (dodgeChance > 0 && Math.random() <= dodgeChance) {
+        // Chỉ được tính né tránh nếu chiêu đó có sát thương (Bỏ qua các chiêu Boss tự Buff máu)
+        if (dodgeChance > 0 && Math.random() <= dodgeChance && dmg > 0) {
             isDodged = true;
-            dmg = 0; // Xóa sổ sát thương
+            dmg = 0; 
+            isPlayerStunned = false; // Né được thì xóa choáng
+            applyBleedToPlayer = false; // Né được thì xóa chảy máu
+            
+            // [ĐÃ FIX LỖI 3]: In tên chiêu thức ra trước khi báo Né Tránh
+            if (isSpecialAttack) logBattle(specialAttackLog);
             logBattle(`<span style="color:#8eefff; font-weight:bold;">💨 NÉ TRÁNH! Cảm quan nhạy bén giúp bạn lướt qua đòn đánh hoàn hảo!</span>`);
         }
 
-        if (dmg > 0 && !isDodged) {
+        // [ĐÃ FIX LỖI 2]: Xử lý hiển thị log cho các chiêu Buff/Hồi máu của Boss
+        if (dmg === 0 && isSpecialAttack && !isDodged) {
+            logBattle(specialAttackLog);
+        }
+        else if (dmg > 0 && !isDodged) {
             // --- CƠ CHẾ 3: PHẢN ĐÒN HOÀN HẢO ---
             if (isPlayerCountering) {
-                isPlayerCountering = false; // Tắt trạng thái thủ
-                let counterDmg = Math.floor(dmg * 1.5); // Bật lại 150% dame của quái
+                isPlayerCountering = false; 
+                let counterDmg = Math.floor(dmg * 1.5); 
                 enemy.hp = Math.max(0, enemy.hp - counterDmg);
-                dmg = 0; // Bạn không bị mất giọt máu nào
+                dmg = 0; 
+                
+                isPlayerStunned = false; 
+                applyBleedToPlayer = false; 
                 
                 triggerShake();
+                // [ĐÃ FIX LỖI 3]: In tên chiêu thức ra trước khi báo Phản Đòn
+                if (isSpecialAttack) logBattle(specialAttackLog);
                 logBattle(`<span style="color:gold; font-size:18px; font-weight:bold; text-shadow:0 0 5px gold;">🛡️ KENG! PHẢN ĐÒN! Bạn gạt đòn của địch và chém ngược lại ${counterDmg} sát thương!</span>`);
                 
                 if (enemy.hp <= 0) {
@@ -2710,12 +2687,9 @@
                 }
             } 
             else {
-                // KHI KHÔNG PHẢN ĐÒN THÌ MỚI BỊ TRỪ MÁU
-                
-                // 2. KÍCH HOẠT CƠ THỂ THÉP (Đã xóa Kiên Cường)
+                // KHI KHÔNG PHẢN ĐÒN HOẶC NÉ THÌ MỚI BỊ TRỪ MÁU
                 if (currentUser.skills["Cơ Thể Thép"] > 0) dmg *= 0.80; 
                 
-                // 3. GIẢM SÁT THƯƠNG TỪ TRANG BỊ
                 if (currentUser.equipped && currentUser.equipped.shield && currentUser.equipped.shield.name === "Shield") dmg *= 0.985;
                 if (currentUser.equipped && currentUser.equipped.accessory && currentUser.equipped.accessory.name === "Ice Elf Cloak") dmg *= 0.95;
                 if (currentUser.equipped && currentUser.equipped.helmet && currentUser.equipped.helmet.name === "Mũ bảo hộ của hiệp sĩ đỏ") dmg *= 0.92;
@@ -2723,25 +2697,25 @@
                 
                 dmg = Math.floor(dmg);
 
-                // 5. TRỪ MÁU VÀ HIỂN THỊ LOG
                 triggerPlayerShake();
                 currentUser.hp = Math.max(0, currentUser.hp - dmg);
                 
+                // In log sát thương
                 if (isSpecialAttack) {
-                    logBattle(specialAttackLog); // Nếu Boss đánh chiêu đặc biệt
+                    logBattle(specialAttackLog); 
                 } else {
-                    logBattle(`${enemy.name} tấn công, bạn mất ${dmg} HP.`); // Nếu quái đánh thường
+                    logBattle(`${enemy.name} tấn công, bạn mất ${dmg} HP.`); 
                 }
-                // NẾU TRÚNG CHIÊU ĐỊA CHẤN KIẾM THÌ GÁN 2 LƯỢT CHẢY MÁU
+                
                 if (applyBleedToPlayer) {
                     playerBleedTurns = 2; 
                 }
-            } // <--- Đóng ngoặc của Else (Không Phản Đòn)
+            }
         }
 
         // --- XỬ LÝ SÁT THƯƠNG RÚT MÁU KHI BỊ THƯƠNG ---
-        if (playerBleedTurns > 0 && currentUser.hp > 0) { // Nếu sống sót sau đòn đánh thì mới tính rút máu
-            let bleedDmg = Math.floor(currentUser.maxHp * 0.05); // Rút 5% HP tối đa của bạn
+        if (playerBleedTurns > 0 && currentUser.hp > 0) { 
+            let bleedDmg = Math.floor(currentUser.maxHp * 0.05); 
             currentUser.hp = Math.max(0, currentUser.hp - bleedDmg);
             playerBleedTurns--;
             logBattle(`<span style="color:red; font-style:italic;">🩸 Vết thương rỉ máu! Bạn mất thêm ${bleedDmg} HP (Còn ${playerBleedTurns} lượt).</span>`);
@@ -2783,7 +2757,7 @@
                 if(btnFind) btnFind.disabled = false;
             }
         } else {
-            // XỬ LÝ HIỆU ỨNG CHOÁNG CỦA IGRIS
+            // XỬ LÝ HIỆU ỨNG CHOÁNG CỦA BOSS
             if (isPlayerStunned) {
                 isPlayerStunned = false; 
                 isMyTurn = false; 
