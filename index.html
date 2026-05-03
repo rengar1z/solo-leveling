@@ -2781,26 +2781,21 @@
         if (isDungeonMode && !currentRedGateId) {
             let spawnedRedGate = null;
 
-            // 1. Hầm Ngục Côn Trùng -> Xuất hiện Cổng Băng Giá (Vua Tiên Băng Baruka)
+            // Hầm Ngục Côn Trùng -> 10% mở Cổng Đỏ (Ngẫu nhiên ra Vua Băng hoặc Igris)
             if (dCurrentId === 'insect_dungeon') {
-                if (Math.random() <= 0.9) { // Chuẩn 10% tỷ lệ xuất hiện
-                    spawnedRedGate = "ice_world";
+                if (Math.random() <= 0.10) { // LỚP 1: 10% Tỷ lệ xuất hiện Cổng Đỏ
+                    
+                    // LỚP 2: Tung đồng xu 50-50 chọn cổng
+                    if (Math.random() <= 0.5) {
+                        spawnedRedGate = "ice_world";       // 50% ra Cổng Băng Giá
+                    } else {
+                        spawnedRedGate = "red_knight_tomb"; // 50% ra Cổng Hiệp Sĩ Đỏ (Igris)
+                    }
+                    
+                    // Mẹo: Nếu bạn muốn Igris hiếm hơn (Ví dụ 70% Băng - 30% Igris) 
+                    // thì chỉ cần đổi (Math.random() <= 0.7) là được.
                 }
             }
-            
-            // 2. Chỗ này là khung mẫu để sau này bạn thêm Cổng Hỏa Ngục hoặc Igris
-            /*
-            else if (dCurrentId === 'goblin_village') {
-                if (Math.random() <= 0.10) { 
-                    spawnedRedGate = "fire_hell"; 
-                }
-            }
-            else if (dCurrentId === 'hapjeong_subway') {
-                if (Math.random() <= 0.05) { // Cổng cấp thấp thì tỷ lệ ra Cổng Đỏ thấp hơn chút (5%)
-                    spawnedRedGate = "red_knight_tomb"; 
-                }
-            }
-            */
 
             // NẾU TRÚNG TỶ LỆ, KÍCH HOẠT HÚT VÀO CỔNG ĐỎ
             if (spawnedRedGate) {
@@ -2809,7 +2804,7 @@
                 return; // Dừng việc chuyển ải bình thường lại
             }
         }
-
+        
         // Chuyển ải Hầm ngục bình thường
         if (isDungeonMode) {
             const dData = dungeonData[dCurrentId];
