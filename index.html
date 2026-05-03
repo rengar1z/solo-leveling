@@ -976,6 +976,13 @@
                     <h2 style="color: #ff4d4d; text-align: center;">CỔNG HẦM NGỤC</h2>
                     
                     <div id="dungeonListArea">
+                     
+                        <div class="dungeon-card" onclick="enterDungeon('hapjeong_subway')" style="border-color: #aaaaaa; box-shadow: 0 0 15px rgba(170, 170, 170, 0.4);">
+                            <h3 style="color: #ffffff; text-shadow: 0 0 10px #aaaaaa;">GA TÀU ĐIỆN HAPJEONG</h3>
+                            <p style="font-size: 20px; color: #ccc;">Số ải: 5 | Độ khó: Hạng E</p>
+                            <button class="tab-btn btn-system" style="border-color: #aaaaaa; color: #aaaaaa !important; font-size: 24px;">TIẾN VÀO HẦM NGỤC</button>
+                        </div>
+                
                         <div class="dungeon-card" onclick="enterDungeon('goblin_village')">
                             <h3>LÀNG CỦA GOBLIN</h3>
                             <p style="font-size: 20px; color: #ccc;">Số ải: 5 | Độ khó: Hạng C</p>
@@ -1101,6 +1108,16 @@
 
     // --- DỮ LIỆU HẦM NGỤC (MỨC ĐỘ: TÂN THỦ & CÀY CUỐC) ---
     const dungeonData = {
+        "hapjeong_subway": {
+            name: "Ga Tàu Điện Hapjeong",
+            stages: [
+                { name: "Rắn Hang Độc nhỏ", hp: 25, atk: 4, def: 0, exp: 15, img: "bot/enemy.png" },
+                { name: "Bọ cạp nhỏ", hp: 40, atk: 6, def: 1, exp: 20, img: "bot/enemy.png" },
+                { name: "Thằn lằn hang ăn xác", hp: 60, atk: 8, def: 2, exp: 30, img: "bot/enemy.png" },
+                { name: "Lycan Đầu Đàn", hp: 100, atk: 12, def: 3, exp: 45, img: "bot/Boss_Red_Mane_Lycan.png" },
+                { name: "BOSS: Kasaka Nọc Độc Xanh", hp: 250, atk: 20, def: 5, exp: 250, img: "boss/Boss_Blue_Venom-fanged_Kasaka.png", isBoss: true, bossType: "kasaka" }
+            ]
+        },
         "goblin_village": {
             name: "Làng Của Goblin",
             stages: [
@@ -2334,7 +2351,6 @@
         let applyBleedToPlayer = false;
 
         // --- CƠ CHẾ KỸ NĂNG CỦA BOSS HẦM NGỤC THƯỜNG ---
-        
         // 1. KỸ NĂNG CỦA THỦ LĨNH YÊU TINH (GOBLIN)
         if (isDungeonMode && enemy.bossType === "hobgoblin_leader") {
             let rand = Math.random(); 
@@ -2373,6 +2389,28 @@
                 dmg = Math.max(20, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                 isSpecialAttack = true;
                 specialAttackLog = `<span style="color:#00ff00; font-weight:bold; text-shadow: 0 0 5px #00ff00;">☠️ NỌC ĐỘC CHẾT NGƯỜI!</span> Nhện Khổng Lồ cắm cặp nanh đầy axit vào người bạn, giáng ${Math.floor(dmg)} sát thương tàn khốc!`;
+            }
+        }
+
+        // 3. KỸ NĂNG CỦA BOSS KASAKA RĂNG NỌC ĐỘC XANH
+        if (isDungeonMode && enemy.bossType === "kasaka") {
+            let rand = Math.random(); 
+            
+            // 20% Tỷ lệ cắn nọc độc (Mượn cờ hiệu rút máu của Igris để làm hiệu ứng độc)
+            if (rand <= 0.20) {
+                let rawDmg = enemyAtk * 1.5; 
+                dmg = Math.max(5, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true;
+                applyBleedToPlayer = true; // Khiến người chơi mất máu từ từ
+                specialAttackLog = `<span style="color:#00ff00; font-weight:bold; text-shadow: 0 0 5px #00ff00;">🐍 NỌC ĐỘC KASAKA!</span> Rắn khổng lồ cắm phập nanh độc vào bạn, gây ${Math.floor(dmg)} sát thương và khiến bạn bị <span style="color:#00ff00; font-style:italic;">[NHIỄM ĐỘC]</span> 2 lượt!`;
+            } 
+            // 15% Tỷ lệ Vòng siết tử thần (Làm choáng)
+            else if (rand <= 0.35) {
+                let rawDmg = enemyAtk * 1.2; 
+                dmg = Math.max(3, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true;
+                isPlayerStunned = true; // Kích hoạt Choáng
+                specialAttackLog = `<span style="color:#ffcc00; font-weight:bold;">🌀 VÒNG SIẾT TỬ THẦN!</span> Cơ thể khổng lồ có vảy thép quấn chặt lấy bạn, ép lồng ngực gây ${Math.floor(dmg)} sát thương và làm bạn <span style="color:yellow; text-shadow: 0 0 5px yellow;">[CHOÁNG VÁNG]</span>!`;
             }
         }
         
