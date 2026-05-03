@@ -1089,6 +1089,7 @@
     let isPlayerCountering = false; // Nhớ trạng thái Phản đòn
     let enemyPoisonTurns = 0;
     let monarchWrathUses = 0;
+    let playerBleedTurns = 0; // <--- THÊM BIẾN NÀY: Theo dõi số lượt bạn bị chảy máu
 
     // --- DỮ LIỆU HẦM NGỤC (MỨC ĐỘ: TÂN THỦ & CÀY CUỐC) ---
     const dungeonData = {
@@ -2312,6 +2313,7 @@
         
         let isSpecialAttack = false;
         let specialAttackLog = "";
+        let applyBleedToPlayer = false;
 
         // --- CƠ CHẾ KỸ NĂNG CỦA CÁC BOSS CỔNG ĐỎ ---
         if (currentRedGateId && enemy.isBoss) {
@@ -2368,7 +2370,7 @@
 
                     case "igris":
                         if (rand <= 0.15) {
-                            let rawDmg = enemyAtk * 3.0; // Igris chém cực kỳ rát
+                            let rawDmg = enemyAtk * 3.0; 
                             dmg = Math.max(25, Math.floor(rawDmg * (1 - vitDmgReduction)));
                             isSpecialAttack = true;
                             specialAttackLog = `<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">⚔️ TRẢM PHONG!</span> Igris vung đại kiếm tạo ra luồng kiếm khí ác liệt, gây ${Math.floor(dmg)} sát thương!`;
@@ -2383,6 +2385,12 @@
                             isSpecialAttack = true;
                             isPlayerStunned = true; 
                             specialAttackLog = `<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">👁️ UY ÁP KẺ THỐNG TRỊ!</span> Ánh mắt của Igris xuyên thấu tâm can, gây ${Math.floor(dmg)} sát thương và làm bạn <span style="color:yellow; text-shadow: 0 0 5px yellow;">CHOÁNG VÁNG</span>!`;
+                        } else if (rand <= 0.60) { // <--- THÊM CHIÊU THỨC THỨ 4 TẠI ĐÂY
+                            let rawDmg = enemyAtk * 2.5; // Sát thương khá lớn
+                            dmg = Math.max(20, Math.floor(rawDmg * (1 - vitDmgReduction)));
+                            isSpecialAttack = true;
+                            applyBleedToPlayer = true; // Bật cờ hiệu rách da chảy máu
+                            specialAttackLog = `<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">☄️ ĐỊA CHẤN KIẾM!</span> Igris nhảy vọt lên không trung và giáng đại kiếm xuống mặt đất, gây ${Math.floor(dmg)} sát thương và khiến bạn bị <span style="color:red; font-weight:bold;">[CHẢY MÁU]</span> 2 lượt!`;
                         }
                         break;
                 }
@@ -2443,7 +2451,19 @@
                 } else {
                     logBattle(`${enemy.name} tấn công, bạn mất ${dmg} HP.`); // Nếu quái đánh thường
                 }
+                // NẾU TRÚNG CHIÊU ĐỊA CHẤN KIẾM THÌ GÁN 2 LƯỢT CHẢY MÁU
+                if (applyBleedToPlayer) {
+                    playerBleedTurns = 2; 
+                }
             } // <--- Đóng ngoặc của Else (Không Phản Đòn)
+        }
+
+        // --- XỬ LÝ SÁT THƯƠNG RÚT MÁU KHI BỊ THƯƠNG ---
+        if (playerBleedTurns > 0 && currentUser.hp > 0) { // Nếu sống sót sau đòn đánh thì mới tính rút máu
+            let bleedDmg = Math.floor(currentUser.maxHp * 0.05); // Rút 5% HP tối đa của bạn
+            currentUser.hp = Math.max(0, currentUser.hp - bleedDmg);
+            playerBleedTurns--;
+            logBattle(`<span style="color:red; font-style:italic;">🩸 Vết thương rỉ máu! Bạn mất thêm ${bleedDmg} HP (Còn ${playerBleedTurns} lượt).</span>`);
         }
 
         if (currentUser.hp > 0 && currentUser.equipped && currentUser.equipped.accessory && currentUser.equipped.accessory.name === "Essence of Magic") {
@@ -2638,6 +2658,7 @@
         isPlayerStunned = false;
         isEnemyStunned = false; // <--- THÊM DÒNG NÀY ĐỂ GIẢI CHOÁNG QUÁI MỚI
         monarchWrathUses = 0;
+        playerBleedTurns = 0;
 
         document.getElementById('e-name').innerText = enemy.name;
         document.getElementById('e-img').src = enemy.img;
@@ -2672,6 +2693,7 @@
         isPlayerStunned = false;
         isEnemyStunned = false;
         monarchWrathUses = 0;
+        playerBleedTurns = 0;
 
         document.getElementById('dStageText').innerText = `Ải ${dCurrentStage + 1}/${dungeonData[dCurrentId].stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
         if(enemy.isBoss) {
@@ -2718,6 +2740,7 @@
         isPlayerStunned = false;
         isEnemyStunned = false;
         monarchWrathUses = 0;
+        playerBleedTurns = 0;
         
         document.getElementById('dStageText').innerText = `Ải ${rgCurrentStage + 1}/${gateData.stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
         document.getElementById('dStageText').style.color = gateData.themeColor;
