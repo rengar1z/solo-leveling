@@ -1035,6 +1035,9 @@
             <div id="p-hp-bar" class="combat-hp-fill-player" style="width: 100%;"></div>
         </div>
         <div id="p-hp-text" class="combat-hp-text" style="color: #00bfff;">HP: 100/100</div>
+        
+        <!-- CHÈN KHAY ICON NGƯỜI CHƠI VÀO ĐÂY -->
+        <div id="p-status-board" class="status-board"></div>
     </div>
 
     <!-- CHỮ VS (Màu Vàng Gold cho Arena) -->
@@ -1050,8 +1053,10 @@
             <div id="e-hp-bar" class="combat-hp-fill-enemy" style="width: 100%;"></div>
         </div>
         <div id="e-hp-text" class="combat-hp-text" style="color: #ff4d4d;">HP: 100/100</div>
+
+        <!-- CHÈN KHAY ICON QUÁI VẬT VÀO ĐÂY -->
+        <div id="e-status-board" class="status-board"></div>
     </div>
-</div>
 
 <div id="battleLog">
     Sẵn sàng khiêu chiến...
@@ -1114,6 +1119,9 @@
             <div id="d-p-hp-bar" class="combat-hp-fill-player" style="width: 100%;"></div>
         </div>
         <div id="d-p-hp-text" class="combat-hp-text" style="color: #00bfff;">HP: 100/100</div>
+
+        <!-- CHÈN KHAY ICON NGƯỜI CHƠI VÀO ĐÂY -->
+        <div id="d-p-status-board" class="status-board"></div>
     </div>
 
     <!-- CHỮ VS (Màu đỏ rực lửa cho Dungeon) -->
@@ -1129,8 +1137,10 @@
             <div id="d-e-hp-bar" class="combat-hp-fill-enemy" style="width: 100%;"></div>
         </div>
         <div id="d-e-hp-text" class="combat-hp-text" style="color: #ff4d4d;">HP: 100/100</div>
+
+        <!-- CHÈN KHAY ICON QUÁI VẬT VÀO ĐÂY -->
+        <div id="d-e-status-board" class="status-board"></div>
     </div>
-</div>
 
 <div id="d-battleLog">
     Hệ thống hầm ngục đã kích hoạt...
@@ -1923,8 +1933,9 @@
     function getPrefix() { return isDungeonMode ? 'd-' : ''; }
 
     window.renderStatusIcons = function() {
-        const pBoard = document.getElementById('player-status-board');
-        const eBoard = document.getElementById('enemy-status-board');
+        const pre = getPrefix(); // Tự động lấy tiền tố 'd-' nếu đang đi Hầm Ngục
+        const pBoard = document.getElementById(pre + 'p-status-board');
+        const eBoard = document.getElementById(pre + 'e-status-board');
         if (!pBoard || !eBoard) return;
 
         // --- 1. VẼ ICON CHO NGƯỜI CHƠI ---
@@ -1956,7 +1967,6 @@
         }
         eBoard.innerHTML = eHTML;
     };
-
     
     function updateCombatUI() {
         if (!enemy) return;
@@ -1975,10 +1985,7 @@
         document.getElementById(pre + 'e-hp-text').innerText = `HP: ${enemy.hp}/${enemyMaxHp}`;
 
         // --- CƠ CHẾ NỔI ĐIÊN (ENRAGE) CHO BOSS ---
-        // Lấy cái khung nền màu xám đen bao quanh thanh máu đỏ
         const eHpBarBox = eHpBar.parentElement; 
-
-        // --- CƠ CHẾ NỔI ĐIÊN (ENRAGE) CHO BOSS ---
         const eImgElement = document.getElementById(pre + 'e-img');
 
         // Bước 1: Kiểm tra xem Boss đã chạm mốc 50% máu chưa và có MỚI nổi điên lần đầu không
@@ -1986,27 +1993,29 @@
             enemy.isEnraged = true; // Khóa trạng thái lại
             
             const log = document.getElementById(pre + 'battleLog');
-            log.innerHTML = `<span style="color:red; font-size:18px; font-weight:bold; text-shadow: 0 0 10px red;">⚠️ CẢNH BÁO: ${enemy.name.toUpperCase()} ĐÃ BỘC PHÁT SÁT KHÍ! SÁT THƯƠNG TĂNG ĐỘT BIẾN!</span><br>` + log.innerHTML;
+            if(log) log.innerHTML = `<span style="color:red; font-size:18px; font-weight:bold; text-shadow: 0 0 10px red;">⚠️ CẢNH BÁO: ${enemy.name.toUpperCase()} ĐÃ BỘC PHÁT SÁT KHÍ! SÁT THƯƠNG TĂNG ĐỘT BIẾN!</span><br>` + log.innerHTML;
             
             // Tăng 30% sức mạnh tấn công
             enemy.atk = Math.floor(enemy.atk * 1.3); 
             
             // Lắc màn hình để tạo lực giật lúc biến hình
-            eImgElement.classList.add('shake'); 
-            setTimeout(() => eImgElement.classList.remove('shake'), 400);
+            if(eImgElement) {
+                eImgElement.classList.add('shake'); 
+                setTimeout(() => eImgElement.classList.remove('shake'), 400);
+            }
         }
 
         // Bước 2: Bật/Tắt giao diện phụ thuộc vào việc Boss đang điên hay bình thường
         if (enemy.isBoss && enemy.isEnraged) {
             // Boss đã nổi điên: Duy trì viền lửa thanh máu và phủ Hào quang đỏ lên ảnh
             eHpBar.style.background = "linear-gradient(90deg, #660000, #cc0000)";
-            eHpBarBox.classList.add('enraged-glow');
-            eImgElement.classList.add('boss-enraged-img'); // Bật hiệu ứng CSS
+            if(eHpBarBox) eHpBarBox.classList.add('enraged-glow');
+            if(eImgElement) eImgElement.classList.add('boss-enraged-img'); // Bật hiệu ứng CSS
         } else {
             // Quái thường hoặc Boss chưa nổi điên: Trạng thái bình thường
             eHpBar.style.background = "#ff0000";
-            eHpBarBox.classList.remove('enraged-glow');
-            eImgElement.classList.remove('boss-enraged-img'); // Tắt hiệu ứng CSS
+            if(eHpBarBox) eHpBarBox.classList.remove('enraged-glow');
+            if(eImgElement) eImgElement.classList.remove('boss-enraged-img'); // Tắt hiệu ứng CSS
         }
 
         // --- CƠ CHẾ KHÓA NÚT THÔNG MINH KHI THIẾU MP ---
@@ -2025,6 +2034,13 @@
                 btn.style.cursor = "pointer";
             }
         });
+
+        // ==========================================
+        // GỌI HÀM VẼ ICON HIỆU ỨNG VÀO ĐÂY (BƯỚC 4 ĐÃ ĐƯỢC THÊM)
+        // ==========================================
+        if (typeof renderStatusIcons === "function") {
+            renderStatusIcons();
+        }
     }
 
     function triggerShake() {
