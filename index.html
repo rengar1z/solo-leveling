@@ -950,7 +950,7 @@
     <!-- ĐỐI THỦ -->
     <div style="text-align: center; width: 40%;">
         <div id="e-name" style="color: #ff4d4d; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #ff4d4d; margin-bottom: 15px; text-transform: uppercase;">ĐỐI THỦ</div>
-        <img id="e-img" src="enemy.png" class="avatar-frame" style="border-color: #ff4d4d; box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);">
+        <img id="e-img" src="bot/enemy.png" class="avatar-frame" style="border-color: #ff4d4d; box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);">
         
         <!-- Thanh máu mới -->
         <div class="combat-hp-track" style="border-color: #ff4d4d;">
@@ -1015,7 +1015,7 @@
     <!-- QUÁI VẬT -->
     <div style="text-align: center; width: 40%;">
         <div id="d-e-name" style="color: #ff4d4d; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #ff4d4d; margin-bottom: 15px; text-transform: uppercase;">QUÁI VẬT</div>
-        <img id="d-e-img" src="enemy.png" class="avatar-frame" style="border-color: #ff4d4d; box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);">
+        <img id="d-e-img" src="bot/enemy.png" class="avatar-frame" style="border-color: #ff4d4d; box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);">
         
         <!-- Thanh máu mới -->
         <div class="combat-hp-track" style="border-color: #ff4d4d;">
@@ -2779,7 +2779,7 @@
         }
 
         document.getElementById('d-e-name').innerText = enemy.name;
-        document.getElementById('d-e-img').src = enemy.img || "enemy.png"; 
+        document.getElementById('d-e-img').src = enemy.img || "bot/enemy.png"; 
         
         document.getElementById('btnNextStage').classList.add('hidden');
         document.getElementById('btnExitDungeon').classList.remove('hidden');
@@ -2819,7 +2819,7 @@
         document.getElementById('dStageText').innerText = `Ải ${rgCurrentStage + 1}/${gateData.stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
         document.getElementById('dStageText').style.color = gateData.themeColor;
         document.getElementById('d-e-name').innerText = enemy.name;
-        document.getElementById('d-e-img').src = enemy.img || "enemy.png"; 
+        document.getElementById('d-e-img').src = enemy.img || "bot/enemy.png"; 
 
         document.getElementById('btnNextStage').classList.add('hidden');
         document.getElementById('btnExitDungeon').classList.add('hidden'); // KHÓA NÚT THOÁT
