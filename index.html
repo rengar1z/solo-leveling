@@ -981,7 +981,15 @@
                             <p style="font-size: 20px; color: #ccc;">Số ải: 5 | Độ khó: Hạng C</p>
                             <button class="tab-btn btn-system" style="border-color: #ff4d4d; color: #ff4d4d !important; font-size: 24px;">TIẾN VÀO HẦM NGỤC</button>
                         </div>
+
+                        <!-- CHÈN THÊM CỔNG NHỆN VÀO ĐÂY -->
+                        <div class="dungeon-card" onclick="enterDungeon('insect_dungeon')" style="border-color: #ff9900; box-shadow: 0 0 15px rgba(255, 153, 0, 0.5);">
+                            <h3 style="color: #ff9900; text-shadow: 0 0 10px #ff9900;">HẦM NGỤC CÔN TRÙNG</h3>
+                            <p style="font-size: 20px; color: #ccc;">Số ải: 5 | Độ khó: Hạng C+</p>
+                            <button class="tab-btn btn-system" style="border-color: #ff9900; color: #ff9900 !important; font-size: 24px;">TIẾN VÀO HẦM NGỤC</button>
                         </div>
+                        
+                    </div>
 
                     <div id="dungeonCombatUI" class="hidden">
                         <h3 id="dDungeonTitle" style="color: #ffcc00; text-align: center; margin-bottom: 5px; font-size: 32px;">Làng Của Goblin</h3>
@@ -1100,7 +1108,17 @@
                 { name: "Chiến Binh Yêu Tinh", hp: 250, atk: 40, def: 10, exp: 60, img: "bot/Boss_Elite_Goblin_Fighter.png" },
                 { name: "Yêu Tinh Máu Lạnh", hp: 400, atk: 55, def: 15, exp: 90, img: "bot/Boss_Cold-blooded_Hobgoblin.png" },
                 { name: "Yêu Tinh Mất Trí", hp: 600, atk: 75, def: 25, exp: 150, img: "bot/Boss_Mad_Hobgoblin.png" },
-                { name: "BOSS: Thủ Lĩnh Yêu Tinh", hp: 1500, atk: 110, def: 40, exp: 500, img: "boss/Boss_Hobgoblin_Leader.png", isBoss: true }
+                { name: "BOSS: Thủ Lĩnh Yêu Tinh", hp: 1500, atk: 110, def: 40, exp: 500, img: "boss/Boss_Hobgoblin_Leader.png", isBoss: true, bossType: "hobgoblin_leader" }
+            ]
+        },
+        "insect_dungeon": {
+            name: "Hầm Ngục Côn Trùng",
+            stages: [
+                { name: "Kiến Khổng Lồ", hp: 350, atk: 45, def: 15, exp: 70, img: "bot/ant.png" },
+                { name: "Rết Độc Lưỡi Liềm", hp: 500, atk: 60, def: 20, exp: 100, img: "bot/centipede.png" },
+                { name: "Nhện Hang Động", hp: 700, atk: 80, def: 30, exp: 150, img: "bot/spider.png" },
+                { name: "Kiến Lính Tinh Nhuệ", hp: 900, atk: 100, def: 35, exp: 220, img: "bot/elite_ant.png" },
+                { name: "BOSS: Nhện Khổng Lồ", hp: 2500, atk: 140, def: 50, exp: 1000, img: "boss/giant_spider.png", isBoss: true, bossType: "giant_spider" }
             ]
         }
     };
@@ -2315,6 +2333,49 @@
         let specialAttackLog = "";
         let applyBleedToPlayer = false;
 
+        // --- CƠ CHẾ KỸ NĂNG CỦA BOSS HẦM NGỤC THƯỜNG ---
+        
+        // 1. KỸ NĂNG CỦA THỦ LĨNH YÊU TINH (GOBLIN)
+        if (isDungeonMode && enemy.bossType === "hobgoblin_leader") {
+            let rand = Math.random(); 
+            
+            // 20% Tỷ lệ vung chùy chí mạng
+            if (rand <= 0.20) {
+                let rawDmg = enemyAtk * 2.0; // Gấp đôi sát thương
+                dmg = Math.max(15, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true;
+                specialAttackLog = `<span style="color:#ff6600; font-weight:bold; text-shadow: 0 0 5px #ff6600;">🔨 CHÙY PHÁ SƠN!</span> Thủ Lĩnh Yêu Tinh vung cây chùy khổng lồ đập nát mặt đất, giáng ${Math.floor(dmg)} sát thương tàn bạo!`;
+            } 
+            // 15% Tỷ lệ gầm thét làm choáng
+            else if (rand <= 0.35) {
+                let rawDmg = enemyAtk * 1.2; // Sát thương nhẹ
+                dmg = Math.max(5, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true;
+                isPlayerStunned = true; // Kích hoạt Choáng
+                specialAttackLog = `<span style="color:#ffcc00; font-weight:bold; text-shadow: 0 0 5px #ffcc00;">🗣️ TIẾNG GẦM HUYẾT MẠCH!</span> Tiếng rống chói tai khiến bạn tê liệt, nhận ${Math.floor(dmg)} sát thương và bị <span style="color:yellow; text-shadow: 0 0 5px yellow;">[CHOÁNG VÁNG]</span>!`;
+            }
+        }
+
+        if (isDungeonMode && enemy.bossType === "giant_spider") {
+            let rand = Math.random(); 
+            
+            // 20% Phun tơ trói (Gây Choáng)
+            if (rand <= 0.20) {
+                let rawDmg = enemyAtk * 1.5; 
+                dmg = Math.max(10, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true;
+                isPlayerStunned = true; // Làm choáng người chơi
+                specialAttackLog = `<span style="color:#cccccc; font-weight:bold; text-shadow: 0 0 5px #ffffff;">🕸️ PHUN TƠ TRÓI BUỘC!</span> Nhện Khổng Lồ nhả tơ phong tỏa di chuyển của bạn, gây ${Math.floor(dmg)} sát thương và làm bạn bị <span style="color:yellow; text-shadow: 0 0 5px yellow;">[CHOÁNG VÁNG]</span>!`;
+            } 
+            // 20% Cắn nọc độc (Xuyên giáp lớn)
+            else if (rand <= 0.40) {
+                let rawDmg = enemyAtk * 2.5; 
+                dmg = Math.max(20, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true;
+                specialAttackLog = `<span style="color:#00ff00; font-weight:bold; text-shadow: 0 0 5px #00ff00;">☠️ NỌC ĐỘC CHẾT NGƯỜI!</span> Nhện Khổng Lồ cắm cặp nanh đầy axit vào người bạn, giáng ${Math.floor(dmg)} sát thương tàn khốc!`;
+            }
+        }
+        
         // --- CƠ CHẾ KỸ NĂNG CỦA CÁC BOSS CỔNG ĐỎ ---
         if (currentRedGateId && enemy.isBoss) {
             
