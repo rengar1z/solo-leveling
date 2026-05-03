@@ -911,6 +911,15 @@
                             <p style="color: #ccc; font-size: 14px; min-height: 45px;">Thay đổi Avatar. Tăng 150 STR, 100 VIT.</p>
                             <button id="btn-costume_mining" class="btn-system" style="width: 100%; border-color: #8eefff; font-size: 16px; font-weight: bold; transition: 0.3s;" onclick="handleCostume('costume_mining')">MUA (15000 CASH)</button>
                         </div>
+
+                        <!-- Costume Mới: Thợ Săn Quỷ -->
+                        <div class="card costume-card" style="text-align: center; border-color: #ff0000; padding: 15px; box-shadow: 0 0 10px rgba(255,0,0,0.3);">
+                            <img src="cos/Demon_Hunter_Cloak.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid #ff0000; margin-bottom: 10px;">
+                            <h4 style="color: #ff4d4d; margin: 0; text-shadow: 0 0 5px #ff0000;">Áo Choàng Thợ Săn Quỷ</h4>
+                            <p style="color: #ccc; font-size: 14px; min-height: 45px;">Thay đổi Avatar. Tăng 300 STR, 200 VIT, 150 MP.</p>
+                            <!-- ID và hàm onclick phải chứa mã shop của đồ mới -->
+                            <button id="btn-costume_demon_hunter" class="btn-system" style="width: 100%; border-color: #ff4d4d; font-size: 16px; font-weight: bold; transition: 0.3s;" onclick="handleCostume('costume_demon_hunter')">MUA (35000 CASH)</button>
+                        </div>
                         
                         <!-- Sau này bạn cứ copy block <div class="card costume-card"> dán tiếp vào đây, nó sẽ tự đẩy dài ra bên phải -->
 
@@ -1189,7 +1198,14 @@
         
         // Costume:
         "Bộ Vest Đen Ám Sát": { rank: "B", type: "costume", name: "Bộ Vest Đen Ám Sát", str: 50, vit: 20, mp: 0, effect: "Đổi Avatar thành Vest Đen", img: "cos/Sung_Jinwoo_Black_Suit.png", avatar: "cos/Sung_Jinwoo_Black_Suit.png", sellPrice: 2500 },
-        "Mining Work Clothes": { rank: "A", type: "costume", name: "Mining Work Clothes", str: 150, vit: 100, mp: 100, effect: "Đổi Avatar thành Mining Work Clothes", img: "cos/Sung_Jinwoo_Mining_Work.png", avatar: "cos/Sung_Jinwoo_Mining_Work.png", sellPrice: 7500 }
+        "Trang Phục Đi Mỏ": { rank: "A", type: "costume", name: "Mining Work Clothes", str: 150, vit: 100, mp: 100, effect: "Đổi Avatar thành Mining Work Clothes", img: "cos/Sung_Jinwoo_Mining_Work.png", avatar: "cos/Sung_Jinwoo_Mining_Work.png", sellPrice: 7500 },
+        "Điều Ước Thành Hiện Thực": { rank: "B", type: "costume", name: "Điều Ước Thành Hiện Thực", str: 70, vit: 30, mp: 0, effect: "Đổi Avatar thành Điều Ước Thành Hiện Thực", img: "cos/Sung_Jinwoo_A_Wish_Come_True.png", avatar: "cos/Sung_Jinwoo_A_Wish_Come_True.png", sellPrice: 10000 },
+        "Trang Phục Dạo Phố Nhẹ Nhàng": { rank: "B", type: "costume", name: "Trang Phục Dạo Phố Nhẹ Nhàng", str: 50, vit: 20, mp: 0, effect: "Đổi Avatar thành Dạo Phố Nhẹ Nhàng", img: "cos/Sung_Jinwoo_Light_Outing_Wear.png", avatar: "cos/Sung_Jinwoo_Light_Outing_Wear.png", sellPrice: 10000 },
+        "Incapable of Evaluation": { rank: "B", type: "costume", name: "Incapable of Evaluation", str: 50, vit: 20, mp: 0, effect: "Đổi Avatar thành Incapable of Evaluation", img: "cos/Sung_Jinwoo_Incapable_of_Evaluation.png", avatar: "cos/Sung_Jinwoo_Incapable_of_Evaluation.png", sellPrice: 10000 },
+        "Kỳ Nghỉ Hè 2": { rank: "B", type: "costume", name: "Kỳ Nghỉ Hè 2", str: 50, vit: 20, mp: 0, effect: "Đổi Avatar thành Kỳ Nghỉ Hè 2", img: "cos/Sung_Jinwoo_Summer_Vacation_2.png", avatar: "cos/Sung_Jinwoo_Summer_Vacation_2.png", sellPrice: 10000 },
+        "Chúa Tể Màn Đêm": { rank: "A", type: "costume", name: "Chúa Tể Màn Đêm", str: 50, vit: 20, mp: 0, effect: "Đổi Avatar thành Chúa Tể Màn Đêm", img: "cos/Sung_Jinwoo_Night_Lord.png", avatar: "cos/Sung_Jinwoo_Night_Lord.png", sellPrice: 20000 },
+        "Vua Của Loài Rồng Hủy Diệt Bầu Trời": { rank: "S", type: "costume", name: "Vua Của Loài Rồng Hủy Diệt Bầu Trời", str: 250, vit: 100, mp: 100, effect: "Đổi Avatar thành Vua Của Loài Rồng", img: "cos/Sung_Jinwoo_Monarch_of_the_Heaven-Annihilating_Dragons.png", avatar: "cos/Sung_Jinwoo_Monarch_of_the_Heaven-Annihilating_Dragons.png", sellPrice: 100000 },
+        "Tử Thần": { rank: "S", type: "costume", name: "Tử Thần", str: 250, vit: 100, mp: 100, effect: "Đổi Avatar thành Tử Thần", img: "cos/Sung_Jinwoo_God_of_Death.png", avatar: "cos/Sung_Jinwoo_God_of_Death.png", sellPrice: 100000 },
     };
 
     // --- HỆ THỐNG TẠO ĐỒ RANDOM CHỈ SỐ ---
