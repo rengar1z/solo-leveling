@@ -1500,23 +1500,16 @@
                 </div>
 
                 <div id="tab-shop" class="tab-panel">
-    
-    <!-- THANH ĐIỀU HƯỚNG MUA / BÁN -->
-    <div class="sl-shop-header-nav">
-        <div class="sl-shop-tab active">BUY</div>
-        <div class="sl-shop-tab" onclick="openTab(event, 'tab-bag'); switchInvTab(event, 'equip');">SELL</div>
-    </div>
 
-    <!-- KHAY PHÂN LOẠI ICON (CHUẨN ANIME) -->
-    <!-- Gọi hàm filterShop để lọc đồ theo Category -->
+    <!-- KHAY PHÂN LOẠI ICON -->
     <div class="sl-shop-filter-row">
-        <div class="sl-shop-filter-btn active" onclick="filterShop('all', this)">🔠</div>
-        <div class="sl-shop-filter-btn" onclick="filterShop('weapon', this)">⚔️</div>
-        <div class="sl-shop-filter-btn" onclick="filterShop('potion', this)">🧪</div>
-        <div class="sl-shop-filter-btn" onclick="filterShop('costume', this)">👔</div> 
+        <!-- Đã xóa nút ABCD (All) -->
+        <div class="sl-shop-filter-btn" onclick="filterShop('weapon', this)">⚔️</div> <!-- Vũ Khí -->
+        <div class="sl-shop-filter-btn active" onclick="filterShop('potion', this)">🧪</div> <!-- Thuốc (Mặc định sáng) -->
+        <div class="sl-shop-filter-btn" onclick="filterShop('costume', this)">👔</div> <!-- Trang Phục -->
     </div>
 
-    <!-- DANH SÁCH VẬT PHẨM DUY NHẤT (SẼ BỊ ẨN/HIỆN DỰA THEO MENU Ở TRÊN) -->
+    <!-- DANH SÁCH VẬT PHẨM -->
     <div class="sl-shop-list" id="shopItemsContainer">
         
         <!-- ================= THUỐC (POTION) ================= -->
@@ -1564,9 +1557,34 @@
             </div>
         </div>
 
+        <div class="sl-shop-item shop-item-row" data-category="potion" onclick="buyShopItem('mp_potion_mid')">
+            <div class="sl-shop-icon-box" style="box-shadow: inset 0 0 15px rgba(0, 136, 255, 0.4); border-color: #0088ff;">💧</div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name">Mana Essence (Trung)</p>
+                <p class="sl-shop-item-desc">Khôi phục 300 MP.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button class="sl-shop-price-btn" style="color: #0088ff;">150 CASH</button>
+            </div>
+        </div>
+
+        <div class="sl-shop-item shop-item-row" data-category="potion" onclick="buyShopItem('mp_potion_high')">
+            <div class="sl-shop-icon-box" style="box-shadow: inset 0 0 15px rgba(0, 68, 255, 0.5); border-color: #0044ff;">🌊</div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name">Mana Essence (Lớn)</p>
+                <p class="sl-shop-item-desc">Khôi phục 1000 MP.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button class="sl-shop-price-btn" style="color: #0044ff;">500 CASH</button>
+            </div>
+        </div>
+
         <!-- ================= TRANG PHỤC (COSTUME) ================= -->
-        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_black_suit')">
-            <div class="sl-shop-icon-box" style="border-color: gold;"><img src="cos/Sung_Jinwoo_Black_Suit.png"></div>
+        <!-- Đã thêm style="display: none;" để ẩn đi lúc mới vào cửa hàng -->
+        <div class="sl-shop-item shop-item-row" data-category="costume" style="display: none;" onclick="handleCostume('costume_black_suit')">
+            <div class="sl-shop-icon-box" style="border-color: gold;">
+                <img src="cos/Sung_Jinwoo_Black_Suit.png">
+            </div>
             <div class="sl-shop-info">
                 <p class="sl-shop-item-name">Bộ Vest Đen Ám Sát</p>
                 <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
@@ -1576,8 +1594,10 @@
             </div>
         </div>
 
-        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_mining')">
-            <div class="sl-shop-icon-box"><img src="cos/Sung_Jinwoo_Mining_Work.png"></div>
+        <div class="sl-shop-item shop-item-row" data-category="costume" style="display: none;" onclick="handleCostume('costume_mining')">
+            <div class="sl-shop-icon-box">
+                <img src="cos/Sung_Jinwoo_Mining_Work.png">
+            </div>
             <div class="sl-shop-info">
                 <p class="sl-shop-item-name">Mining Work Clothes</p>
                 <p class="sl-shop-item-desc">Đổi Avatar. Tăng 150 STR, 100 VIT.</p>
@@ -1587,8 +1607,10 @@
             </div>
         </div>
 
-        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_wish')">
-            <div class="sl-shop-icon-box"><img src="cos/Sung_Jinwoo_A_Wish_Come_True.png"></div>
+        <div class="sl-shop-item shop-item-row" data-category="costume" style="display: none;" onclick="handleCostume('costume_wish')">
+            <div class="sl-shop-icon-box">
+                <img src="cos/Sung_Jinwoo_A_Wish_Come_True.png">
+            </div>
             <div class="sl-shop-info">
                 <p class="sl-shop-item-name">Điều Ước Thành Hiện Thực</p>
                 <p class="sl-shop-item-desc">Đổi Avatar. Tăng 70 STR, 30 VIT.</p>
@@ -1598,8 +1620,10 @@
             </div>
         </div>
 
-        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_light_outing')">
-            <div class="sl-shop-icon-box"><img src="cos/Sung_Jinwoo_Light_Outing_Wear.png"></div>
+        <div class="sl-shop-item shop-item-row" data-category="costume" style="display: none;" onclick="handleCostume('costume_light_outing')">
+            <div class="sl-shop-icon-box">
+                <img src="cos/Sung_Jinwoo_Light_Outing_Wear.png">
+            </div>
             <div class="sl-shop-info">
                 <p class="sl-shop-item-name">Dạo Phố Nhẹ Nhàng</p>
                 <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
@@ -1609,14 +1633,68 @@
             </div>
         </div>
         
-        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_night_lord')">
-            <div class="sl-shop-icon-box" style="border-color: #ff4d4d;"><img src="cos/Sung_Jinwoo_Night_Lord.png"></div>
+        <div class="sl-shop-item shop-item-row" data-category="costume" style="display: none;" onclick="handleCostume('costume_incapable')">
+            <div class="sl-shop-icon-box">
+                <img src="cos/Sung_Jinwoo_Incapable_of_Evaluation.png">
+            </div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name">Incapable of Evaluation</p>
+                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button id="btn-costume_incapable" class="sl-shop-price-btn">10000 CASH</button>
+            </div>
+        </div>
+
+        <div class="sl-shop-item shop-item-row" data-category="costume" style="display: none;" onclick="handleCostume('costume_summer_2')">
+            <div class="sl-shop-icon-box">
+                <img src="cos/Sung_Jinwoo_Summer_Vacation_2.png">
+            </div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name">Kỳ Nghỉ Hè 2</p>
+                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button id="btn-costume_summer_2" class="sl-shop-price-btn">10000 CASH</button>
+            </div>
+        </div>
+
+        <div class="sl-shop-item shop-item-row" data-category="costume" style="display: none;" onclick="handleCostume('costume_night_lord')">
+            <div class="sl-shop-icon-box" style="border-color: #ff4d4d;">
+                <img src="cos/Sung_Jinwoo_Night_Lord.png">
+            </div>
             <div class="sl-shop-info">
                 <p class="sl-shop-item-name" style="color: #ff4d4d;">Chúa Tể Màn Đêm</p>
                 <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
             </div>
             <div class="sl-shop-action">
                 <button id="btn-costume_night_lord" class="sl-shop-price-btn" style="color: #ff4d4d;">20000 CASH</button>
+            </div>
+        </div>
+
+        <div class="sl-shop-item shop-item-row" data-category="costume" style="display: none;" onclick="handleCostume('costume_dragon_monarch')">
+            <div class="sl-shop-icon-box" style="border-color: #ffcc00;">
+                <img src="cos/Sung_Jinwoo_Monarch_of_the_Heaven-Annihilating_Dragons.png">
+            </div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name" style="color: #ffcc00;">Vua Của Loài Rồng</p>
+                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 250 STR, 100 VIT, 100 MP.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button id="btn-costume_dragon_monarch" class="sl-shop-price-btn">100000 CASH</button>
+            </div>
+        </div>
+
+        <div class="sl-shop-item shop-item-row" data-category="costume" style="display: none;" onclick="handleCostume('costume_god_of_death')">
+            <div class="sl-shop-icon-box" style="border-color: #ffcc00;">
+                <img src="cos/Sung_Jinwoo_God_of_Death.png">
+            </div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name" style="color: #ffcc00;">Tử Thần</p>
+                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 250 STR, 100 VIT, 100 MP.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button id="btn-costume_god_of_death" class="sl-shop-price-btn">100000 CASH</button>
             </div>
         </div>
 
