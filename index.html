@@ -2361,6 +2361,24 @@
 
         return { dmg: Math.floor(finalDmg), isCrit: isCrit };
     }
+        // 7. CƠ CHẾ CHẶN SÁT THƯƠNG CỦA LỚP GIÁP ẢO (SHIELD BARRIER)
+        let actualDmg = Math.floor(finalDmg);
+        if (enemy.shieldHP && enemy.shieldHP > 0) {
+            if (actualDmg >= enemy.shieldHP) {
+                // Đame to hơn Giáp -> Vỡ giáp, đame dư đâm thẳng vào máu đỏ
+                actualDmg -= enemy.shieldHP;
+                enemy.shieldHP = 0;
+                logBattle(`<span style="color:#00ffff; font-weight:bold;">💥 CHOANG! LỚP GIÁP MA THUẬT CỦA KẺ ĐỊCH ĐÃ BỊ BẠN ĐÁNH VỠ!</span>`);
+            } else {
+                // Đame yếu hơn Giáp -> Giáp chịu hết, máu đỏ không mất giọt nào
+                enemy.shieldHP -= actualDmg;
+                logBattle(`<span style="color:#00ffff; font-style:italic;">🛡️ Lớp giáp ma thuật đã hấp thụ ${actualDmg} sát thương! (Giáp còn: ${enemy.shieldHP})</span>`);
+                actualDmg = 0; 
+            }
+        }
+
+        return { dmg: actualDmg, isCrit: isCrit };
+    }
     
     // --- BỘ KỸ NĂNG VẬT LÝ (SÁT THỦ - STR / AGI) ---
     window.playerAttack = function() {
@@ -2621,12 +2639,20 @@
         if (isDungeonMode && enemy.bossType === "kargalgan") {
             let rand = Math.random(); 
             if (enemy.hp < enemy.maxHp * 0.4 && !enemy.hasShielded) {
+                // Chia tỷ lệ: Hồi 15% Máu thật và Tạo 20% Giáp ảo
+                let healAmount = Math.floor(enemy.maxHp * 0.3); 
                 let shieldAmount = Math.floor(enemy.maxHp * 0.20); 
-                enemy.hp = Math.min(enemy.maxHp, enemy.hp + shieldAmount);
+                
+                // 1. Bơm máu thật
+                enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount); 
+                // 2. Phủ giáp ảo
+                enemy.shieldHP = shieldAmount; 
+                
                 enemy.hasShielded = true; 
                 dmg = 0; 
                 isSpecialAttack = true;
-                specialAttackLog = `<span style="color:#9933ff; font-weight:bold; text-shadow: 0 0 5px #9933ff;">🛡️ KHÚC CA BẢO HỘ!</span> Kargalgan lẩm nhẩm chú ngữ, triệu hồi khiên ma thuật và phục hồi ${shieldAmount} HP!`;
+                
+                specialAttackLog = `<span style="color:#9933ff; font-weight:bold; text-shadow: 0 0 5px #9933ff;">🛡️ KHÚC CA BẢO HỘ!</span> Kargalgan lẩm nhẩm chú ngữ, phục hồi <span style="color:#00ff00; font-weight:bold;">${healAmount} HP</span> và bọc thêm một <span style="color:#00ffff; font-weight:bold;">Lớp Giáp Ma Thuật</span> chặn ${shieldAmount} sát thương!`;
             } else {
                 if (rand <= 0.20) {
                     let rawDmg = enemyAtk * 1.5; 
