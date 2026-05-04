@@ -2856,6 +2856,17 @@
         const defensePower = currentUser.vit || 0; 
         const enemyAtk = enemy.atk || 10;
 
+        // --- CƠ CHẾ BUFF SỨC MẠNH TẠM THỜI (TINH THỂ MÁU) ---
+        if (window.enemyAtkBuffTurns && window.enemyAtkBuffTurns > 0) {
+            enemyAtk = Math.floor(enemyAtk * 1.15); // Tăng 15% ATK trong hiệp này
+            window.enemyAtkBuffTurns--; // Đánh xong thì trừ đi 1 lượt
+            
+            // Nếu hết lượt buff thì thông báo cho người chơi thở phào
+            if (window.enemyAtkBuffTurns === 0) {
+                logBattle(`<span style="color:#aaa; font-style:italic;">Khí tức tà ác mờ dần... Sức mạnh của Baran đã trở lại bình thường.</span>`);
+            }
+        }
+
         // --- KÍCH HOẠT HIỆU ỨNG GIẢM GIÁP CỦA BOSS ---
         let effectiveVit = defensePower;
         if (playerArmorBreakTurns > 0) {
@@ -3031,24 +3042,56 @@
         // 8. KỸ NĂNG CỦA VUA QUỶ BARAN (BẠCH CỐT)
         if (isDungeonMode && enemy.bossType === "baran") {
             let rand = Math.random(); 
-            if (enemy.hp < enemy.maxHp * 0.4 && !enemy.hasSummonedWyvern) {
+            
+            // --- GIAI ĐOẠN 1: TINH THỂ MÁU (Dưới 50% Máu) ---
+            if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasAbsorbedDemons) {
+                enemy.hasAbsorbedDemons = true;
+                let healAmount = Math.floor(enemy.maxHp * 0.20); // Hồi 20% Máu
+                enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
+                
+                // Bật công tắc Buff 15% ATK kéo dài đúng 2 lượt
+                window.enemyAtkBuffTurns = 2; 
+                
+                dmg = 0;
+                isSpecialAttack = true;
+                specialAttackLog = `<span style="color:#cc00ff; font-weight:bold; text-shadow: 0 0 10px #cc00ff;">💎 TINH THỂ MÁU!</span> Baran hấp thụ linh hồn của những con quỷ đồng loại giúp hồi lại <span style="color:#00ff00">${healAmount} HP</span> và <span style="color:#ff3333; font-weight:bold;">tăng 15% ATK trong 2 lượt</span>!`;
+            }
+            
+            // --- GIAI ĐOẠN 2: CƯỠI WYVERN & HƠI THỞ SẤM SÉT (Dưới 25% Máu) ---
+            else if (enemy.hp < enemy.maxHp * 0.25 && !enemy.hasSummonedWyvern) {
                 enemy.hasSummonedWyvern = true; 
-                dmg = enemyAtk * 3.0; // Sát thương khủng khiếp không quan tâm giáp
+                let rawDmg = enemyAtk * 2.0; // Đòn đánh hủy diệt
+                dmg = Math.max(50, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                 isSpecialAttack = true;
                 applyBleedToPlayer = true;
                 isPlayerStunned = true;
-                specialAttackLog = `<span style="color:#cc00ff; font-weight:bold; text-shadow: 0 0 10px #cc00ff, 0 0 20px #cc00ff;">🐉 TRIỆU HỒI RỒNG SÉT WYVERN!</span> Baran cưỡi Wyvern giáng sấm sét kinh hoàng, gây <span style="color:red; font-size: 22px;">${Math.floor(dmg)}</span> sát thương tàn khốc, làm bạn <span style="color:yellow;">[CHOÁNG]</span> và <span style="color:red;">[CHẢY MÁU]</span>!`;
-            } else if (rand <= 0.25) {
-                let rawDmg = enemyAtk * 2.5; 
-                dmg = Math.max(50, Math.floor(rawDmg * (1 - vitDmgReduction))); 
-                isSpecialAttack = true;
-                specialAttackLog = `<span style="color:#ffffff; font-weight:bold; text-shadow: 0 0 5px #fff;">⚡ SÉT TRẮNG BẠCH CỐT!</span> Một tia sét trắng giáng xuống đầu bạn, xé toạc hàng phòng ngự gây ${Math.floor(dmg)} sát thương!`;
-            } else if (rand <= 0.45) {
-                let rawDmg = enemyAtk * 2.0; 
+                specialAttackLog = `<span style="color:#ffffff; font-weight:bold; text-shadow: 0 0 10px #fff, 0 0 20px #00ffff;">🐉 RỒNG SÉT WYVERN & HƠI THỞ SẤM SÉT!</span> Baran bay lên không trung, phun luồng sét hủy diệt gây <span style="color:red; font-size: 22px;">${Math.floor(dmg)}</span> ST, khiến bạn <span style="color:yellow;">[CHOÁNG VÁNG]</span> và <span style="color:red;">[CHẢY MÁU]</span>!`;
+            } 
+            
+            // --- CÁC CHIÊU THỨC SỬ DỤNG NGẪU NHIÊN ---
+            else if (rand <= 0.20) { 
+                // Ngọn lửa trắng: Đòn đánh tốc độ cực nhanh + Choáng
+                let rawDmg = enemyAtk * 1.5; 
                 dmg = Math.max(40, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                 isSpecialAttack = true;
-                effectArmorBreak = 5; // Giảm giáp 5 lượt
-                specialAttackLog = `<span style="color:#cc00ff; font-weight:bold;">⚔️ KIẾM KHÍ QUÂN VƯƠNG!</span> Baran vung ma kiếm chém nát khiên của bạn, gây ${Math.floor(dmg)} ST và <span style="color:orange;">[PHÁ GIÁP]</span> 5 lượt tới!`;
+                isPlayerStunned = true;
+                specialAttackLog = `<span style="color:#ffffff; font-weight:bold; text-shadow: 0 0 5px #fff;">⚡ NGỌN LỬA TRẮNG!</span> Baran hóa thành một tia sét lao đến với tốc độ chóng mặt, giáng ${Math.floor(dmg)} sát thương và làm bạn bị <span style="color:yellow;">[CHOÁNG]</span>!`;
+            } 
+            else if (rand <= 0.40) { 
+                // Đội quân địa ngục: Tạo khiên máu
+                let shieldAmount = Math.floor(enemy.maxHp * 0.15); // Lớp khiên bằng 15% Max HP
+                enemy.shieldHP = shieldAmount; 
+                dmg = 0; 
+                isSpecialAttack = true;
+                specialAttackLog = `<span style="color:#9933ff; font-weight:bold;">🧟 ĐỘI QUÂN ĐỊA NGỤC!</span> Baran mở cổng dịch chuyển, triệu hồi ác quỷ ra làm bia đỡ đạn, tạo lớp giáp hấp thụ ${shieldAmount} sát thương!`;
+            } 
+            else if (rand <= 0.65) { 
+                // Sức mạnh phi thường: Đánh thường cực mạnh + Phá giáp
+                let rawDmg = enemyAtk * 2.0; 
+                dmg = Math.max(30, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true;
+                effectArmorBreak = 3; 
+                specialAttackLog = `<span style="color:#ff3333; font-weight:bold;">💪 SỨC MẠNH PHI THƯỜNG!</span> Một đòn vung kiếm với lực ép nghẹt thở từ Quân Vương, gây ${Math.floor(dmg)} ST và <span style="color:orange;">[PHÁ GIÁP]</span> 3 lượt tới!`;
             }
         }
         
