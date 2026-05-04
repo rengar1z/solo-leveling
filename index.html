@@ -1528,6 +1528,9 @@
         const data = s.val();
         if (data.password !== p) return alert('Mật mã sai');
     
+        // DÒNG QUAN TRỌNG NHẤT BỊ THIẾU ĐÂY RỒI: Tải dữ liệu từ database vào nhân vật
+        currentUser = data; 
+        
         if (!currentUser.skills) {
             currentUser.skills = { "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Siêu Giác Quan": 0, "Thợ Săn Tiền Thưởng": 0, "Bàn Tay May Mắn": 0 };
             currentUser.skillPoints = currentUser.skillPoints || 0;
@@ -1546,8 +1549,10 @@
         currentUser.cash = currentUser.cash || 0;
         currentUser.inventory = currentUser.inventory || [];
         currentUser.equipped = currentUser.equipped || { weapon: null, shield: null, accessory: null };
+        
         document.getElementById('auth').classList.add('hidden');
         document.getElementById('gameWrap').classList.remove('hidden');
+        
         render();
         window.renderSkills(); 
     }
