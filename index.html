@@ -874,10 +874,18 @@
                             <div id="equippedArea"></div>
                         </div>
                         <div class="card" style="flex: 1;">
-                            <h3 style="text-align: center; margin-top: 0;">KHO ĐỒ</h3>
+                            <h3 style="text-align: center; margin-top: 0; margin-bottom: 10px;">KHO ĐỒ</h3>
+                            
+                            <!-- BẮT ĐẦU: 3 NÚT PHÂN LOẠI KHO ĐỒ -->
+                            <div class="tabs-header" style="margin-bottom: 15px; border-bottom: 1px solid rgba(0,191,255,0.5); background: rgba(0, 10, 30, 0.8);">
+                                <button class="tab-btn inv-tab-btn active" style="padding: 10px; font-size: 16px;" onclick="switchInvTab(event, 'equip')">TRANG BỊ</button>
+                                <button class="tab-btn inv-tab-btn" style="padding: 10px; font-size: 16px;" onclick="switchInvTab(event, 'consum')">TIÊU HAO</button>
+                                <button class="tab-btn inv-tab-btn" style="padding: 10px; font-size: 16px; color: #cc66ff;" onclick="switchInvTab(event, 'rare')">VẬT LIỆU</button>
+                            </div>
+                            <!-- KẾT THÚC: 3 NÚT PHÂN LOẠI -->
+
                             <div id="inventoryArea" style="max-height: 350px; overflow-y: auto; padding-right: 5px;"></div>
                         </div>
-                        
                    </div>
                 </div>  
 
@@ -2256,15 +2264,25 @@
             }
         });
 
-        // ================= HIỂN THỊ KHO ĐỒ =================
-        if (currentUser.inventory.length === 0) {
-            invArea.innerHTML = '<p style="color: #aaa; text-align: center; font-size: 20px; padding: 20px;">Túi đồ trống</p>';
-        } else {
-            currentUser.inventory.forEach((itemObj, index) => {
-                const itemData = ITEM_DATA[itemObj.name];
-                const rank = itemData.rank || 'D';
-                const sellPrice = itemData.sellPrice || 10;
-                
+        // ================= HIỂN THỊ KHO ĐỒ (ĐÃ LỌC THEO TAB) =================
+        let hasItem = false;
+        
+        currentUser.inventory.forEach((itemObj, index) => {
+            const itemData = ITEM_DATA[itemObj.name];
+            if (!itemData) return;
+            
+            const rank = itemData.rank || 'D';
+            const sellPrice = itemData.sellPrice || 10;
+            
+            // --- KIỂM TRA XEM MÓN ĐỒ CÓ THUỘC TAB HIỆN TẠI KHÔNG ---
+            let isMatch = false;
+            if (window.currentInvTab === 'equip' && ['weapon', 'shield', 'accessory', 'helmet', 'gloves', 'costume'].includes(itemData.type)) isMatch = true;
+            if (window.currentInvTab === 'consum' && itemData.type === 'consumable') isMatch = true;
+            if (window.currentInvTab === 'rare' && ['material', 'rare'].includes(itemData.type)) isMatch = true;
+
+            // Nếu đúng Tab thì mới vẽ ra HTML
+            if (isMatch) {
+                hasItem = true;
                 invArea.innerHTML += `
                 <div class="stat-item rank-${rank}" style="padding: 12px; border-left: 4px solid;">
                     <div style="display: flex; gap: 15px; align-items: center; flex: 1;">
@@ -2285,15 +2303,22 @@
                             <small style="color:#aaa; font-size:16px;">Hạng: ${rank}</small>
                         </div>
                     </div>
+                    
                     <div style="display: flex; flex-direction: column; gap: 5px;">
                         ${itemData.type === 'consumable' 
                             ? `<button class="add-btn" style="width: 80px; height: 32px; font-size: 16px; background: #00ff00; border-color: #00cc00; color: #000;" onclick="useItem(${index})">DÙNG</button>` 
-                            : `<button class="add-btn" style="width: 80px; height: 32px; font-size: 16px;" onclick="equipItem(${index})">MẶC</button>`
+                            : (['material', 'rare'].includes(itemData.type) 
+                                ? `` /* Bỏ trống: Vật liệu thì không Dùng cũng không Mặc được */
+                                : `<button class="add-btn" style="width: 80px; height: 32px; font-size: 16px;" onclick="equipItem(${index})">MẶC</button>`)
                         }
                         <button class="add-btn" style="width: 80px; height: 32px; font-size: 16px; background: #ff4d4d; border-color: #cc0000; color: #fff;" onclick="sellItem(${index}, ${sellPrice})">BÁN (${sellPrice})</button>
                     </div>
                 </div>`;
-            });
+            }
+        });
+
+        if (!hasItem) {
+            invArea.innerHTML = '<p style="color: #aaa; text-align: center; font-size: 20px; padding: 20px;">Ngăn chứa này đang trống</p>';
         }
     }
 
