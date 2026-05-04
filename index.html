@@ -1379,7 +1379,7 @@
         // --- NHÁNH CHUNG (NỘI TẠI) ---
         "Phát Triển Cấp Tốc": { branch: "Chung", type: "passive", maxLv: 3, cost: 1, desc: "Tăng lượng EXP nhận được thêm 10% mỗi cấp.", icon: "https://cdn-icons-png.flaticon.com/512/9483/9483031.png" },
         "Thể Chất Siêu Phàm": { branch: "Chung", type: "passive", maxLv: 3, cost: 1, desc: "Khi cộng, tăng ngay lập tức 5 STR và 5 VIT.", icon: "https://cdn-icons-png.flaticon.com/256/1845/1845861.png" },
-        "Siêu Giác Quan": { branch: "Chung", type: "passive", maxLv: 3, cost: 1, desc: "Tăng thêm 5% tỷ lệ né tránh đòn đánh mỗi cấp.", icon: "https://cdn-icons-png.flaticon.com/512/709/709612.png" },
+        "Siêu Giác Quan": { branch: "Chung", type: "passive", maxLv: 3, cost: 5, desc: "Tăng thêm 3% tỷ lệ né tránh đòn đánh mỗi cấp.", icon: "https://cdn-icons-png.flaticon.com/512/709/709612.png" },        
         "Thợ Săn Tiền Thưởng": { branch: "Chung", type: "passive", maxLv: 3, cost: 2, desc: "Tăng 15% Cash nhận được sau mỗi trận thắng.", icon: "skill/amsat.jpg" },
         "Bàn Tay May Mắn": { branch: "Chung", type: "passive", maxLv: 1, cost: 5, desc: "Tăng 10% tỷ lệ rớt đồ hiếm khi tiêu diệt Boss.", icon: "skill/amsat.jpg" },
         "Phản Đòn": { branch: "Đấu Sĩ", type: "active", maxLv: 1, cost: 10, mp: 30, func: "useCounterAttack", desc: "Thủ thế. Chặn 100% sát thương đòn tiếp theo và phản lại 150% ST đó lên kẻ địch.", icon: "wp/shield.png" },
@@ -1727,7 +1727,7 @@
                     if (lv > 0 && data.maxLv > 1) {
                         if (s === "Phát Triển Cấp Tốc") dynamicText = `<br><span style="color:#00ff00; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 10}% EXP</span>`;
                         if (s === "Thợ Săn Tiền Thưởng") dynamicText = `<br><span style="color:gold; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 15}% CASH</span>`;
-                        if (s === "Siêu Giác Quan") dynamicText = `<br><span style="color:#8eefff; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 5}% Né Đòn</span>`;
+                        if (s === "Siêu Giác Quan") dynamicText = `<br><span style="color:#8eefff; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 3}% Né Đòn</span>`;
                         if (s === "Thể Chất Siêu Phàm") dynamicText = `<br><span style="color:#ff4d4d; font-size:14px; font-weight:bold;">↳ Đã cộng vĩnh viễn: +${lv * 5} STR/VIT</span>`;
                     }
 
@@ -2504,14 +2504,15 @@
         updateCombatUI(); checkBattleEnd();
     };
 
-   // --- SKILL: PHẢN ĐÒN (TEST MODE - KHÔNG COOLDOWN) ---
+   // --- SKILL: PHẢN ĐÒN ---
     window.useCounterAttack = function() {
-        // Tạm thời comment lại phần chặn Cooldown
-        /* 
+        // Khởi tạo biến đếm nếu chưa có
+        window.counterCooldown = window.counterCooldown || 0; 
+        
+        // CHẶN NẾU ĐANG TRONG THỜI GIAN HỒI CHIÊU
         if (window.counterCooldown > 0) {
             return logBattle(`<span style='color:orange'>⏳ Phản Đòn đang hồi chiêu! (Cần chờ thêm ${window.counterCooldown} lượt)</span>`);
-        } 
-        */
+        }
 
         if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 30) { 
             if(currentUser.mp < 30) logBattle("<span style='color:orange'>Thiếu 30 MP!</span>"); 
@@ -2521,11 +2522,11 @@
         currentUser.mp -= 30; 
         isPlayerCountering = true; // Bật cờ phản đòn
         
-        // Ép Cooldown về 0 để UI không khóa nút ở lượt sau
-        window.counterCooldown = 0; 
+        // GẮN COOLDOWN: Đặt 3 để sau khi kết thúc lượt này, nó tụt xuống 2 lượt chờ!
+        window.counterCooldown = 3; 
         
-        logBattle(`<span style="color:gold; font-weight:bold;">🛡️ [TEST MODE] Bạn nắm chặt vũ khí, vào thế phòng thủ sẵn sàng phản công!</span>`);
-        updateCombatUI(); checkBattleEnd(); 
+        logBattle(`<span style="color:gold; font-weight:bold;">🛡️ Bạn nắm chặt vũ khí, vào thế phòng thủ sẵn sàng phản công!</span>`);
+        updateCombatUI(); checkBattleEnd(); // Chuyển lượt cho quái đánh
     };
     
     // --- KỸ NĂNG KHỐNG CHẾ (NÉM DAO) ---
@@ -2811,7 +2812,7 @@
         let isDodged = false;
         let dodgeChance = 0;
         if (currentUser.skills["Bước Chân Bóng Tối"] > 0) dodgeChance += 0.10;
-        if (currentUser.skills["Siêu Giác Quan"] > 0) dodgeChance += (0.05 * currentUser.skills["Siêu Giác Quan"]);
+        if (currentUser.skills["Siêu Giác Quan"] > 0) dodgeChance += (0.03 * currentUser.skills["Siêu Giác Quan"]);
 
         // Lọc bỏ đoạn "gây X sát thương..."
         let skillNameOnly = isSpecialAttack ? specialAttackLog.split(/, gây|, giáng|, nhận/)[0] + "..." : "";
