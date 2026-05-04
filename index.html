@@ -1959,8 +1959,8 @@
         if (typeof enemyDefBreakTurns !== 'undefined' && enemyDefBreakTurns > 0) {
             eHTML += `<div class="status-icon" title="Phá Giáp (Mất 50% Thủ)" style="border-color: #9933ff; box-shadow: 0 0 5px #9933ff;"><span style="font-size:16px;">💔</span><div class="status-turn">${enemyDefBreakTurns}</div></div>`;
         }
-        if (typeof enemy !== 'undefined' && enemy && enemy.hasShielded) {
-            eHTML += `<div class="status-icon" title="Khiên Bảo Hộ (Đã Hồi Máu)" style="border-color: #00ffff; box-shadow: 0 0 5px #00ffff;"><span style="font-size:16px;">🔰</span></div>`;
+        if (typeof enemy !== 'undefined' && enemy && enemy.shieldHP > 0) {
+            eHTML += `<div class="status-icon" title="Giáp Ma Thuật (Còn: ${enemy.shieldHP})" style="border-color: #00ffff; box-shadow: 0 0 5px #00ffff;"><span style="font-size:16px;">🔰</span></div>`;
         }
         eBoard.innerHTML = eHTML;
     };
