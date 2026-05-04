@@ -2277,8 +2277,8 @@
 
         // ================= HIỂN THỊ ĐỒ ĐANG TRANG BỊ (LỌC THEO TAB) =================
         const slotsToRender = window.currentEqTab === 'basic' 
-            ? ['weapon', 'shield', 'helmet', 'gloves'] 
-            : ['accessory', 'artifact']; // Sau này bạn thêm 'artifact' vào đây
+            ? ['weapon', 'shield', 'helmet', 'gloves', 'accessory'] 
+            : ['artifact']; // Sau này bạn thêm 'artifact' vào đây
 
         slotsToRender.forEach(slot => {
             const itemObj = currentUser.equipped[slot];
