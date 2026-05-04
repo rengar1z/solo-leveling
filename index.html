@@ -128,8 +128,16 @@
             width: 60px !important; height: 60px !important;
             border-radius: 50% !important; flex: none !important; padding: 0 !important;
             display: flex !important; align-items: center; justify-content: center;
-            background: rgba(0, 0, 0, 0.8) !important; border: none !important;
+            background: transparent !important; /* Xóa nền đen mờ thành trong suốt */
+            border: none !important; /* Xóa viền */
             overflow: visible !important; /* Mở khóa để Tooltip hiện ra ngoài viền */
+            box-shadow: none !important; /* Chặn đổ bóng */
+        }
+
+        /* Chặn hiệu ứng phát sáng màu trắng khi rê chuột (Hover) */
+        .icon-mode:hover, .icon-mode:active {
+            background: transparent !important;
+            box-shadow: none !important;
         }
         
         .icon-mode img {
@@ -169,13 +177,6 @@
             border-width: 6px;
             border-style: solid;
             border-color: #00bfff transparent transparent transparent;
-        }
-
-        .icon-mode:hover .skill-tooltip,
-        .icon-mode:active .skill-tooltip {
-            visibility: visible;
-            opacity: 1;
-            bottom: 125%; /* Hiệu ứng trôi nhẹ lên trên khi hover */
         }
 
         /* --- HIỆU ỨNG TOOLTIP CHO DANH SÁCH SKILL --- */
