@@ -2242,7 +2242,7 @@
         if (window.renderBag) window.renderBag();
     };
 
-    // --- HỆ THỐNG TỦ ĐỒ (COSTUME) ---
+    // --- HỆ THỐNG TỦ ĐỒ (COSTUME) - ĐÃ FIX LỖI KẸT DATA ---
     window.handleCostume = async function(shopId) {
         if (!currentUser.ownedCostumes) currentUser.ownedCostumes = [];
         
@@ -2250,11 +2250,17 @@
         const itemId = shopItem.itemId;
         const itemData = ITEM_DATA[itemId];
 
+        // Lớp bảo vệ 1: Tránh lỗi bấm nhầm vật phẩm không tồn tại
+        if (!itemData) {
+            console.error("Lỗi: Không tìm thấy dữ liệu vật phẩm cho", itemId);
+            return alert("Vật phẩm này đang bảo trì!");
+        }
+
         // TRƯỜNG HỢP 1: ĐANG MẶC -> BẤM ĐỂ THÁO RA
         if (currentUser.equipped.costume && currentUser.equipped.costume.name === itemId) {
-            currentUser.str -= itemData.str;
-            currentUser.vit -= itemData.vit;
-            currentUser.maxMp -= itemData.mp;
+            currentUser.str -= (itemData.str || 0);
+            currentUser.vit -= (itemData.vit || 0);
+            currentUser.maxMp -= (itemData.mp || 0);
             currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
             if (itemData.vit > 0) {
                 currentUser.maxHp -= itemData.vit * 10;
@@ -2267,15 +2273,32 @@
             // Nếu đang mặc bộ khác thì tự động tháo bộ cũ ra trước
             if (currentUser.equipped.costume) {
                 const oldData = ITEM_DATA[currentUser.equipped.costume.name];
-                currentUser.str -= oldData.str; currentUser.vit -= oldData.vit;
-                currentUser.maxMp -= oldData.mp; currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
-                if (oldData.vit > 0) { currentUser.maxHp -= oldData.vit * 10; currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp); }
+                
+                // Lớp bảo vệ 2: FIX LỖI KẸT DATA Ở ĐÂY
+                if (oldData) { 
+                    currentUser.str -= (oldData.str || 0); 
+                    currentUser.vit -= (oldData.vit || 0);
+                    currentUser.maxMp -= (oldData.mp || 0); 
+                    currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
+                    if (oldData.vit > 0) { 
+                        currentUser.maxHp -= oldData.vit * 10; 
+                        currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp); 
+                    }
+                } else {
+                    console.warn("Cảnh báo: Phát hiện trang phục cũ bị lỗi dữ liệu. Đã tháo bỏ an toàn.");
+                }
             }
+            
             // Mặc bộ mới vào
             currentUser.equipped.costume = { name: itemId };
-            currentUser.str += itemData.str; currentUser.vit += itemData.vit;
-            currentUser.maxMp += itemData.mp; currentUser.mp += itemData.mp;
-            if (itemData.vit > 0) { currentUser.maxHp += itemData.vit * 10; currentUser.hp += itemData.vit * 10; }
+            currentUser.str += (itemData.str || 0); 
+            currentUser.vit += (itemData.vit || 0);
+            currentUser.maxMp += (itemData.mp || 0); 
+            currentUser.mp += (itemData.mp || 0);
+            if (itemData.vit > 0) { 
+                currentUser.maxHp += itemData.vit * 10; 
+                currentUser.hp += itemData.vit * 10; 
+            }
         }
         // TRƯỜNG HỢP 3: CHƯA SỞ HỮU -> BẤM ĐỂ MUA
         else {
