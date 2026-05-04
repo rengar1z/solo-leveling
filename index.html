@@ -605,20 +605,21 @@
 }
 .combat-hp-fill-enemy {
     height: 100%;
-    background: linear-gradient(90deg, #cc0000, #ff4d4d) !important; /* Máu quái màu đỏ */
+    background: linear-gradient(90deg, #cc0000, #ff4d4d) !important; 
     box-shadow: 0 0 15px #ff4d4d;
     transition: width 0.4s ease-out;
 }
+        
 .combat-shield-bar {
     position: absolute;
     top: 0;
     height: 100%;
     background: linear-gradient(180deg, #f8f9fa 0%, #c4cbd4 50%, #e2e6ea 100%) !important;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), inset 0 0 5px #8b9aa8;
-    border-left: 2px solid #fff; /* Vạch trắng phân cách ranh giới với Máu đỏ */
+    border-left: 2px solid #fff; 
     transition: width 0.4s ease-out, left 0.4s ease-out, opacity 0.3s;
-    z-index: 5; /* Đảm bảo nó nổi lên trên thanh máu đỏ */
-    opacity: 0; /* Mặc định tàng hình khi không có giáp */
+    z-index: 5; 
+    opacity: 0; 
 }
         
 .combat-hp-text {
@@ -3097,7 +3098,7 @@
 
         const randIdx = Math.floor(Math.random() * enemies.length);
         const template = enemies[randIdx];
-        enemy = { ...template, maxHp: template.hp };
+        enemy = { ...template, maxHp: template.hp, shieldHP: 0 };
         isMyTurn = true;
         isPlayerStunned = false;
         isEnemyStunned = false; // <--- THÊM DÒNG NÀY ĐỂ GIẢI CHOÁNG QUÁI MỚI
@@ -3133,7 +3134,7 @@
     window.startDungeonStage = function() {
         resetToButtonMode();
         const stageData = dungeonData[dCurrentId].stages[dCurrentStage];
-        enemy = { ...stageData, maxHp: stageData.hp };
+        enemy = { ...stageData, maxHp: stageData.hp, shieldHP: 0 }; 
         isMyTurn = true;
         isPlayerStunned = false;
         isEnemyStunned = false;
@@ -3181,7 +3182,7 @@
         resetToButtonMode();
         const gateData = RED_GATES[currentRedGateId];
         const stageData = gateData.stages[rgCurrentStage];
-        enemy = { ...stageData, maxHp: stageData.hp };
+        enemy = { ...stageData, maxHp: stageData.hp, shieldHP: 0 };
         isMyTurn = true;
         isPlayerStunned = false;
         isEnemyStunned = false;
