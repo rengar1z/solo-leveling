@@ -2346,15 +2346,24 @@
                     <div style="display: flex; gap: 15px; align-items: center; flex: 1;">
                         <div class="item-icon-wrapper rank-${rank}">
                             <img src="${itemData.img}" class="item-img-premium">
+                            
+                            <!-- BẢNG THÔNG TIN (TOOLTIP) ĐÃ TỐI ƯU -->
                             <div class="item-tooltip">
                                 <h4 class="text-rank-${rank}" style="margin: 0 0 5px 0; font-size: 20px;">[CLASS: ${rank}] ${itemObj.name}</h4>
-                                <span style="color: #ccc; font-size: 16px;">TYPE: ${itemData.type.toUpperCase()}</span><br><br>
+                                <span style="color: #ccc; font-size: 16px;">TYPE: ${itemData.type.toUpperCase()}</span>
+                                
+                                <!-- ẨN CHỈ SỐ NẾU LÀ VẬT PHẨM TIÊU HAO HOẶC VẬT LIỆU -->
+                                ${['consumable', 'material'].includes(itemData.type) ? '' : `
+                                <br><br>
                                 <span style="color: #ff4d4d; font-size: 16px;">STR: +${itemObj.str} | VIT: +${itemObj.vit}</span><br>
-                                <span style="color: #00ff00; font-size: 16px;">MP: +${itemObj.mp}</span><br>
+                                <span style="color: #00ff00; font-size: 16px;">MP: +${itemObj.mp}</span>
+                                `}
+
                                 <hr style="border-color: #444; margin: 8px 0;">
                                 <span class="text-rank-${rank}" style="font-size: 14px;">EFFECT: ${itemData.effect}</span><br><br>
                                 <span style="color: yellow; font-size: 14px;">Giá bán: ${sellPrice} Cash</span>
                             </div>
+                            
                         </div>
                         <div style="display: flex; flex-direction: column;">
                             <b class="text-rank-${rank}" style="font-size: 20px;">${itemObj.name}</b>
@@ -2366,7 +2375,7 @@
                         ${itemData.type === 'consumable' 
                             ? `<button class="add-btn" style="width: 80px; height: 32px; font-size: 16px; background: #00ff00; border-color: #00cc00; color: #000;" onclick="useItem(${index})">DÙNG</button>` 
                             : (['material', 'rare'].includes(itemData.type) 
-                                ? `` /* Bỏ trống: Vật liệu thì không Dùng cũng không Mặc được */
+                                ? `` 
                                 : `<button class="add-btn" style="width: 80px; height: 32px; font-size: 16px;" onclick="equipItem(${index})">MẶC</button>`)
                         }
                         <button class="add-btn" style="width: 80px; height: 32px; font-size: 16px; background: #ff4d4d; border-color: #cc0000; color: #fff;" onclick="sellItem(${index}, ${sellPrice})">BÁN (${sellPrice})</button>
