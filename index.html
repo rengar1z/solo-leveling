@@ -1974,12 +1974,15 @@
         document.getElementById(pre + 'p-hp-bar').style.width = pPercent + "%";
         document.getElementById(pre + 'p-hp-text').innerText = `HP: ${currentUser.hp}/${currentUser.maxHp}`;
         
-        // Cập nhật HP Enemy
+        // Cập nhật HP Enemy & Giáp Ảo
         const enemyMaxHp = enemy.maxHp || enemy.hp || 100;
         const ePercent = (enemy.hp / enemyMaxHp) * 100;
         const eHpBar = document.getElementById(pre + 'e-hp-bar');
         eHpBar.style.width = ePercent + "%";
-        document.getElementById(pre + 'e-hp-text').innerText = `HP: ${enemy.hp}/${enemyMaxHp}`;
+        
+        // HIỂN THỊ CHỈ SỐ KHIÊN BÊN CẠNH HP
+        let shieldText = (enemy.shieldHP && enemy.shieldHP > 0) ? ` <span style="color:#00ffff;">(+${enemy.shieldHP} 🛡️)</span>` : "";
+        document.getElementById(pre + 'e-hp-text').innerHTML = `HP: ${enemy.hp}/${enemyMaxHp}${shieldText}`;
 
         // --- CƠ CHẾ NỔI ĐIÊN (ENRAGE) CHO BOSS ---
         const eHpBarBox = eHpBar.parentElement; 
