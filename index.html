@@ -1501,7 +1501,7 @@
             title: "Weakest Hunter of All Time", skillPoints: 0,
             inventory: [], // Thêm mảng chứa đồ
             equipped: { weapon: null, shield: null, accessory: null }, // Thêm các ô trang bị
-            skills: { "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Tái Tạo": 0, "Trị Thương": 0, "Siêu Giác Quan": 0, "Gia Tăng Chỉ Số": 0, "Tàng Hình": 0, "Tàn sát": 0, "Dagger Rush": 0 },
+            skills: { "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Siêu Giác Quan": 0, "Thợ Săn Tiền Thưởng": 0, "Bàn Tay May Mắn": 0 },
             isNew: true
 };
         await set(ref(db, 'users/' + u), userData);
@@ -1515,9 +1515,8 @@
         const data = s.val();
         if (data.password !== p) return alert('Mật mã sai');
     
-        currentUser = data;
         if (!currentUser.skills) {
-            currentUser.skills = { "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Tái Tạo": 0, "Trị Thương": 0, "Siêu Giác Quan": 0, "Gia Tăng Chỉ Số": 0, "Tàng Hình": 0 };
+            currentUser.skills = { "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Siêu Giác Quan": 0, "Thợ Săn Tiền Thưởng": 0, "Bàn Tay May Mắn": 0 };
             currentUser.skillPoints = currentUser.skillPoints || 0;
         }
 
