@@ -15,7 +15,13 @@
             overflow-x: hidden;
         }
 
-        #debug { color: yellow; text-align: center; padding: 8px; text-shadow: 0 0 8px yellow; font-size: 14px; }
+        #debug {
+            color: yellow;
+            text-align: center;
+            padding: 8px;
+            text-shadow: 0 0 8px yellow;
+            font-size: 14px;
+        }
 
         .wrapper {
             display: flex;
@@ -36,30 +42,126 @@
             backdrop-filter: blur(5px);
         }
 
-        h1 { text-align: center; font-size: 64px; color: #fff; text-shadow: 0 0 20px #00bfff; margin: 5px 0 20px; letter-spacing: 5px; }
+        h1 {
+            text-align: center;
+            font-size: 64px;
+            color: #fff;
+            text-shadow: 0 0 20px #00bfff;
+            margin: 5px 0 20px;
+            letter-spacing: 5px;
+        }
 
-        .row { display: flex; justify-content: space-between; font-size: 30px; margin: 12px 0; border-bottom: 1px solid rgba(0, 191, 255, 0.3); }
-        .small { font-size: 22px; color: #aaa; }
+        .row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 30px;
+            margin: 12px 0;
+            border-bottom: 1px solid rgba(0, 191, 255, 0.3);
+        }
 
-        .barbox { width: 100%; height: 16px; border: 1px solid #00bfff; margin: 8px 0 18px; background: rgba(0,0,0,0.5); position: relative; }
-        .bar { height: 100%; background: linear-gradient(90deg, #00bfff, #23d8ff); box-shadow: 0 0 12px #23d8ff; transition: width 0.5s ease; }
-        #hpBar { background: linear-gradient(90deg, #ff0000, #ff4d4d); box-shadow: 0 0 12px #ff0000; }
-        #mpBar { background: linear-gradient(90deg, #0066ff, #00bfff); }
+        .small {
+            font-size: 22px;
+            color: #aaa;
+        }
 
-        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 26px; margin-top: 20px; }
-        .card { margin-top: 20px; border: 1px solid #00bfff; padding: 15px; background: rgba(0,0,30,.6); box-shadow: 0 0 10px #00bfff; }
+        .barbox {
+            width: 100%;
+            height: 16px;
+            border: 1px solid #00bfff;
+            margin: 8px 0 18px;
+            background: rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00bfff, #23d8ff);
+            box-shadow: 0 0 12px #23d8ff;
+            transition: width 0.5s ease;
+        }
+
+        #hpBar {
+            background: linear-gradient(90deg, #ff0000, #ff4d4d);
+            box-shadow: 0 0 12px #ff0000;
+        }
+
+        #mpBar {
+            background: linear-gradient(90deg, #0066ff, #00bfff);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            font-size: 26px;
+            margin-top: 20px;
+        }
+
+        .card {
+            margin-top: 20px;
+            border: 1px solid #00bfff;
+            padding: 15px;
+            background: rgba(0,0,30,.6);
+            box-shadow: 0 0 10px #00bfff;
+        }
         
-        input, button { padding: 10px 14px; font-size: 18px; margin: 5px; border: 1px solid #00bfff; border-radius: 4px; background: #000; color: #fff; }
-        button { background: #00bfff; color: #000; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #fff; box-shadow: 0 0 20px #fff; }
+        input, button {
+            padding: 10px 14px;
+            font-size: 18px;
+            margin: 5px;
+            border: 1px solid #00bfff;
+            border-radius: 4px;
+            background: #000;
+            color: #fff;
+        }
 
-        .hidden { display: none !important; }
+        button {
+            background: #00bfff;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #fff;
+            box-shadow: 0 0 20px #fff;
+        }
+
+        .hidden {
+            display: none !important;
+        }
         
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
 
-        #levelPopup { position: fixed; inset: 0; background: rgba(0,0,0,.85); display: none; justify-content: center; align-items: center; z-index: 999; }
-        .popupInner { background: linear-gradient(#2d1d00, #8b5a00, #2d1d00); padding: 40px 70px; border: 3px solid gold; color: #fff; text-align: center; box-shadow: 0 0 50px gold; }
-        .popupInner h2 { font-size: 70px; margin: 0; color: gold; text-shadow: 0 0 20px yellow; }
+        #levelPopup {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .popupInner {
+            background: linear-gradient(#2d1d00, #8b5a00, #2d1d00);
+            padding: 40px 70px;
+            border: 3px solid gold;
+            color: #fff;
+            text-align: center;
+            box-shadow: 0 0 50px gold;
+        }
+
+        .popupInner h2 {
+            font-size: 70px;
+            margin: 0;
+            color: gold;
+            text-shadow: 0 0 20px yellow;
+        }
 
         .sh-title {
             font-weight: bold;
@@ -74,42 +176,208 @@
             50% { text-shadow: 0 0 15px #fff, 0 0 25px #00bfff, 0 0 40px #00bfff; transform: scale(1.05); opacity: 0.8; }
         }
 
-        .welcome-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-        .welcome-box { width: 450px; background: linear-gradient(to bottom, #001a33, #003366); border-top: 2px solid #336699; border-bottom: 2px solid #336699; padding: 20px; text-align: center; box-shadow: 0 0 30px rgba(0, 191, 255, 0.5); font-family: 'Oswald', sans-serif; }
-        .alert-header { color: #fff; font-size: 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-bottom: 10px; margin-bottom: 20px; letter-spacing: 2px; }
-        .alert-content { color: #fff; font-size: 32px; font-weight: bold; }
-        .player-text { color: #a3cf62; }
+        .welcome-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
 
-        .tabs-container { margin-top: 30px; border: 1px solid #00bfff; background: rgba(0,0,30,0.8); }
-        .tabs-header { display: flex; background: rgba(0, 191, 255, 0.2); border-bottom: 1px solid #00bfff; }
-        .tab-btn { flex: 1; padding: 15px; border: none; background: none; color: #8eefff; font-family: 'Oswald', sans-serif; font-size: 20px; cursor: pointer; transition: 0.3s; }
-        .tab-btn:hover { background: rgba(255, 255, 255, 0.1); }
-        .tab-btn.active { background: #00bfff; color: #000; font-weight: bold; box-shadow: inset 0 0 10px #fff; }
+        .welcome-box {
+            width: 450px;
+            background: linear-gradient(to bottom, #001a33, #003366);
+            border-top: 2px solid #336699;
+            border-bottom: 2px solid #336699;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 191, 255, 0.5);
+            font-family: 'Oswald', sans-serif;
+        }
 
-        .tabs-content { padding: 20px; min-height: 200px; }
-        .tab-panel { display: none; animation: fadeIn 0.5s ease; }
-        .tab-panel.active { display: block; }
+        .alert-header {
+            color: #fff;
+            font-size: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
 
-        .skill-item { padding: 10px; border-bottom: 1px solid rgba(0,191,255,0.2); font-size: 22px; color: #fff; text-shadow: 0 0 5px #00bfff; }
+        .alert-content {
+            color: #fff;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .player-text {
+            color: #a3cf62;
+        }
+
+        .tabs-container {
+            margin-top: 30px;
+            border: 1px solid #00bfff;
+            background: rgba(0,0,30,0.8);
+        }
+
+        .tabs-header {
+            display: flex;
+            background: rgba(0, 191, 255, 0.2);
+            border-bottom: 1px solid #00bfff;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: none;
+            color: #8eefff;
+            font-family: 'Oswald', sans-serif;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-btn.active {
+            background: #00bfff;
+            color: #000;
+            font-weight: bold;
+            box-shadow: inset 0 0 10px #fff;
+        }
+
+        .tabs-content {
+            padding: 20px;
+            min-height: 200px;
+        }
+
+        .tab-panel {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .skill-item {
+            padding: 10px;
+            border-bottom: 1px solid rgba(0,191,255,0.2);
+            font-size: 22px;
+            color: #fff;
+            text-shadow: 0 0 5px #00bfff;
+        }
         
-        #titleSelect option { background-color: #001a33; color: #fff; font-family: 'Oswald', sans-serif; padding: 10px; }    
-        #titleSelect { font-size: 32px; background: transparent; border: none; color: #fff; outline: none; cursor: pointer; font-family: 'Oswald', sans-serif; }
+        #titleSelect option {
+            background-color: #001a33;
+            color: #fff;
+            font-family: 'Oswald', sans-serif;
+            padding: 10px;
+        }
 
-        .row { display: flex; justify-content: space-between; align-items: center; font-size: 32px; margin: 15px 0; border-bottom: 1px solid rgba(0, 191, 255, 0.3); height: 50px; }
+        #titleSelect {
+            font-size: 32px;
+            background: transparent;
+            border: none;
+            color: #fff;
+            outline: none;
+            cursor: pointer;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 32px;
+            margin: 15px 0;
+            border-bottom: 1px solid rgba(0, 191, 255, 0.3);
+            height: 50px;
+        }
         
-        .skill-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; margin-bottom: 8px; background: rgba(0, 0, 0, 0.5); border: 1px solid #333; transition: 0.3s; cursor: pointer; }
-        .skill-item.locked { opacity: 0.4; filter: grayscale(1); } 
-        .skill-item.unlocked { border-color: #00bfff; opacity: 1; background: rgba(0, 191, 255, 0.1); }
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+            transition: 0.3s;
+            cursor: pointer;
+        }
 
-        .add-skill-btn { background: #00bfff; color: #000; border: none; width: 30px; height: 30px; font-weight: bold; cursor: pointer; border-radius: 4px; }
-        .add-skill-btn:disabled { background: #555; cursor: not-allowed; }
+        .skill-item.locked {
+            opacity: 0.4;
+            filter: grayscale(1);
+        }
 
-        .stat-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; margin-bottom: 5px; background: rgba(0, 191, 255, 0.05); border: 1px solid rgba(0, 191, 255, 0.2); cursor: pointer; transition: 0.3s; }
-        .stat-item:hover { background: rgba(0, 191, 255, 0.15); }
-        .add-btn { background: #00bfff; color: #000; border: none; width: 24px; height: 24px; font-weight: bold; cursor: pointer; border-radius: 3px; display: flex; justify-content: center; align-items: center; }
-        .add-btn:disabled { background: #444; cursor: not-allowed; }
+        .skill-item.unlocked {
+            border-color: #00bfff;
+            opacity: 1;
+            background: rgba(0, 191, 255, 0.1);
+        }
 
-        .shake { animation: shake 0.3s; }
+        .add-skill-btn {
+            background: #00bfff;
+            color: #000;
+            border: none;
+            width: 30px;
+            height: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .add-skill-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            background: rgba(0, 191, 255, 0.05);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .stat-item:hover {
+            background: rgba(0, 191, 255, 0.15);
+        }
+
+        .add-btn {
+            background: #00bfff;
+            color: #000;
+            border: none;
+            width: 24px;
+            height: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 3px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .add-btn:disabled {
+            background: #444;
+            cursor: not-allowed;
+        }
+
+        .shake {
+            animation: shake 0.3s;
+        }
+
         @keyframes shake {
             0% { transform: translateX(0); }
             25% { transform: translateX(-5px); }
@@ -118,47 +386,66 @@
             100% { transform: translateX(0); }
         }
         
-        .avatar-frame { width: 150px; height: 200px; object-fit: cover; object-position: top; border-radius: 8px; border: 2px solid transparent; transition: 0.3s; }
+        .avatar-frame {
+            width: 150px;
+            height: 200px;
+            object-fit: cover;
+            object-position: top;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            transition: 0.3s;
+        }
 
-        .btn-system { background: #222 !important; color: #8eefff !important; border: 1px solid #444 !important; padding: 10px; font-family: 'Oswald', sans-serif; text-transform: uppercase; }
+        .btn-system {
+            background: #222 !important;
+            color: #8eefff !important;
+            border: 1px solid #444 !important;
+            padding: 10px;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+        }
 
         /* --- CSS MỚI CHO ICON SKILL VÀ TOOLTIP --- */
         .icon-mode {
             position: relative; 
-            width: 60px !important; height: 60px !important;
-            flex: none !important; padding: 0 !important;
-            display: flex !important; align-items: center; justify-content: center;
+            width: 60px !important;
+            height: 60px !important;
+            flex: none !important;
+            padding: 0 !important;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
             background: transparent !important; 
             border: none !important; 
-    
             overflow: visible !important; 
         }
 
         .icon-mode img {
-            width: 100%; height: 100%; object-fit: contain;
-            border-radius: 0 !important; /* Xóa luôn hiệu ứng ép ảnh thành hình tròn */
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 0 !important;
         }
         
         /* 1. Chặn hiệu ứng phát sáng hình tròn và giữ nguyên nền đen của nút */
         .icon-mode:hover, .icon-mode:active {
-            background: rgba(0, 0, 0, 0.8) !important; /* Giữ nguyên nền trong suốt màu đen */
-            box-shadow: none !important; /* Tắt hẳn quầng sáng tròn bên ngoài */
-            border-color: #00bfff !important; /* Giữ nguyên màu viền xanh */
+            background: rgba(0, 0, 0, 0.8) !important;
+            box-shadow: none !important;
+            border-color: #00bfff !important;
         }
 
         /* 2. Chỉ làm phát sáng bản thân tấm ảnh icon bên trong */
         .icon-mode:hover img, .icon-mode:active img {
-        /* Dùng drop-shadow để ánh sáng đọc theo viền của tấm ảnh */
             filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 2px #00bfff);
-            transform: scale(1.15); /* Phóng to tấm ảnh lên một chút cho đẹp */
-            transition: all 0.3s ease; /* Làm mượt chuyển động */
+            transform: scale(1.15);
+            transition: all 0.3s ease;
         }
 
         .skill-tooltip {
             visibility: hidden;
             opacity: 0;
             position: absolute;
-            bottom: 110%; /* Nổi lên phía trên nút bấm */
+            bottom: 110%;
             left: 50%;
             transform: translateX(-50%);
             width: 220px;
@@ -181,7 +468,8 @@
         .skill-tooltip::after {
             content: "";
             position: absolute;
-            top: 100%; left: 50%;
+            top: 100%;
+            left: 50%;
             margin-left: -6px;
             border-width: 6px;
             border-style: solid;
@@ -192,7 +480,7 @@
         .icon-mode:active .skill-tooltip {
             visibility: visible;
             opacity: 1;
-            bottom: 125%; /* Hiệu ứng trôi nhẹ lên trên khi hover */
+            bottom: 125%;
         }
 
         /* --- HIỆU ỨNG TOOLTIP CHO DANH SÁCH SKILL --- */
@@ -200,7 +488,7 @@
             visibility: hidden;
             opacity: 0;
             position: absolute;
-            bottom: 80%; /* Nổi lên phía trên skill */
+            bottom: 80%;
             left: 50%;
             transform: translateX(-50%);
             width: 260px;
@@ -210,7 +498,7 @@
             border-radius: 6px;
             z-index: 1000;
             transition: 0.2s ease-in-out;
-            pointer-events: none; /* Cực kỳ quan trọng để không chặn lúc bấm nút + */
+            pointer-events: none;
             text-align: center;
             line-height: 1.4;
         }
@@ -222,8 +510,14 @@
             bottom: 105%; 
         }
         
-        .hidden-skill { display: none !important; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .hidden-skill {
+            display: none !important;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         /* Style cho Dungeon */
         .dungeon-card {
@@ -236,8 +530,19 @@
             transition: 0.3s;
             cursor: pointer;
         }
-        .dungeon-card:hover { background: rgba(80, 0, 0, 0.8); transform: scale(1.02); box-shadow: 0 0 25px rgba(255, 77, 77, 1); }
-        .dungeon-card h3 { color: #ffcc00; margin-top: 0; font-size: 28px; text-shadow: 0 0 10px red; }
+
+        .dungeon-card:hover {
+            background: rgba(80, 0, 0, 0.8);
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(255, 77, 77, 1);
+        }
+
+        .dungeon-card h3 {
+            color: #ffcc00;
+            margin-top: 0;
+            font-size: 28px;
+            text-shadow: 0 0 10px red;
+        }
 
         #actionControls button, #d-actionControls button {
             margin: 0 !important;
@@ -248,10 +553,12 @@
         #inventoryArea::-webkit-scrollbar { 
             width: 6px; 
         }
+
         #inventoryArea::-webkit-scrollbar-track { 
             background: rgba(0, 30, 60, 0.5); 
             border-radius: 4px; 
         }
+
         #inventoryArea::-webkit-scrollbar-thumb { 
             background: #00bfff; 
             border-radius: 4px; 
@@ -264,6 +571,7 @@
             50% { box-shadow: 0 0 25px #ff9900, 0 0 45px #ff4d4d; outline: 2px solid #ff9900; }
             100% { box-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000; outline: 2px solid #ff0000; }
         }
+
         .enraged-glow {
             animation: fireGlow 0.4s infinite alternate !important;
             border-radius: 2px;
@@ -277,7 +585,7 @@
         }
         
         .item-img-premium {
-            width: 60px; /* Phóng to ảnh gấp đôi */
+            width: 60px;
             height: 60px;
             object-fit: cover;
             border: 2px solid #00bfff;
@@ -291,7 +599,7 @@
         /* Khi rê chuột hoặc chạm vào ảnh */
         .item-icon-wrapper:hover .item-img-premium,
         .item-icon-wrapper:active .item-img-premium {
-            transform: scale(1.15); /* Phóng to nhẹ */
+            transform: scale(1.15);
             border-color: gold;
             box-shadow: 0 0 20px gold;
             z-index: 10;
@@ -302,7 +610,7 @@
             visibility: hidden;
             opacity: 0;
             position: absolute;
-            left: 75px; /* Hiện ra bên phải của tấm ảnh */
+            left: 75px;
             top: 50%;
             transform: translateY(-50%);
             width: 220px;
@@ -314,7 +622,7 @@
             border-radius: 6px;
             z-index: 999;
             transition: 0.3s;
-            pointer-events: none; /* Tránh cản trở việc click nút */
+            pointer-events: none;
             text-align: left;
             line-height: 1.4;
         }
@@ -328,13 +636,14 @@
 
         /* --- TOOLTIP CHUYÊN DỤNG CHO BẢNG CHỈ SỐ (STATS) --- */
         .sl-stat-item {
-            position: relative; /* Quan trọng để neo tooltip không bị bay lung tung */
+            position: relative;
         }
+
         .stat-tooltip {
             visibility: hidden;
             opacity: 0;
             position: absolute;
-            bottom: 90%; /* Nổi lên phía trên chỉ số */
+            bottom: 90%;
             left: 50%;
             transform: translateX(-50%);
             width: 250px;
@@ -346,7 +655,7 @@
             border-radius: 6px;
             z-index: 1000;
             transition: 0.3s ease;
-            pointer-events: none; /* Không cản trở việc bấm nút + */
+            pointer-events: none;
             text-align: center;
             font-size: 16px;
             line-height: 1.4;
@@ -357,7 +666,8 @@
         .stat-tooltip::after {
             content: "";
             position: absolute;
-            top: 100%; left: 50%;
+            top: 100%;
+            left: 50%;
             margin-left: -6px;
             border-width: 6px;
             border-style: solid;
@@ -369,7 +679,7 @@
         .sl-stat-item:active .stat-tooltip {
             visibility: visible;
             opacity: 1;
-            bottom: 110%; /* Hiệu ứng trôi nhẹ lên */
+            bottom: 110%;
         }
 
         /* --- SOLO LEVELING STATUS UI --- */
@@ -381,16 +691,19 @@
             background: rgba(0, 20, 50, 0.3);
             box-shadow: inset 0 0 15px rgba(0, 191, 255, 0.05);
         }
+
         .sl-top-row {
             display: flex;
             justify-content: space-around;
             align-items: center;
         }
+
         .sl-status-block {
             display: flex;
             align-items: center;
             gap: 15px;
         }
+
         .sl-icon-col {
             display: flex;
             flex-direction: column;
@@ -398,15 +711,17 @@
             color: #8eefff;
             text-shadow: 0 0 10px #8eefff;
         }
+
         .sl-bar-col {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
         }
+
         /* KÉO DÀI THANH MÁU TRÊN PC */
         .sl-bar-outer {
-            width: 320px; /* <--- Kéo dài gấp đôi (Từ 160px lên 320px) */
-            height: 14px; /* <--- Làm dày hơn một chút để nhìn rõ màu (Từ 10px lên 14px) */
+            width: 320px;
+            height: 14px;
             border: 2px solid rgba(142, 239, 255, 0.7);
             border-radius: 10px;
             padding: 2px;
@@ -421,18 +736,21 @@
             display: inline-block;
             margin-bottom: 4px;
         }
+
         .hp-cross::before, .hp-cross::after {
             content: '';
             position: absolute;
-            background: #8eefff; /* Màu xanh hệ thống */
+            background: #8eefff;
             box-shadow: 0 0 10px #8eefff, 0 0 15px #8eefff;
-            border-radius: 4px; /* Bo góc hoàn hảo */
+            border-radius: 4px;
         }
+
         .hp-cross::before {
-            top: 0; bottom: 0; left: 7px; right: 7px; /* Vẽ thanh dọc */
+            top: 0; bottom: 0; left: 7px; right: 7px;
         }
+
         .hp-cross::after {
-            left: 0; right: 0; top: 7px; bottom: 7px; /* Vẽ thanh ngang */
+            left: 0; right: 0; top: 7px; bottom: 7px;
         }
 
         /* RESPONSIVE: Tự động thu nhỏ lại khi dùng trên Điện thoại */
@@ -441,7 +759,7 @@
                 width: 140px; 
             }
             .sl-top-row {
-                flex-wrap: wrap; /* Cho phép rớt dòng nếu thiếu chỗ */
+                flex-wrap: wrap;
                 gap: 15px;
             }
         }
@@ -468,6 +786,7 @@
             gap: 20px 40px;
             padding: 25px 40px;
         }
+
         .sl-stat-item {
             display: flex;
             align-items: center;
@@ -475,38 +794,47 @@
             cursor: pointer;
             transition: 0.2s;
         }
+
         .sl-stat-item:hover {
             transform: scale(1.02);
         }
+
         .sl-stat-item:hover .sl-stat-label, .sl-stat-item:hover .sl-stat-val {
             text-shadow: 0 0 15px #fff;
         }
+
         .sl-stat-icon {
             font-size: 28px;
             margin-right: 15px;
             filter: drop-shadow(0 0 5px #8eefff);
         }
+
         .sl-stat-label {
             width: 60px;
             color: #fff;
             text-shadow: 0 0 8px #8eefff;
         }
+
         .sl-stat-val {
             font-size: 36px;
             font-weight: bold;
             margin-left: 15px;
             color: #fff;
             text-shadow: 0 0 10px #8eefff;
-            /* Đã xóa flex: 1; để nút không bị đẩy ra xa */
-            width: 100px; /* Thêm độ rộng cố định để các nút + luôn thẳng cột dọc */
+            width: 100px;
             text-align: left;
         }
+
         .sl-points-block {
             justify-content: flex-end;
             text-align: right;
             cursor: default;
         }
-        .sl-points-block:hover { transform: none; }
+
+        .sl-points-block:hover {
+            transform: none;
+        }
+
         .sl-points-label {
             font-size: 14px;
             line-height: 1.2;
@@ -514,12 +842,14 @@
             margin-right: 15px;
             text-transform: uppercase;
         }
+
         .sl-points-val {
             font-size: 48px;
             font-weight: bold;
             color: #fff;
             text-shadow: 0 0 15px #8eefff;
         }
+
         /* Nút cộng điểm nâng cấp giao diện tròn */
         .sl-stat-item .add-btn {
             background: transparent;
@@ -531,6 +861,7 @@
             border-radius: 50%;
             margin-left: 10px;
         }
+
         .sl-stat-item .add-btn:hover:not(:disabled) {
             background: #8eefff;
             color: #000;
@@ -556,116 +887,144 @@
         }
 
         /* Thanh cuộn dành riêng cho kho đồ */
-        #inventoryArea::-webkit-scrollbar { width: 6px; }
-        #inventoryArea::-webkit-scrollbar-track { background: rgba(0, 30, 60, 0.5); border-radius: 4px; }
-        #inventoryArea::-webkit-scrollbar-thumb { background: #00bfff; border-radius: 4px; box-shadow: 0 0 5px #00bfff; }
+        #inventoryArea::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #inventoryArea::-webkit-scrollbar-track {
+            background: rgba(0, 30, 60, 0.5);
+            border-radius: 4px;
+        }
+
+        #inventoryArea::-webkit-scrollbar-thumb {
+            background: #00bfff;
+            border-radius: 4px;
+            box-shadow: 0 0 5px #00bfff;
+        }
 
         /* --- CSS MỚI: THANH CUỘN NGANG CHO CỬA HÀNG COSTUME --- */
         .costume-scroll-container {
             display: flex;
             gap: 20px;
-            overflow-x: auto; /* Cho phép cuộn ngang */
-            flex-wrap: nowrap; /* Cấm rớt dòng */
+            overflow-x: auto;
+            flex-wrap: nowrap;
             padding-bottom: 15px;
             justify-content: flex-start; 
         }
+
         .costume-scroll-container::-webkit-scrollbar {
-            height: 8px; /* Độ dày thanh cuộn ngang */
+            height: 8px;
         }
+
         .costume-scroll-container::-webkit-scrollbar-track {
             background: rgba(0, 30, 60, 0.5);
             border-radius: 4px;
         }
+
         .costume-scroll-container::-webkit-scrollbar-thumb {
-            background: #ffcc00; /* Màu vàng Gold cho sang trọng */
+            background: #ffcc00;
             border-radius: 4px;
             box-shadow: 0 0 5px #ffcc00;
         }
+
         /* Ép kích thước thẻ Costume để không bị bóp méo khi có quá nhiều đồ */
         .costume-card {
-            flex: 0 0 260px; /* Rộng cố định 260px */
+            flex: 0 0 260px;
             margin-top: 5px;
         }
 
         /* ================= GIAO DIỆN CHIẾN ĐẤU (ARENA & DUNGEON) ================= */
 
-/* 2. Chữ "VS" rực lửa */
-.vs-text {
-    font-size: 60px !important;
-    font-weight: bold;
-    color: #ffcc00;
-    font-style: italic;
-    text-shadow: 0 0 10px #ff0000, 0 0 20px #ff4d4d, 0 0 40px #ffcc00;
-    animation: pulseVS 1.5s infinite alternate;
-}
-@keyframes pulseVS {
-    from { transform: scale(1); opacity: 0.8; }
-    to { transform: scale(1.1); opacity: 1; }
-}
+        /* 2. Chữ "VS" rực lửa */
+        .vs-text {
+            font-size: 60px !important;
+            font-weight: bold;
+            color: #ffcc00;
+            font-style: italic;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff4d4d, 0 0 40px #ffcc00;
+            animation: pulseVS 1.5s infinite alternate;
+        }
 
-/* 3. Nâng cấp Thanh Máu (HP Bar) - Dày hơn, có viền 3D và bóng mờ */
-.combat-hp-track {
-    height: 18px !important; /* Thanh máu dày hơn để dễ nhìn */
-    background: rgba(0, 0, 0, 0.8) !important;
-    border: 2px solid #444;
-    border-radius: 10px;
-    margin: 15px 0 !important;
-    box-shadow: inset 0 0 10px #000;
-    overflow: hidden;
-    position: relative;
-}
-.combat-hp-fill-player {
-    height: 100%;
-    background: linear-gradient(90deg, #0088ff, #00ffff) !important; /* Máu player màu xanh hệ thống */
-    box-shadow: 0 0 15px #00ffff;
-    transition: width 0.4s ease-out;
-}
-.combat-hp-fill-enemy {
-    height: 100%;
-    background: linear-gradient(90deg, #cc0000, #ff4d4d) !important; 
-    box-shadow: 0 0 15px #ff4d4d;
-    transition: width 0.4s ease-out;
-}
-        
-.combat-shield-bar {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    background: linear-gradient(180deg, #f8f9fa 0%, #c4cbd4 50%, #e2e6ea 100%) !important;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), inset 0 0 5px #8b9aa8;
-    border-left: 2px solid #fff; 
-    transition: width 0.4s ease-out, left 0.4s ease-out, opacity 0.3s;
-    z-index: 5; 
-    opacity: 0; 
-}
-        
-.combat-hp-text {
-    font-size: 20px !important;
-    font-weight: bold;
-    letter-spacing: 1px;
-    text-shadow: 0 0 8px #000, 0 0 15px rgba(0,0,0,0.8); /* Bóng đen giúp chữ nổi bật trên nền sáng */
-}
+        @keyframes pulseVS {
+            from { transform: scale(1); opacity: 0.8; }
+            to { transform: scale(1.1); opacity: 1; }
+        }
 
-/* 4. Tân trang Nhật ký Chiến đấu (Battle Log) - Chữ to, dễ đọc, cuộn mượt */
-#battleLog, #d-battleLog {
-    height: 180px !important; /* Cao hơn để hiển thị nhiều dòng hơn */
-    background: linear-gradient(to bottom, rgba(0, 10, 30, 0.9), rgba(0, 0, 10, 0.95)) !important;
-    border: 2px solid rgba(0, 191, 255, 0.4) !important;
-    border-radius: 8px;
-    box-shadow: inset 0 0 20px rgba(0, 191, 255, 0.1);
-    margin-top: 20px !important;
-    padding: 15px 20px !important;
-    font-size: 18px !important; /* Tăng size chữ */
-    line-height: 1.6;
-    color: #e0e0e0 !important;
-    font-family: 'Oswald', sans-serif !important; /* Dùng font chuẩn của game thay vì monospace */
-    overflow-y: auto;
-}
-#battleLog::-webkit-scrollbar, #d-battleLog::-webkit-scrollbar { width: 6px; }
-#battleLog::-webkit-scrollbar-track, #d-battleLog::-webkit-scrollbar-track { background: rgba(0,0,0,0.5); }
-#battleLog::-webkit-scrollbar-thumb, #d-battleLog::-webkit-scrollbar-thumb { background: #00bfff; border-radius: 4px; }
+        /* 3. Nâng cấp Thanh Máu (HP Bar) - Dày hơn, có viền 3D và bóng mờ */
+        .combat-hp-track {
+            height: 18px !important;
+            background: rgba(0, 0, 0, 0.8) !important;
+            border: 2px solid #444;
+            border-radius: 10px;
+            margin: 15px 0 !important;
+            box-shadow: inset 0 0 10px #000;
+            overflow: hidden;
+            position: relative;
+        }
 
-    /* ================= HỆ THỐNG MÀU RANK (S, A, B, C, D) ================= */
+        .combat-hp-fill-player {
+            height: 100%;
+            background: linear-gradient(90deg, #0088ff, #00ffff) !important;
+            box-shadow: 0 0 15px #00ffff;
+            transition: width 0.4s ease-out;
+        }
+
+        .combat-hp-fill-enemy {
+            height: 100%;
+            background: linear-gradient(90deg, #cc0000, #ff4d4d) !important; 
+            box-shadow: 0 0 15px #ff4d4d;
+            transition: width 0.4s ease-out;
+        }
+                
+        .combat-shield-bar {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            background: linear-gradient(180deg, #f8f9fa 0%, #c4cbd4 50%, #e2e6ea 100%) !important;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), inset 0 0 5px #8b9aa8;
+            border-left: 2px solid #fff; 
+            transition: width 0.4s ease-out, left 0.4s ease-out, opacity 0.3s;
+            z-index: 5; 
+            opacity: 0; 
+        }
+                
+        .combat-hp-text {
+            font-size: 20px !important;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px #000, 0 0 15px rgba(0,0,0,0.8);
+        }
+
+        /* 4. Tân trang Nhật ký Chiến đấu (Battle Log) - Chữ to, dễ đọc, cuộn mượt */
+        #battleLog, #d-battleLog {
+            height: 180px !important;
+            background: linear-gradient(to bottom, rgba(0, 10, 30, 0.9), rgba(0, 0, 10, 0.95)) !important;
+            border: 2px solid rgba(0, 191, 255, 0.4) !important;
+            border-radius: 8px;
+            box-shadow: inset 0 0 20px rgba(0, 191, 255, 0.1);
+            margin-top: 20px !important;
+            padding: 15px 20px !important;
+            font-size: 18px !important;
+            line-height: 1.6;
+            color: #e0e0e0 !important;
+            font-family: 'Oswald', sans-serif !important;
+            overflow-y: auto;
+        }
+
+        #battleLog::-webkit-scrollbar, #d-battleLog::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #battleLog::-webkit-scrollbar-track, #d-battleLog::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.5);
+        }
+
+        #battleLog::-webkit-scrollbar-thumb, #d-battleLog::-webkit-scrollbar-thumb {
+            background: #00bfff;
+            border-radius: 4px;
+        }
+
+        /* ================= HỆ THỐNG MÀU RANK (S, A, B, C, D) ================= */
         /* Rank S - Vàng Gold Rực Rỡ */
         .rank-S .item-img-premium { border-color: #ffcc00; box-shadow: 0 0 10px rgba(255, 204, 0, 0.5); }
         .rank-S:hover .item-img-premium { border-color: #ffcc00; box-shadow: 0 0 25px #ffcc00; }
@@ -696,15 +1055,15 @@
         .rank-D .item-tooltip { border-color: #aaa; box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); }
         .text-rank-D { color: #ccc !important; }
 
-
         /* --- CSS CHO KHAY HIỆU ỨNG (BUFF/DEBUFF) --- */
         .status-board {
             display: flex;
             gap: 8px;
             justify-content: center;
             margin-top: 5px;
-            min-height: 28px; /* Giữ khoảng trống để giao diện không bị giật khi icon hiện ra */
+            min-height: 28px;
         }
+
         .status-icon {
             position: relative;
             width: 28px;
@@ -716,8 +1075,9 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 0 5px rgba(0,0,0,0.5);
-            cursor: help; /* Rê chuột vào sẽ hiện tên hiệu ứng */
+            cursor: help;
         }
+
         .status-turn {
             position: absolute;
             bottom: -6px;
@@ -734,6 +1094,7 @@
             justify-content: center;
             border: 1px solid #fff;
         }
+
         /* ================= SỬA LỖI KHUẤT BẢNG THÔNG TIN ITEM ================= */
         
         /* Item trên cùng: Ép Tooltip thả xuống dưới thay vì trồi lên trên */
@@ -755,37 +1116,181 @@
             bottom: auto;
             transform: none;
         }
+        
+        /* ================= GIAO DIỆN CỬA HÀNG CHUẨN SOLO LEVELING ANIME ================= */
+        .sl-shop-header-nav {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
 
-        /* ================= GIAO DIỆN CỬA HÀNG  ================= */
-        .sl-shop-header-nav { display: flex; gap: 15px; margin-bottom: 20px; }
-        .sl-shop-tab { flex: 1; text-align: center; padding: 12px; font-size: 24px; color: #555; border: 1px solid #444; cursor: pointer; text-transform: uppercase; letter-spacing: 3px; background: rgba(0,0,0,0.5); transition: 0.3s; }
-        .sl-shop-tab.active { color: #fff; border-color: #00bfff; text-shadow: 0 0 10px #00bfff; box-shadow: inset 0 0 15px rgba(0, 191, 255, 0.3); }
+        .sl-shop-tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            font-size: 24px;
+            color: #555;
+            border: 1px solid #444;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            background: rgba(0,0,0,0.5);
+            transition: 0.3s;
+        }
 
-        .sl-shop-filter-row { display: flex; gap: 10px; margin-bottom: 20px; }
-        .sl-shop-filter-btn { width: 55px; height: 55px; border: 1px solid rgba(0, 191, 255, 0.4); display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; background: rgba(0,0,0,0.6); transition: 0.2s; filter: grayscale(1) opacity(0.5); }
-        .sl-shop-filter-btn.active { border-color: #fff; background: #fff; filter: grayscale(0) opacity(1); box-shadow: 0 0 15px rgba(255,255,255,0.6); }
-        .sl-shop-filter-btn:hover { border-color: #00bfff; filter: grayscale(0) opacity(1); }
+        .sl-shop-tab.active {
+            color: #fff;
+            border-color: #00bfff;
+            text-shadow: 0 0 10px #00bfff;
+            box-shadow: inset 0 0 15px rgba(0, 191, 255, 0.3);
+        }
 
-        .sl-shop-list { display: flex; flex-direction: column; gap: 12px; max-height: 550px; overflow-y: auto; padding-right: 10px; }
-        .sl-shop-list::-webkit-scrollbar { width: 6px; }
-        .sl-shop-list::-webkit-scrollbar-track { background: rgba(0, 30, 60, 0.5); border-radius: 4px; }
-        .sl-shop-list::-webkit-scrollbar-thumb { background: #00bfff; border-radius: 4px; box-shadow: 0 0 5px #00bfff; }
+        .sl-shop-filter-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
 
-        .sl-shop-item { display: flex; align-items: center; border: 1px solid rgba(0, 191, 255, 0.2); padding: 15px 20px; background: linear-gradient(90deg, rgba(0, 15, 30, 0.8), rgba(0, 5, 15, 0.9)); transition: 0.2s; cursor: pointer; position: relative; }
-        .sl-shop-item:hover { border-color: #00bfff; background: linear-gradient(90deg, rgba(0, 30, 60, 0.8), rgba(0, 10, 20, 0.9)); box-shadow: 0 0 20px rgba(0, 191, 255, 0.15) inset; }
+        .sl-shop-filter-btn {
+            width: 55px;
+            height: 55px;
+            border: 1px solid rgba(0, 191, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            background: rgba(0,0,0,0.6);
+            transition: 0.2s;
+            filter: grayscale(1) opacity(0.5);
+        }
 
-        .sl-shop-icon-box { width: 60px; height: 60px; border: 1px solid #00bfff; background: rgba(0, 0, 0, 0.8); display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: inset 0 0 15px rgba(0, 191, 255, 0.3); flex-shrink: 0; position: relative; overflow: hidden; }
-        .sl-shop-icon-box img { width: 100%; height: 100%; object-fit: cover; }
+        .sl-shop-filter-btn.active {
+            border-color: #fff;
+            background: #fff;
+            filter: grayscale(0) opacity(1);
+            box-shadow: 0 0 15px rgba(255,255,255,0.6);
+        }
 
-        .sl-shop-info { flex: 1; margin-left: 20px; display: flex; flex-direction: column; justify-content: center; }
-        .sl-shop-item-name { font-size: 24px; color: #fff; margin: 0; letter-spacing: 1px; text-shadow: 0 0 5px rgba(255,255,255,0.4); font-weight: normal; }
-        .sl-shop-item-desc { font-size: 14px; color: #888; margin-top: 5px; }
+        .sl-shop-filter-btn:hover {
+            border-color: #00bfff;
+            filter: grayscale(0) opacity(1);
+        }
 
-        .sl-shop-action { text-align: right; min-width: 150px; }
-        .sl-shop-price-btn { background: transparent !important; border: none !important; color: #8eefff; font-size: 22px; font-family: 'Oswald', sans-serif; cursor: pointer; outline: none; transition: 0.2s; letter-spacing: 1px; padding: 0; }
-        .sl-shop-price-btn:hover { color: #fff; text-shadow: 0 0 10px #fff; transform: scale(1.05); }
+        .sl-shop-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 550px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .sl-shop-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sl-shop-list::-webkit-scrollbar-track {
+            background: rgba(0, 30, 60, 0.5);
+            border-radius: 4px;
+        }
+
+        .sl-shop-list::-webkit-scrollbar-thumb {
+            background: #00bfff;
+            border-radius: 4px;
+            box-shadow: 0 0 5px #00bfff;
+        }
+
+        .sl-shop-item {
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            padding: 15px 20px;
+            background: linear-gradient(90deg, rgba(0, 15, 30, 0.8), rgba(0, 5, 15, 0.9));
+            transition: 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .sl-shop-item:hover {
+            border-color: #00bfff;
+            background: linear-gradient(90deg, rgba(0, 30, 60, 0.8), rgba(0, 10, 20, 0.9));
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.15) inset;
+        }
+
+        .sl-shop-icon-box {
+            width: 60px;
+            height: 60px;
+            border: 1px solid #00bfff;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: inset 0 0 15px rgba(0, 191, 255, 0.3);
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sl-shop-icon-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sl-shop-info {
+            flex: 1;
+            margin-left: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .sl-shop-item-name {
+            font-size: 24px;
+            color: #fff;
+            margin: 0;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px rgba(255,255,255,0.4);
+            font-weight: normal;
+        }
+
+        .sl-shop-item-desc {
+            font-size: 14px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .sl-shop-action {
+            text-align: right;
+            min-width: 150px;
+        }
+
+        .sl-shop-price-btn {
+            background: transparent !important;
+            border: none !important;
+            color: #8eefff;
+            font-size: 22px;
+            font-family: 'Oswald', sans-serif;
+            cursor: pointer;
+            outline: none;
+            transition: 0.2s;
+            letter-spacing: 1px;
+            padding: 0;
+        }
+
+        .sl-shop-price-btn:hover {
+            color: #fff;
+            text-shadow: 0 0 10px #fff;
+            transform: scale(1.05);
+        }
+
         /* Đường kẻ chia cắt các phân mục */
-        .sl-shop-divider { border-bottom: 1px solid rgba(0, 191, 255, 0.3); margin: 15px 0; }
+        .sl-shop-divider {
+            border-bottom: 1px solid rgba(0, 191, 255, 0.3);
+            margin: 15px 0;
+        }
     </style>
 </head>
 <body>
@@ -810,7 +1315,10 @@
 
 <div class="wrapper hidden" id="gameWrap">
     <div class="panel" style="width: 100%;"> <h1>STATUS</h1>
-        <div class="row"><span>NAME: <span id="playerName"></span></span><span>LEVEL: <span id="level"></span></span></div>
+        <div class="row">
+            <span>NAME: <span id="playerName"></span></span>
+            <span>LEVEL: <span id="level"></span></span>
+        </div>
         <div class="row">
             <span>JOB: <span id="job" class="sh-title"></span></span>
         </div>
@@ -830,7 +1338,9 @@
         
         <!-- Thanh EXP giữ nguyên màu vàng/cam cũ -->
         <div>EXP: <span id="expText"></span></div>
-        <div class="barbox" style="margin-bottom: 5px;"><div class="bar" id="expBar"></div></div>
+        <div class="barbox" style="margin-bottom: 5px;">
+            <div class="bar" id="expBar"></div>
+        </div>
 
         <div class="sl-box sl-top-row" style="flex-wrap: wrap; gap: 15px;">
             
@@ -841,7 +1351,9 @@
                     <span style="font-size:16px; font-weight:bold; letter-spacing: 1px;">HP</span>
                 </div>
                 <div class="sl-bar-col">
-                    <div class="sl-bar-outer"><div id="hpBar"></div></div>
+                    <div class="sl-bar-outer">
+                        <div id="hpBar"></div>
+                    </div>
                     <div class="sl-bar-text" id="hpDisplay">100/100</div>
                 </div>
             </div>
@@ -854,7 +1366,9 @@
                     <span style="font-size:16px; font-weight:bold; letter-spacing: 1px;">MP</span>
                 </div>
                 <div class="sl-bar-col">
-                    <div class="sl-bar-outer"><div id="mpBar"></div></div>
+                    <div class="sl-bar-outer">
+                        <div id="mpBar"></div>
+                    </div>
                     <div class="sl-bar-text" id="mpDisplay">10/10</div>
                 </div>
             </div>
@@ -862,7 +1376,9 @@
             <!-- CASH -->
             <div class="sl-status-block" style="flex-direction: column; gap: 5px;">
                 <span style="font-size:28px; filter: drop-shadow(0 0 10px #8eefff); line-height: 1;">💠</span>
-                <span style="font-size:16px; font-weight:bold; color: #8eefff; text-shadow: 0 0 5px #8eefff; letter-spacing: 1px;">CASH: <span id="cashText" style="color: #fff;">0</span></span>
+                <span style="font-size:16px; font-weight:bold; color: #8eefff; text-shadow: 0 0 5px #8eefff; letter-spacing: 1px;">
+                    CASH: <span id="cashText" style="color: #fff;">0</span>
+                </span>
             </div>
             
         </div>
@@ -871,7 +1387,10 @@
         <div class="sl-box sl-stat-grid">
             
             <div class="sl-stat-item">
-                <span class="sl-stat-icon">🏋️</span> <span class="sl-stat-label">STR:</span> <span class="sl-stat-val" id="str">0</span> <button class="add-btn" onclick="upgradeStat(event, 'str')">+</button>
+                <span class="sl-stat-icon">🏋️</span> 
+                <span class="sl-stat-label">STR:</span> 
+                <span class="sl-stat-val" id="str">0</span> 
+                <button class="add-btn" onclick="upgradeStat(event, 'str')">+</button>
                 <div class="stat-tooltip">
                     <h4 style="color: #8eefff; margin: 0 0 5px 0;">STRENGTH (SỨC MẠNH)</h4>
                     <span style="color: #ccc;">Tăng sát thương vật lý gốc cho đòn đánh thường và bộ kỹ năng nhánh <span style="color: #4a90e2">Sát Thủ</span>, <span style="color: #ff4d4d">Đấu Sĩ</span>.</span>
@@ -879,7 +1398,10 @@
             </div>
             
             <div class="sl-stat-item">
-                <span class="sl-stat-icon">💖</span> <span class="sl-stat-label">VIT:</span> <span class="sl-stat-val" id="vit">0</span> <button class="add-btn" onclick="upgradeStat(event, 'vit')">+</button>
+                <span class="sl-stat-icon">💖</span> 
+                <span class="sl-stat-label">VIT:</span> 
+                <span class="sl-stat-val" id="vit">0</span> 
+                <button class="add-btn" onclick="upgradeStat(event, 'vit')">+</button>
                 <div class="stat-tooltip">
                     <h4 style="color: #8eefff; margin: 0 0 5px 0;">VITALITY (THỂ LỰC)</h4>
                     <span style="color: #ccc;">Mỗi điểm cộng thêm <span style="color: #00ff00">10 HP tối đa</span> và tăng tỷ lệ miễn thương (giảm sát thương gánh chịu).</span>
@@ -887,7 +1409,10 @@
             </div>
             
             <div class="sl-stat-item">
-                <span class="sl-stat-icon">👟</span> <span class="sl-stat-label">AGI:</span> <span class="sl-stat-val" id="agi">0</span> <button class="add-btn" onclick="upgradeStat(event, 'agi')">+</button>
+                <span class="sl-stat-icon">👟</span> 
+                <span class="sl-stat-label">AGI:</span> 
+                <span class="sl-stat-val" id="agi">0</span> 
+                <button class="add-btn" onclick="upgradeStat(event, 'agi')">+</button>
                 <div class="stat-tooltip">
                     <h4 style="color: #8eefff; margin: 0 0 5px 0;">AGILITY (NHANH NHẸN)</h4>
                     <span style="color: #ccc;">Mỗi điểm tăng <span style="color: yellow">0.5% Tỷ lệ Bạo kích</span> và cộng thêm sát thương khi bạo kích.</span>
@@ -895,7 +1420,10 @@
             </div>
             
             <div class="sl-stat-item">
-                <span class="sl-stat-icon">🧠</span> <span class="sl-stat-label">INT:</span> <span class="sl-stat-val" id="int">0</span> <button class="add-btn" onclick="upgradeStat(event, 'int')">+</button>
+                <span class="sl-stat-icon">🧠</span> 
+                <span class="sl-stat-label">INT:</span> 
+                <span class="sl-stat-val" id="int">0</span> 
+                <button class="add-btn" onclick="upgradeStat(event, 'int')">+</button>
                 <div class="stat-tooltip">
                     <h4 style="color: #8eefff; margin: 0 0 5px 0;">INTELLIGENCE (TRÍ LỰC)</h4>
                     <span style="color: #ccc;">Mỗi điểm cộng thêm <span style="color: #00bfff">5 MP tối đa</span>. Cốt lõi tăng sát thương cho kỹ năng nhánh <span style="color: #9933ff">Pháp Sư</span>.</span>
@@ -903,7 +1431,10 @@
             </div>
             
             <div class="sl-stat-item">
-                <span class="sl-stat-icon">👁️</span> <span class="sl-stat-label">PER:</span> <span class="sl-stat-val" id="sense">0</span> <button class="add-btn" onclick="upgradeStat(event, 'sense')">+</button>
+                <span class="sl-stat-icon">👁️</span> 
+                <span class="sl-stat-label">PER:</span> 
+                <span class="sl-stat-val" id="sense">0</span> 
+                <button class="add-btn" onclick="upgradeStat(event, 'sense')">+</button>
                 <div class="stat-tooltip">
                     <h4 style="color: #8eefff; margin: 0 0 5px 0;">SENSE (CẢM NHẬN)</h4>
                     <span style="color: #ccc;">Tăng độ ổn định của đòn đánh (kéo mức sát thương tối thiểu lên gần sát thương tối đa nhất).</span>
@@ -911,7 +1442,8 @@
             </div>
             
             <div class="sl-stat-item sl-points-block">
-                <span class="sl-points-label">Available<br>Ability<br>Points:</span> <span class="sl-points-val" id="points">0</span>
+                <span class="sl-points-label">Available<br>Ability<br>Points:</span> 
+                <span class="sl-points-val" id="points">0</span>
             </div>
         </div>
 
@@ -937,227 +1469,227 @@
 
                 <!-- ================= TAB BAG (TÚI ĐỒ) - ĐÃ VÁ LỖI THẺ ĐÓNG ================= -->
                 <div id="tab-bag" class="tab-panel">
-                <h2 style="color: #00bfff; text-align: center;">HÀNH TRANG THỢ SĂN</h2>
-                <div style="display: flex; gap: 20px; align-items: stretch;">
-        
-                <!-- BÊN TRÁI: ĐỒ ĐANG MẶC (Ép chiều cao cố định, biến thành Flex column) -->
-                <div class="card" style="flex: 1; border-color: gold; display: flex; flex-direction: column; height: 500px; box-sizing: border-box;">
-                <div class="tabs-header" style="height: 45px; flex-shrink: 0; align-items: stretch; margin-bottom: 15px; border-bottom: 1px solid rgba(255, 215, 0, 0.5); background: rgba(0, 10, 30, 0.8);">
-                <button class="tab-btn eq-tab-btn active" style="padding: 0; font-size: 16px; color: gold;" onclick="switchEqTab(event, 'basic')">TRANG BỊ</button>
-                <button class="tab-btn eq-tab-btn" style="padding: 0; font-size: 16px; color: #00ffff;" onclick="switchEqTab(event, 'artifact')">CỔ VẬT</button>
+                    <h2 style="color: #00bfff; text-align: center;">HÀNH TRANG THỢ SĂN</h2>
+                    <div style="display: flex; gap: 20px; align-items: stretch;">
+            
+                        <!-- BÊN TRÁI: ĐỒ ĐANG MẶC (Ép chiều cao cố định, biến thành Flex column) -->
+                        <div class="card" style="flex: 1; border-color: gold; display: flex; flex-direction: column; height: 500px; box-sizing: border-box;">
+                            <div class="tabs-header" style="height: 45px; flex-shrink: 0; align-items: stretch; margin-bottom: 15px; border-bottom: 1px solid rgba(255, 215, 0, 0.5); background: rgba(0, 10, 30, 0.8);">
+                                <button class="tab-btn eq-tab-btn active" style="padding: 0; font-size: 16px; color: gold;" onclick="switchEqTab(event, 'basic')">TRANG BỊ</button>
+                                <button class="tab-btn eq-tab-btn" style="padding: 0; font-size: 16px; color: #00ffff;" onclick="switchEqTab(event, 'artifact')">CỔ VẬT</button>
+                            </div>
+                        
+                            <!-- Khu vực chứa đồ: Cho phép chiếm nốt khoảng trống (flex: 1) và bật thanh cuộn (overflow-y: auto) -->
+                            <div id="equippedArea" style="flex: 1; overflow-y: auto; padding-right: 5px;"></div>
+                        </div>
+
+                        <!-- BÊN PHẢI: KHO ĐỒ PHÂN LOẠI (Làm tương tự bên trái) -->
+                        <div class="card" style="flex: 1; display: flex; flex-direction: column; height: 500px; box-sizing: border-box;">
+                            
+                            <div class="tabs-header" style="height: 45px; flex-shrink: 0; align-items: stretch; margin-bottom: 15px; border-bottom: 1px solid rgba(0,191,255,0.5); background: rgba(0, 10, 30, 0.8);">
+                                <button class="tab-btn inv-tab-btn active" style="padding: 0; font-size: 16px;" onclick="switchInvTab(event, 'equip')">TRANG BỊ</button>
+                                <button class="tab-btn inv-tab-btn" style="padding: 0; font-size: 16px;" onclick="switchInvTab(event, 'consum')">TIÊU HAO</button>
+                                <button class="tab-btn inv-tab-btn" style="padding: 0; font-size: 16px; color: #cc66ff;" onclick="switchInvTab(event, 'rare')">VẬT LIỆU</button>
+                            </div>
+                            
+                            <!-- Bỏ max-height cũ, dùng flex: 1 để đồng bộ hoàn toàn với khung bên trái -->
+                            <div id="inventoryArea" style="flex: 1; overflow-y: auto; padding-right: 5px;"></div>
+                        </div>
+
+                    </div>
                 </div>
-            
-                <!-- Khu vực chứa đồ: Cho phép chiếm nốt khoảng trống (flex: 1) và bật thanh cuộn (overflow-y: auto) -->
-                <div id="equippedArea" style="flex: 1; overflow-y: auto; padding-right: 5px;"></div>
-            </div>
-
-        <!-- BÊN PHẢI: KHO ĐỒ PHÂN LOẠI (Làm tương tự bên trái) -->
-        <div class="card" style="flex: 1; display: flex; flex-direction: column; height: 500px; box-sizing: border-box;">
-            
-            <div class="tabs-header" style="height: 45px; flex-shrink: 0; align-items: stretch; margin-bottom: 15px; border-bottom: 1px solid rgba(0,191,255,0.5); background: rgba(0, 10, 30, 0.8);">
-                <button class="tab-btn inv-tab-btn active" style="padding: 0; font-size: 16px;" onclick="switchInvTab(event, 'equip')">TRANG BỊ</button>
-                <button class="tab-btn inv-tab-btn" style="padding: 0; font-size: 16px;" onclick="switchInvTab(event, 'consum')">TIÊU HAO</button>
-                <button class="tab-btn inv-tab-btn" style="padding: 0; font-size: 16px; color: #cc66ff;" onclick="switchInvTab(event, 'rare')">VẬT LIỆU</button>
-            </div>
-            
-            <!-- Bỏ max-height cũ, dùng flex: 1 để đồng bộ hoàn toàn với khung bên trái -->
-            <div id="inventoryArea" style="flex: 1; overflow-y: auto; padding-right: 5px;"></div>
-        </div>
-
-    </div>
-</div>
 
                 <div id="tab-shop" class="tab-panel">
     
-    <!-- THANH ĐIỀU HƯỚNG MUA / BÁN (CHUẨN ANIME) -->
-    <div class="sl-shop-header-nav">
-        <div class="sl-shop-tab active">BUY</div>
-        <!-- Nút SELL được dẫn link thẳng sang túi đồ để người chơi bán đồ -->
-        <div class="sl-shop-tab" onclick="openTab(event, 'tab-bag'); switchInvTab(event, 'equip');">SELL</div>
-    </div>
+                    <!-- THANH ĐIỀU HƯỚNG MUA / BÁN (CHUẨN ANIME) -->
+                    <div class="sl-shop-header-nav">
+                        <div class="sl-shop-tab active">BUY</div>
+                        <!-- Nút SELL được dẫn link thẳng sang túi đồ để người chơi bán đồ -->
+                        <div class="sl-shop-tab" onclick="openTab(event, 'tab-bag'); switchInvTab(event, 'equip');">SELL</div>
+                    </div>
 
-    <!-- KHAY PHÂN LOẠI ICON (CHUẨN ANIME) -->
-    <div class="sl-shop-filter-row">
-        <div class="sl-shop-filter-btn">🔠</div> <!-- Ký hiệu: Tất Cả -->
-        <div class="sl-shop-filter-btn">⚔️</div> <!-- Ký hiệu: Vũ Khí -->
-        <div class="sl-shop-filter-btn active">🧪</div> <!-- Ký hiệu: Vật phẩm tiêu hao -->
-        <div class="sl-shop-filter-btn">👔</div> <!-- Ký hiệu: Trang Phục -->
-    </div>
+                    <!-- KHAY PHÂN LOẠI ICON (CHUẨN ANIME) -->
+                    <div class="sl-shop-filter-row">
+                        <div class="sl-shop-filter-btn">🔠</div> <!-- Ký hiệu: Tất Cả -->
+                        <div class="sl-shop-filter-btn">⚔️</div> <!-- Ký hiệu: Vũ Khí -->
+                        <div class="sl-shop-filter-btn active">🧪</div> <!-- Ký hiệu: Vật phẩm tiêu hao -->
+                        <div class="sl-shop-filter-btn">👔</div> <!-- Ký hiệu: Trang Phục -->
+                    </div>
 
-    <!-- DANH SÁCH VẬT PHẨM (LIST VIEW) -->
-    <div class="sl-shop-list">
-        
-        <!-- VẬT PHẨM HỒI PHỤC -->
-        <div class="sl-shop-item" onclick="buyShopItem('hp_potion')">
-            <div class="sl-shop-icon-box">❤️</div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Divine HP Potion (Nhỏ)</p>
-                <p class="sl-shop-item-desc">Hồi phục tức thời 100 HP.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button class="sl-shop-price-btn">50 CASH</button>
-            </div>
-        </div>
+                    <!-- DANH SÁCH VẬT PHẨM (LIST VIEW) -->
+                    <div class="sl-shop-list">
+                        
+                        <!-- VẬT PHẨM HỒI PHỤC -->
+                        <div class="sl-shop-item" onclick="buyShopItem('hp_potion')">
+                            <div class="sl-shop-icon-box">❤️</div>
+                            <div class="sl-shop-info">
+                                <p class="sl-shop-item-name">Divine HP Potion (Nhỏ)</p>
+                                <p class="sl-shop-item-desc">Hồi phục tức thời 100 HP.</p>
+                            </div>
+                            <div class="sl-shop-action">
+                                <button class="sl-shop-price-btn">50 CASH</button>
+                            </div>
+                        </div>
 
-        <div class="sl-shop-item" onclick="buyShopItem('hp_potion_mid')">
-            <div class="sl-shop-icon-box" style="box-shadow: inset 0 0 15px rgba(255, 51, 51, 0.4); border-color: #ff3333;">💖</div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Divine HP Potion (Trung)</p>
-                <p class="sl-shop-item-desc">Hồi phục tức thời 500 HP.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button class="sl-shop-price-btn" style="color: #ff3333;">200 CASH</button>
-            </div>
-        </div>
+                        <div class="sl-shop-item" onclick="buyShopItem('hp_potion_mid')">
+                            <div class="sl-shop-icon-box" style="box-shadow: inset 0 0 15px rgba(255, 51, 51, 0.4); border-color: #ff3333;">💖</div>
+                            <div class="sl-shop-info">
+                                <p class="sl-shop-item-name">Divine HP Potion (Trung)</p>
+                                <p class="sl-shop-item-desc">Hồi phục tức thời 500 HP.</p>
+                            </div>
+                            <div class="sl-shop-action">
+                                <button class="sl-shop-price-btn" style="color: #ff3333;">200 CASH</button>
+                            </div>
+                        </div>
 
-        <div class="sl-shop-item" onclick="buyShopItem('hp_potion_high')">
-            <div class="sl-shop-icon-box" style="box-shadow: inset 0 0 15px rgba(204, 0, 0, 0.5); border-color: #cc0000;">❤️‍🔥</div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Divine HP Potion (Lớn)</p>
-                <p class="sl-shop-item-desc">Hồi phục tức thời 2000 HP.</p>
+                        <div class="sl-shop-item" onclick="buyShopItem('hp_potion_high')">
+                            <div class="sl-shop-icon-box" style="box-shadow: inset 0 0 15px rgba(204, 0, 0, 0.5); border-color: #cc0000;">❤️‍🔥</div>
+                            <div class="sl-shop-info">
+                                <p class="sl-shop-item-name">Divine HP Potion (Lớn)</p>
+                                <p class="sl-shop-item-desc">Hồi phục tức thời 2000 HP.</p>
+                            </div>
+                            <div class="sl-shop-action">
+                                <button class="sl-shop-price-btn" style="color: #cc0000;">700 CASH</button>
             </div>
-            <div class="sl-shop-action">
-                <button class="sl-shop-price-btn" style="color: #cc0000;">700 CASH</button>
-            </div>
-        </div>
+                        </div>
 
-        <div class="sl-shop-item" onclick="buyShopItem('mp_potion')">
-            <div class="sl-shop-icon-box" style="box-shadow: inset 0 0 15px rgba(0, 191, 255, 0.4); border-color: #00bfff;">🧪</div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Mana Essence (Nhỏ)</p>
-                <p class="sl-shop-item-desc">Khôi phục 100 MP.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button class="sl-shop-price-btn" style="color: #00bfff;">50 CASH</button>
-            </div>
-        </div>
+                        <div class="sl-shop-item" onclick="buyShopItem('mp_potion')">
+                            <div class="sl-shop-icon-box" style="box-shadow: inset 0 0 15px rgba(0, 191, 255, 0.4); border-color: #00bfff;">🧪</div>
+                            <div class="sl-shop-info">
+                                <p class="sl-shop-item-name">Mana Essence (Nhỏ)</p>
+                                <p class="sl-shop-item-desc">Khôi phục 100 MP.</p>
+                            </div>
+                            <div class="sl-shop-action">
+                                <button class="sl-shop-price-btn" style="color: #00bfff;">50 CASH</button>
+                            </div>
+                        </div>
 
-        <div class="sl-shop-item" onclick="buyShopItem('mp_potion_mid')">
-            <div class="sl-shop-icon-box" style="box-shadow: inset 0 0 15px rgba(0, 136, 255, 0.4); border-color: #0088ff;">💧</div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Mana Essence (Trung)</p>
-                <p class="sl-shop-item-desc">Khôi phục 300 MP.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button class="sl-shop-price-btn" style="color: #0088ff;">150 CASH</button>
-            </div>
-        </div>
+                        <div class="sl-shop-item" onclick="buyShopItem('mp_potion_mid')">
+                            <div class="sl-shop-icon-box" style="box-shadow: inset 0 0 15px rgba(0, 136, 255, 0.4); border-color: #0088ff;">💧</div>
+                            <div class="sl-shop-info">
+                                <p class="sl-shop-item-name">Mana Essence (Trung)</p>
+                                <p class="sl-shop-item-desc">Khôi phục 300 MP.</p>
+                            </div>
+                            <div class="sl-shop-action">
+                                <button class="sl-shop-price-btn" style="color: #0088ff;">150 CASH</button>
+                            </div>
+                        </div>
 
-        <div class="sl-shop-item" onclick="buyShopItem('mp_potion_high')">
-            <div class="sl-shop-icon-box" style="box-shadow: inset 0 0 15px rgba(0, 68, 255, 0.5); border-color: #0044ff;">🌊</div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Mana Essence (Lớn)</p>
-                <p class="sl-shop-item-desc">Khôi phục 1000 MP.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button class="sl-shop-price-btn" style="color: #0044ff;">500 CASH</button>
-            </div>
-        </div>
+                        <div class="sl-shop-item" onclick="buyShopItem('mp_potion_high')">
+                            <div class="sl-shop-icon-box" style="box-shadow: inset 0 0 15px rgba(0, 68, 255, 0.5); border-color: #0044ff;">🌊</div>
+                            <div class="sl-shop-info">
+                                <p class="sl-shop-item-name">Mana Essence (Lớn)</p>
+                                <p class="sl-shop-item-desc">Khôi phục 1000 MP.</p>
+                            </div>
+                            <div class="sl-shop-action">
+                                <button class="sl-shop-price-btn" style="color: #0044ff;">500 CASH</button>
+                            </div>
+                        </div>
 
-        <div class="sl-shop-divider"></div>
+                        <div class="sl-shop-divider"></div>
 
-        <!-- CỬA HÀNG TRANG PHỤC (COSTUME) -->
-        <div class="sl-shop-item" onclick="handleCostume('costume_black_suit')">
-            <div class="sl-shop-icon-box" style="border-color: gold;"><img src="cos/Sung_Jinwoo_Black_Suit.png"></div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Bộ Vest Đen Ám Sát</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_black_suit" class="sl-shop-price-btn">5000 CASH</button>
-            </div>
-        </div>
+                        <!-- CỬA HÀNG TRANG PHỤC (COSTUME) -->
+                        <div class="sl-shop-item" onclick="handleCostume('costume_black_suit')">
+                            <div class="sl-shop-icon-box" style="border-color: gold;"><img src="cos/Sung_Jinwoo_Black_Suit.png"></div>
+                            <div class="sl-shop-info">
+                                <p class="sl-shop-item-name">Bộ Vest Đen Ám Sát</p>
+                                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
+                            </div>
+                            <div class="sl-shop-action">
+                                <button id="btn-costume_black_suit" class="sl-shop-price-btn">5000 CASH</button>
+                            </div>
+                        </div>
 
-        <div class="sl-shop-item" onclick="handleCostume('costume_mining')">
-            <div class="sl-shop-icon-box"><img src="cos/Sung_Jinwoo_Mining_Work.png"></div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Mining Work Clothes</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 150 STR, 100 VIT.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_mining" class="sl-shop-price-btn">15000 CASH</button>
-            </div>
-        </div>
+                        <div class="sl-shop-item" onclick="handleCostume('costume_mining')">
+                            <div class="sl-shop-icon-box"><img src="cos/Sung_Jinwoo_Mining_Work.png"></div>
+                            <div class="sl-shop-info">
+                                <p class="sl-shop-item-name">Mining Work Clothes</p>
+                                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 150 STR, 100 VIT.</p>
+                            </div>
+                            <div class="sl-shop-action">
+                                <button id="btn-costume_mining" class="sl-shop-price-btn">15000 CASH</button>
+                            </div>
+                        </div>
 
-        <div class="sl-shop-item" onclick="handleCostume('costume_wish')">
-            <div class="sl-shop-icon-box"><img src="cos/Sung_Jinwoo_A_Wish_Come_True.png"></div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Điều Ước Thành Hiện Thực</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 70 STR, 30 VIT.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_wish" class="sl-shop-price-btn">10000 CASH</button>
-            </div>
-        </div>
+                        <div class="sl-shop-item" onclick="handleCostume('costume_wish')">
+                            <div class="sl-shop-icon-box"><img src="cos/Sung_Jinwoo_A_Wish_Come_True.png"></div>
+                            <div class="sl-shop-info">
+                                <p class="sl-shop-item-name">Điều Ước Thành Hiện Thực</p>
+                                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 70 STR, 30 VIT.</p>
+                            </div>
+                            <div class="sl-shop-action">
+                                <button id="btn-costume_wish" class="sl-shop-price-btn">10000 CASH</button>
+                            </div>
+                        </div>
 
-        <div class="sl-shop-item" onclick="handleCostume('costume_light_outing')">
-            <div class="sl-shop-icon-box"><img src="cos/Sung_Jinwoo_Light_Outing_Wear.png"></div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Dạo Phố Nhẹ Nhàng</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_light_outing" class="sl-shop-price-btn">10000 CASH</button>
-            </div>
-        </div>
+                        <div class="sl-shop-item" onclick="handleCostume('costume_light_outing')">
+                            <div class="sl-shop-icon-box"><img src="cos/Sung_Jinwoo_Light_Outing_Wear.png"></div>
+                            <div class="sl-shop-info">
+                                <p class="sl-shop-item-name">Dạo Phố Nhẹ Nhàng</p>
+                                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
+                            </div>
+                            <div class="sl-shop-action">
+                                <button id="btn-costume_light_outing" class="sl-shop-price-btn">10000 CASH</button>
+                            </div>
+                        </div>
 
-        <div class="sl-shop-item" onclick="handleCostume('costume_incapable')">
-            <div class="sl-shop-icon-box"><img src="cos/Sung_Jinwoo_Incapable_of_Evaluation.png"></div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Incapable of Evaluation</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_incapable" class="sl-shop-price-btn">10000 CASH</button>
-            </div>
-        </div>
+                        <div class="sl-shop-item" onclick="handleCostume('costume_incapable')">
+                            <div class="sl-shop-icon-box"><img src="cos/Sung_Jinwoo_Incapable_of_Evaluation.png"></div>
+                            <div class="sl-shop-info">
+                                <p class="sl-shop-item-name">Incapable of Evaluation</p>
+                                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
+                            </div>
+                            <div class="sl-shop-action">
+                                <button id="btn-costume_incapable" class="sl-shop-price-btn">10000 CASH</button>
+                            </div>
+                        </div>
 
-        <div class="sl-shop-item" onclick="handleCostume('costume_summer_2')">
-            <div class="sl-shop-icon-box"><img src="cos/Sung_Jinwoo_Summer_Vacation_2.png"></div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Kỳ Nghỉ Hè 2</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_summer_2" class="sl-shop-price-btn">10000 CASH</button>
-            </div>
-        </div>
+                        <div class="sl-shop-item" onclick="handleCostume('costume_summer_2')">
+                            <div class="sl-shop-icon-box"><img src="cos/Sung_Jinwoo_Summer_Vacation_2.png"></div>
+                            <div class="sl-shop-info">
+                                <p class="sl-shop-item-name">Kỳ Nghỉ Hè 2</p>
+                                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
+                            </div>
+                            <div class="sl-shop-action">
+                                <button id="btn-costume_summer_2" class="sl-shop-price-btn">10000 CASH</button>
+                            </div>
+                        </div>
 
-        <div class="sl-shop-item" onclick="handleCostume('costume_night_lord')">
-            <div class="sl-shop-icon-box" style="border-color: #ff4d4d;"><img src="cos/Sung_Jinwoo_Night_Lord.png"></div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Chúa Tể Màn Đêm</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_night_lord" class="sl-shop-price-btn">20000 CASH</button>
-            </div>
-        </div>
+                        <div class="sl-shop-item" onclick="handleCostume('costume_night_lord')">
+                            <div class="sl-shop-icon-box" style="border-color: #ff4d4d;"><img src="cos/Sung_Jinwoo_Night_Lord.png"></div>
+                            <div class="sl-shop-info">
+                                <p class="sl-shop-item-name">Chúa Tể Màn Đêm</p>
+                                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
+                            </div>
+                            <div class="sl-shop-action">
+                                <button id="btn-costume_night_lord" class="sl-shop-price-btn">20000 CASH</button>
+                            </div>
+                        </div>
 
-        <div class="sl-shop-item" onclick="handleCostume('costume_dragon_monarch')">
-            <div class="sl-shop-icon-box" style="border-color: #ffcc00;"><img src="cos/Sung_Jinwoo_Monarch_of_the_Heaven-Annihilating_Dragons.png"></div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name" style="color: #ffcc00;">Vua Của Loài Rồng</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 250 STR, 100 VIT, 100 MP.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_dragon_monarch" class="sl-shop-price-btn">100000 CASH</button>
-            </div>
-        </div>
+                        <div class="sl-shop-item" onclick="handleCostume('costume_dragon_monarch')">
+                            <div class="sl-shop-icon-box" style="border-color: #ffcc00;"><img src="cos/Sung_Jinwoo_Monarch_of_the_Heaven-Annihilating_Dragons.png"></div>
+                            <div class="sl-shop-info">
+                                <p class="sl-shop-item-name" style="color: #ffcc00;">Vua Của Loài Rồng</p>
+                                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 250 STR, 100 VIT, 100 MP.</p>
+                            </div>
+                            <div class="sl-shop-action">
+                                <button id="btn-costume_dragon_monarch" class="sl-shop-price-btn">100000 CASH</button>
+                            </div>
+                        </div>
 
-        <div class="sl-shop-item" onclick="handleCostume('costume_god_of_death')">
-            <div class="sl-shop-icon-box" style="border-color: #ffcc00;"><img src="cos/Sung_Jinwoo_God_of_Death.png"></div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name" style="color: #ffcc00;">Tử Thần</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 250 STR, 100 VIT, 100 MP.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_god_of_death" class="sl-shop-price-btn">100000 CASH</button>
-            </div>
-        </div>
+                        <div class="sl-shop-item" onclick="handleCostume('costume_god_of_death')">
+                            <div class="sl-shop-icon-box" style="border-color: #ffcc00;"><img src="cos/Sung_Jinwoo_God_of_Death.png"></div>
+                            <div class="sl-shop-info">
+                                <p class="sl-shop-item-name" style="color: #ffcc00;">Tử Thần</p>
+                                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 250 STR, 100 VIT, 100 MP.</p>
+                            </div>
+                            <div class="sl-shop-action">
+                                <button id="btn-costume_god_of_death" class="sl-shop-price-btn">100000 CASH</button>
+                            </div>
+                        </div>
 
-    </div>
-</div>
+                    </div>
+                </div>
 
                 <div id="tab-skills" class="tab-panel">
                     <h2 style="color: #00bfff;">SKILL POINTS: <span id="skPoints">0</span></h2>
@@ -1174,45 +1706,45 @@
                     
                     <div id="combatArea" class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 30px; background: rgba(0, 15, 30, 0.6); border: 2px solid #00bfff; border-radius: 12px; min-height: 350px; box-shadow: 0 0 30px rgba(0, 191, 255, 0.15);">
     
-    <!-- NGƯỜI CHƠI -->
-    <div style="text-align: center; width: 40%;">
-        <div id="p-name" style="color: #00bfff; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #00bfff; margin-bottom: 15px; text-transform: uppercase;">SUNG JIN WOO</div>
-        <img id="p-img" src="char/Sungjinwoo.png" class="avatar-frame" style="border-color: #00bfff; box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);">
-        
-        <div class="combat-hp-track" style="border-color: #00bfff;">
-            <div id="p-hp-bar" class="combat-hp-fill-player" style="width: 100%;"></div>
-        </div>
-        <div id="p-hp-text" class="combat-hp-text" style="color: #00bfff;">HP: 100/100</div>
-        
-        <!-- KHAY ICON TRẠNG THÁI (NGƯỜI CHƠI) -->
-        <div id="p-status-board" class="status-board"></div>
-    </div>
+                        <!-- NGƯỜI CHƠI -->
+                        <div style="text-align: center; width: 40%;">
+                            <div id="p-name" style="color: #00bfff; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #00bfff; margin-bottom: 15px; text-transform: uppercase;">SUNG JIN WOO</div>
+                            <img id="p-img" src="char/Sungjinwoo.png" class="avatar-frame" style="border-color: #00bfff; box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);">
+                            
+                            <div class="combat-hp-track" style="border-color: #00bfff;">
+                                <div id="p-hp-bar" class="combat-hp-fill-player" style="width: 100%;"></div>
+                            </div>
+                            <div id="p-hp-text" class="combat-hp-text" style="color: #00bfff;">HP: 100/100</div>
+                            
+                            <!-- KHAY ICON TRẠNG THÁI (NGƯỜI CHƠI) -->
+                            <div id="p-status-board" class="status-board"></div>
+                        </div>
 
-    <!-- CHỮ VS -->
-    <div class="vs-text" style="color: gold; text-shadow: 0 0 10px #ffcc00, 0 0 20px gold, 0 0 40px #fff;">VS</div>
+                        <!-- CHỮ VS -->
+                        <div class="vs-text" style="color: gold; text-shadow: 0 0 10px #ffcc00, 0 0 20px gold, 0 0 40px #fff;">VS</div>
 
-    <!-- ĐỐI THỦ -->
-    <div style="text-align: center; width: 40%;">
-        <div id="e-name" style="color: #ff4d4d; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #ff4d4d; margin-bottom: 15px; text-transform: uppercase;">ĐỐI THỦ</div>
-        <img id="e-img" src="bot/enemy.png" class="avatar-frame" style="border-color: #ff4d4d; box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);">
-        
-        <div class="combat-hp-track" style="border-color: #ff4d4d;">
-            <div id="e-hp-bar" class="combat-hp-fill-enemy" style="width: 100%;"></div>
-        </div>
-        <div id="e-hp-text" class="combat-hp-text" style="color: #ff4d4d;">HP: 100/100</div>
-        
-        <!-- KHAY ICON TRẠNG THÁI (QUÁI VẬT) -->
-        <div id="e-status-board" class="status-board"></div>
-    </div>
-</div>
+                        <!-- ĐỐI THỦ -->
+                        <div style="text-align: center; width: 40%;">
+                            <div id="e-name" style="color: #ff4d4d; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #ff4d4d; margin-bottom: 15px; text-transform: uppercase;">ĐỐI THỦ</div>
+                            <img id="e-img" src="bot/enemy.png" class="avatar-frame" style="border-color: #ff4d4d; box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);">
+                            
+                            <div class="combat-hp-track" style="border-color: #ff4d4d;">
+                                <div id="e-hp-bar" class="combat-hp-fill-enemy" style="width: 100%;"></div>
+                            </div>
+                            <div id="e-hp-text" class="combat-hp-text" style="color: #ff4d4d;">HP: 100/100</div>
+                            
+                            <!-- KHAY ICON TRẠNG THÁI (QUÁI VẬT) -->
+                            <div id="e-status-board" class="status-board"></div>
+                        </div>
+                    </div>
 
-<div id="battleLog">
-    Sẵn sàng khiêu chiến...
-</div>
+                    <div id="battleLog">
+                        Sẵn sàng khiêu chiến...
+                    </div>
 
                     <div id="actionControls" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px; width: 100%;">
                         <div id="skillRow" style="display: flex; gap: 15px; justify-content: center; align-items: center; width: 100%;">
-                        <button id="btnAttack" class="tab-btn btn-system" onclick="playerAttack()" style="flex: 1;">TẤN CÔNG</button>
+                            <button id="btnAttack" class="tab-btn btn-system" onclick="playerAttack()" style="flex: 1;">TẤN CÔNG</button>
                         </div>
                         <button id="btnFindEnemy" class="tab-btn btn-system" onclick="startNewBattle()" style="width: 100%;">TÌM ĐỐI THỦ MỚI</button>
                     </div>
@@ -1253,7 +1785,7 @@
                         <!-- CỔNG LÂU ĐÀI QUỶ (HẠNG S) -->
                         <div class="dungeon-card" onclick="openDemonCastleMenu()" style="border-color: #cc0000; box-shadow: 0 0 20px rgba(204, 0, 0, 0.6);">
                             <h3 style="color: #ff3333; text-shadow: 0 0 15px #ff0000;">LÂU ĐÀI QUỶ</h3>
-                            <p style="font-size: 20px; color: #ccc;">Độ khó: <span style="color: #ff3333; font-weight: bold;">Số tầng: 4 | Độ khó: S</p>
+                            <p style="font-size: 20px; color: #ccc;">Độ khó: <span style="color: #ff3333; font-weight: bold;">Số tầng: 4 | Độ khó: S</span></p>
                             <button class="tab-btn btn-system" style="border-color: #cc0000; color: #ff3333 !important; font-size: 24px;">TIẾN VÀO HẦM NGỤC</button>
                         </div>
                     </div> <!-- ĐÓNG THẺ QUAN TRỌNG: Kết thúc dungeonListArea -->
@@ -1302,66 +1834,65 @@
                     </div>
                     <!-- ================= KẾT THÚC MENU CON ================= -->
                         
-                    </div>
-
-                        <div id="dungeonCombatUI" class="hidden">
-                            <h3 id="dDungeonTitle" style="color: #ffcc00; text-align: center; margin-bottom: 5px; font-size: 32px;">Làng Của Goblin</h3>
-                            <h4 id="dStageText" style="color: #fff; text-align: center; margin-top: 0; font-size: 24px;">Ải 1/5</h4>
-                            <div class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 30px; background: rgba(20, 0, 0, 0.6); border: 2px solid #ff4d4d; border-radius: 12px; min-height: 350px; box-shadow: 0 0 30px rgba(255, 77, 77, 0.2);">
-    
-    <!-- NGƯỜI CHƠI -->
-    <div style="text-align: center; width: 40%;">
-        <div id="d-p-name" style="color: #00bfff; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #00bfff; margin-bottom: 15px; text-transform: uppercase;">SUNG JIN WOO</div>
-        <img id="d-p-img" src="char/Sungjinwoo.png" class="avatar-frame" style="border-color: #00bfff; box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);">
-        
-        <div class="combat-hp-track" style="border-color: #00bfff;">
-            <div id="d-p-hp-bar" class="combat-hp-fill-player" style="width: 100%;"></div>
-        </div>
-        <div id="d-p-hp-text" class="combat-hp-text" style="color: #00bfff;">HP: 100/100</div>
-        
-        <!-- KHAY ICON TRẠNG THÁI (NGƯỜI CHƠI - DUNGEON) -->
-        <div id="d-p-status-board" class="status-board"></div>
-    </div>
-
-    <!-- CHỮ VS -->
-    <div class="vs-text" style="color: #ff4d4d; text-shadow: 0 0 10px #ff0000, 0 0 20px #ff4d4d, 0 0 40px #fff;">VS</div>
-
-    <!-- QUÁI VẬT -->
-    <div style="text-align: center; width: 40%;">
-        <div id="d-e-name" style="color: #ff4d4d; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #ff4d4d; margin-bottom: 15px; text-transform: uppercase;">QUÁI VẬT</div>
-        <img id="d-e-img" src="bot/enemy.png" class="avatar-frame" style="border-color: #ff4d4d; box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);">
-        
-        <div class="combat-hp-track" style="border-color: #ff4d4d;">
-            <div id="d-e-hp-bar" class="combat-hp-fill-enemy" style="width: 100%;"></div>
-        </div>
-        <div id="d-e-hp-text" class="combat-hp-text" style="color: #ff4d4d;">HP: 100/100</div>
-        
-        <!-- KHAY ICON TRẠNG THÁI (QUÁI VẬT - DUNGEON) -->
-        <div id="d-e-status-board" class="status-board"></div>
-    </div>
-</div>
-<div id="d-battleLog">
-    Hệ thống hầm ngục đã kích hoạt...
-</div>
-
-                        <div id="d-actionControls" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px; width: 100%;">
-                            <div id="d-skillRow" style="display: flex; gap: 15px; justify-content: center; align-items: center; width: 100%;">
-                                <button id="d-btnAttack" class="tab-btn btn-system" onclick="playerAttack()" style="flex: 1;">TẤN CÔNG</button>
-                                <button id="d-btnDagger" class="tab-btn btn-system hidden-skill" onclick="useDaggerRush()"></button>
-                                <button id="d-btnTanSat" class="tab-btn btn-system hidden-skill" onclick="useTanSat()"></button>
-                            </div>
-
-                            <button id="btnNextStage" class="tab-btn btn-system hidden" onclick="startNextStage()" style="width: 100%; border-color: gold; color: gold !important; font-size: 24px; text-shadow: 0 0 5px gold;">
-                                TIẾN VÀO ẢI TIẾP THEO
-                            </button>
-                            <button id="btnExitDungeon" class="tab-btn btn-system" onclick="exitDungeon()" style="width: 100%; border-color: red;">
-                                BỎ CUỘC & THOÁT
-                            </button>
-                        </div>
-                    </div>
                 </div>
 
+                <div id="dungeonCombatUI" class="hidden">
+                    <h3 id="dDungeonTitle" style="color: #ffcc00; text-align: center; margin-bottom: 5px; font-size: 32px;">Làng Của Goblin</h3>
+                    <h4 id="dStageText" style="color: #fff; text-align: center; margin-top: 0; font-size: 24px;">Ải 1/5</h4>
+                    <div class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 30px; background: rgba(20, 0, 0, 0.6); border: 2px solid #ff4d4d; border-radius: 12px; min-height: 350px; box-shadow: 0 0 30px rgba(255, 77, 77, 0.2);">
+    
+                        <!-- NGƯỜI CHƠI -->
+                        <div style="text-align: center; width: 40%;">
+                            <div id="d-p-name" style="color: #00bfff; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #00bfff; margin-bottom: 15px; text-transform: uppercase;">SUNG JIN WOO</div>
+                            <img id="d-p-img" src="char/Sungjinwoo.png" class="avatar-frame" style="border-color: #00bfff; box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);">
+                            
+                            <div class="combat-hp-track" style="border-color: #00bfff;">
+                                <div id="d-p-hp-bar" class="combat-hp-fill-player" style="width: 100%;"></div>
+                            </div>
+                            <div id="d-p-hp-text" class="combat-hp-text" style="color: #00bfff;">HP: 100/100</div>
+                            
+                            <!-- KHAY ICON TRẠNG THÁI (NGƯỜI CHƠI - DUNGEON) -->
+                            <div id="d-p-status-board" class="status-board"></div>
+                        </div>
+
+                        <!-- CHỮ VS -->
+                        <div class="vs-text" style="color: #ff4d4d; text-shadow: 0 0 10px #ff0000, 0 0 20px #ff4d4d, 0 0 40px #fff;">VS</div>
+
+                        <!-- QUÁI VẬT -->
+                        <div style="text-align: center; width: 40%;">
+                            <div id="d-e-name" style="color: #ff4d4d; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #ff4d4d; margin-bottom: 15px; text-transform: uppercase;">QUÁI VẬT</div>
+                            <img id="d-e-img" src="bot/enemy.png" class="avatar-frame" style="border-color: #ff4d4d; box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);">
+                            
+                            <div class="combat-hp-track" style="border-color: #ff4d4d;">
+                                <div id="d-e-hp-bar" class="combat-hp-fill-enemy" style="width: 100%;"></div>
+                            </div>
+                            <div id="d-e-hp-text" class="combat-hp-text" style="color: #ff4d4d;">HP: 100/100</div>
+                            
+                            <!-- KHAY ICON TRẠNG THÁI (QUÁI VẬT - DUNGEON) -->
+                            <div id="d-e-status-board" class="status-board"></div>
+                        </div>
+                    </div>
+                    <div id="d-battleLog">
+                        Hệ thống hầm ngục đã kích hoạt...
+                    </div>
+
+                    <div id="d-actionControls" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px; width: 100%;">
+                        <div id="d-skillRow" style="display: flex; gap: 15px; justify-content: center; align-items: center; width: 100%;">
+                            <button id="d-btnAttack" class="tab-btn btn-system" onclick="playerAttack()" style="flex: 1;">TẤN CÔNG</button>
+                            <button id="d-btnDagger" class="tab-btn btn-system hidden-skill" onclick="useDaggerRush()"></button>
+                            <button id="d-btnTanSat" class="tab-btn btn-system hidden-skill" onclick="useTanSat()"></button>
+                        </div>
+
+                        <button id="btnNextStage" class="tab-btn btn-system hidden" onclick="startNextStage()" style="width: 100%; border-color: gold; color: gold !important; font-size: 24px; text-shadow: 0 0 5px gold;">
+                            TIẾN VÀO ẢI TIẾP THEO
+                        </button>
+                        <button id="btnExitDungeon" class="tab-btn btn-system" onclick="exitDungeon()" style="width: 100%; border-color: red;">
+                            BỎ CUỘC & THOÁT
+                        </button>
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
 </div>
