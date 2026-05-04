@@ -2609,13 +2609,16 @@
             effectiveVit = Math.floor(effectiveVit * 0.7); // Bị giảm 30% Thể lực (VIT)
         }
         
-        // [ĐÃ FIX LỖI 1]: Xóa khai báo trùng lặp. Tính toán sát thương gốc tại đây.
         let vitDmgReduction = Math.min(0.60, effectiveVit * 0.001);
         let dmg = Math.max(2, Math.floor(enemyAtk * (1 - vitDmgReduction)));
         
         let isSpecialAttack = false;
         let specialAttackLog = "";
         let applyBleedToPlayer = false;
+
+        // BỔ SUNG CỜ HIỆU (INTENTS) DÀNH CHO CÁC CHIÊU TRỪ CHỈ SỐ
+        let effectArmorBreak = 0;
+        let effectManaSteal = 0;
 
         // --- CƠ CHẾ KỸ NĂNG CỦA BOSS HẦM NGỤC THƯỜNG ---
         // 1. KỸ NĂNG CỦA THỦ LĨNH YÊU TINH (GOBLIN)
@@ -2670,39 +2673,31 @@
             }
         }
 
-        // 4. KỸ NĂNG CỦA ĐẠI TÙ TRƯỞNG KARGALGAN
+        // 4. KỸ NĂNG CỦA ĐẠI TÙ TRƯỞNG KARGALGAN (ĐÃ ĐƯỢC CHUYỂN SANG DẠNG INTENT)
         if (isDungeonMode && enemy.bossType === "kargalgan") {
             let rand = Math.random(); 
             if (enemy.hp < enemy.maxHp * 0.4 && !enemy.hasShielded) {
-                // Chia tỷ lệ: Hồi 15% Máu thật và Tạo 20% Giáp ảo
                 let healAmount = Math.floor(enemy.maxHp * 0.3); 
                 let shieldAmount = Math.floor(enemy.maxHp * 0.20); 
-                
-                // 1. Bơm máu thật
                 enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount); 
-                // 2. Phủ giáp ảo
                 enemy.shieldHP = shieldAmount; 
-                
                 enemy.hasShielded = true; 
                 dmg = 0; 
                 isSpecialAttack = true;
-                
                 specialAttackLog = `<span style="color:#9933ff; font-weight:bold; text-shadow: 0 0 5px #9933ff;">🛡️ KHÚC CA BẢO HỘ!</span> Kargalgan lẩm nhẩm chú ngữ, phục hồi <span style="color:#00ff00; font-weight:bold;">${healAmount} HP</span> và bọc thêm một <span style="color:#00ffff; font-weight:bold;">Lớp Giáp Ma Thuật</span> chặn ${shieldAmount} sát thương!`;
             } else {
                 if (rand <= 0.20) {
                     let rawDmg = enemyAtk * 1.5; 
                     dmg = Math.max(10, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                     isSpecialAttack = true;
-                    playerArmorBreakTurns = 3; 
+                    effectArmorBreak = 3; // BẬT CỜ TRỪ GIÁP (CHƯA THỰC THI)
                     specialAttackLog = `<span style="color:#9933ff; font-weight:bold; text-shadow: 0 0 5px #9933ff;">💀 LỜI NGUYỀN SUY YẾU!</span> Kargalgan niệm chú hắc ám, gây ${Math.floor(dmg)} sát thương và <span style="color:orange; font-weight:bold;">[GIẢM 30% GIÁP]</span> của bạn trong 3 lượt!`;
                 } else if (rand <= 0.35) {
                     let rawDmg = enemyAtk * 1.8; 
                     dmg = Math.max(15, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                     isSpecialAttack = true;
-                    let manaSteal = Math.min(currentUser.mp, 50); 
-                    currentUser.mp -= manaSteal;
-                    enemy.hp = Math.min(enemy.maxHp, enemy.hp + (manaSteal * 10)); 
-                    specialAttackLog = `<span style="color:#00bfff; font-weight:bold; text-shadow: 0 0 5px #00bfff;">✨ ĐOẠT MA LỰC!</span> Bàn tay ma thuật bóp nghẹt bạn, gây ${Math.floor(dmg)} ST và hút cạn <span style="color:#00bfff">${manaSteal} MP</span>!`;
+                    effectManaSteal = 50; // BẬT CỜ HÚT MANA (CHƯA THỰC THI)
+                    specialAttackLog = `<span style="color:#00bfff; font-weight:bold; text-shadow: 0 0 5px #00bfff;">✨ ĐOẠT MA LỰC!</span> Bàn tay ma thuật bóp nghẹt bạn, gây ${Math.floor(dmg)} ST và hút cạn MP!`;
                 } else if (rand <= 0.55) {
                     let rawDmg = enemyAtk * 2.5; 
                     dmg = Math.max(50, Math.floor(rawDmg * (1 - vitDmgReduction))); 
@@ -2792,27 +2787,26 @@
 
         // --- XỬ LÝ SÁT THƯƠNG GÁNH CHỊU VÀ NÉ TRÁNH/PHẢN ĐÒN ---
         let isDodged = false;
-        
         let dodgeChance = 0;
         if (currentUser.skills["Bước Chân Bóng Tối"] > 0) dodgeChance += 0.10;
         if (currentUser.skills["Siêu Giác Quan"] > 0) dodgeChance += (0.05 * currentUser.skills["Siêu Giác Quan"]);
 
-        // [MỚI THÊM]: Lọc bỏ đoạn "gây X sát thương..." nếu Né hoặc Phản Đòn thành công
+        // Lọc bỏ đoạn "gây X sát thương..."
         let skillNameOnly = isSpecialAttack ? specialAttackLog.split(/, gây|, giáng|, nhận/)[0] + "..." : "";
 
-        // Chỉ được tính né tránh nếu chiêu đó có sát thương (Bỏ qua các chiêu Boss tự Buff máu)
-        if (dodgeChance > 0 && Math.random() <= dodgeChance && dmg > 0) {
+        // CHẶN NÉ TRÁNH NẾU ĐANG BẬT KHIÊN PHẢN ĐÒN
+        if (dodgeChance > 0 && Math.random() <= dodgeChance && dmg > 0 && !isPlayerCountering) {
             isDodged = true;
             dmg = 0; 
-            isPlayerStunned = false; // Né được thì xóa choáng
-            applyBleedToPlayer = false; // Né được thì xóa chảy máu
+            isPlayerStunned = false; 
+            applyBleedToPlayer = false; 
+            effectArmorBreak = 0; // Hủy debuff
+            effectManaSteal = 0;  // Hủy debuff
             
-            // In tên chiêu thức đã được cắt gọt
             if (isSpecialAttack) logBattle(skillNameOnly);
             logBattle(`<span style="color:#8eefff; font-weight:bold;">💨 NÉ TRÁNH! Cảm quan nhạy bén giúp bạn lướt qua đòn đánh hoàn hảo!</span>`);
         }
 
-        // Xử lý hiển thị log cho các chiêu Buff/Hồi máu của Boss
         if (dmg === 0 && isSpecialAttack && !isDodged) {
             logBattle(specialAttackLog);
         }
@@ -2825,10 +2819,11 @@
                 dmg = 0; 
                 
                 isPlayerStunned = false; 
-                applyBleedToPlayer = false; // Tắt luôn hiệu ứng cháy/độc của Boss
+                applyBleedToPlayer = false; 
+                effectArmorBreak = 0; // Chặn đứt bùa hại
+                effectManaSteal = 0;  // Chặn đứt việc mất máu/mana
                 
                 triggerShake();
-                // In tên chiêu thức đã được cắt gọt
                 if (isSpecialAttack) logBattle(skillNameOnly);
                 logBattle(`<span style="color:gold; font-size:18px; font-weight:bold; text-shadow:0 0 5px gold;">🛡️ KENG! PHẢN ĐÒN! Bạn gạt đòn của địch và chém ngược lại ${counterDmg} sát thương!</span>`);
                 
@@ -2838,7 +2833,16 @@
                 }
             } 
             else {
-                // KHI KHÔNG PHẢN ĐÒN HOẶC NÉ THÌ MỚI BỊ TRỪ MÁU
+                // ÁP DỤNG HIỆU ỨNG KARGALGAN TẠI ĐÂY (VÌ ĐÃ ĐÁNH TRÚNG)
+                if (effectArmorBreak > 0) playerArmorBreakTurns = effectArmorBreak;
+                if (effectManaSteal > 0) {
+                    let manaSteal = Math.min(currentUser.mp, effectManaSteal);
+                    currentUser.mp -= manaSteal;
+                    enemy.hp = Math.min(enemy.maxHp, enemy.hp + (manaSteal * 10));
+                    // Sửa lại đoạn Log để hiển thị chính xác số Mana bị mất
+                    specialAttackLog = specialAttackLog.replace("hút cạn MP!", `hút cạn <span style="color:#00bfff">${manaSteal} MP</span>!`);
+                }
+
                 if (currentUser.skills["Cơ Thể Thép"] > 0) dmg *= 0.80; 
                 
                 if (currentUser.equipped && currentUser.equipped.shield && currentUser.equipped.shield.name === "Shield") dmg *= 0.985;
@@ -2851,7 +2855,6 @@
                 triggerPlayerShake();
                 currentUser.hp = Math.max(0, currentUser.hp - dmg);
                 
-                // In log sát thương
                 if (isSpecialAttack) {
                     logBattle(specialAttackLog); 
                 } else {
@@ -2862,6 +2865,11 @@
                     playerBleedTurns = 2; 
                 }
             }
+        }
+
+        // TỰ ĐỘNG HỦY THẾ THỦ NẾU BOSS KHÔNG ĐÁNH (VÍ DỤ: BUFF MÁU)
+        if (isPlayerCountering) {
+            isPlayerCountering = false;
         }
 
         // --- XỬ LÝ SÁT THƯƠNG RÚT MÁU KHI BỊ THƯƠNG ---
@@ -2908,7 +2916,6 @@
                 if(btnFind) btnFind.disabled = false;
             }
         } else {
-            // XỬ LÝ HIỆU ỨNG CHOÁNG CỦA BOSS
             if (isPlayerStunned) {
                 isPlayerStunned = false; 
                 isMyTurn = false; 
