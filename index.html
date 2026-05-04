@@ -2921,6 +2921,44 @@
         if (typeof render === "function") render(); 
 
         if (currentUser.hp <= 0) {
+            logBattle(`<span style="color:red; font-size: 20px;">BẠN ĐÃ THẤT BẠI! Bị thương nặng...</span>`);
+            resetToButtonMode(); 
+            
+            if (currentRedGateId) {
+                currentRedGateId = null; 
+                document.getElementById('dDungeonTitle').style.color = "#ffcc00"; 
+                document.getElementById('dDungeonTitle').style.textShadow = "none";
+                document.getElementById('btnExitDungeon').classList.remove('hidden');
+                document.getElementById('btnExitDungeon').innerText = "BỎ MẠNG & THOÁT KHỎI CỔNG ĐỎ";
+            } 
+            else if (isDungeonMode) {
+                document.getElementById('btnNextStage').classList.add('hidden');
+                document.getElementById('btnExitDungeon').classList.remove('hidden');
+            } else {
+                const btnFind = document.getElementById('btnFindEnemy');
+                if(btnFind) btnFind.disabled = false;
+            }
+        } else {
+            // --- HỆ THỐNG GIẢM COOLDOWN Ở CUỐI MỖI LƯỢT ---
+            if (window.counterCooldown && window.counterCooldown > 0) {
+                window.counterCooldown--;
+            }
+
+            if (isPlayerStunned) {
+                isPlayerStunned = false; 
+                isMyTurn = false; 
+                updateCombatUI();
+                
+                setTimeout(() => {
+                    logBattle(`<span style="color:yellow; font-weight:bold;">Tâm trí bạn trở nên trống rỗng... Bạn đã bị mất lượt!</span>`);
+                    setTimeout(enemyTurn, 1200); 
+                }, 1000);
+            } else {
+                isMyTurn = true; 
+                updateCombatUI();
+            }
+        }
+    }
 
     function winBattle() {
         let rewardCash = currentRedGateId ? Math.floor(enemy.exp * 2.5) : Math.floor(enemy.exp * 1.5);
@@ -3036,6 +3074,7 @@
             if(btnFind) btnFind.disabled = false;
         }
     }
+
 
     function checkBattleEnd() {
         if (enemy.hp <= 0) { winBattle(); } 
