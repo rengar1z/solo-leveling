@@ -1291,6 +1291,46 @@
             border-bottom: 1px solid rgba(0, 191, 255, 0.3);
             margin: 15px 0;
         }
+
+        /* TẠO NÚT BẤM CHUẨN GAME SOLO LEVELING: ARISE (Cắt góc, nền kim loại) */
+.sl-shop-price-btn {
+    position: relative;
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    text-transform: uppercase;
+    padding: 10px 20px !important;
+    border: none !important;
+    cursor: pointer;
+    min-width: 170px;
+    text-align: center;
+    transition: all 0.2s ease;
+    
+    /* Ép khung cắt vát góc (Top-Left và Bottom-Right giống hệt ảnh) */
+    clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+    box-shadow: none !important; /* Xóa bóng neon cũ */
+}
+
+/* Viền sáng mờ bên trong (Inner Bevel) để tạo độ khối 3D cho khối kim loại */
+.sl-shop-price-btn::after {
+    content: "";
+    position: absolute;
+    top: 2px; left: 2px; right: 2px; bottom: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    pointer-events: none;
+}
+
+/* Hiệu ứng khi rê chuột */
+.sl-shop-price-btn:hover {
+    transform: scale(1.05);
+    filter: brightness(1.15); /* Làm nút sáng rực lên 15% */
+}
+
+/* Hiệu ứng khi click chìm xuống */
+.sl-shop-price-btn:active {
+    transform: scale(0.95);
+}
     </style>
 </head>
 <body>
@@ -2650,41 +2690,35 @@
         if (dpImg) dpImg.src = defaultAvatar;
     };
         updatePlayerAvatar(); // Kích hoạt ngay lập tức
-        // XỬ LÝ MÀU SẮC VÀ CHỮ CỦA NÚT COSTUME TRONG SHOP
+        // XỬ LÝ MÀU SẮC VÀ CHỮ CỦA NÚT COSTUME TRONG SHOP (CHUẨN GAME ARISE)
         if (!currentUser.ownedCostumes) currentUser.ownedCostumes = [];
         
-        // 1. CHÈN THÊM CÁC ID VÀO DANH SÁCH NÀY
         const costumes = ["costume_black_suit", "costume_mining", "costume_wish", "costume_light_outing", "costume_incapable", "costume_summer_2", "costume_night_lord", "costume_dragon_monarch", "costume_god_of_death"];
         
         costumes.forEach(shopId => {
             const btn = document.getElementById('btn-' + shopId);
             if (btn) {
                 const itemId = SHOP_DATA[shopId].itemId;
-                // Nếu đang mặc
+                btn.style = ""; // Reset sạch style inline cũ
+                
                 if (currentUser.equipped && currentUser.equipped.costume && currentUser.equipped.costume.name === itemId) {
-                    btn.innerText = "ĐANG SỬ DỤNG (THÁO)";
-                    btn.style.background = "#fff";
-                    btn.style.color = "#000";
-                    btn.style.textShadow = "none";
+                    btn.innerText = "ĐANG SỬ DỤNG";
+                    // Style giống nút "Reset" (Màu xám/xanh lam nhạt kim loại)
+                    btn.style.background = "linear-gradient(to bottom, #8ea1b2, #5a6e84)";
+                    btn.style.color = "#111"; // Chữ đen đậm
                 } 
-                // Nếu đã mua rồi
                 else if (currentUser.ownedCostumes.includes(itemId)) {
                     btn.innerText = "MẶC TRANG PHỤC";
-                    btn.style.background = "transparent";
-                    btn.style.color = "#00ff00"; 
-                    btn.style.borderColor = "#00ff00";
+                    // Style màu Xanh Neon đặc trưng cho hành động Trang bị
+                    btn.style.background = "linear-gradient(to bottom, #5cb8ff, #1a75ff)";
+                    btn.style.color = "#fff"; // Chữ trắng
+                    btn.style.textShadow = "0 1px 3px rgba(0,0,0,0.8)";
                 } 
-                // Nếu chưa mua
                 else {
-                    btn.innerText = `MUA (${SHOP_DATA[shopId].price} CASH)`;
-                    btn.style.background = "transparent";
-                    
-                    // 2. TỰ ĐỘNG QUÉT RANK ĐỂ LÊN MÀU NÚT BẤM
-                    const rank = ITEM_DATA[itemId].rank;
-                    let btnColor = rank === "S" ? "#ffcc00" : rank === "A" ? "#ff4d4d" : rank === "B" ? "#00bfff" : "#ccc";
-                    
-                    btn.style.color = btnColor;
-                    btn.style.borderColor = btnColor;
+                    btn.innerText = `MUA (${SHOP_DATA[shopId].price})`;
+                    // Style giống nút "Confirm" (Màu Vàng Gold kim loại rực rỡ)
+                    btn.style.background = "linear-gradient(to bottom, #fce068, #df9a20)";
+                    btn.style.color = "#222"; // Chữ đen đậm
                 }
             }
         });
