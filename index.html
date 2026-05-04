@@ -2797,6 +2797,9 @@
         if (currentUser.skills["Bước Chân Bóng Tối"] > 0) dodgeChance += 0.10;
         if (currentUser.skills["Siêu Giác Quan"] > 0) dodgeChance += (0.05 * currentUser.skills["Siêu Giác Quan"]);
 
+        // [MỚI THÊM]: Lọc bỏ đoạn "gây X sát thương..." nếu Né hoặc Phản Đòn thành công
+        let skillNameOnly = isSpecialAttack ? specialAttackLog.split(/, gây|, giáng|, nhận/)[0] + "..." : "";
+
         // Chỉ được tính né tránh nếu chiêu đó có sát thương (Bỏ qua các chiêu Boss tự Buff máu)
         if (dodgeChance > 0 && Math.random() <= dodgeChance && dmg > 0) {
             isDodged = true;
@@ -2804,12 +2807,12 @@
             isPlayerStunned = false; // Né được thì xóa choáng
             applyBleedToPlayer = false; // Né được thì xóa chảy máu
             
-            // [ĐÃ FIX LỖI 3]: In tên chiêu thức ra trước khi báo Né Tránh
-            if (isSpecialAttack) logBattle(specialAttackLog);
+            // In tên chiêu thức đã được cắt gọt
+            if (isSpecialAttack) logBattle(skillNameOnly);
             logBattle(`<span style="color:#8eefff; font-weight:bold;">💨 NÉ TRÁNH! Cảm quan nhạy bén giúp bạn lướt qua đòn đánh hoàn hảo!</span>`);
         }
 
-        // [ĐÃ FIX LỖI 2]: Xử lý hiển thị log cho các chiêu Buff/Hồi máu của Boss
+        // Xử lý hiển thị log cho các chiêu Buff/Hồi máu của Boss
         if (dmg === 0 && isSpecialAttack && !isDodged) {
             logBattle(specialAttackLog);
         }
@@ -2822,11 +2825,11 @@
                 dmg = 0; 
                 
                 isPlayerStunned = false; 
-                applyBleedToPlayer = false; 
+                applyBleedToPlayer = false; // Tắt luôn hiệu ứng cháy/độc của Boss
                 
                 triggerShake();
-                // [ĐÃ FIX LỖI 3]: In tên chiêu thức ra trước khi báo Phản Đòn
-                if (isSpecialAttack) logBattle(specialAttackLog);
+                // In tên chiêu thức đã được cắt gọt
+                if (isSpecialAttack) logBattle(skillNameOnly);
                 logBattle(`<span style="color:gold; font-size:18px; font-weight:bold; text-shadow:0 0 5px gold;">🛡️ KENG! PHẢN ĐÒN! Bạn gạt đòn của địch và chém ngược lại ${counterDmg} sát thương!</span>`);
                 
                 if (enemy.hp <= 0) {
