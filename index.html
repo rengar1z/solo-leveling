@@ -755,6 +755,37 @@
             bottom: auto;
             transform: none;
         }
+
+        /* ================= GIAO DIỆN CỬA HÀNG  ================= */
+        .sl-shop-header-nav { display: flex; gap: 15px; margin-bottom: 20px; }
+        .sl-shop-tab { flex: 1; text-align: center; padding: 12px; font-size: 24px; color: #555; border: 1px solid #444; cursor: pointer; text-transform: uppercase; letter-spacing: 3px; background: rgba(0,0,0,0.5); transition: 0.3s; }
+        .sl-shop-tab.active { color: #fff; border-color: #00bfff; text-shadow: 0 0 10px #00bfff; box-shadow: inset 0 0 15px rgba(0, 191, 255, 0.3); }
+
+        .sl-shop-filter-row { display: flex; gap: 10px; margin-bottom: 20px; }
+        .sl-shop-filter-btn { width: 55px; height: 55px; border: 1px solid rgba(0, 191, 255, 0.4); display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; background: rgba(0,0,0,0.6); transition: 0.2s; filter: grayscale(1) opacity(0.5); }
+        .sl-shop-filter-btn.active { border-color: #fff; background: #fff; filter: grayscale(0) opacity(1); box-shadow: 0 0 15px rgba(255,255,255,0.6); }
+        .sl-shop-filter-btn:hover { border-color: #00bfff; filter: grayscale(0) opacity(1); }
+
+        .sl-shop-list { display: flex; flex-direction: column; gap: 12px; max-height: 550px; overflow-y: auto; padding-right: 10px; }
+        .sl-shop-list::-webkit-scrollbar { width: 6px; }
+        .sl-shop-list::-webkit-scrollbar-track { background: rgba(0, 30, 60, 0.5); border-radius: 4px; }
+        .sl-shop-list::-webkit-scrollbar-thumb { background: #00bfff; border-radius: 4px; box-shadow: 0 0 5px #00bfff; }
+
+        .sl-shop-item { display: flex; align-items: center; border: 1px solid rgba(0, 191, 255, 0.2); padding: 15px 20px; background: linear-gradient(90deg, rgba(0, 15, 30, 0.8), rgba(0, 5, 15, 0.9)); transition: 0.2s; cursor: pointer; position: relative; }
+        .sl-shop-item:hover { border-color: #00bfff; background: linear-gradient(90deg, rgba(0, 30, 60, 0.8), rgba(0, 10, 20, 0.9)); box-shadow: 0 0 20px rgba(0, 191, 255, 0.15) inset; }
+
+        .sl-shop-icon-box { width: 60px; height: 60px; border: 1px solid #00bfff; background: rgba(0, 0, 0, 0.8); display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: inset 0 0 15px rgba(0, 191, 255, 0.3); flex-shrink: 0; position: relative; overflow: hidden; }
+        .sl-shop-icon-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        .sl-shop-info { flex: 1; margin-left: 20px; display: flex; flex-direction: column; justify-content: center; }
+        .sl-shop-item-name { font-size: 24px; color: #fff; margin: 0; letter-spacing: 1px; text-shadow: 0 0 5px rgba(255,255,255,0.4); font-weight: normal; }
+        .sl-shop-item-desc { font-size: 14px; color: #888; margin-top: 5px; }
+
+        .sl-shop-action { text-align: right; min-width: 150px; }
+        .sl-shop-price-btn { background: transparent !important; border: none !important; color: #8eefff; font-size: 22px; font-family: 'Oswald', sans-serif; cursor: pointer; outline: none; transition: 0.2s; letter-spacing: 1px; padding: 0; }
+        .sl-shop-price-btn:hover { color: #fff; text-shadow: 0 0 10px #fff; transform: scale(1.05); }
+        /* Đường kẻ chia cắt các phân mục */
+        .sl-shop-divider { border-bottom: 1px solid rgba(0, 191, 255, 0.3); margin: 15px 0; }
     </style>
 </head>
 <body>
@@ -905,24 +936,20 @@
                 </div>
 
                 <!-- ================= TAB BAG (TÚI ĐỒ) - ĐÃ VÁ LỖI THẺ ĐÓNG ================= -->
-<div id="tab-bag" class="tab-panel">
-    <h2 style="color: #00bfff; text-align: center;">HÀNH TRANG THỢ SĂN</h2>
-    
-    <!-- Đổi align-items thành stretch để 2 bên luôn chia đều không gian -->
-    <div style="display: flex; gap: 20px; align-items: stretch;">
+                <div id="tab-bag" class="tab-panel">
+                <h2 style="color: #00bfff; text-align: center;">HÀNH TRANG THỢ SĂN</h2>
+                <div style="display: flex; gap: 20px; align-items: stretch;">
         
-        <!-- BÊN TRÁI: ĐỒ ĐANG MẶC (Ép chiều cao cố định, biến thành Flex column) -->
-        <div class="card" style="flex: 1; border-color: gold; display: flex; flex-direction: column; height: 500px; box-sizing: border-box;">
-            
-            <!-- Khóa chiều cao thanh Tab không bị bóp méo (flex-shrink: 0) -->
-            <div class="tabs-header" style="height: 45px; flex-shrink: 0; align-items: stretch; margin-bottom: 15px; border-bottom: 1px solid rgba(255, 215, 0, 0.5); background: rgba(0, 10, 30, 0.8);">
+                <!-- BÊN TRÁI: ĐỒ ĐANG MẶC (Ép chiều cao cố định, biến thành Flex column) -->
+                <div class="card" style="flex: 1; border-color: gold; display: flex; flex-direction: column; height: 500px; box-sizing: border-box;">
+                <div class="tabs-header" style="height: 45px; flex-shrink: 0; align-items: stretch; margin-bottom: 15px; border-bottom: 1px solid rgba(255, 215, 0, 0.5); background: rgba(0, 10, 30, 0.8);">
                 <button class="tab-btn eq-tab-btn active" style="padding: 0; font-size: 16px; color: gold;" onclick="switchEqTab(event, 'basic')">TRANG BỊ</button>
                 <button class="tab-btn eq-tab-btn" style="padding: 0; font-size: 16px; color: #00ffff;" onclick="switchEqTab(event, 'artifact')">CỔ VẬT</button>
-            </div>
+                </div>
             
-            <!-- Khu vực chứa đồ: Cho phép chiếm nốt khoảng trống (flex: 1) và bật thanh cuộn (overflow-y: auto) -->
-            <div id="equippedArea" style="flex: 1; overflow-y: auto; padding-right: 5px;"></div>
-        </div>
+                <!-- Khu vực chứa đồ: Cho phép chiếm nốt khoảng trống (flex: 1) và bật thanh cuộn (overflow-y: auto) -->
+                <div id="equippedArea" style="flex: 1; overflow-y: auto; padding-right: 5px;"></div>
+            </div>
 
         <!-- BÊN PHẢI: KHO ĐỒ PHÂN LOẠI (Làm tương tự bên trái) -->
         <div class="card" style="flex: 1; display: flex; flex-direction: column; height: 500px; box-sizing: border-box;">
@@ -941,146 +968,196 @@
 </div>
 
                 <div id="tab-shop" class="tab-panel">
-                    <h2 style="color: gold; text-align: center;">CỬA HÀNG HỆ THỐNG</h2>
-                    
-                    <h3 style="color: #00bfff; border-bottom: 1px solid rgba(0, 191, 255, 0.5); padding-bottom: 5px;">💊 VẬT PHẨM HỒI PHỤC</h3>
-                    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px;">
-                        
-                        <!-- HP Nhỏ -->
-                        <div class="card" style="width: 30%; text-align: center; border-color: #ff4d4d; padding: 10px;">
-                            <div style="font-size: 35px; margin-bottom: 5px;">❤️</div>
-                            <h4 style="color: #ff4d4d; margin: 0;">HP Potion (Nhỏ)</h4>
-                            <p style="color: #ccc; font-size: 14px; min-height: 40px;">Hồi phục 100 HP.</p>
-                            <p style="color: gold; font-weight: bold;">Giá: 50 Cash</p>
-                            <button class="btn-system" style="width: 100%; border-color: #ff4d4d; color: #ff4d4d !important; font-size: 14px;" onclick="buyShopItem('hp_potion')">MUA & DÙNG</button>
-                        </div>
+    
+    <!-- THANH ĐIỀU HƯỚNG MUA / BÁN (CHUẨN ANIME) -->
+    <div class="sl-shop-header-nav">
+        <div class="sl-shop-tab active">BUY</div>
+        <!-- Nút SELL được dẫn link thẳng sang túi đồ để người chơi bán đồ -->
+        <div class="sl-shop-tab" onclick="openTab(event, 'tab-bag'); switchInvTab(event, 'equip');">SELL</div>
+    </div>
 
-                        <!-- HP Trung -->
-                        <div class="card" style="width: 30%; text-align: center; border-color: #ff3333; padding: 10px;">
-                            <div style="font-size: 35px; margin-bottom: 5px;">💖</div>
-                            <h4 style="color: #ff3333; margin: 0;">HP Potion (Trung)</h4>
-                            <p style="color: #ccc; font-size: 14px; min-height: 40px;">Hồi phục 500 HP.</p>
-                            <p style="color: gold; font-weight: bold;">Giá: 200 Cash</p>
-                            <button class="btn-system" style="width: 100%; border-color: #ff3333; color: #ff3333 !important; font-size: 14px;" onclick="buyShopItem('hp_potion_mid')">MUA & DÙNG</button>
-                        </div>
+    <!-- KHAY PHÂN LOẠI ICON (CHUẨN ANIME) -->
+    <div class="sl-shop-filter-row">
+        <div class="sl-shop-filter-btn">🔠</div> <!-- Ký hiệu: Tất Cả -->
+        <div class="sl-shop-filter-btn">⚔️</div> <!-- Ký hiệu: Vũ Khí -->
+        <div class="sl-shop-filter-btn active">🧪</div> <!-- Ký hiệu: Vật phẩm tiêu hao -->
+        <div class="sl-shop-filter-btn">👔</div> <!-- Ký hiệu: Trang Phục -->
+    </div>
 
-                        <!-- HP Cao -->
-                        <div class="card" style="width: 30%; text-align: center; border-color: #cc0000; padding: 10px;">
-                            <div style="font-size: 35px; margin-bottom: 5px;">❤️‍🔥</div>
-                            <h4 style="color: #cc0000; margin: 0;">HP Potion (Lớn)</h4>
-                            <p style="color: #ccc; font-size: 14px; min-height: 40px;">Hồi phục 2000 HP.</p>
-                            <p style="color: gold; font-weight: bold;">Giá: 700 Cash</p>
-                            <button class="btn-system" style="width: 100%; border-color: #cc0000; color: #cc0000 !important; font-size: 14px;" onclick="buyShopItem('hp_potion_high')">MUA & DÙNG</button>
-                        </div>
+    <!-- DANH SÁCH VẬT PHẨM (LIST VIEW) -->
+    <div class="sl-shop-list">
+        
+        <!-- VẬT PHẨM HỒI PHỤC -->
+        <div class="sl-shop-item" onclick="buyShopItem('hp_potion')">
+            <div class="sl-shop-icon-box">❤️</div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name">Divine HP Potion (Nhỏ)</p>
+                <p class="sl-shop-item-desc">Hồi phục tức thời 100 HP.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button class="sl-shop-price-btn">50 CASH</button>
+            </div>
+        </div>
 
-                        <!-- MP Nhỏ -->
-                        <div class="card" style="width: 30%; text-align: center; border-color: #00bfff; padding: 10px;">
-                            <div style="font-size: 35px; margin-bottom: 5px;">🧪</div>
-                            <h4 style="color: #00bfff; margin: 0;">MP Potion (Nhỏ)</h4>
-                            <p style="color: #ccc; font-size: 14px; min-height: 40px;">Hồi phục 100 MP.</p>
-                            <p style="color: gold; font-weight: bold;">Giá: 50 Cash</p>
-                            <button class="btn-system" style="width: 100%; border-color: #00bfff; color: #00bfff !important; font-size: 14px;" onclick="buyShopItem('mp_potion')">MUA & DÙNG</button>
-                        </div>
+        <div class="sl-shop-item" onclick="buyShopItem('hp_potion_mid')">
+            <div class="sl-shop-icon-box" style="box-shadow: inset 0 0 15px rgba(255, 51, 51, 0.4); border-color: #ff3333;">💖</div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name">Divine HP Potion (Trung)</p>
+                <p class="sl-shop-item-desc">Hồi phục tức thời 500 HP.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button class="sl-shop-price-btn" style="color: #ff3333;">200 CASH</button>
+            </div>
+        </div>
 
-                        <!-- MP Trung -->
-                        <div class="card" style="width: 30%; text-align: center; border-color: #0088ff; padding: 10px;">
-                            <div style="font-size: 35px; margin-bottom: 5px;">💧</div>
-                            <h4 style="color: #0088ff; margin: 0;">MP Potion (Trung)</h4>
-                            <p style="color: #ccc; font-size: 14px; min-height: 40px;">Hồi phục 300 MP.</p>
-                            <p style="color: gold; font-weight: bold;">Giá: 150 Cash</p>
-                            <button class="btn-system" style="width: 100%; border-color: #0088ff; color: #0088ff !important; font-size: 14px;" onclick="buyShopItem('mp_potion_mid')">MUA & DÙNG</button>
-                        </div>
+        <div class="sl-shop-item" onclick="buyShopItem('hp_potion_high')">
+            <div class="sl-shop-icon-box" style="box-shadow: inset 0 0 15px rgba(204, 0, 0, 0.5); border-color: #cc0000;">❤️‍🔥</div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name">Divine HP Potion (Lớn)</p>
+                <p class="sl-shop-item-desc">Hồi phục tức thời 2000 HP.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button class="sl-shop-price-btn" style="color: #cc0000;">700 CASH</button>
+            </div>
+        </div>
 
-                        <!-- MP Cao -->
-                        <div class="card" style="width: 30%; text-align: center; border-color: #0044ff; padding: 10px;">
-                            <div style="font-size: 35px; margin-bottom: 5px;">🌊</div>
-                            <h4 style="color: #0044ff; margin: 0;">MP Potion (Lớn)</h4>
-                            <p style="color: #ccc; font-size: 14px; min-height: 40px;">Hồi phục 1000 MP.</p>
-                            <p style="color: gold; font-weight: bold;">Giá: 500 Cash</p>
-                            <button class="btn-system" style="width: 100%; border-color: #0044ff; color: #0044ff !important; font-size: 14px;" onclick="buyShopItem('mp_potion_high')">MUA & DÙNG</button>
-                        </div>
-                    </div>
+        <div class="sl-shop-item" onclick="buyShopItem('mp_potion')">
+            <div class="sl-shop-icon-box" style="box-shadow: inset 0 0 15px rgba(0, 191, 255, 0.4); border-color: #00bfff;">🧪</div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name">Mana Essence (Nhỏ)</p>
+                <p class="sl-shop-item-desc">Khôi phục 100 MP.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button class="sl-shop-price-btn" style="color: #00bfff;">50 CASH</button>
+            </div>
+        </div>
 
-                    <h3 style="color: #ffcc00; border-bottom: 1px solid rgba(255, 204, 0, 0.5); padding-bottom: 5px;">👔 CỬA HÀNG TRANG PHỤC (COSTUME)</h3>
-                    
-                    <!-- Khung trượt ngang -->
-                    <div class="costume-scroll-container">
-                        
-                        <!-- Costume 1 -->
-                        <div class="card costume-card" style="text-align: center; border-color: gold; padding: 15px;">
-                            <img src="cos/Sung_Jinwoo_Black_Suit.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid gold; margin-bottom: 10px;">
-                            <h4 style="color: gold; margin: 0;">Bộ Vest Đen Ám Sát</h4>
-                            <p style="color: #ccc; font-size: 14px; min-height: 45px;">Thay đổi Avatar. Tăng 50 STR, 20 VIT.</p>
-                            <button id="btn-costume_black_suit" class="btn-system" style="width: 100%; border-color: gold; font-size: 16px; font-weight: bold; transition: 0.3s;" onclick="handleCostume('costume_black_suit')">MUA (5000 CASH)</button>
-                        </div>
+        <div class="sl-shop-item" onclick="buyShopItem('mp_potion_mid')">
+            <div class="sl-shop-icon-box" style="box-shadow: inset 0 0 15px rgba(0, 136, 255, 0.4); border-color: #0088ff;">💧</div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name">Mana Essence (Trung)</p>
+                <p class="sl-shop-item-desc">Khôi phục 300 MP.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button class="sl-shop-price-btn" style="color: #0088ff;">150 CASH</button>
+            </div>
+        </div>
 
-                        <!-- Costume 2 -->
-                        <div class="card costume-card" style="text-align: center; border-color: #8eefff; padding: 15px;">
-                            <img src="cos/Sung_Jinwoo_Mining_Work.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid #8eefff; margin-bottom: 10px;">
-                            <h4 style="color: #8eefff; margin: 0;">Mining Work Clothes</h4>
-                            <p style="color: #ccc; font-size: 14px; min-height: 45px;">Thay đổi Avatar. Tăng 150 STR, 100 VIT.</p>
-                            <button id="btn-costume_mining" class="btn-system" style="width: 100%; border-color: #8eefff; font-size: 16px; font-weight: bold; transition: 0.3s;" onclick="handleCostume('costume_mining')">MUA (15000 CASH)</button>
-                        </div>
+        <div class="sl-shop-item" onclick="buyShopItem('mp_potion_high')">
+            <div class="sl-shop-icon-box" style="box-shadow: inset 0 0 15px rgba(0, 68, 255, 0.5); border-color: #0044ff;">🌊</div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name">Mana Essence (Lớn)</p>
+                <p class="sl-shop-item-desc">Khôi phục 1000 MP.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button class="sl-shop-price-btn" style="color: #0044ff;">500 CASH</button>
+            </div>
+        </div>
 
-                        <!-- Điều Ước Thành Hiện Thực (Hạng B) -->
-                        <div class="card costume-card" style="text-align: center; border-color: #00bfff; padding: 15px;">
-                            <img src="cos/Sung_Jinwoo_A_Wish_Come_True.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid #00bfff; margin-bottom: 10px;">
-                            <h4 style="color: #00bfff; margin: 0;">Điều Ước Thành Hiện Thực</h4>
-                            <p style="color: #ccc; font-size: 14px; min-height: 45px;">Thay đổi Avatar. Tăng 70 STR, 30 VIT.</p>
-                            <button id="btn-costume_wish" class="btn-system" style="width: 100%; border-color: #00bfff; font-size: 16px; font-weight: bold; transition: 0.3s;" onclick="handleCostume('costume_wish')">MUA (10000 CASH)</button>
-                        </div>
+        <div class="sl-shop-divider"></div>
 
-                        <!-- Trang Phục Dạo Phố Nhẹ Nhàng (Hạng B) -->
-                        <div class="card costume-card" style="text-align: center; border-color: #00bfff; padding: 15px;">
-                            <img src="cos/Sung_Jinwoo_Light_Outing_Wear.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid #00bfff; margin-bottom: 10px;">
-                            <h4 style="color: #00bfff; margin: 0;">Dạo Phố Nhẹ Nhàng</h4>
-                            <p style="color: #ccc; font-size: 14px; min-height: 45px;">Thay đổi Avatar. Tăng 50 STR, 20 VIT.</p>
-                            <button id="btn-costume_light_outing" class="btn-system" style="width: 100%; border-color: #00bfff; font-size: 16px; font-weight: bold; transition: 0.3s;" onclick="handleCostume('costume_light_outing')">MUA (10000 CASH)</button>
-                        </div>
+        <!-- CỬA HÀNG TRANG PHỤC (COSTUME) -->
+        <div class="sl-shop-item" onclick="handleCostume('costume_black_suit')">
+            <div class="sl-shop-icon-box" style="border-color: gold;"><img src="cos/Sung_Jinwoo_Black_Suit.png"></div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name">Bộ Vest Đen Ám Sát</p>
+                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button id="btn-costume_black_suit" class="sl-shop-price-btn">5000 CASH</button>
+            </div>
+        </div>
 
-                        <!-- Incapable of Evaluation (Hạng B) -->
-                        <div class="card costume-card" style="text-align: center; border-color: #00bfff; padding: 15px;">
-                            <img src="cos/Sung_Jinwoo_Incapable_of_Evaluation.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid #00bfff; margin-bottom: 10px;">
-                            <h4 style="color: #00bfff; margin: 0;">Incapable of Evaluation</h4>
-                            <p style="color: #ccc; font-size: 14px; min-height: 45px;">Thay đổi Avatar. Tăng 50 STR, 20 VIT.</p>
-                            <button id="btn-costume_incapable" class="btn-system" style="width: 100%; border-color: #00bfff; font-size: 16px; font-weight: bold; transition: 0.3s;" onclick="handleCostume('costume_incapable')">MUA (10000 CASH)</button>
-                        </div>
+        <div class="sl-shop-item" onclick="handleCostume('costume_mining')">
+            <div class="sl-shop-icon-box"><img src="cos/Sung_Jinwoo_Mining_Work.png"></div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name">Mining Work Clothes</p>
+                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 150 STR, 100 VIT.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button id="btn-costume_mining" class="sl-shop-price-btn">15000 CASH</button>
+            </div>
+        </div>
 
-                        <!-- Kỳ Nghỉ Hè 2 (Hạng B) -->
-                        <div class="card costume-card" style="text-align: center; border-color: #00bfff; padding: 15px;">
-                            <img src="cos/Sung_Jinwoo_Summer_Vacation_2.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid #00bfff; margin-bottom: 10px;">
-                            <h4 style="color: #00bfff; margin: 0;">Kỳ Nghỉ Hè 2</h4>
-                            <p style="color: #ccc; font-size: 14px; min-height: 45px;">Thay đổi Avatar. Tăng 50 STR, 20 VIT.</p>
-                            <button id="btn-costume_summer_2" class="btn-system" style="width: 100%; border-color: #00bfff; font-size: 16px; font-weight: bold; transition: 0.3s;" onclick="handleCostume('costume_summer_2')">MUA (10000 CASH)</button>
-                        </div>
+        <div class="sl-shop-item" onclick="handleCostume('costume_wish')">
+            <div class="sl-shop-icon-box"><img src="cos/Sung_Jinwoo_A_Wish_Come_True.png"></div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name">Điều Ước Thành Hiện Thực</p>
+                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 70 STR, 30 VIT.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button id="btn-costume_wish" class="sl-shop-price-btn">10000 CASH</button>
+            </div>
+        </div>
 
-                        <!-- Chúa Tể Màn Đêm (Hạng A) -->
-                        <div class="card costume-card" style="text-align: center; border-color: #ff4d4d; padding: 15px;">
-                            <img src="cos/Sung_Jinwoo_Night_Lord.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid #ff4d4d; margin-bottom: 10px;">
-                            <h4 style="color: #ff4d4d; margin: 0;">Chúa Tể Màn Đêm</h4>
-                            <p style="color: #ccc; font-size: 14px; min-height: 45px;">Thay đổi Avatar. Tăng 50 STR, 20 VIT.</p>
-                            <button id="btn-costume_night_lord" class="btn-system" style="width: 100%; border-color: #ff4d4d; font-size: 16px; font-weight: bold; transition: 0.3s;" onclick="handleCostume('costume_night_lord')">MUA (20000 CASH)</button>
-                        </div>
+        <div class="sl-shop-item" onclick="handleCostume('costume_light_outing')">
+            <div class="sl-shop-icon-box"><img src="cos/Sung_Jinwoo_Light_Outing_Wear.png"></div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name">Dạo Phố Nhẹ Nhàng</p>
+                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button id="btn-costume_light_outing" class="sl-shop-price-btn">10000 CASH</button>
+            </div>
+        </div>
 
-                        <!-- Vua Của Loài Rồng (Hạng S) -->
-                        <div class="card costume-card" style="text-align: center; border-color: #ffcc00; padding: 15px;">
-                            <img src="cos/Sung_Jinwoo_Monarch_of_the_Heaven-Annihilating_Dragons.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid #ffcc00; margin-bottom: 10px;">
-                            <h4 style="color: #ffcc00; margin: 0; text-shadow: 0 0 5px #ffcc00;">Vua Của Loài Rồng</h4>
-                            <p style="color: #ccc; font-size: 14px; min-height: 45px;">Thay đổi Avatar. Tăng 250 STR, 100 VIT, 100 MP.</p>
-                            <button id="btn-costume_dragon_monarch" class="btn-system" style="width: 100%; border-color: #ffcc00; font-size: 16px; font-weight: bold; transition: 0.3s;" onclick="handleCostume('costume_dragon_monarch')">MUA (100000 CASH)</button>
-                        </div>
+        <div class="sl-shop-item" onclick="handleCostume('costume_incapable')">
+            <div class="sl-shop-icon-box"><img src="cos/Sung_Jinwoo_Incapable_of_Evaluation.png"></div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name">Incapable of Evaluation</p>
+                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button id="btn-costume_incapable" class="sl-shop-price-btn">10000 CASH</button>
+            </div>
+        </div>
 
-                        <!-- Tử Thần (Hạng S) -->
-                        <div class="card costume-card" style="text-align: center; border-color: #ffcc00; padding: 15px;">
-                            <img src="cos/Sung_Jinwoo_God_of_Death.png" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid #ffcc00; margin-bottom: 10px;">
-                            <h4 style="color: #ffcc00; margin: 0; text-shadow: 0 0 5px #ffcc00;">Tử Thần</h4>
-                            <p style="color: #ccc; font-size: 14px; min-height: 45px;">Thay đổi Avatar. Tăng 250 STR, 100 VIT, 100 MP.</p>
-                            <button id="btn-costume_god_of_death" class="btn-system" style="width: 100%; border-color: #ffcc00; font-size: 16px; font-weight: bold; transition: 0.3s;" onclick="handleCostume('costume_god_of_death')">MUA (100000 CASH)</button>
-                        </div>
-                        <!-- Sau này bạn cứ copy block <div class="card costume-card"> dán tiếp vào đây, nó sẽ tự đẩy dài ra bên phải -->
+        <div class="sl-shop-item" onclick="handleCostume('costume_summer_2')">
+            <div class="sl-shop-icon-box"><img src="cos/Sung_Jinwoo_Summer_Vacation_2.png"></div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name">Kỳ Nghỉ Hè 2</p>
+                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button id="btn-costume_summer_2" class="sl-shop-price-btn">10000 CASH</button>
+            </div>
+        </div>
 
-                    </div>
-                </div>
+        <div class="sl-shop-item" onclick="handleCostume('costume_night_lord')">
+            <div class="sl-shop-icon-box" style="border-color: #ff4d4d;"><img src="cos/Sung_Jinwoo_Night_Lord.png"></div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name">Chúa Tể Màn Đêm</p>
+                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button id="btn-costume_night_lord" class="sl-shop-price-btn">20000 CASH</button>
+            </div>
+        </div>
+
+        <div class="sl-shop-item" onclick="handleCostume('costume_dragon_monarch')">
+            <div class="sl-shop-icon-box" style="border-color: #ffcc00;"><img src="cos/Sung_Jinwoo_Monarch_of_the_Heaven-Annihilating_Dragons.png"></div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name" style="color: #ffcc00;">Vua Của Loài Rồng</p>
+                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 250 STR, 100 VIT, 100 MP.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button id="btn-costume_dragon_monarch" class="sl-shop-price-btn">100000 CASH</button>
+            </div>
+        </div>
+
+        <div class="sl-shop-item" onclick="handleCostume('costume_god_of_death')">
+            <div class="sl-shop-icon-box" style="border-color: #ffcc00;"><img src="cos/Sung_Jinwoo_God_of_Death.png"></div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name" style="color: #ffcc00;">Tử Thần</p>
+                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 250 STR, 100 VIT, 100 MP.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button id="btn-costume_god_of_death" class="sl-shop-price-btn">100000 CASH</button>
+            </div>
+        </div>
+
+    </div>
+</div>
 
                 <div id="tab-skills" class="tab-panel">
                     <h2 style="color: #00bfff;">SKILL POINTS: <span id="skPoints">0</span></h2>
