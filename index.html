@@ -1306,6 +1306,15 @@
 
     // --- DỮ LIỆU ITEM (ĐÃ THÊM RANK S, A, B, C, D) ---
     const ITEM_DATA = {
+        // --- VẬT PHẨM TIÊU HAO (MÁU, MANA, BUFF VĨNH VIỄN) ---
+        "HP Potion (Nhỏ)": { rank: "C", type: "consumable", effectType: "heal_hp", amount: 100, name: "HP Potion (Nhỏ)", str: 0, vit: 0, mp: 0, effect: "Hồi phục 100 HP.", img: "https://cdn-icons-png.flaticon.com/512/867/867332.png", sellPrice: 25 },
+        "HP Potion (Trung)": { rank: "B", type: "consumable", effectType: "heal_hp", amount: 500, name: "HP Potion (Trung)", str: 0, vit: 0, mp: 0, effect: "Hồi phục 500 HP.", img: "https://cdn-icons-png.flaticon.com/512/867/867332.png", sellPrice: 100 },
+        "HP Potion (Lớn)": { rank: "A", type: "consumable", effectType: "heal_hp", amount: 2000, name: "HP Potion (Lớn)", str: 0, vit: 0, mp: 0, effect: "Hồi phục 2000 HP.", img: "https://cdn-icons-png.flaticon.com/512/867/867332.png", sellPrice: 350 },
+        
+        "MP Potion (Nhỏ)": { rank: "C", type: "consumable", effectType: "heal_mp", amount: 100, name: "MP Potion (Nhỏ)", str: 0, vit: 0, mp: 0, effect: "Hồi phục 100 MP.", img: "https://cdn-icons-png.flaticon.com/512/867/867332.png", sellPrice: 25 },
+        "MP Potion (Trung)": { rank: "B", type: "consumable", effectType: "heal_mp", amount: 300, name: "MP Potion (Trung)", str: 0, vit: 0, mp: 0, effect: "Hồi phục 300 MP.", img: "https://cdn-icons-png.flaticon.com/512/867/867332.png", sellPrice: 75 },
+        "MP Potion (Lớn)": { rank: "A", type: "consumable", effectType: "heal_mp", amount: 1000, name: "MP Potion (Lớn)", str: 0, vit: 0, mp: 0, effect: "Hồi phục 1000 MP.", img: "https://cdn-icons-png.flaticon.com/512/867/867332.png", sellPrice: 250 },
+        
         "Dagger": { rank: "D", type: "weapon", name: "Dagger", str: 15, vit: 0, mp: 0, effect: "Tăng 2% ST đòn đánh thường", img: "wp/dagger.png", sellPrice: 30 },
         "Shield": { rank: "C", type: "shield", name: "Shield", str: 0, vit: 5, mp: 0, effect: "Giảm 1.5% ST gánh chịu", img: "wp/shield.png", sellPrice: 45 },
         "Essence of Magic": { rank: "B", type: "accessory", name: "Essence of Magic", str: 0, vit: 0, mp: 50, effect: "Hồi 2% MP mỗi lượt", img: "wp/essenceofmagic.png", sellPrice: 30 },
@@ -1357,12 +1366,12 @@
 
     // --- DỮ LIỆU CỬA HÀNG ---
     const SHOP_DATA = {
-        "hp_potion": { name: "HP Potion (Nhỏ)", price: 50, type: "heal", amount: 100, stat: "hp", maxStat: "maxHp" },
-        "mp_potion": { name: "MP Potion (Nhỏ)", price: 50, type: "heal", amount: 100, stat: "mp", maxStat: "maxMp" },
-        "hp_potion_mid": { name: "HP Potion (Trung)", price: 200, type: "heal", amount: 500, stat: "hp", maxStat: "maxHp" },
-        "mp_potion_mid": { name: "MP Potion (Trung)", price: 150, type: "heal", amount: 300, stat: "mp", maxStat: "maxMp" },
-        "hp_potion_high": { name: "HP Potion (Lớn)", price: 700, type: "heal", amount: 2000, stat: "hp", maxStat: "maxHp" },
-        "mp_potion_high": { name: "MP Potion (Lớn)", price: 500, type: "heal", amount: 1000, stat: "mp", maxStat: "maxMp" },
+        "hp_potion": { name: "HP Potion (Nhỏ)", price: 50, type: "item", itemId: "HP Potion (Nhỏ)" },
+        "mp_potion": { name: "MP Potion (Nhỏ)", price: 50, type: "item", itemId: "MP Potion (Nhỏ)" },
+        "hp_potion_mid": { name: "HP Potion (Trung)", price: 200, type: "item", itemId: "HP Potion (Trung)" },
+        "mp_potion_mid": { name: "MP Potion (Trung)", price: 150, type: "item", itemId: "MP Potion (Trung)" },
+        "hp_potion_high": { name: "HP Potion (Lớn)", price: 700, type: "item", itemId: "HP Potion (Lớn)" },
+        "mp_potion_high": { name: "MP Potion (Lớn)", price: 500, type: "item", itemId: "MP Potion (Lớn)" },
         "costume_black_suit": { name: "Bộ Vest Đen Ám Sát", price: 5000, type: "item", itemId: "Bộ Vest Đen Ám Sát" },
         "costume_mining": { name: "Trang phục Thợ Mỏ", price: 15000, type: "item", itemId: "Mining Work Clothes" },
         "costume_wish": { name: "Điều Ước Thành Hiện Thực", price: 10000, type: "item", itemId: "Điều Ước Thành Hiện Thực" },
@@ -1415,19 +1424,17 @@
             return alert(`Bạn không đủ Cash để mua ${item.name}! Cần ${item.price} Cash.`);
         }
 
-        // Chỉ xử lý mua vật phẩm hồi phục (HP/MP)
-        if (item.type === "heal") {
-            if (currentUser[item.stat] >= currentUser[item.maxStat]) {
-                return alert(`${item.stat.toUpperCase()} của bạn đã đầy, không thể dùng thêm!`);
-            }
-            currentUser.cash -= item.price;
-            currentUser[item.stat] = Math.min(currentUser[item.maxStat], currentUser[item.stat] + item.amount);
-            alert(`Mua thành công! Bạn đã sử dụng ${item.name} và hồi phục ${item.amount} ${item.stat.toUpperCase()}.`);
-            
-            await set(ref(db, 'users/' + currentUser.username), currentUser);
-            render();
-            if (window.renderBag) window.renderBag();
-        } 
+        currentUser.cash -= item.price;
+        
+        if (item.type === "item") {
+            const newItem = generateItem(item.itemId); 
+            if (newItem) currentUser.inventory.push(newItem);
+            alert(`🛒 Mua thành công! [${item.name}] đã được cất vào Túi đồ của bạn.`);
+        }
+
+        await set(ref(db, 'users/' + currentUser.username), currentUser);
+        render();
+        if (window.renderBag) window.renderBag();
     };
 
     // --- HỆ THỐNG TỦ ĐỒ (COSTUME) ---
@@ -2279,7 +2286,10 @@
                         </div>
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 5px;">
-                        <button class="add-btn" style="width: 80px; height: 32px; font-size: 16px;" onclick="equipItem(${index})">MẶC</button>
+                        ${itemData.type === 'consumable' 
+                            ? `<button class="add-btn" style="width: 80px; height: 32px; font-size: 16px; background: #00ff00; border-color: #00cc00; color: #000;" onclick="useItem(${index})">DÙNG</button>` 
+                            : `<button class="add-btn" style="width: 80px; height: 32px; font-size: 16px;" onclick="equipItem(${index})">MẶC</button>`
+                        }
                         <button class="add-btn" style="width: 80px; height: 32px; font-size: 16px; background: #ff4d4d; border-color: #cc0000; color: #fff;" onclick="sellItem(${index}, ${sellPrice})">BÁN (${sellPrice})</button>
                     </div>
                 </div>`;
@@ -2350,6 +2360,33 @@
             render(); 
         }
     }
+
+    window.useItem = async function(index) {
+        const itemObj = currentUser.inventory[index];
+        const itemData = ITEM_DATA[itemObj.name];
+        
+        if (itemData.effectType === "heal_hp") {
+            if (currentUser.hp >= currentUser.maxHp) return alert("HP của bạn đã đầy, không cần sử dụng!");
+            currentUser.hp = Math.min(currentUser.maxHp, currentUser.hp + itemData.amount);
+            alert(`✨ Bạn đã uống [${itemObj.name}] và hồi phục ${itemData.amount} HP!`);
+        } 
+        else if (itemData.effectType === "heal_mp") {
+            if (currentUser.mp >= currentUser.maxMp) return alert("MP của bạn đã đầy, không cần sử dụng!");
+            currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + itemData.amount);
+            alert(`✨ Bạn đã uống [${itemObj.name}] và hồi phục ${itemData.amount} MP!`);
+        }
+        else if (itemData.effectType === "add_str") {
+            // Đây là sức mạnh của các Item hiếm!
+            currentUser.str += itemData.amount;
+            alert(`💪 Bạn đã hấp thụ [${itemObj.name}]! Sức mạnh (STR) được tăng VĨNH VIỄN thêm ${itemData.amount} điểm!`);
+        }
+        
+        // Sau khi dùng xong thì xóa vật phẩm khỏi túi
+        currentUser.inventory.splice(index, 1);
+        
+        await saveUserData();
+        renderBag();
+    };
 
     // --- HỆ THỐNG TÍNH TOÁN SÁT THƯƠNG ĐA DỤNG (MULTI-BUILD) ---
     function calcPlayerDamage(config) {
