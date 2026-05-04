@@ -717,6 +717,27 @@
             justify-content: center;
             border: 1px solid #fff;
         }
+        /* ================= SỬA LỖI KHUẤT BẢNG THÔNG TIN ITEM ================= */
+        
+        /* Item trên cùng: Ép Tooltip thả xuống dưới thay vì trồi lên trên */
+        .stat-item:first-child .item-tooltip {
+            top: -5px;
+            transform: none;
+        }
+        
+        /* Item dưới cùng: Ép Tooltip đẩy lên trên để không bị kẹt ở đáy thanh cuộn */
+        .stat-item:last-child .item-tooltip {
+            top: auto;
+            bottom: -5px;
+            transform: none;
+        }
+        
+        /* Trường hợp đặc biệt: Danh sách chỉ có duy nhất 1 Item */
+        .stat-item:first-child:last-child .item-tooltip {
+            top: -5px;
+            bottom: auto;
+            transform: none;
+        }
     </style>
 </head>
 <body>
