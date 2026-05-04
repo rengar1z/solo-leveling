@@ -2053,7 +2053,7 @@
             }
         }
 
-        // --- 4. CƠ CHẾ KHÓA NÚT THÔNG MINH KHI THIẾU MP ---
+        // --- 4. CƠ CHẾ KHÓA NÚT THÔNG MINH KHI THIẾU MP VÀ HỒI CHIÊU ---
         const btnAttackOld = document.getElementById(pre + 'btnAttack');
         if (btnAttackOld) btnAttackOld.disabled = !isMyTurn;
 
@@ -2061,7 +2061,14 @@
         dynamicBtns.forEach(btn => {
             btn.disabled = !isMyTurn;
             const cost = parseInt(btn.getAttribute('data-mp') || 0); 
-            if (cost > 0 && currentUser.mp < cost) {
+            // Kiểm tra xem nút này có phải là nút Phản Đòn không
+            const isCounterSkill = btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('useCounterAttack');
+            
+            let isLocked = false;
+            if (cost > 0 && currentUser.mp < cost) isLocked = true; // Thiếu MP -> Khóa
+            if (isCounterSkill && window.counterCooldown && window.counterCooldown > 0) isLocked = true; // Đang Cooldown -> Khóa
+
+            if (isLocked) {
                 btn.style.filter = "grayscale(1) brightness(0.5)"; 
                 btn.style.cursor = "not-allowed";
             } else {
@@ -2498,9 +2505,24 @@
 
     // --- SKILL: PHẢN ĐÒN ---
     window.useCounterAttack = function() {
-        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 30) { if(currentUser.mp < 30) logBattle("<span style='color:orange'>Thiếu 30 MP!</span>"); return; }
+        // Khởi tạo biến đếm nếu chưa có
+        window.counterCooldown = window.counterCooldown || 0; 
+        
+        // CHẶN NẾU ĐANG TRONG THỜI GIAN HỒI CHIÊU
+        if (window.counterCooldown > 0) {
+            return logBattle(`<span style='color:orange'>⏳ Phản Đòn đang hồi chiêu! (Cần chờ thêm ${window.counterCooldown} lượt)</span>`);
+        }
+
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 30) { 
+            if(currentUser.mp < 30) logBattle("<span style='color:orange'>Thiếu 30 MP!</span>"); 
+            return; 
+        }
+        
         currentUser.mp -= 30; 
         isPlayerCountering = true; // Bật cờ phản đòn
+        
+        // GẮN COOLDOWN: Đặt 4 để sau khi kết thúc lượt này, nó tụt xuống 3 là vừa đẹp!
+        window.counterCooldown = 4; 
         
         logBattle(`<span style="color:gold; font-weight:bold;">🛡️ Bạn nắm chặt vũ khí, vào thế phòng thủ sẵn sàng phản công!</span>`);
         updateCombatUI(); checkBattleEnd(); // Chuyển lượt cho quái đánh
@@ -2898,39 +2920,6 @@
         if (typeof render === "function") render(); 
 
         if (currentUser.hp <= 0) {
-            logBattle(`<span style="color:red; font-size: 20px;">BẠN ĐÃ THẤT BẠI! Bị thương nặng...</span>`);
-            resetToButtonMode(); 
-            
-            if (currentRedGateId) {
-                currentRedGateId = null; 
-                document.getElementById('dDungeonTitle').style.color = "#ffcc00"; 
-                document.getElementById('dDungeonTitle').style.textShadow = "none";
-                document.getElementById('btnExitDungeon').classList.remove('hidden');
-                document.getElementById('btnExitDungeon').innerText = "BỎ MẠNG & THOÁT KHỎI CỔNG ĐỎ";
-            } 
-            else if (isDungeonMode) {
-                document.getElementById('btnNextStage').classList.add('hidden');
-                document.getElementById('btnExitDungeon').classList.remove('hidden');
-            } else {
-                const btnFind = document.getElementById('btnFindEnemy');
-                if(btnFind) btnFind.disabled = false;
-            }
-        } else {
-            if (isPlayerStunned) {
-                isPlayerStunned = false; 
-                isMyTurn = false; 
-                updateCombatUI();
-                
-                setTimeout(() => {
-                    logBattle(`<span style="color:yellow; font-weight:bold;">Tâm trí bạn trở nên trống rỗng... Bạn đã bị mất lượt!</span>`);
-                    setTimeout(enemyTurn, 1200); 
-                }, 1000);
-            } else {
-                isMyTurn = true; 
-                updateCombatUI();
-            }
-        }
-    }
 
     function winBattle() {
         let rewardCash = currentRedGateId ? Math.floor(enemy.exp * 2.5) : Math.floor(enemy.exp * 1.5);
