@@ -2362,8 +2362,6 @@
             finalDmg *= 1.25; 
         }
 
-        return { dmg: Math.floor(finalDmg), isCrit: isCrit };
-    }
         // 7. CƠ CHẾ CHẶN SÁT THƯƠNG CỦA LỚP GIÁP ẢO (SHIELD BARRIER)
         let actualDmg = Math.floor(finalDmg);
         if (enemy.shieldHP && enemy.shieldHP > 0) {
@@ -2380,6 +2378,7 @@
             }
         }
 
+        // CHỈ ĐẶT 1 DÒNG RETURN DUY NHẤT Ở CUỐI CÙNG HÀM NÀY
         return { dmg: actualDmg, isCrit: isCrit };
     }
     
