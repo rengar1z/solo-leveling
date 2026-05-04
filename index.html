@@ -1226,6 +1226,7 @@
     let monarchWrathUses = 0;
     let playerBleedTurns = 0; // <--- THÊM BIẾN NÀY: Theo dõi số lượt bạn bị chảy máu
     let playerArmorBreakTurns = 0; // <--- THÊM BIẾN NÀY: Đếm số lượt bạn bị Boss phá giáp
+    window.counterCooldown = 0;
 
     // --- DỮ LIỆU HẦM NGỤC (MỨC ĐỘ: TÂN THỦ & CÀY CUỐC) ---
     const dungeonData = {
@@ -3103,6 +3104,7 @@
         monarchWrathUses = 0;
         playerBleedTurns = 0;
         playerArmorBreakTurns = 0;
+        window.counterCooldown = 0;
 
         document.getElementById('e-name').innerText = enemy.name;
         document.getElementById('e-img').src = enemy.img;
@@ -3139,6 +3141,7 @@
         monarchWrathUses = 0;
         playerBleedTurns = 0;
         playerArmorBreakTurns = 0;
+        window.counterCooldown = 0;
 
         document.getElementById('dStageText').innerText = `Ải ${dCurrentStage + 1}/${dungeonData[dCurrentId].stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
         if(enemy.isBoss) {
@@ -3187,6 +3190,7 @@
         monarchWrathUses = 0;
         playerBleedTurns = 0;
         playerArmorBreakTurns = 0;
+        window.counterCooldown = 0;
         
         document.getElementById('dStageText').innerText = `Ải ${rgCurrentStage + 1}/${gateData.stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
         document.getElementById('dStageText').style.color = gateData.themeColor;
