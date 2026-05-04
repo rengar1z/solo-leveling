@@ -609,6 +609,18 @@
     box-shadow: 0 0 15px #ff4d4d;
     transition: width 0.4s ease-out;
 }
+.combat-shield-bar {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    background: linear-gradient(180deg, #f8f9fa 0%, #c4cbd4 50%, #e2e6ea 100%) !important;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), inset 0 0 5px #8b9aa8;
+    border-left: 2px solid #fff; /* Vạch trắng phân cách ranh giới với Máu đỏ */
+    transition: width 0.4s ease-out, left 0.4s ease-out, opacity 0.3s;
+    z-index: 5; /* Đảm bảo nó nổi lên trên thanh máu đỏ */
+    opacity: 0; /* Mặc định tàng hình khi không có giáp */
+}
+        
 .combat-hp-text {
     font-size: 20px !important;
     font-weight: bold;
@@ -1968,16 +1980,38 @@
         if (!enemy) return;
         const pre = getPrefix();
         
-        // Cập nhật HP Player
-        const pPercent = (currentUser.hp / currentUser.maxHp) * 100;
-        document.getElementById(pre + 'p-hp-bar').style.width = pPercent + "%";
-        document.getElementById(pre + 'p-hp-text').innerText = `HP: ${currentUser.hp}/${currentUser.maxHp}`;
-        
         // Cập nhật HP Enemy & Giáp Ảo
         const enemyMaxHp = enemy.maxHp || enemy.hp || 100;
         const ePercent = (enemy.hp / enemyMaxHp) * 100;
         const eHpBar = document.getElementById(pre + 'e-hp-bar');
         eHpBar.style.width = ePercent + "%";
+        
+        // --- BẮT ĐẦU: TỰ ĐỘNG VẼ THANH GIÁP BẠC ---
+        const eHpTrack = eHpBar.parentElement; // Lấy khung chứa thanh máu
+        let eShieldBar = document.getElementById(pre + 'e-shield-bar');
+        
+        // Nếu chưa có thanh giáp bạc thì tự động tạo ra và nhét vào thanh máu
+        if (!eShieldBar) {
+            eShieldBar = document.createElement('div');
+            eShieldBar.id = pre + 'e-shield-bar';
+            eShieldBar.className = 'combat-shield-bar';
+            eHpTrack.appendChild(eShieldBar);
+        }
+
+        // Tính toán độ dài của Giáp Bạc và ghim nó nối tiếp vào Máu Đỏ
+        if (enemy.shieldHP && enemy.shieldHP > 0) {
+            const shieldPercent = (enemy.shieldHP / enemyMaxHp) * 100;
+            eShieldBar.style.width = shieldPercent + "%";
+            eShieldBar.style.left = ePercent + "%"; // Neo nó vào ngay đuôi của thanh máu đỏ
+            eShieldBar.style.opacity = "1"; // Hiện thanh giáp
+        } else {
+            eShieldBar.style.width = "0%";
+            eShieldBar.style.opacity = "0"; // Ẩn thanh giáp khi bị đánh vỡ
+        }
+        // --- KẾT THÚC: TỰ ĐỘNG VẼ THANH GIÁP BẠC ---
+
+        // ĐÃ XÓA BỎ DÒNG CHỮ HIỂN THỊ KHIÊN (+5000 🛡️)
+        document.getElementById(pre + 'e-hp-text').innerText = `HP: ${enemy.hp}/${enemyMaxHp}`;
         
         // HIỂN THỊ CHỈ SỐ KHIÊN BÊN CẠNH HP
         let shieldText = (enemy.shieldHP && enemy.shieldHP > 0) ? ` <span style="color:#00ffff;">(+${enemy.shieldHP} 🛡️)</span>` : "";
