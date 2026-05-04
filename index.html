@@ -887,29 +887,33 @@
                     <p id="streak"></p>
                 </div>
 
-                <div id="tab-bag" class="tab-panel">
-                    <h2 style="color: #00bfff;">TÚI ĐỒ VÀ TRANG BỊ</h2>
-                    <div class="card" style="flex: 1; border-color: gold;">
-                    <!-- THANH TAB PHÂN LOẠI ĐỒ ĐANG MẶC (BÊN TRÁI) -->
-                    <div class="tabs-header" style="margin-bottom: 15px; border-bottom: 1px solid rgba(255, 215, 0, 0.5); background: rgba(0, 10, 30, 0.8);">
-                    <button class="tab-btn eq-tab-btn active" style="padding: 10px; font-size: 16px; color: gold;" onclick="switchEqTab(event, 'basic')">TRANG BỊ</button>
-                    <button class="tab-btn eq-tab-btn" style="padding: 10px; font-size: 16px; color: #00ffff;" onclick="switchEqTab(event, 'artifact')">CỔ VẬT</button>
-                </div>
-                <div id="equippedArea"></div>
+                <!-- ================= TAB BAG (TÚI ĐỒ) - ĐÃ VÁ LỖI THẺ ĐÓNG ================= -->
+<div id="tab-bag" class="tab-panel">
+    <h2 style="color: #00bfff; text-align: center;">HÀNH TRANG THỢ SĂN</h2>
+    
+    <div style="display: flex; gap: 20px; align-items: flex-start;">
+        
+        <!-- BÊN TRÁI: ĐỒ ĐANG MẶC -->
+        <div class="card" style="flex: 1; border-color: gold;">
+            <div class="tabs-header" style="margin-bottom: 15px; border-bottom: 1px solid rgba(255, 215, 0, 0.5); background: rgba(0, 10, 30, 0.8);">
+                <button class="tab-btn eq-tab-btn active" style="padding: 10px; font-size: 16px; color: gold;" onclick="switchEqTab(event, 'basic')">TRANG BỊ</button>
+                <button class="tab-btn eq-tab-btn" style="padding: 10px; font-size: 16px; color: #00ffff;" onclick="switchEqTab(event, 'artifact')">CỔ VẬT</button>
+            </div>
+            <div id="equippedArea"></div>
         </div>
-                        <div class="card" style="flex: 1;">
-                            <!-- BẮT ĐẦU: 3 NÚT PHÂN LOẠI KHO ĐỒ -->
-                            <div class="tabs-header" style="margin-bottom: 15px; border-bottom: 1px solid rgba(0,191,255,0.5); background: rgba(0, 10, 30, 0.8);">
-                                <button class="tab-btn inv-tab-btn active" style="padding: 10px; font-size: 16px;" onclick="switchInvTab(event, 'equip')">TRANG BỊ</button>
-                                <button class="tab-btn inv-tab-btn" style="padding: 10px; font-size: 16px;" onclick="switchInvTab(event, 'consum')">TIÊU HAO</button>
-                                <button class="tab-btn inv-tab-btn" style="padding: 10px; font-size: 16px; color: #cc66ff;" onclick="switchInvTab(event, 'rare')">VẬT LIỆU</button>
-                            </div>
-                            <!-- KẾT THÚC: 3 NÚT PHÂN LOẠI -->
 
-                            <div id="inventoryArea" style="max-height: 350px; overflow-y: auto; padding-right: 5px;"></div>
-                        </div>
-                   </div>
-                </div>  
+        <!-- BÊN PHẢI: KHO ĐỒ PHÂN LOẠI -->
+        <div class="card" style="flex: 1;">
+            <div class="tabs-header" style="margin-bottom: 15px; border-bottom: 1px solid rgba(0,191,255,0.5); background: rgba(0, 10, 30, 0.8);">
+                <button class="tab-btn inv-tab-btn active" style="padding: 10px; font-size: 16px;" onclick="switchInvTab(event, 'equip')">TRANG BỊ</button>
+                <button class="tab-btn inv-tab-btn" style="padding: 10px; font-size: 16px;" onclick="switchInvTab(event, 'consum')">TIÊU HAO</button>
+                <button class="tab-btn inv-tab-btn" style="padding: 10px; font-size: 16px; color: #cc66ff;" onclick="switchInvTab(event, 'rare')">VẬT LIỆU</button>
+            </div>
+            <div id="inventoryArea" style="max-height: 450px; overflow-y: auto; padding-right: 5px;"></div>
+        </div>
+
+    </div> <!-- ĐÓNG KHỐI FLEX (Dòng này cực kỳ quan trọng) -->
+</div> <!-- ĐÓNG TAB BAG (Dòng này tách biệt Bag với các Tab khác) -->
 
                 <div id="tab-shop" class="tab-panel">
                     <h2 style="color: gold; text-align: center;">CỬA HÀNG HỆ THỐNG</h2>
