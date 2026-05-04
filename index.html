@@ -1155,13 +1155,27 @@
                             <button class="tab-btn btn-system" style="border-color: #9933ff; color: #9933ff !important; font-size: 24px;">TIẾN VÀO HẦM NGỤC</button>
                         </div>
 
-                        <!-- ================= HỆ THỐNG LÂU ĐÀI QUỶ (END-GAME) ================= -->
-                        <div style="border: 2px solid #9933ff; border-radius: 10px; padding: 25px; margin-top: 40px; background: rgba(30, 0, 50, 0.4); box-shadow: 0 0 25px rgba(153, 51, 255, 0.2), inset 0 0 15px rgba(153, 51, 255, 0.1);">
-                            
-                            <h2 style="color: #cc00ff; text-align: center; font-size: 38px; text-shadow: 0 0 15px #cc00ff; margin-top: 0; margin-bottom: 5px; letter-spacing: 3px;">🏰 LÂU ĐÀI QUỶ ĐỊA NGỤC</h2>
-                            <p style="text-align: center; color: #aaa; font-style: italic; font-size: 18px; margin-bottom: 25px;">Khu vực End-game: Vượt qua 4 tầng địa ngục để khiêu chiến Vua Quỷ Baran</p>
+                        <!-- THẺ RÚT GỌN NẰM Ở MÀN HÌNH CHÍNH -->
+                        <div class="dungeon-card" onclick="openDemonCastleMenu()" style="border-color: #cc00ff; box-shadow: 0 0 15px rgba(204, 0, 255, 0.5);">
+                            <h3 style="color: #cc00ff; text-shadow: 0 0 10px #cc00ff;">🏰 LÂU ĐÀI QUỶ ĐỊA NGỤC</h3>
+                            <p style="font-size: 20px; color: #ccc;">Khu vực End-Game | Gồm 4 Tầng</p>
+                            <button class="tab-btn btn-system" style="border-color: #cc00ff; color: #cc00ff !important; font-size: 24px;">TIẾN VÀO KHU VỰC</button>
+                        </div>
+                    </div> <!-- ĐÓNG THẺ QUAN TRỌNG: Kết thúc dungeonListArea -->
 
-                            <!-- Bọc 4 ải vào một Grid thông minh (Tự chia 2 cột trên PC, 1 cột trên Mobile) -->
+                    <!-- ================= MENU CON: LÂU ĐÀI QUỶ (ẨN MẶC ĐỊNH) ================= -->
+                    <div id="demonCastleArea" class="hidden">
+                        
+                        <!-- Nút quay lại -->
+                        <div style="text-align: left; margin-bottom: 15px;">
+                            <button class="tab-btn btn-system" style="border-color: #aaa; color: #aaa !important; font-size: 18px;" onclick="closeDemonCastleMenu()">🔙 QUAY LẠI DANH SÁCH</button>
+                        </div>
+
+                        <div style="border: 2px solid #9933ff; border-radius: 10px; padding: 25px; background: rgba(30, 0, 50, 0.4); box-shadow: 0 0 25px rgba(153, 51, 255, 0.2), inset 0 0 15px rgba(153, 51, 255, 0.1);">
+                            <h2 style="color: #cc00ff; text-align: center; font-size: 38px; text-shadow: 0 0 15px #cc00ff; margin-top: 0; margin-bottom: 5px; letter-spacing: 3px;">🏰 LÂU ĐÀI QUỶ ĐỊA NGỤC</h2>
+                            <p style="text-align: center; color: #aaa; font-style: italic; font-size: 18px; margin-bottom: 25px;">Khu vực End-game: Chọn cổng để khiêu chiến</p>
+
+                            <!-- Bọc 4 ải vào Grid -->
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;">
                                 
                                 <div class="dungeon-card" onclick="enterDungeon('demon_castle_1')" style="border-color: #ff3300; margin-bottom: 0; box-shadow: 0 0 15px rgba(255, 51, 0, 0.4);">
@@ -1190,6 +1204,8 @@
 
                             </div>
                         </div>
+                    </div>
+                    <!-- ================= KẾT THÚC MENU CON ================= -->
                         
                     </div>
 
