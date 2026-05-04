@@ -3335,7 +3335,6 @@
         updateCombatUI();
     };
 
-    // --- HÀM DUNGEON ---
     window.enterDungeon = function(id) {
         if (!currentUser) return;
         if (currentUser.hp <= 0) return alert("Bạn cần hồi phục máu trước khi vào Hầm Ngục!");
@@ -3345,11 +3344,28 @@
         isDungeonMode = true;
 
         document.getElementById('dungeonListArea').classList.add('hidden');
+        
+        // Thêm dòng này: Giấu luôn Menu Lâu Đài Quỷ nếu người chơi đi từ đó vào
+        const dcArea = document.getElementById('demonCastleArea');
+        if (dcArea) dcArea.classList.add('hidden'); 
+
         document.getElementById('dungeonCombatUI').classList.remove('hidden');
         document.getElementById('dDungeonTitle').innerText = dungeonData[id].name;
         
         startDungeonStage();
     }
+
+    // --- MỞ MENU LÂU ĐÀI QUỶ ---
+    window.openDemonCastleMenu = function() {
+        document.getElementById('dungeonListArea').classList.add('hidden');
+        document.getElementById('demonCastleArea').classList.remove('hidden');
+    };
+
+    // --- QUAY LẠI DANH SÁCH HẦM NGỤC CHÍNH ---
+    window.closeDemonCastleMenu = function() {
+        document.getElementById('demonCastleArea').classList.add('hidden');
+        document.getElementById('dungeonListArea').classList.remove('hidden');
+    };
 
     window.startDungeonStage = function() {
         resetToButtonMode();
@@ -3455,10 +3471,16 @@
 
     window.exitDungeon = function() {
         isDungeonMode = false;
-        document.getElementById('dungeonListArea').classList.remove('hidden');
         document.getElementById('dungeonCombatUI').classList.add('hidden');
         
-        enemy = null; // <--- THÊM DÒNG NÀY VÀO ĐỂ XÓA DỮ LIỆU QUÁI VẬT CŨ
+        // Logic trả về đúng Menu: Nếu đang ở Lâu Đài Quỷ thì về Lâu Đài Quỷ
+        if (dCurrentId && dCurrentId.includes('demon_castle')) {
+            document.getElementById('demonCastleArea').classList.remove('hidden');
+        } else {
+            document.getElementById('dungeonListArea').classList.remove('hidden');
+        }
+        
+        enemy = null; // Xóa dữ liệu Boss cũ
     }
 
     // --- HỆ THỐNG PRELOAD (TẢI TRƯỚC HÌNH ẢNH TOÀN DIỆN) ---
