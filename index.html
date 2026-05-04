@@ -2504,15 +2504,14 @@
         updateCombatUI(); checkBattleEnd();
     };
 
-    // --- SKILL: PHẢN ĐÒN ---
+   // --- SKILL: PHẢN ĐÒN (TEST MODE - KHÔNG COOLDOWN) ---
     window.useCounterAttack = function() {
-        // Khởi tạo biến đếm nếu chưa có
-        window.counterCooldown = window.counterCooldown || 0; 
-        
-        // CHẶN NẾU ĐANG TRONG THỜI GIAN HỒI CHIÊU
+        // Tạm thời comment lại phần chặn Cooldown
+        /* 
         if (window.counterCooldown > 0) {
             return logBattle(`<span style='color:orange'>⏳ Phản Đòn đang hồi chiêu! (Cần chờ thêm ${window.counterCooldown} lượt)</span>`);
-        }
+        } 
+        */
 
         if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 30) { 
             if(currentUser.mp < 30) logBattle("<span style='color:orange'>Thiếu 30 MP!</span>"); 
@@ -2522,13 +2521,13 @@
         currentUser.mp -= 30; 
         isPlayerCountering = true; // Bật cờ phản đòn
         
-        // GẮN COOLDOWN: Đặt 4 để sau khi kết thúc lượt này, nó tụt xuống 3 là vừa đẹp!
-        window.counterCooldown = 4; 
+        // Ép Cooldown về 0 để UI không khóa nút ở lượt sau
+        window.counterCooldown = 0; 
         
-        logBattle(`<span style="color:gold; font-weight:bold;">🛡️ Bạn nắm chặt vũ khí, vào thế phòng thủ sẵn sàng phản công!</span>`);
-        updateCombatUI(); checkBattleEnd(); // Chuyển lượt cho quái đánh
+        logBattle(`<span style="color:gold; font-weight:bold;">🛡️ [TEST MODE] Bạn nắm chặt vũ khí, vào thế phòng thủ sẵn sàng phản công!</span>`);
+        updateCombatUI(); checkBattleEnd(); 
     };
-
+    
     // --- KỸ NĂNG KHỐNG CHẾ (NÉM DAO) ---
     window.useDaggerThrow = function() {
         if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 20) { if(currentUser.mp < 20) logBattle("<span style='color:orange'>Thiếu 20 MP!</span>"); return; }
