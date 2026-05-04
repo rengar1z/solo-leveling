@@ -4317,50 +4317,7 @@
         enemy = null; // Xóa dữ liệu Boss cũ
     }
 
-    // --- HỆ THỐNG PRELOAD (TẢI TRƯỚC HÌNH ẢNH TOÀN DIỆN) ---
-    window.preloadGameImages = function() {
-        let loadedCount = 0;
-        const imagesToLoad = [];
-
-        // 1. Thu thập ảnh từ ARENA (Thợ săn)
-        if (typeof enemies !== 'undefined') {
-            enemies.forEach(e => {
-                if (e.img) imagesToLoad.push(e.img);
-            });
-        }
-
-        // 2. Thu thập ảnh từ CỔNG ĐỎ (Red Gates)
-        for (const key in RED_GATES) {
-            RED_GATES[key].stages.forEach(stage => {
-                if (stage.img) imagesToLoad.push(stage.img);
-            });
-        }
-
-        // 3. Thu thập ảnh từ HẦM NGỤC (Dungeons)
-        for (const key in dungeonData) {
-            dungeonData[key].stages.forEach(stage => {
-                if (stage.img) imagesToLoad.push(stage.img);
-            });
-        }
-
-        // Lọc bỏ các ảnh bị trùng lặp
-        const uniqueImages = [...new Set(imagesToLoad)];
-        
-        // Tiến hành tải ngầm
-        uniqueImages.forEach(src => {
-            const img = new Image();
-            img.src = src;
-            loadedCount++;
-        });
-
-        console.log(`[Hệ thống] Đã tải trước ${loadedCount} hình ảnh gốc vào bộ nhớ đệm!`);
-    }
-
-    // Kích hoạt sau khi toàn bộ code đã được đọc xong
-    //preloadGameImages();
-
     setTimeout(startNewBattle, 2000);
-
 </script>
 </body>
 </html>
