@@ -2180,8 +2180,18 @@
         }
     }
 
-    //Trang bi item
+    // --- QUẢN LÝ CHUYỂN TAB TRONG TÚI ĐỒ ---
+    window.currentInvTab = 'equip'; // Mặc định mở tab Trang bị
 
+    window.switchInvTab = function(evt, tabName) {
+        window.currentInvTab = tabName;
+        const btns = document.getElementsByClassName("inv-tab-btn");
+        for (let i = 0; i < btns.length; i++) btns[i].classList.remove("active");
+        evt.currentTarget.classList.add("active");
+        renderBag(); // Tải lại đồ theo tab mới
+    }
+
+    //Trang bi item
     window.renderBag = function() {
         if (!currentUser.inventory) currentUser.inventory = [];
         if (!currentUser.equipped) currentUser.equipped = { weapon: null, shield: null, accessory: null, helmet: null, gloves: null, costume: null };
