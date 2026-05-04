@@ -2998,44 +2998,76 @@
         // 6. KỸ NĂNG CỦA VULCAN (DUNG NHAM)
         if (isDungeonMode && enemy.bossType === "vulcan") {
             let rand = Math.random(); 
-            if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasShielded) {
-                let shieldAmount = Math.floor(enemy.maxHp * 0.25); 
+            
+            // --- GIAI ĐOẠN 2: CƠN THỊNH NỘ & ĐỘ BỀN VƯỢT TRỘI (Dưới 50% Máu) ---
+            if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasFrenzy) {
+                enemy.hasFrenzy = true; 
+                let shieldAmount = Math.floor(enemy.maxHp * 0.30); // Độ bền đáng kinh ngạc: Tạo khiên 30% máu
                 enemy.shieldHP = shieldAmount; 
-                enemy.hasShielded = true; 
+                enemy.atk = Math.floor(enemy.atk * 1.50); // Cơn thịnh nộ: Tăng vĩnh viễn 50% ATK
                 dmg = 0; 
                 isSpecialAttack = true;
-                specialAttackLog = `<span style="color:#ff6600; font-weight:bold; text-shadow: 0 0 5px #ff6600;">🛡️ BỘ GIÁP DUNG NHAM!</span> Vulcan gầm lên, khoác lên mình lớp giáp dung nham chặn ${shieldAmount} sát thương!`;
-            } else if (rand <= 0.25) {
-                let rawDmg = enemyAtk * 1.8; 
+                specialAttackLog = `<span style="color:#ff0000; font-weight:bold; text-shadow: 0 0 10px #ff0000;">💢 CƠN THỊNH NỘ!</span> Vulcan gầm thét điên cuồng! Hắn kích hoạt <span style="color:#ff9900;">Độ Bền Vượt Trội</span> (Tạo khiên ${shieldAmount} HP) và <span style="color:#ff3333;">tăng vĩnh viễn 50% Chỉ số Sức mạnh</span>!`;
+            } 
+            
+            // --- CÁC ĐÒN TẤN CÔNG NGẪU NHIÊN ---
+            else if (rand <= 0.25) {
+                // Tốc độ vượt trội: Nhanh đến mức không kịp phản ứng (Gây Choáng)
+                let rawDmg = enemyAtk * 1.5; 
                 dmg = Math.max(30, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                 isSpecialAttack = true;
-                effectArmorBreak = 3; 
-                specialAttackLog = `<span style="color:#ff3300; font-weight:bold;">🔨 CHÙY HỦY DIỆT!</span> Vulcan nện chùy xuống đất, gây ${Math.floor(dmg)} sát thương và <span style="color:orange;">[GIẢM 30% GIÁP]</span> của bạn!`;
-            } else if (rand <= 0.45) {
+                isPlayerStunned = true; 
+                specialAttackLog = `<span style="color:#ff9900; font-weight:bold;">⚡ TỐC ĐỘ VƯỢT TRỘI!</span> Bất chấp thân hình đồ sộ, Vulcan lao đến với tốc độ kinh hoàng giáng ${Math.floor(dmg)} ST, khiến bạn không kịp né tránh và bị <span style="color:yellow;">[CHOÁNG]</span>!`;
+            } 
+            else if (rand <= 0.55) {
+                // Địa chấn tầng sâu: Sát thương diện rộng bạo kích thuần túy (Đã bỏ Chảy Máu)
+                let rawDmg = enemyAtk * 2.5; 
+                dmg = Math.max(50, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true;
+                specialAttackLog = `<span style="color:#ff0000; font-weight:bold;">🌋 ĐỊA CHẤN TẦNG SÂU!</span> Vulcan dậm mạnh đôi chân khổng lồ xuống đất tạo ra một cơn địa chấn kinh hoàng, giáng <span style="color:red; font-size: 18px;">${Math.floor(dmg)}</span> sát thương!`;
+            }
+            else if (rand <= 0.80) {
+                // Sức mạnh phi thường: Áp đảo thể chất, đập nát phòng thủ (Phá Giáp)
                 let rawDmg = enemyAtk * 2.2; 
                 dmg = Math.max(40, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                 isSpecialAttack = true;
-                isPlayerStunned = true; 
-                specialAttackLog = `<span style="color:#ff0000; font-weight:bold;">🌋 ĐỊA CHẤN TẦNG SÂU!</span> Sóng xung kích làm bạn mất thăng bằng, nhận ${Math.floor(dmg)} ST và bị <span style="color:yellow;">[CHOÁNG VÁNG]</span>!`;
+                effectArmorBreak = 3; 
+                specialAttackLog = `<span style="color:#ff3300; font-weight:bold;">💪 SỨC MẠNH PHI THƯỜNG!</span> Vulcan vung đòn áp đảo hoàn toàn thể chất của bạn, gây ${Math.floor(dmg)} ST và đánh nát hàng phòng thủ, <span style="color:orange;">[PHÁ GIÁP]</span> trong 3 lượt tới!`;
             }
         }
 
         // 7. KỸ NĂNG CỦA METUS (LINH HỒN)
         if (isDungeonMode && enemy.bossType === "metus") {
             let rand = Math.random(); 
-            if (rand <= 0.35) {
+            
+            // --- GIAI ĐOẠN 2: THUẬT GỌI HỒN (Dưới 50% Máu) ---
+            if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasSummonedUndead) {
+                enemy.hasSummonedUndead = true; 
+                // Gọi bầy xác sống lên làm bia đỡ đạn, tạo khiên bằng 40% Máu tối đa
+                let shieldAmount = Math.floor(enemy.maxHp * 0.40); 
+                enemy.shieldHP = shieldAmount; 
+                dmg = 0; 
+                isSpecialAttack = true;
+                specialAttackLog = `<span style="color:#00ffff; font-weight:bold; text-shadow: 0 0 10px #00ffff;">🧟 THUẬT GỌI HỒN (GIỌNG NÓI BỊ NGUYỀN RỦA)!</span> Metus cất tiếng gọi từ cõi chết! Hàng vạn xác sống trỗi dậy bao bọc lấy hắn, tạo thành Bức Tường Thịt chịu thay <span style="color:#00ff00;">${shieldAmount} sát thương</span>!`;
+            } 
+            
+            // --- CÁC ĐÒN TẤN CÔNG MA THUẬT NGẪU NHIÊN ---
+            else if (rand <= 0.35) {
+                // Ma thuật cấp cao & Lượng Mana khổng lồ: Rút MP của người chơi
+                let rawDmg = enemyAtk * 1.8; 
+                dmg = Math.max(30, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true;
+                effectManaSteal = 150; // Hút 150 MP của người chơi (Rất thâm độc)
+                specialAttackLog = `<span style="color:#00bfff; font-weight:bold;">☠️ MA THUẬT BÓNG TỐI CẤP CAO!</span> Metus vận dụng lượng Mana khổng lồ giáng luồng ma lực hủy diệt gây ${Math.floor(dmg)} ST, đồng thời <span style="color:blue;">[THIÊU ĐỐT 150 MP]</span> của bạn!`;
+            } 
+            else if (rand <= 0.60) {
+                // Khả năng phục hồi: Hút máu (Vì cơ thể vật lý yếu nên phải hút sinh lực để tồn tại)
                 let rawDmg = enemyAtk * 1.5; 
                 dmg = Math.max(20, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                 isSpecialAttack = true;
-                let healAmount = Math.floor(dmg * 2.0); // Hút máu cực mạnh
+                let healAmount = Math.floor(dmg * 2.5); // Hút máu cực mạnh (250% lượng ST gây ra)
                 enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
-                specialAttackLog = `<span style="color:#00ffff; font-weight:bold; text-shadow: 0 0 5px #00ffff;">👻 ĐOẠT HỒN!</span> Metus xé rách linh hồn bạn gây ${Math.floor(dmg)} ST và hút lại <span style="color:#00ff00">${healAmount} HP</span>!`;
-            } else if (rand <= 0.55) {
-                let rawDmg = enemyAtk * 2.0; 
-                dmg = Math.max(30, Math.floor(rawDmg * (1 - vitDmgReduction))); 
-                isSpecialAttack = true;
-                effectManaSteal = 100; // Hút cực nhiều Mana
-                specialAttackLog = `<span style="color:#00bfff; font-weight:bold;">☠️ LỜI NGUYỀN VONG LINH!</span> Ám khí xâm nhập, gây ${Math.floor(dmg)} ST và bòn rút tàn nhẫn MP của bạn!`;
+                specialAttackLog = `<span style="color:#00ffff; font-weight:bold; text-shadow: 0 0 5px #00ffff;">👻 ĐOẠT MẠNG!</span> Chướng khí từ Metus xé rách sinh lực của bạn gây ${Math.floor(dmg)} ST và bồi đắp lại <span style="color:#00ff00">${healAmount} HP</span> cho hắn!`;
             }
         }
 
