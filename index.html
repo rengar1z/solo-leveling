@@ -1891,11 +1891,16 @@
 
         <!-- THANH MENU TAB BÊN TRONG TÚI ĐỒ -->
         <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 15px; padding-bottom: 15px; position: relative; border-bottom: 1px dashed rgba(0, 191, 255, 0.4); min-height: 46px;">
+            
+            <!-- Nhóm chứa: Mô hình nhân vật và Kho đồ -->
             <div style="display: flex; gap: 10px;">
-                <button class="square-icon-tab eq-tab-btn" onclick="switchEqTab(event, 'artifact')" title="Cổ Vật">🔮</button>
+                <button id="btnToggleVisual" onclick="toggleEquipView()" class="square-icon-tab active" title="Mô Hình Nhân Vật">👤</button>
                 <button class="square-icon-tab eq-tab-btn" onclick="switchEqTab(event, 'inventory')" title="Kho Đồ">🎒</button>
             </div>
-            <button id="btnToggleVisual" onclick="toggleEquipView()" class="square-icon-tab active" style="position: absolute; right: 0; width: 46px; height: 46px; background: rgba(0, 191, 255, 0.15);" title="Mô Hình Nhân Vật">👤</button>
+            
+            <!-- Nút Cổ Vật: Bị ép sang góc phải -->
+            <button class="square-icon-tab eq-tab-btn" onclick="switchEqTab(event, 'artifact')" style="position: absolute; right: 0;" title="Cổ Vật">🔮</button>
+            
         </div>
 
         <!-- GIAO DIỆN 1: MÔ HÌNH NHÂN VẬT (NƠI CHỨA ĐỒ ĐANG MẶC) -->
