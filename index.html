@@ -605,27 +605,60 @@
             z-index: 10;
         }
 
-        /* Bảng thông tin (Tooltip) ẩn đi lúc bình thường */
         .item-tooltip {
             visibility: hidden;
             opacity: 0;
             position: absolute;
-            left: 75px;
+            left: 75px; 
             top: 50%;
             transform: translateY(-50%);
-            width: 220px;
-            background: rgba(0, 10, 30, 0.95);
-            border: 1px solid gold;
-            box-shadow: 0 0 15px gold;
+            width: 360px !important;
+            background: #0a2013 !important;
+            border: 2px solid #1dbf48 !important;
+            box-shadow: 0 0 15px rgba(29, 191, 72, 0.4) !important;
             color: #fff;
-            padding: 12px;
-            border-radius: 6px;
+            padding: 15px !important;
+            border-radius: 4px;
             z-index: 999;
             transition: 0.3s;
             pointer-events: none;
-            text-align: left;
-            line-height: 1.4;
+            text-transform: uppercase;
+            font-family: 'Oswald', sans-serif;
+            text-align: left !important;
         }
+
+        .sl-tt-top { 
+            display: flex; 
+            gap: 15px; 
+            margin-bottom: 12px; 
+        }
+
+        .sl-tt-img-box {
+            width: 75px; height: 75px;
+            background: #040e08; 
+            border-radius: 4px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+            flex-shrink: 0;
+        }
+
+        .sl-tt-img-box img { width: 85%; height: 85%; object-fit: contain; }
+
+        .sl-tt-info { display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+
+        /* Xóa bỏ màu vàng chanh mặc định của Tiêu đề Item trong tooltip */
+        .sl-tt-title { font-size: 18px; font-weight: bold; }
+        .sl-tt-line { font-size: 15px; color: #ffffff !important; }
+
+        .sl-tt-bottom { font-size: 15px; color: #fff; line-height: 1.6; }
+        .sl-tt-price { margin-top: 8px; color: #ffcc00; font-size: 14px; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 8px; }
+
+        /* ================= HỆ THỐNG MÀU RANK MỚI ================= */
+        .text-rank-S { color: #ff3333 !important; text-shadow: 0 0 8px rgba(255, 51, 51, 0.6); }
+        .text-rank-A { color: #ff9900 !important; text-shadow: 0 0 8px rgba(255, 153, 0, 0.6); }
+        .text-rank-B { color: #00bfff !important; text-shadow: 0 0 8px rgba(0, 191, 255, 0.6); }
+        .text-rank-C { color: #1dbf48 !important; text-shadow: 0 0 8px rgba(29, 191, 72, 0.6); }
+        .text-rank-D { color: #ffffff !important; text-shadow: 0 0 5px rgba(255, 255, 255, 0.4); }
 
         /* Bật Tooltip lên khi chạm/hover */
         .item-icon-wrapper:hover .item-tooltip,
@@ -3103,13 +3136,28 @@
                     <div style="display: flex; gap: 15px; align-items: center; flex: 1;">
                         <div class="item-icon-wrapper rank-${rank}">
                             <img src="${itemData.img}" class="item-img-premium">
+                            
+                            <!-- BẢNG THÔNG TIN (CHUẨN MANHWA) -->
                             <div class="item-tooltip">
-                                <h4 class="text-rank-${rank}" style="margin: 0 0 5px 0; font-size: 20px;">[CLASS: ${rank}] ${itemObj.name}</h4>
-                                <span style="color: #ccc; font-size: 16px;">TYPE: ${slot.toUpperCase()}</span><br><br>
-                                <span style="color: #ff4d4d; font-size: 16px;">STR: +${itemObj.str} | VIT: +${itemObj.vit}</span><br>
-                                <span style="color: #00ff00; font-size: 16px;">MP: +${itemObj.mp}</span><br>
-                                <hr style="border-color: #444; margin: 8px 0;">
-                                <span class="text-rank-${rank}" style="font-size: 14px;">EFFECT: ${itemData.effect}</span>
+                                <div class="sl-tt-top">
+                                    <div class="sl-tt-img-box"><img src="${itemData.img}"></div>
+                                    <div class="sl-tt-info">
+                                        <!-- Tên Item được đổ màu theo Rank -->
+                                        <div class="sl-tt-title text-rank-${rank}">[ITEM: ${itemObj.name}]</div>
+                                        
+                                        <!-- Chữ trắng, riêng Hạng có màu -->
+                                        <div class="sl-tt-line">ITEM CLASS: <span class="text-rank-${rank}" style="font-weight:bold;">${rank}</span></div>
+                                        <div class="sl-tt-line">TYPE: ${slot.toUpperCase()}</div>
+                                    </div>
+                                </div>
+                                <div class="sl-tt-bottom">
+                                    ${itemData.effect ? itemData.effect + '<br>' : ''}
+                                    ${[
+                                        itemObj.vit > 0 ? `+${itemObj.vit} VITALITY` : '',
+                                        itemObj.str > 0 ? `+${itemObj.str} STRENGTH` : '',
+                                        itemObj.mp > 0 ? `+${itemObj.mp} MANA` : ''
+                                    ].filter(Boolean).join(', ')}
+                                </div>
                             </div>
                         </div>
                         <div style="display: flex; flex-direction: column;">
@@ -3167,21 +3215,30 @@
                         <div class="item-icon-wrapper rank-${rank}">
                             <img src="${itemData.img}" class="item-img-premium">
                             
-                            <!-- BẢNG THÔNG TIN (TOOLTIP) ĐÃ TỐI ƯU -->
+                            <!-- BẢNG THÔNG TIN (CHUẨN MANHWA) -->
                             <div class="item-tooltip">
-                                <h4 class="text-rank-${rank}" style="margin: 0 0 5px 0; font-size: 20px;">[CLASS: ${rank}] ${itemObj.name}</h4>
-                                <span style="color: #ccc; font-size: 16px;">TYPE: ${itemData.type.toUpperCase()}</span>
-                                
-                                <!-- ẨN CHỈ SỐ NẾU LÀ VẬT PHẨM TIÊU HAO HOẶC VẬT LIỆU -->
-                                ${['consumable', 'material'].includes(itemData.type) ? '' : `
-                                <br><br>
-                                <span style="color: #ff4d4d; font-size: 16px;">STR: +${itemObj.str} | VIT: +${itemObj.vit}</span><br>
-                                <span style="color: #00ff00; font-size: 16px;">MP: +${itemObj.mp}</span>
-                                `}
-
-                                <hr style="border-color: #444; margin: 8px 0;">
-                                <span class="text-rank-${rank}" style="font-size: 14px;">EFFECT: ${itemData.effect}</span><br><br>
-                                <span style="color: yellow; font-size: 14px;">Giá bán: ${sellPrice} Cash</span>
+                                <div class="sl-tt-top">
+                                    <div class="sl-tt-img-box"><img src="${itemData.img}"></div>
+                                    <div class="sl-tt-info">
+                                        <!-- Tên Item được đổ màu theo Rank -->
+                                        <div class="sl-tt-title text-rank-${rank}">[ITEM: ${itemObj.name}]</div>
+                                        
+                                        <!-- Chữ trắng, riêng Hạng có màu -->
+                                        <div class="sl-tt-line">ITEM CLASS: <span class="text-rank-${rank}" style="font-weight:bold;">${rank}</span></div>
+                                        <div class="sl-tt-line">TYPE: ${itemData.type.toUpperCase()}</div>
+                                    </div>
+                                </div>
+                                <div class="sl-tt-bottom">
+                                    ${itemData.effect ? itemData.effect + '<br>' : ''}
+                                    ${!['consumable', 'material'].includes(itemData.type) ? 
+                                        [
+                                            itemObj.vit > 0 ? `+${itemObj.vit} VITALITY` : '',
+                                            itemObj.str > 0 ? `+${itemObj.str} STRENGTH` : '',
+                                            itemObj.mp > 0 ? `+${itemObj.mp} MANA` : ''
+                                        ].filter(Boolean).join(', ')
+                                    : ''}
+                                    <div class="sl-tt-price">Giá bán: ${sellPrice} Cash</div>
+                                </div>
                             </div>
                             
                         </div>
