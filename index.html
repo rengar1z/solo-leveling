@@ -1608,6 +1608,33 @@
             clip-path: none !important; 
             border-radius: 0 !important; 
         }
+
+        /* ================= ĐỒNG BỘ TAB ICON VUÔNG CHO BẢNG TRANG BỊ ================= */
+        .square-icon-tab {
+            width: 46px;
+            height: 46px;
+            background: rgba(10, 15, 25, 0.8); /* Nền tối */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            filter: grayscale(100%) opacity(0.5); /* Tối mờ khi chưa chọn */
+        }
+
+        .square-icon-tab:hover {
+            filter: grayscale(0%) opacity(0.8);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .square-icon-tab.active {
+            background: #ffffff; /* Nền trắng phát sáng */
+            border: 1px solid #ffffff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+            filter: grayscale(0%) opacity(1); /* Rõ nét hoàn toàn */
+        }
     </style>
 </head>
 <body>
@@ -1780,20 +1807,18 @@
                 <!-- ================= TAB BAG (TÚI ĐỒ) - ĐÃ VÁ LỖI THẺ ĐÓNG ================= -->
                 <div id="tab-bag" class="tab-panel">
                     <div style="display: flex; gap: 20px; align-items: stretch;">
-            
-                        <!-- BÊN TRÁI: ĐỒ ĐANG MẶC (Ép chiều cao cố định, biến thành Flex column) -->
                         <div class="card" style="flex: 1; border-color: gold; display: flex; flex-direction: column; height: 500px; box-sizing: border-box;">
-                            <div class="tabs-header" style="height: 45px; flex-shrink: 0; align-items: stretch; margin-bottom: 15px; border-bottom: 1px solid rgba(255, 215, 0, 0.5); background: rgba(0, 10, 30, 0.8);">
-                                <button class="tab-btn eq-tab-btn active" style="padding: 0; font-size: 16px; color: gold;" onclick="switchEqTab(event, 'basic')">TRANG BỊ</button>
-                                <button class="tab-btn eq-tab-btn" style="padding: 0; font-size: 16px; color: #00ffff;" onclick="switchEqTab(event, 'artifact')">CỔ VẬT</button>
+                            <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed rgba(255, 215, 0, 0.4);">
+                                <button class="square-icon-tab active" onclick="switchEqTab(event, 'basic')" title="Trang Bị">
+                                    🧙‍♂️
+                                </button>
+                                <button class="square-icon-tab" onclick="switchEqTab(event, 'artifact')" title="Cổ Vật">
+                                    🔮
+                                </button>
                             </div>
                             <div id="equippedArea" style="flex: 1; overflow-y: auto; padding-right: 5px;"></div>
                         </div>
-
-                            <!-- BÊN PHẢI: KHO ĐỒ PHÂN LOẠI -->
                 <div class="card" style="flex: 1; display: flex; flex-direction: column; height: 500px; box-sizing: border-box; border-color: #00bfff; box-shadow: inset 0 0 15px rgba(0,191,255,0.1);">
-            
-                <!-- KHAY PHÂN LOẠI (Đã xóa dòng chữ Kho đồ và nút Tất Cả) -->
                     <div class="sl-shop-filter-row" style="justify-content: center; margin-bottom: 15px; flex-wrap: wrap;">
                         <div class="sl-shop-filter-btn inv-filter-btn active" title="Vũ Khí" onclick="switchInvTab('weapon', this)">⚔️</div>
                         <div class="sl-shop-filter-btn inv-filter-btn" title="Phòng Cụ" onclick="switchInvTab('armor', this)">🛡️</div>
@@ -1801,25 +1826,17 @@
                         <div class="sl-shop-filter-btn inv-filter-btn" title="Tiêu Hao" onclick="switchInvTab('consum', this)">🧪</div>
                         <div class="sl-shop-filter-btn inv-filter-btn" title="Vật Liệu" onclick="switchInvTab('material', this)">💎</div>
                     </div>
-            
-                    <!-- Khu vực chứa item -->
                     <div id="inventoryArea" class="sl-shop-list" style="padding-right: 5px;"></div>
-
                 </div>
                     </div>
                 </div>
-
                 <div id="tab-shop" class="tab-panel">
-
-    <!-- KHAY PHÂN LOẠI ICON -->
     <div class="sl-shop-filter-row">
-        <!-- Đã xóa nút ABCD (All) -->
-        <div class="sl-shop-filter-btn" onclick="filterShop('weapon', this)">⚔️</div> <!-- Vũ Khí -->
-        <div class="sl-shop-filter-btn active" onclick="filterShop('potion', this)">🧪</div> <!-- Thuốc (Mặc định sáng) -->
-        <div class="sl-shop-filter-btn" onclick="filterShop('costume', this)">👔</div> <!-- Trang Phục -->
+        <div class="sl-shop-filter-btn" onclick="filterShop('weapon', this)">⚔️</div> 
+        <div class="sl-shop-filter-btn active" onclick="filterShop('potion', this)">🧪</div> 
+        <div class="sl-shop-filter-btn" onclick="filterShop('costume', this)">👔</div> 
     </div>
 
-    <!-- DANH SÁCH VẬT PHẨM -->
     <div class="sl-shop-list" id="shopItemsContainer">
         
         <!-- ================= THUỐC (POTION) ================= -->
