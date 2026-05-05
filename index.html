@@ -1941,7 +1941,7 @@
 
     </div>
 </div>
-
+<div id="tab-shop" class="tab-panel" style="display: none;">
     <div class="sl-shop-list" id="shopItemsContainer">
         
         <!-- ================= THUỐC (POTION) ================= -->
@@ -4993,19 +4993,18 @@
     });
 };
 
-    // Biến lưu trạng thái góc nhìn
-    let isVisualView = false;
+    // Kéo biến này ra biến toàn cục của window
+    window.isVisualView = false;
 
-    // Hàm chuyển đổi giao diện túi đồ
-    function toggleEquipView() {
-        isVisualView = !isVisualView;
+    // Khai báo hàm vào window để HTML nhìn thấy
+    window.toggleEquipView = function() {
+        window.isVisualView = !window.isVisualView;
         
         const listView = document.getElementById('equippedListArea');
         const visualView = document.getElementById('characterVisualArea');
         
-        // Thêm lệnh kiểm tra an toàn (tránh báo lỗi null)
         if (listView && visualView) {
-            if (isVisualView) {
+            if (window.isVisualView) {
                 listView.style.display = 'none';
                 visualView.style.display = 'block';
             } else {
@@ -5015,7 +5014,7 @@
         } else {
             console.error("LỖI: Không tìm thấy khung giao diện, hãy kiểm tra lại HTML!");
         }
-    }
+    };
     setTimeout(startNewBattle, 2000);
 </script>
 </body>
