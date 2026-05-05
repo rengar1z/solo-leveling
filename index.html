@@ -3578,12 +3578,13 @@
         if (!currentUser.inventory) currentUser.inventory = [];
         if (!currentUser.equipped) currentUser.equipped = { weapon: null, shield: null, accessory: null, helmet: null, gloves: null, costume: null };
         if (currentUser.cash === undefined) currentUser.cash = 0;
-        
-        const eqArea = document.getElementById('equippedArea');
+    
+        // --- SỬA TẠI ĐÂY ---
+        // Chỉ lấy invArea, xóa bỏ eqArea vì HTML cũ đã bị gỡ bỏ
         const invArea = document.getElementById('inventoryArea');
-        if (!eqArea || !invArea) return;
-        
-        eqArea.innerHTML = ''; invArea.innerHTML = '';
+        if (!invArea) return; 
+    
+        invArea.innerHTML = '';
         
         // 1. TỰ ĐỘNG CHUYỂN ĐỔI DATA CŨ SANG DATA MỚI
         currentUser.inventory = currentUser.inventory.map(item => {
