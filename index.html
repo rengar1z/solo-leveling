@@ -1716,6 +1716,38 @@
             object-fit: contain; /* Tự động thu nhỏ ảnh lại cho vừa khung */
             z-index: 1; /* Nằm ngoan ngoãn dưới các ô trang bị */
         }
+
+        /* ================= TỐI ƯU GIAO DIỆN CHO ĐIỆN THOẠI ================= */
+        @media (max-width: 768px) {
+            /* 1. Giảm khoảng trống viền 2 bên màn hình */
+            .wrapper {
+                padding: 10px !important;
+            }
+            
+            /* 2. Ép khung chính phải thu nhỏ lại, không được giãn theo các tab */
+            .panel {
+                min-width: 0 !important; 
+                padding: 15px !important;
+            }
+            
+            /* 3. Đưa bảng trạng thái về 1 cột cho dễ nhìn */
+            .sl-stat-grid {
+                grid-template-columns: 1fr !important;
+                padding: 15px !important;
+                gap: 15px !important;
+            }
+            
+            /* 4. Giảm khoảng cách giữa các ô chứa trang bị trong Bag */
+            .char-equip-grid {
+                gap: 5px 10px !important;
+            }
+            
+            /* 5. Mở khóa giới hạn chiều cao cố định của khung Bag */
+            .card {
+                height: auto !important;
+                min-height: 480px !important;
+            }
+        }
     </style>
 </head>
 <body>
