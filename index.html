@@ -1652,12 +1652,14 @@
             filter: grayscale(0%) opacity(1); /* Rõ nét hoàn toàn */
         }
 
-        /* ================= GIAO DIỆN MÔ HÌNH NHÂN VẬT ================= */
+        /* ================= GIAO DIỆN MÔ HÌNH NHÂN VẬT (ĐÃ FIX LỖI) ================= */
         .char-equip-grid {
             display: grid;
-            grid-template-columns: 1fr 2fr 1fr; /* Chia 3 cột: Trái(1) - Giữa(2) - Phải(1) */
-            gap: 15px 10px;
+            grid-template-columns: 1fr 1.5fr 1fr; /* Thu hẹp cột giữa lại một chút để các ô trang bị ôm sát nhân vật hơn */
+            grid-template-rows: repeat(4, 1fr); /* ÉP CỨNG 4 hàng bằng nhau để ảnh không thể làm phình to khung */
+            gap: 15px 20px;
             height: 100%;
+            max-height: 480px; /* Khóa chiều cao tối đa của cả khu vực */
             align-items: center;
             justify-items: center;
             padding: 10px 0;
@@ -1665,8 +1667,8 @@
 
         /* Ô chứa trang bị */
         .eq-slot {
-            width: 60px;
-            height: 60px;
+            width: 65px;
+            height: 65px;
             background: rgba(0, 10, 25, 0.9);
             border: 1px solid rgba(0, 191, 255, 0.4);
             border-radius: 5px;
@@ -1678,6 +1680,7 @@
             box-shadow: inset 0 0 10px rgba(0, 191, 255, 0.1);
             cursor: pointer;
             transition: 0.2s;
+            z-index: 10; /* Luôn nằm đè lên trên ảnh nhân vật nếu có chạm nhau */
         }
 
         .eq-slot:hover {
@@ -1697,11 +1700,17 @@
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 2px;
+            grid-row: span 4; /* Ép nằm trải dài 4 hàng */
+            
+            /* XÓA BỎ HOÀN TOÀN BACKGROUND-IMAGE Ở ĐÂY */
+        }
         
-            background-image: url('char/Sung_Jin_Woo_Full_Body.png'); 
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
+        /* Khóa cứng kích thước ảnh nhân vật bên trong để không bao giờ tràn viền */
+        #visual-p-img {
+            max-width: 100% !important;
+            max-height: 440px !important; /* Ảnh chỉ được cao tối đa 440px */
+            object-fit: contain; /* Tự động thu nhỏ ảnh lại cho vừa khung */
+            z-index: 1; /* Nằm ngoan ngoãn dưới các ô trang bị */
         }
     </style>
 </head>
