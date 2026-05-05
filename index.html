@@ -1698,7 +1698,7 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             /* Chèn link ảnh nhân vật của bạn vào đây: */
-            background-image: url('hinh-nhan-vat.png'); 
+            background-image: src; 
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
@@ -4993,24 +4993,29 @@
     });
 };
 
+    // Biến lưu trạng thái góc nhìn
     let isVisualView = false;
 
-        function toggleEquipView() {
-            isVisualView = !isVisualView;
-            
-            const listView = document.getElementById('equippedListArea');
-            const visualView = document.getElementById('characterVisualArea');
-            
-            if(isVisualView) {
-                // Tắt List, Bật Visual
+    // Hàm chuyển đổi giao diện túi đồ
+    function toggleEquipView() {
+        isVisualView = !isVisualView;
+        
+        const listView = document.getElementById('equippedListArea');
+        const visualView = document.getElementById('characterVisualArea');
+        
+        // Thêm lệnh kiểm tra an toàn (tránh báo lỗi null)
+        if (listView && visualView) {
+            if (isVisualView) {
                 listView.style.display = 'none';
                 visualView.style.display = 'block';
             } else {
-                // Tắt Visual, Bật List
                 listView.style.display = 'block';
                 visualView.style.display = 'none';
             }
+        } else {
+            console.error("LỖI: Không tìm thấy khung giao diện, hãy kiểm tra lại HTML!");
         }
+    }
     setTimeout(startNewBattle, 2000);
 </script>
 </body>
