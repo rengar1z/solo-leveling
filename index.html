@@ -1536,21 +1536,22 @@
         /* ================= THANH CUỘN CHO HẦM NGỤC (MÀU XANH SYSTEM) ================= */
         #dungeonListArea, #demonCastleList {
             max-height: 520px; 
-            overflow-y: auto;
+            overflow-y: auto; 
+            overflow-x: hidden; 
             padding-right: 10px; 
         }
 
-        /* Tùy chỉnh thiết kế thanh cuộn */
         #dungeonListArea::-webkit-scrollbar, #demonCastleList::-webkit-scrollbar {
             width: 6px;
         }
 
         #dungeonListArea::-webkit-scrollbar-track, #demonCastleList::-webkit-scrollbar-track {
             background: rgba(0, 30, 60, 0.5); 
+            border-radius: 4px;
         }
 
         #dungeonListArea::-webkit-scrollbar-thumb, #demonCastleList::-webkit-scrollbar-thumb {
-            background: #00bfff;
+            background: #00bfff; 
             border-radius: 4px;
             box-shadow: 0 0 5px #00bfff;
         }
