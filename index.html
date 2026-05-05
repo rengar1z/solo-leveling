@@ -5053,11 +5053,8 @@ window.switchInvTab = function(tabName, btnElement) {
     // Gọi lại hàm render túi đồ để vẽ lại danh sách item theo tab mới
     if (window.renderBag) window.renderBag();
 };
-    
-
-    // Hàm xử lý riêng khi bấm lại nút Mô hình Nhân vật (👤)
     window.toggleEquipView = function() {
-        // Tắt đèn 3 nút bên trái
+        // Tắt đèn các nút bên trái
         const btns = document.getElementsByClassName("eq-tab-btn");
         for (let i = 0; i < btns.length; i++) btns[i].classList.remove("active");
         
@@ -5065,10 +5062,12 @@ window.switchInvTab = function(tabName, btnElement) {
         const btnToggleVisual = document.getElementById('btnToggleVisual');
         if (btnToggleVisual) btnToggleVisual.classList.add('active');
 
-        // HIỂN THỊ LẠI MÔ HÌNH NHÂN VẬT VÀ GIẤU CÁC KHUNG KHÁC
-        document.getElementById('characterVisualArea').style.display = 'block';
-        document.getElementById('equippedListArea').style.display = 'none';
-        document.getElementById('inventoryCardArea').style.display = 'none';
+        // HIỂN THỊ LẠI MÔ HÌNH NHÂN VẬT VÀ GIẤU KHUNG TÚI ĐỒ (Đã xóa dòng gọi equippedListArea)
+        const visualArea = document.getElementById('characterVisualArea');
+        if (visualArea) visualArea.style.display = 'block';
+        
+        const invArea = document.getElementById('inventoryCardArea');
+        if (invArea) invArea.style.display = 'none';
     };
     setTimeout(startNewBattle, 2000);
 </script>
