@@ -1364,6 +1364,17 @@
 .sl-shop-price-btn:active {
     transform: scale(0.95);
 }
+        /* ================= VÁ LỖI BỊ CẮT XÉN BẢNG MÔ TẢ ITEM ================= */
+#inventoryArea, #equippedArea {
+    flex: 1 !important; 
+    min-height: 350px !important; /* Ép khung luôn mở rộng tối đa dù có ít đồ */
+    height: 100% !important;
+}
+
+/* Ép Tooltip luôn nằm trên cùng của mọi lớp giao diện */
+.item-tooltip {
+    z-index: 9999 !important;
+}
     </style>
 </head>
 <body>
