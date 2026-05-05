@@ -1468,7 +1468,7 @@
         }
 
         .ach-desc {
-            color: #a4b3c6; /* Màu chữ mô tả xám xanh */
+            color: #a4b3c6; 
             font-size: 14px;
             font-family: sans-serif;
         }
@@ -1482,7 +1482,6 @@
             font-family: 'Oswald', sans-serif;
         }
 
-        /* Thanh tiến trình mỏng */
         .ach-progress-bar-bg {
             width: 100%;
             height: 4px;
@@ -1493,12 +1492,11 @@
 
         .ach-progress-bar-fill {
             height: 100%;
-            background: #ffcc00; /* Màu vàng chuẩn */
+            background: #ffcc00;
             box-shadow: 0 0 5px rgba(255, 204, 0, 0.8);
             transition: width 0.4s ease-out;
         }
 
-        /* Ô Vuông Phần Thưởng (Kiêm nút Trang Bị) bên phải */
         .ach-reward-box {
             width: 65px;
             height: 65px;
@@ -1534,6 +1532,29 @@
 
         .ach-reward-icon { font-size: 26px; margin-bottom: 2px; }
         .ach-btn-text { font-size: 11px; font-weight: bold; font-family: 'Oswald', sans-serif; }
+
+        /* ================= THANH CUỘN CHO HẦM NGỤC (MÀU XANH SYSTEM) ================= */
+        #dungeonListArea, #demonCastleList {
+            max-height: 520px; 
+            overflow-y: auto;
+            padding-right: 10px; 
+        }
+
+        /* Tùy chỉnh thiết kế thanh cuộn */
+        #dungeonListArea::-webkit-scrollbar, #demonCastleList::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #dungeonListArea::-webkit-scrollbar-track, #demonCastleList::-webkit-scrollbar-track {
+            background: rgba(0, 30, 60, 0.5); 
+        }
+
+        #dungeonListArea::-webkit-scrollbar-thumb, #demonCastleList::-webkit-scrollbar-thumb {
+            background: #00bfff;
+            border-radius: 4px;
+            box-shadow: 0 0 5px #00bfff;
+        }
+        
     </style>
 </head>
 <body>
@@ -2058,7 +2079,7 @@
 
                             <!-- Bọc 4 ải vào Grid -->
                             <!-- Danh sách 4 ải xếp dọc -->
-                            <div style="display: flex; flex-direction: column; gap: 15px;">
+                            <div id="demonCastleList" style="display: flex; flex-direction: column; gap: 15px;">
                                 
                                 <div class="dungeon-card" onclick="enterDungeon('demon_castle_1')" style="border-color: #ff3300; margin-bottom: 0; box-shadow: 0 0 15px rgba(255, 51, 0, 0.4);">
                                     <h3 style="color: #ff3300; text-shadow: 0 0 10px #ff3300;">1. CỔNG ĐỊA NGỤC</h3>
