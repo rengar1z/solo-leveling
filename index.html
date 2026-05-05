@@ -1651,6 +1651,58 @@
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
             filter: grayscale(0%) opacity(1); /* Rõ nét hoàn toàn */
         }
+
+        /* ================= GIAO DIỆN MÔ HÌNH NHÂN VẬT ================= */
+        .char-equip-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr; /* Chia 3 cột: Trái(1) - Giữa(2) - Phải(1) */
+            gap: 15px 10px;
+            height: 100%;
+            align-items: center;
+            justify-items: center;
+            padding: 10px 0;
+        }
+
+        /* Ô chứa trang bị */
+        .eq-slot {
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 10, 25, 0.9);
+            border: 1px solid rgba(0, 191, 255, 0.4);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+            box-shadow: inset 0 0 10px rgba(0, 191, 255, 0.1);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .eq-slot:hover {
+            border-color: #00bfff;
+            box-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+            color: #fff;
+        }
+
+        /* Khu vực hiển thị hình nhân vật ở giữa */
+        .char-model-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00bfff;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            /* Chèn link ảnh nhân vật của bạn vào đây: */
+            background-image: url('hinh-nhan-vat.png'); 
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
     </style>
 </head>
 <body>
@@ -1821,37 +1873,74 @@
                 </div>
 
                 <!-- ================= TAB BAG (TÚI ĐỒ) - ĐÃ VÁ LỖI THẺ ĐÓNG ================= -->
-                <div id="tab-bag" class="tab-panel">
-                    <div style="display: flex; gap: 20px; align-items: stretch;">
-                        <div class="card" style="flex: 1; border-color: #00bfff; display: flex; flex-direction: column; height: 500px; box-sizing: border-box;">
-                            <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 15px;">
-                                <button class="square-icon-tab eq-tab-btn active" onclick="switchEqTab(event, 'basic')" title="Trang Bị">
-                                    🧙‍♂️
-                                </button>
-                                <button class="square-icon-tab eq-tab-btn" onclick="switchEqTab(event, 'artifact')" title="Cổ Vật">
-                                    🔮
-                                </button>
-                            </div>
-                            <div id="equippedArea" style="flex: 1; overflow-y: auto; padding-right: 5px;"></div>
-                        </div>
-                <div class="card" style="flex: 1; display: flex; flex-direction: column; height: 500px; box-sizing: border-box; border-color: #00bfff; box-shadow: inset 0 0 15px rgba(0,191,255,0.1);">
-                    <div class="sl-shop-filter-row" style="justify-content: center; margin-bottom: 15px; flex-wrap: wrap;">
-                        <div class="sl-shop-filter-btn inv-filter-btn active" title="Vũ Khí" onclick="switchInvTab('weapon', this)">⚔️</div>
-                        <div class="sl-shop-filter-btn inv-filter-btn" title="Phòng Cụ" onclick="switchInvTab('armor', this)">🛡️</div>
-                        <div class="sl-shop-filter-btn inv-filter-btn" title="Trang Sức" onclick="switchInvTab('accessory', this)">💍</div>
-                        <div class="sl-shop-filter-btn inv-filter-btn" title="Tiêu Hao" onclick="switchInvTab('consum', this)">🧪</div>
-                        <div class="sl-shop-filter-btn inv-filter-btn" title="Vật Liệu" onclick="switchInvTab('material', this)">💎</div>
+<div id="tab-bag" class="tab-panel">
+    <div style="display: flex; gap: 20px; align-items: stretch;">
+        
+        <!-- ================= CỘT TRÁI: BẢNG TRANG BỊ & MÔ HÌNH NHÂN VẬT (BẢN MỚI) ================= -->
+        <div class="card" style="flex: 1; border-color: #00bfff; display: flex; flex-direction: column; height: 500px; box-sizing: border-box; position: relative;">
+            
+            <!-- THANH MENU TAB & NÚT CHUYỂN GÓC NHÌN -->
+            <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; position: relative;">
+                <button class="square-icon-tab eq-tab-btn active" onclick="switchEqTab(event, 'basic')" title="Trang Bị">
+                    🧙‍♂️
+                </button>
+                <button class="square-icon-tab eq-tab-btn" onclick="switchEqTab(event, 'artifact')" title="Cổ Vật">
+                    🔮
+                </button>
+                
+                <!-- NÚT TOGGLE GÓC NHÌN ĐẶT Ở GÓC PHẢI -->
+                <button onclick="toggleEquipView()" class="square-icon-tab" style="position: absolute; right: 0; width: 46px; height: 46px; background: rgba(0, 191, 255, 0.2);" title="Chuyển đổi góc nhìn">
+                    👤
+                </button>
+            </div>
+            
+            <!-- GIAO DIỆN 1: DẠNG DANH SÁCH (MẶC ĐỊNH HIỂN THỊ) -->
+            <div id="equippedListArea" style="flex: 1; overflow-y: auto; padding-right: 5px; display: block;">
+                <!-- Đây là nơi ID cũ được bọc lại -->
+                <div id="equippedArea"></div> 
+            </div>
+
+            <!-- GIAO DIỆN 2: DẠNG MÔ HÌNH NHÂN VẬT (MẶC ĐỊNH ẨN) -->
+            <div id="characterVisualArea" style="flex: 1; display: none; background: rgba(0,20,40,0.4); border: 1px solid rgba(0,191,255,0.3); border-radius: 8px; padding: 10px;">
+                <div class="char-equip-grid">
+                    <!-- Cột trái -->
+                    <div class="eq-slot" title="Mũ">Helmet</div>
+                    <!-- Cột giữa (Hình nhân vật) -->
+                    <div class="char-model-placeholder" style="grid-row: span 4;">
+                        [ Hình Nhân Vật ]
                     </div>
-                    <div id="inventoryArea" class="sl-shop-list" style="padding-right: 5px;"></div>
+                    <!-- Cột phải -->
+                    <div class="eq-slot" title="Dây chuyền">Necklace</div>
+                    
+                    <div class="eq-slot" title="Áo">Armor</div>
+                    <div class="eq-slot" title="Nhẫn 1">Ring 1</div>
+                    
+                    <div class="eq-slot" title="Găng tay">Gloves</div>
+                    <div class="eq-slot" title="Nhẫn 2">Ring 2</div>
+
+                    <div class="eq-slot" title="Vũ khí">Weapon</div>
+                    <div class="eq-slot" title="Giày">Shoes</div>
                 </div>
-                    </div>
-                </div>
-                <div id="tab-shop" class="tab-panel">
-    <div class="sl-shop-filter-row">
-        <div class="sl-shop-filter-btn" onclick="filterShop('weapon', this)">⚔️</div> 
-        <div class="sl-shop-filter-btn active" onclick="filterShop('potion', this)">🧪</div> 
-        <div class="sl-shop-filter-btn" onclick="filterShop('costume', this)">👔</div> 
+            </div>
+        </div>
+        <!-- ================= KẾT THÚC CỘT TRÁI ================= -->
+
+
+        <!-- ================= CỘT PHẢI: TÚI ĐỒ VÀ BỘ LỌC (GIỮ NGUYÊN) ================= -->
+        <div class="card" style="flex: 1; display: flex; flex-direction: column; height: 500px; box-sizing: border-box; border-color: #00bfff; box-shadow: inset 0 0 15px rgba(0,191,255,0.1);">
+            <div class="sl-shop-filter-row" style="justify-content: center; margin-bottom: 15px; flex-wrap: wrap;">
+                <div class="sl-shop-filter-btn inv-filter-btn active" title="Vũ Khí" onclick="switchInvTab('weapon', this)">⚔️</div>
+                <div class="sl-shop-filter-btn inv-filter-btn" title="Phòng Cụ" onclick="switchInvTab('armor', this)">🛡️</div>
+                <div class="sl-shop-filter-btn inv-filter-btn" title="Trang Sức" onclick="switchInvTab('accessory', this)">💍</div>
+                <div class="sl-shop-filter-btn inv-filter-btn" title="Tiêu Hao" onclick="switchInvTab('consum', this)">🧪</div>
+                <div class="sl-shop-filter-btn inv-filter-btn" title="Vật Liệu" onclick="switchInvTab('material', this)">💎</div>
+            </div>
+            <div id="inventoryArea" class="sl-shop-list" style="padding-right: 5px;"></div>
+        </div>
+        <!-- ================= KẾT THÚC CỘT PHẢI ================= -->
+
     </div>
+</div>
 
     <div class="sl-shop-list" id="shopItemsContainer">
         
@@ -4903,6 +4992,25 @@
         }
     });
 };
+
+    let isVisualView = false;
+
+        function toggleEquipView() {
+            isVisualView = !isVisualView;
+            
+            const listView = document.getElementById('equippedListArea');
+            const visualView = document.getElementById('characterVisualArea');
+            
+            if(isVisualView) {
+                // Tắt List, Bật Visual
+                listView.style.display = 'none';
+                visualView.style.display = 'block';
+            } else {
+                // Tắt Visual, Bật List
+                listView.style.display = 'block';
+                visualView.style.display = 'none';
+            }
+        }
     setTimeout(startNewBattle, 2000);
 </script>
 </body>
