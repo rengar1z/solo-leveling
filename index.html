@@ -3022,7 +3022,7 @@
         document.getElementById('streak').innerText = 'Chuỗi rèn luyện: ' + currentUser.streak + ' ngày';
 
         document.getElementById('logs').innerHTML = (currentUser.logs || []).slice().reverse().join('<br>');
-        if (currentUser.title) document.getElementById('titleSelect').value = currentUser.title;
+    
         if (window.renderSkills) window.renderSkills();
         
         const addBtns = document.getElementsByClassName('add-btn');
