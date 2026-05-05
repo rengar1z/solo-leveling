@@ -222,30 +222,38 @@
             background: rgba(0,0,30,0.8);
         }
 
-        /* ================= TỐI ƯU MENU TAB (CHUẨN LIỀN KHỐI ARISE) ================= */
+        /* ================= TỐI ƯU MENU TAB (CHUẨN LIỀN KHỐI ARISE V2) ================= */
         .tabs-header {
-            display: flex;
-            gap: 0; /* Ép các tab dính liền nhau thành 1 khối */
+            display: flex !important;
+            gap: 0 !important; /* BẮT BUỘC xóa khe hở */
             background: transparent;
-            padding: 10px 5px; /* Để khoảng trống cho hiệu ứng phát sáng không bị cắt */
+            padding: 15px 5px !important; 
             overflow-x: auto;
             border-bottom: none;
         }
 
         .tabs-header::-webkit-scrollbar { height: 4px; }
-        .tabs-header::-webkit-scrollbar-thumb { background: #fff; border-radius: 2px; }
+        .tabs-header::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.5); border-radius: 2px; }
 
         .tab-btn {
             flex: 1;
-            min-width: 100px;
+            min-width: 90px;
             padding: 12px 10px;
-            /* Tạo hiệu ứng sọc ngang (Scanlines) đặc trưng cho khối UI tối */
+            margin: 0 !important; /* Xóa mọi khoảng cách rác */
+            border-radius: 0 !important; /* Xóa sạch bo góc cũ để dính chặt vào nhau */
+            
+            /* Nền sọc Scanline */
             background: repeating-linear-gradient(0deg, rgba(20, 30, 45, 0.95), rgba(20, 30, 45, 0.95) 2px, rgba(35, 45, 60, 0.95) 2px, rgba(35, 45, 60, 0.95) 4px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-right: none; /* Chống viền đôi giữa các tab */
-            color: #d1d8e0; /* Màu xám trắng (Sẽ không đè các màu bạn đã set trong HTML) */
+            
+            /* Dùng chung viền: Chỉ có viền Trên, Dưới, Trái. Cắt bỏ viền Phải để nối vào tab kế tiếp */
+            border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+            border-left: 1px solid rgba(255, 255, 255, 0.2) !important;
+            border-right: none !important; 
+            
+            color: #a4b3c6; 
             font-family: 'Oswald', sans-serif;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
             transition: all 0.2s ease;
             white-space: nowrap;
@@ -253,9 +261,9 @@
             z-index: 1;
         }
 
-        /* Trả lại viền cho tab cuối cùng */
+        /* Đóng viền Phải cho Tab cuối cùng */
         .tab-btn:last-child {
-            border-right: 1px solid rgba(255, 255, 255, 0.15);
+            border-right: 1px solid rgba(255, 255, 255, 0.2) !important;
         }
 
         /* Vát góc trên cùng bên trái cho Tab Đầu Tiên (QUEST) */
@@ -268,28 +276,25 @@
             clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
         }
 
-        /* Hiệu ứng trỏ chuột vào tab chưa active */
         .tab-btn:hover:not(.active) {
             background: repeating-linear-gradient(0deg, rgba(35, 50, 70, 0.95), rgba(35, 50, 70, 0.95) 2px, rgba(50, 65, 85, 0.95) 2px, rgba(50, 65, 85, 0.95) 4px);
-            filter: brightness(1.2);
+            color: #fff;
         }
 
-        /* ================= TAB ĐANG ĐƯỢC CHỌN ================= */
+        /* ================= TAB ĐANG ĐƯỢC CHỌN (SÁNG LÊN) ================= */
         .tab-btn.active {
-            background: linear-gradient(to right, #e2e8f0, #ffffff); /* Nền trắng sáng */
-            color: #111 !important; /* Ép chữ thành màu đen đậm để dễ đọc trên nền trắng */
+            background: linear-gradient(to right, #e2e8f0, #ffffff) !important;
+            color: #111 !important; 
             font-weight: bold;
-            border: none;
-            z-index: 10; /* Nổi bật lên trên các tab khác */
             
-            /* Dùng drop-shadow để tạo viền sáng bám sát theo mọi hình dáng vát góc */
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 1px #fff);
+            /* Ép viền màu trắng bao quanh toàn bộ tab */
+            border: 1px solid #fff !important;
+            z-index: 10; 
+            
+            /* Hào quang vát góc */
+            filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.8));
         }
-
-        /* Sửa lỗi mất góc vát khi tab cuối cùng được Active */
-        .tab-btn.active:last-child {
-            border-right: none;
-        }
+        
         .tabs-content {
             padding: 20px;
             min-height: 200px;
