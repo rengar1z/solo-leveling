@@ -1430,11 +1430,15 @@
         .sl-shop-price-btn:active {
             transform: scale(0.95);
         }
-        /* ================= VÁ LỖI BỊ CẮT XÉN BẢNG MÔ TẢ ITEM ================= */
+        /* ================= VÁ LỖI BẢNG ITEM TRÀN VIỀN (FLEXBOX FIX) ================= */
         #inventoryArea, #equippedArea {
             flex: 1 !important; 
-            min-height: 350px !important; /* Ép khung luôn mở rộng tối đa dù có ít đồ */
-            height: 100% !important;
+            min-height: 0 !important; /* Gỡ giới hạn 350px cũ để danh sách có thể thu nhỏ vừa khung */
+            height: auto !important;
+        }
+
+        #inventoryCardArea, #equippedListArea {
+            min-height: 0 !important; /* Ép các khung cha phải co giãn đúng chuẩn 600px của Card */
         }
 
         /* Ép Tooltip luôn nằm trên cùng của mọi lớp giao diện */
