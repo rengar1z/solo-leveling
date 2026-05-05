@@ -1328,55 +1328,81 @@
         }
 
         /* TẠO NÚT BẤM CHUẨN GAME SOLO LEVELING: ARISE (Cắt góc, nền kim loại) */
-.sl-shop-price-btn {
-    position: relative;
-    font-family: 'Oswald', sans-serif;
-    font-size: 18px !important;
-    font-weight: bold !important;
-    text-transform: uppercase;
-    padding: 10px 20px !important;
-    border: none !important;
-    cursor: pointer;
-    min-width: 170px;
-    text-align: center;
-    transition: all 0.2s ease;
+        .sl-shop-price-btn {
+            position: relative;
+            font-family: 'Oswald', sans-serif;
+            font-size: 18px !important;
+            font-weight: bold !important;
+            text-transform: uppercase;
+            padding: 10px 20px !important;
+            border: none !important;
+            cursor: pointer;
+            min-width: 170px;
+            text-align: center;
+            transition: all 0.2s ease;
     
-    /* Ép khung cắt vát góc (Top-Left và Bottom-Right giống hệt ảnh) */
-    clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
-    box-shadow: none !important; /* Xóa bóng neon cũ */
-}
+            /* Ép khung cắt vát góc (Top-Left và Bottom-Right giống hệt ảnh) */
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+            box-shadow: none !important; /* Xóa bóng neon cũ */
+        }
 
-/* Viền sáng mờ bên trong (Inner Bevel) để tạo độ khối 3D cho khối kim loại */
-.sl-shop-price-btn::after {
-    content: "";
-    position: absolute;
-    top: 2px; left: 2px; right: 2px; bottom: 2px;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-    pointer-events: none;
-}
+        /* Viền sáng mờ bên trong (Inner Bevel) để tạo độ khối 3D cho khối kim loại */
+        .sl-shop-price-btn::after {
+            content: "";
+            position: absolute;
+            top: 2px; left: 2px; right: 2px; bottom: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            pointer-events: none;
+        }
 
-/* Hiệu ứng khi rê chuột */
-.sl-shop-price-btn:hover {
-    transform: scale(1.05);
-    filter: brightness(1.15); /* Làm nút sáng rực lên 15% */
-}
+        /* Hiệu ứng khi rê chuột */
+        .sl-shop-price-btn:hover {
+            transform: scale(1.05);
+            filter: brightness(1.15); /* Làm nút sáng rực lên 15% */
+        }
 
-/* Hiệu ứng khi click chìm xuống */
-.sl-shop-price-btn:active {
-    transform: scale(0.95);
-}
+        /* Hiệu ứng khi click chìm xuống */
+        .sl-shop-price-btn:active {
+            transform: scale(0.95);
+        }
         /* ================= VÁ LỖI BỊ CẮT XÉN BẢNG MÔ TẢ ITEM ================= */
-#inventoryArea, #equippedArea {
-    flex: 1 !important; 
-    min-height: 350px !important; /* Ép khung luôn mở rộng tối đa dù có ít đồ */
-    height: 100% !important;
-}
+        #inventoryArea, #equippedArea {
+            flex: 1 !important; 
+            min-height: 350px !important; /* Ép khung luôn mở rộng tối đa dù có ít đồ */
+            height: 100% !important;
+        }
 
-/* Ép Tooltip luôn nằm trên cùng của mọi lớp giao diện */
-.item-tooltip {
-    z-index: 9999 !important;
-}
+        /* Ép Tooltip luôn nằm trên cùng của mọi lớp giao diện */
+        .item-tooltip {
+            z-index: 9999 !important;
+        }
+
+        /* ================= ĐỒNG BỘ NÚT TÚI ĐỒ VỚI SHOP ================= */
+        .bag-action-btn {
+            min-width: 90px !important; /* Thu nhỏ lại cho vừa túi đồ */
+            font-size: 16px !important;
+            padding: 6px 12px !important;
+            background: transparent !important; /* Xóa nền đặc, chỉ giữ khung viền */
+            box-shadow: none !important;
+            letter-spacing: 1px;
+        }
+
+        .btn-use { color: #00ff00 !important; }
+        .btn-use::after { border-color: #00ff00 !important; }
+        .btn-use:hover { background: rgba(0, 255, 0, 0.1) !important; }
+
+        .btn-equip { color: #00bfff !important; }
+        .btn-equip::after { border-color: #00bfff !important; }
+        .btn-equip:hover { background: rgba(0, 191, 255, 0.1) !important; }
+
+        .btn-unequip { color: #aaaaaa !important; }
+        .btn-unequip::after { border-color: #aaaaaa !important; }
+        .btn-unequip:hover { background: rgba(170, 170, 170, 0.1) !important; }
+
+        .btn-sell { color: #ff4d4d !important; }
+        .btn-sell::after { border-color: #ff4d4d !important; }
+        .btn-sell:hover { background: rgba(255, 77, 77, 0.1) !important; }        
     </style>
 </head>
 <body>
@@ -3190,7 +3216,7 @@
                             <small style="color:#aaa; font-size:16px;">Đang trang bị</small>
                         </div>
                     </div>
-                    <button class="add-btn" style="width: 70px; height: 35px; font-size: 16px;" onclick="unequipItem('${slot}')">THÁO</button>
+                    <button class="sl-shop-price-btn bag-action-btn btn-unequip" onclick="unequipItem('${slot}')">THÁO</button>
                 </div>`;
             } else {
                 eqArea.innerHTML += `
@@ -3273,14 +3299,14 @@
                         </div>
                     </div>
                     
-                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <div style="display: flex; flex-direction: column; gap: 8px; justify-content: center;">
                         ${itemData.type === 'consumable' 
-                            ? `<button class="add-btn" style="width: 80px; height: 32px; font-size: 16px; background: #00ff00; border-color: #00cc00; color: #000;" onclick="useItem(${index})">DÙNG</button>` 
+                            ? `<button class="sl-shop-price-btn bag-action-btn btn-use" onclick="useItem(${index})">DÙNG</button>` 
                             : (['material', 'rare'].includes(itemData.type) 
                                 ? `` 
-                                : `<button class="add-btn" style="width: 80px; height: 32px; font-size: 16px;" onclick="equipItem(${index})">MẶC</button>`)
+                                : `<button class="sl-shop-price-btn bag-action-btn btn-equip" onclick="equipItem(${index})">MẶC</button>`)
                         }
-                        <button class="add-btn" style="width: 80px; height: 32px; font-size: 16px; background: #ff4d4d; border-color: #cc0000; color: #fff;" onclick="sellItem(${index}, ${sellPrice})">BÁN (${sellPrice})</button>
+                        <button class="sl-shop-price-btn bag-action-btn btn-sell" onclick="sellItem(${index}, ${sellPrice})">BÁN (${sellPrice})</button>
                     </div>
                 </div>`;
             }
