@@ -132,11 +132,6 @@
             display: none !important;
         }
         
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
         #levelPopup {
             position: fixed;
             inset: 0;
@@ -613,22 +608,6 @@
             box-shadow: 0 0 5px #00bfff;
         }
 
-        /* ================= THANH CUỘN CHO DANH SÁCH TRANG BỊ ĐANG MẶC ================= */
-        #equippedArea::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        #equippedArea::-webkit-scrollbar-track {
-            background: rgba(0, 30, 60, 0.5); 
-            border-radius: 4px;
-        }
-
-        #equippedArea::-webkit-scrollbar-thumb {
-            background: #00bfff; 
-            border-radius: 4px;
-            box-shadow: 0 0 5px #00bfff; 
-        }
-
         /* Hiệu ứng viền lửa cho Boss nổi điên */
         @keyframes fireGlow {
             0% { box-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000; outline: 2px solid #ff0000; }
@@ -647,8 +626,7 @@
             display: inline-block;
             cursor: pointer;
         }
-        
-        
+          
         .item-img-premium {
             width: 60px;
             height: 60px;
@@ -1431,16 +1409,15 @@
             transform: scale(0.95);
         }
         /* ================= VÁ LỖI BẢNG ITEM TRÀN VIỀN (FLEXBOX FIX) ================= */
-        #inventoryArea, #equippedArea {
+        #inventoryArea {
             flex: 1 !important; 
-            min-height: 0 !important; /* Gỡ giới hạn 350px cũ để danh sách có thể thu nhỏ vừa khung */
+            min-height: 0 !important; 
             height: auto !important;
         }
 
-        #inventoryCardArea, #equippedListArea {
-            min-height: 0 !important; /* Ép các khung cha phải co giãn đúng chuẩn 600px của Card */
+        #inventoryCardArea {
+            min-height: 0 !important; 
         }
-
         /* Ép Tooltip luôn nằm trên cùng của mọi lớp giao diện */
         .item-tooltip {
             z-index: 9999 !important;
@@ -2424,7 +2401,7 @@
         appId: '1:670113654913:web:08feecb3c0341cac1a0580'
     };
 
-    let db, currentUser = null, allUsers = {};
+    let db, currentUser = null;
     const debug = document.getElementById('debug');
 
     try {
@@ -5050,63 +5027,6 @@
         }
     });
 };
-
-    // Kéo biến này ra biến toàn cục của window
-    window.isVisualView = false;
-
-    // Khai báo hàm vào window để HTML nhìn thấy
-    window.toggleEquipView = function() {
-        window.isVisualView = !window.isVisualView;
-        
-        const listView = document.getElementById('equippedListArea');
-        const visualView = document.getElementById('characterVisualArea');
-        
-        if (listView && visualView) {
-            if (window.isVisualView) {
-                listView.style.display = 'none';
-                visualView.style.display = 'block';
-            } else {
-                listView.style.display = 'block';
-                visualView.style.display = 'none';
-            }
-        } else {
-            console.error("LỖI: Không tìm thấy khung giao diện, hãy kiểm tra lại HTML!");
-        }
-    };
-    // Hàm xử lý khi bấm các nút Nhóm Trái (Trang bị, Cổ vật, TÚI ĐỒ)
-    window.switchEqTab = function(evt, tabName) {
-        window.currentEqTab = tabName;
-        
-        // Tắt đèn toàn bộ các nút
-        const btns = document.getElementsByClassName("eq-tab-btn");
-        for (let i = 0; i < btns.length; i++) btns[i].classList.remove("active");
-        if(evt) evt.currentTarget.classList.add("active"); // Bật sáng nút vừa bấm
-        
-        // Tắt đèn nút Mô hình Nhân vật bên phải
-        const btnToggleVisual = document.getElementById('btnToggleVisual');
-        if(btnToggleVisual) btnToggleVisual.classList.remove('active');
-
-        // Gọi 3 khung giao diện ra
-        const visualArea = document.getElementById('characterVisualArea');
-        const listArea = document.getElementById('equippedListArea');
-        const invArea = document.getElementById('inventoryCardArea');
-
-        // Luôn giấu Mô hình nhân vật đi khi bấm vào nhóm này
-        if (visualArea) visualArea.style.display = 'none';
-
-        // Phân nhánh hiển thị:
-        if (tabName === 'inventory') {
-            if (listArea) listArea.style.display = 'none';
-            if (invArea) invArea.style.display = 'flex'; // HIỂN THỊ TÚI ĐỒ
-        } else {
-            if (invArea) invArea.style.display = 'none';
-            if (listArea) listArea.style.display = 'block'; // HIỂN THỊ LIST ĐỒ ĐANG MẶC
-        }
-        
-        // Cập nhật lại danh sách items
-        if(window.renderBag) window.renderBag();
-    };
-
     // Khởi tạo tab mặc định là 'weapon' (Vũ khí) khớp với giao diện HTML ban đầu
 window.currentInvTab = 'weapon';
 
