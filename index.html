@@ -1753,6 +1753,11 @@
                 display: block !important;
             }
         }
+
+        .eq-slot {
+            -webkit-user-select: none; /* Tránh hiện menu hệ thống khi nhấn giữ trên Safari/iOS */
+            user-select: none;         /* Tránh hiện menu hệ thống trên Android */
+}
     </style>
 </head>
 <body>
@@ -3683,31 +3688,45 @@
                 
                 // Gắn thẳng hình ảnh, Tooltip và sự kiện Double-click vào ô Trang bị
                 slotEl.innerHTML = `
-                <div class="item-icon-wrapper rank-${rank}" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;" ondblclick="unequipItem('${slot}')">
-                    <img src="${itemData.img}" class="item-img-premium" style="width: 100%; height: 100%; padding: 4px; border-radius: 6px;">
-                    
-                    <div class="item-tooltip">
-                        <div class="sl-tt-top">
-                            <div class="sl-tt-img-box"><img src="${itemData.img}"></div>
-                            <div class="sl-tt-info">
-                                <div class="sl-tt-title text-rank-${rank}">[ITEM: ${itemObj.name}]</div>
-                                <div class="sl-tt-line">ITEM CLASS: <span class="text-rank-${rank}" style="font-weight:bold;">${rank}</span></div>
-                                <div class="sl-tt-line">TYPE: ${slot.toUpperCase()}</div>
-                            </div>
-                        </div>
-                        <div class="sl-tt-bottom">
-                            ${itemData.effect ? itemData.effect + '<br>' : ''}
-                            ${[
-                                itemObj.vit > 0 ? '+' + itemObj.vit + ' VITALITY' : '',
-                                itemObj.str > 0 ? '+' + itemObj.str + ' STRENGTH' : '',
-                                itemObj.mp > 0 ? '+' + itemObj.mp + ' MANA' : ''
-                            ].filter(Boolean).join(', ')}
-                        </div>
-                        <div style="margin-top: 12px; color: #ff4d4d; font-size: 13px; text-align: center; border-top: 1px dashed rgba(255,0,0,0.4); padding-top: 8px; font-weight: bold;">
-                            ⚠️ Nhấp đúp chuột để Tháo
-                        </div>
+                <div class="item-icon-wrapper rank-${rank}" 
+                 style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;" 
+                 ondblclick="unequipItem('${slot}')"
+                 ontouchstart="window.startPress('${slot}')"
+                 ontouchend="window.endPress()"
+                 ontouchmove="window.endPress()">
+        
+                <img src="${itemData.img}" 
+                 class="item-img-premium" 
+                 style="width: 100%; height: 100%; padding: 4px; border-radius: 6px;">
+        
+                <div class="item-tooltip">
+                <div class="sl-tt-top">
+                <div class="sl-tt-img-box">
+                    <img src="${itemData.img}">
+                </div>
+                <div class="sl-tt-info">
+                    <div class="sl-tt-title text-rank-${rank}">[ITEM: ${itemObj.name}]</div>
+                    <div class="sl-tt-line">
+                        ITEM CLASS: <span class="text-rank-${rank}" style="font-weight:bold;">${rank}</span>
                     </div>
-                </div>`;
+                    <div class="sl-tt-line">TYPE: ${slot.toUpperCase()}</div>
+                </div>
+            </div>
+
+            <div class="sl-tt-bottom">
+                ${itemData.effect ? itemData.effect + '<br>' : ''}
+                ${[
+                    itemObj.vit > 0 ? '+' + itemObj.vit + ' VITALITY' : '',
+                    itemObj.str > 0 ? '+' + itemObj.str + ' STRENGTH' : '',
+                    itemObj.mp > 0 ? '+' + itemObj.mp + ' MANA' : ''
+                ].filter(Boolean).join(', ')}
+            </div>
+
+            <div style="margin-top: 12px; color: #ff4d4d; font-size: 13px; text-align: center; border-top: 1px dashed rgba(255,0,0,0.4); padding-top: 8px; font-weight: bold;">
+                ⚠️ Nhấp đúp (PC) hoặc Nhấn giữ (Mobile) để Tháo
+            </div>
+        </div>
+    </div>`;
             } else {
                 // Trả về trạng thái trống
                 slotEl.classList.remove('has-item');
@@ -5121,6 +5140,22 @@ window.switchInvTab = function(tabName, btnElement) {
         const invArea = document.getElementById('inventoryCardArea');
         if (invArea) invArea.style.display = 'none';
     };
+
+    let pressTimer;
+
+window.startPress = function(slot) {
+    // Bắt đầu đếm giờ khi chạm vào
+    pressTimer = window.setTimeout(function() {
+        if (confirm(`Hệ thống: Bạn muốn tháo trang bị ở ô ${slot.toUpperCase()}?`)) {
+            unequipItem(slot);
+        }
+    }, 500);
+};
+
+window.endPress = function() {
+    // Hủy đếm giờ nếu nhấc tay ra sớm hoặc di chuyển tay (cuộn trang)
+    clearTimeout(pressTimer);
+};
     setTimeout(startNewBattle, 2000);
 </script>
 </body>
