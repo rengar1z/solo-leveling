@@ -1885,57 +1885,44 @@
                     <p id="streak"></p>
                 </div>
 
-                <!-- ================= TAB BAG (TÚI ĐỒ) - ĐÃ GỘP THÀNH 1 KHUNG LỚN ================= -->
+                <!-- ================= TAB BAG (TÚI ĐỒ) MỚI ================= -->
 <div id="tab-bag" class="tab-panel">
-    <!-- Khung Card trải dài toàn màn hình -->
     <div class="card" style="border-color: #00bfff; display: flex; flex-direction: column; height: 600px; box-sizing: border-box; position: relative; box-shadow: inset 0 0 15px rgba(0,191,255,0.1);">
 
         <!-- THANH MENU TAB BÊN TRONG TÚI ĐỒ -->
         <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 15px; padding-bottom: 15px; position: relative; border-bottom: 1px dashed rgba(0, 191, 255, 0.4); min-height: 46px;">
-            
-            <!-- Nhóm nút bên trái -->
             <div style="display: flex; gap: 10px;">
-                <button class="square-icon-tab eq-tab-btn" onclick="switchEqTab(event, 'basic')" title="Trang Bị (Danh sách)">🧙‍♂️</button>
-                <button class="square-icon-tab eq-tab-btn" onclick="switchEqTab(event, 'artifact')" title="Cổ Vật (Danh sách)">🔮</button>
-                <!-- NÚT TÚI ĐỒ MỚI ĐƯỢC THÊM VÀO -->
+                <button class="square-icon-tab eq-tab-btn" onclick="switchEqTab(event, 'artifact')" title="Cổ Vật">🔮</button>
                 <button class="square-icon-tab eq-tab-btn" onclick="switchEqTab(event, 'inventory')" title="Kho Đồ">🎒</button>
             </div>
-            
-            <!-- NÚT MÔ HÌNH NHÂN VẬT (Bật sáng mặc định) -->
-            <button id="btnToggleVisual" onclick="toggleEquipView()" class="square-icon-tab active" style="position: absolute; right: 0; width: 46px; height: 46px; background: rgba(0, 191, 255, 0.15);" title="Mô Hình Nhân Vật">
-                👤
-            </button>
+            <button id="btnToggleVisual" onclick="toggleEquipView()" class="square-icon-tab active" style="position: absolute; right: 0; width: 46px; height: 46px; background: rgba(0, 191, 255, 0.15);" title="Mô Hình Nhân Vật">👤</button>
         </div>
 
-        <!-- GIAO DIỆN 1: MÔ HÌNH NHÂN VẬT (MẶC ĐỊNH HIỂN THỊ) -->
+        <!-- GIAO DIỆN 1: MÔ HÌNH NHÂN VẬT (NƠI CHỨA ĐỒ ĐANG MẶC) -->
         <div id="characterVisualArea" style="flex: 1; display: block; background: rgba(0,20,40,0.4); border-radius: 8px; padding: 10px;">
             <div class="char-equip-grid">
-                <!-- Cột trái -->
-                <div class="eq-slot" title="Mũ">Helmet</div>
-                <!-- Cột giữa (Hình nhân vật) -->
+                <!-- Cột trái (Tooltip bay sang phải) -->
+                <div class="eq-slot slot-left" id="slot-helmet" title="Mũ">HELMET</div>
+                
                 <div class="char-model-placeholder" style="grid-row: span 4;">
-                    <img id="visual-p-img" src="char/Sungjinwoo.png" style="max-width: 100%; max-height: 100%; object-fit: contain; filter: drop-shadow(0 0 15px rgba(0, 191, 255, 0.4)); transition: all 0.3s ease;">
+                    <img id="visual-p-img" src="char/Sungjinwoo.png" style="max-width: 100%; max-height: 440px; object-fit: contain; filter: drop-shadow(0 0 15px rgba(0, 191, 255, 0.4)); z-index: 1;">
                 </div>
-                <!-- Cột phải -->
-                <div class="eq-slot" title="Dây chuyền">Necklace</div>
                 
-                <div class="eq-slot" title="Áo">Armor</div>
-                <div class="eq-slot" title="Nhẫn 1">Ring 1</div>
+                <!-- Cột phải (Tooltip bay sang trái) -->
+                <div class="eq-slot slot-right" id="slot-accessory" title="Trang sức">ACCESSORY</div>
                 
-                <div class="eq-slot" title="Găng tay">Gloves</div>
-                <div class="eq-slot" title="Nhẫn 2">Ring 2</div>
+                <div class="eq-slot slot-left" id="slot-shield" title="Phòng cụ">SHIELD</div>
+                <div class="eq-slot slot-right" id="slot-ring1" title="Nhẫn 1">RING 1</div>
+                
+                <div class="eq-slot slot-left" id="slot-gloves" title="Găng tay">GLOVES</div>
+                <div class="eq-slot slot-right" id="slot-ring2" title="Nhẫn 2">RING 2</div>
 
-                <div class="eq-slot" title="Vũ khí">Weapon</div>
-                <div class="eq-slot" title="Giày">Shoes</div>
+                <div class="eq-slot slot-left" id="slot-weapon" title="Vũ khí">WEAPON</div>
+                <div class="eq-slot slot-right" id="slot-shoes" title="Giày">SHOES</div>
             </div>
         </div>
 
-        <!-- GIAO DIỆN 2: DANH SÁCH ĐỒ ĐANG MẶC (Ẩn) -->
-        <div id="equippedListArea" style="flex: 1; overflow-y: auto; padding-right: 5px; display: none;">
-            <div id="equippedArea"></div> 
-        </div>
-
-        <!-- GIAO DIỆN 3: TÚI ĐỒ & BỘ LỌC (Ẩn) -->
+        <!-- GIAO DIỆN 2: TÚI ĐỒ (Ẩn) -->
         <div id="inventoryCardArea" style="flex: 1; display: none; flex-direction: column;">
             <div class="sl-shop-filter-row" style="justify-content: center; margin-bottom: 15px; flex-wrap: wrap;">
                 <div class="sl-shop-filter-btn inv-filter-btn active" title="Vũ Khí" onclick="switchInvTab('weapon', this)">⚔️</div>
@@ -3630,58 +3617,51 @@
         // 3. DỌN TÚI ĐỒ (XÓA ĐỒ TRONG KHO BỊ LỖI)
         currentUser.inventory = currentUser.inventory.filter(itemObj => ITEM_DATA[itemObj.name]);
 
-        // ================= HIỂN THỊ ĐỒ ĐANG TRANG BỊ (LỌC THEO TAB) =================
-        const slotsToRender = window.currentEqTab === 'basic' 
-            ? ['weapon', 'shield', 'helmet', 'gloves', 'accessory'] 
-            : ['artifact']; // Sau này bạn thêm 'artifact' vào đây
-
-        slotsToRender.forEach(slot => {
+        // ================= HIỂN THỊ ĐỒ ĐANG TRANG BỊ TRỰC TIẾP LÊN MÔ HÌNH =================
+        const allSlots = ['weapon', 'shield', 'helmet', 'gloves', 'accessory']; 
+        
+        allSlots.forEach(slot => {
+            const slotEl = document.getElementById('slot-' + slot);
+            if (!slotEl) return;
+            
             const itemObj = currentUser.equipped[slot];
             if (itemObj) {
                 const itemData = ITEM_DATA[itemObj.name];
                 const rank = itemData.rank || 'D'; 
                 
-                eqArea.innerHTML += `
-                <div class="stat-item rank-${rank}" style="padding: 12px; border-left: 4px solid;">
-                    <div style="display: flex; gap: 15px; align-items: center; flex: 1;">
-                        <div class="item-icon-wrapper rank-${rank}">
-                            <img src="${itemData.img}" class="item-img-premium">
-                            
-                            <!-- BẢNG THÔNG TIN (CHUẨN MANHWA) -->
-                            <div class="item-tooltip">
-                                <div class="sl-tt-top">
-                                    <div class="sl-tt-img-box"><img src="${itemData.img}"></div>
-                                    <div class="sl-tt-info">
-                                        <!-- Tên Item được đổ màu theo Rank -->
-                                        <div class="sl-tt-title text-rank-${rank}">[ITEM: ${itemObj.name}]</div>
-                                        
-                                        <!-- Chữ trắng, riêng Hạng có màu -->
-                                        <div class="sl-tt-line">ITEM CLASS: <span class="text-rank-${rank}" style="font-weight:bold;">${rank}</span></div>
-                                        <div class="sl-tt-line">TYPE: ${slot.toUpperCase()}</div>
-                                    </div>
-                                </div>
-                                <div class="sl-tt-bottom">
-                                    ${itemData.effect ? itemData.effect + '<br>' : ''}
-                                    ${[
-                                        itemObj.vit > 0 ? `+${itemObj.vit} VITALITY` : '',
-                                        itemObj.str > 0 ? `+${itemObj.str} STRENGTH` : '',
-                                        itemObj.mp > 0 ? `+${itemObj.mp} MANA` : ''
-                                    ].filter(Boolean).join(', ')}
-                                </div>
+                slotEl.classList.add('has-item'); // Xóa viền thừa của ô vuông
+                
+                // Gắn thẳng hình ảnh, Tooltip và sự kiện Double-click vào ô Trang bị
+                slotEl.innerHTML = `
+                <div class="item-icon-wrapper rank-${rank}" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;" ondblclick="unequipItem('${slot}')">
+                    <img src="${itemData.img}" class="item-img-premium" style="width: 100%; height: 100%; padding: 4px; border-radius: 6px;">
+                    
+                    <div class="item-tooltip">
+                        <div class="sl-tt-top">
+                            <div class="sl-tt-img-box"><img src="${itemData.img}"></div>
+                            <div class="sl-tt-info">
+                                <div class="sl-tt-title text-rank-${rank}">[ITEM: ${itemObj.name}]</div>
+                                <div class="sl-tt-line">ITEM CLASS: <span class="text-rank-${rank}" style="font-weight:bold;">${rank}</span></div>
+                                <div class="sl-tt-line">TYPE: ${slot.toUpperCase()}</div>
                             </div>
                         </div>
-                        <div style="display: flex; flex-direction: column;">
-                            <b class="text-rank-${rank}" style="font-size: 22px;">${itemObj.name}</b>
-                            <small style="color:#aaa; font-size:16px;">Đang trang bị</small>
+                        <div class="sl-tt-bottom">
+                            ${itemData.effect ? itemData.effect + '<br>' : ''}
+                            ${[
+                                itemObj.vit > 0 ? '+' + itemObj.vit + ' VITALITY' : '',
+                                itemObj.str > 0 ? '+' + itemObj.str + ' STRENGTH' : '',
+                                itemObj.mp > 0 ? '+' + itemObj.mp + ' MANA' : ''
+                            ].filter(Boolean).join(', ')}
+                        </div>
+                        <div style="margin-top: 12px; color: #ff4d4d; font-size: 13px; text-align: center; border-top: 1px dashed rgba(255,0,0,0.4); padding-top: 8px; font-weight: bold;">
+                            ⚠️ Nhấp đúp chuột để Tháo
                         </div>
                     </div>
-                    <button class="sl-shop-price-btn bag-action-btn btn-unequip" onclick="unequipItem('${slot}')">THÁO</button>
                 </div>`;
             } else {
-                eqArea.innerHTML += `
-                <div class="stat-item" style="opacity: 0.3; padding: 15px; justify-content: center;">
-                    <span style="font-size: 18px;">Trống (${slot.toUpperCase()})</span>
-                </div>`;
+                // Trả về trạng thái trống
+                slotEl.classList.remove('has-item');
+                slotEl.innerHTML = slot.toUpperCase();
             }
         });
 
