@@ -3493,34 +3493,13 @@
         const log = document.getElementById(getPrefix() + 'battleLog');
         log.innerHTML = msg + "<br>" + log.innerHTML;
     }
-
-    // --- HỆ THỐNG CHẠM THÔNG MINH CHO MOBILE ---
-    window.safeCast = function(btnElement, funcName) {
-        const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-        
-        if (isTouch) {
-            if (!btnElement.classList.contains('mobile-active')) {
-                document.querySelectorAll('.combat-skill-btn').forEach(b => b.classList.remove('mobile-active'));
-                btnElement.classList.add('mobile-active');
-                return;
-            }
-        }
-        btnElement.classList.remove('mobile-active');
-        if (funcName === 'playerAttack') {
-            playerAttack();
-        } else {
-            window[funcName]();
-        }
-    };
-
-    // --- TỰ ĐỘNG SINH NÚT DỰA VÀO KỸ NĂNG ĐÃ HỌC ---
+   
     function switchToIconMode() {
         const pre = getPrefix();
         const skillRow = document.getElementById(pre === 'd-' ? 'd-skillRow' : 'skillRow');
         skillRow.innerHTML = ''; 
-
         skillRow.innerHTML += `
-            <button id="${pre}btnAttack" class="icon-mode combat-skill-btn" onclick="safeCast(this, 'playerAttack')" style="border-color: #00bfff;">
+            <button id="${pre}btnAttack" class="icon-mode combat-skill-btn" onclick="playerAttack()" style="border-color: #00bfff;">
                 <img src="skill/basic_attack.png">
                 <div class="skill-tooltip" style="border-color: #00bfff; box-shadow: 0 0 15px #00bfff;">
                     <h4 style="color: #00bfff; margin: 0 0 5px 0; font-size: 18px;">TẤN CÔNG (STR)</h4>
@@ -3528,13 +3507,12 @@
                 </div>
             </button>
         `;
-        
         for (let s in currentUser.skills) {
             const data = skillData[s];
             if (currentUser.skills[s] > 0 && data && data.type === 'active') {
                 let color = data.branch === "Sát Thủ" ? "#4a90e2" : data.branch === "Pháp Sư" ? "#9933ff" : data.branch === "Đấu Sĩ" ? "#ff4d4d" : "#00bfff";
                 skillRow.innerHTML += `
-                    <button class="icon-mode combat-skill-btn" data-mp="${data.mp}" onclick="safeCast(this, '${data.func}')" style="border-color: ${color};">
+                    <button class="icon-mode combat-skill-btn" data-mp="${data.mp}" onclick="${data.func}()" style="border-color: ${color};">
                         <img src="${data.icon}">
                         <div class="skill-tooltip" style="border-color: ${color}; box-shadow: 0 0 15px ${color};">
                             <h4 style="color: ${color}; margin: 0 0 5px 0; font-size: 18px;">${s.toUpperCase()}</h4>
