@@ -1524,22 +1524,21 @@
                         </div>
 
                             <!-- BÊN PHẢI: KHO ĐỒ PHÂN LOẠI -->
-                            <div class="card" style="flex: 1; display: flex; flex-direction: column; height: 500px; box-sizing: border-box; border-color: #00bfff; box-shadow: inset 0 0 15px rgba(0,191,255,0.1);">
+                <div class="card" style="flex: 1; display: flex; flex-direction: column; height: 500px; box-sizing: border-box; border-color: #00bfff; box-shadow: inset 0 0 15px rgba(0,191,255,0.1);">
             
-                                <h3 class="sl-shop-col-title" style="color: #00bfff; border-color: rgba(0,191,255,0.3);">🎒 KHO ĐỒ</h3>
+                <!-- KHAY PHÂN LOẠI (Đã xóa dòng chữ Kho đồ và nút Tất Cả) -->
+                    <div class="sl-shop-filter-row" style="justify-content: center; margin-bottom: 15px; flex-wrap: wrap;">
+                        <div class="sl-shop-filter-btn inv-filter-btn active" title="Vũ Khí" onclick="switchInvTab('weapon', this)">⚔️</div>
+                        <div class="sl-shop-filter-btn inv-filter-btn" title="Phòng Cụ" onclick="switchInvTab('armor', this)">🛡️</div>
+                        <div class="sl-shop-filter-btn inv-filter-btn" title="Trang Sức" onclick="switchInvTab('accessory', this)">💍</div>
+                        <div class="sl-shop-filter-btn inv-filter-btn" title="Tiêu Hao" onclick="switchInvTab('consum', this)">🧪</div>
+                        <div class="sl-shop-filter-btn inv-filter-btn" title="Vật Liệu" onclick="switchInvTab('material', this)">💎</div>
+                    </div>
             
-                                <div class="sl-shop-filter-row" style="justify-content: center; margin-bottom: 15px; flex-wrap: wrap;">
-                                <div class="sl-shop-filter-btn inv-filter-btn active" title="Tất Cả" onclick="switchInvTab('all', this)">🔠</div>
-                                <div class="sl-shop-filter-btn inv-filter-btn" title="Vũ Khí" onclick="switchInvTab('weapon', this)">⚔️</div>
-                                <div class="sl-shop-filter-btn inv-filter-btn" title="Phòng Cụ" onclick="switchInvTab('armor', this)">🛡️</div>
-                                <div class="sl-shop-filter-btn inv-filter-btn" title="Trang Sức" onclick="switchInvTab('accessory', this)">💍</div>
-                                <div class="sl-shop-filter-btn inv-filter-btn" title="Tiêu Hao" onclick="switchInvTab('consum', this)">🧪</div>
-                                <div class="sl-shop-filter-btn inv-filter-btn" title="Vật Liệu" onclick="switchInvTab('material', this)">💎</div>
-                            </div>
-            
-                            <div id="inventoryArea" class="sl-shop-list" style="padding-right: 5px;"></div>
+                    <!-- Khu vực chứa item -->
+                    <div id="inventoryArea" class="sl-shop-list" style="padding-right: 5px;"></div>
 
-                            </div>
+                </div>
                     </div>
                 </div>
 
@@ -3025,7 +3024,7 @@
     window.currentInvTab = 'equip'; // Mặc định mở tab Trang bị
 
    // Mặc định mở tab Tất cả
-    window.currentInvTab = 'all'; 
+    window.currentInvTab = 'weapon'; 
 
     window.switchInvTab = function(tabName, btnElement) {
         window.currentInvTab = tabName;
