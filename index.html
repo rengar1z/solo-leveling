@@ -1447,15 +1447,7 @@
         
         <div class="row small">
             <span>TITLE:</span>
-            <select id="titleSelect" class="sh-title" onchange="updateTitle()">
-                <option value="Weakest Hunter of All Time">Weakest Hunter of All Time</option>
-                <option value="Wolf Slayer">Wolf Slayer</option>
-                <option value="Sand Soldier Slayer">Sand Soldier Slayer</option>
-                <option value="Demon Slayer">Demon Slayer</option>
-                <option value="Survivor">Survivor</option>
-                <option value="Monarch Slayer">Monarch Slayer</option>
-                <option value="Shadow Monarch">Shadow Monarch</option>
-            </select>
+            <span id="equippedTitleDisplay" class="sh-title" style="cursor: pointer; border-bottom: 1px dashed #00bfff; padding-bottom: 2px;" onclick="openTab(event, 'tab-achievement')">Chưa trang bị</span>
         </div>
         
         <!-- Thanh EXP giữ nguyên màu vàng/cam cũ -->
@@ -1578,6 +1570,7 @@
                 <button class="tab-btn" onclick="openTab(event, 'tab-logs')">LOGS</button>
                 <button class="tab-btn" onclick="openTab(event, 'tab-arena')">ARENA</button>
                 <button class="tab-btn" onclick="openTab(event, 'tab-dungeon')" style="color: #ff4d4d;">DUNGEON</button>
+                <button class="tab-btn" onclick="openTab(event, 'tab-achievement')" style="color: #00ff00;">TITLE</button>
             </div>
 
             <div class="tabs-content">
@@ -1978,9 +1971,12 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- ================= KẾT THÚC MENU CON ================= -->
-                        
+                    </div>                
+                </div>
+
+                <div id="tab-achievement" class="tab-panel">
+                    <h2 style="color: #00ff00; text-align: center; margin-bottom: 20px; font-size: 32px; text-shadow: 0 0 10px #00ff00;">HỆ THỐNG DANH HIỆU</h2>
+                    <div id="achievementList" class="sl-shop-list" style="max-height: 550px; padding-right: 10px;"></div>
                 </div>
 
                 <div id="dungeonCombatUI" class="hidden">
@@ -2242,21 +2238,30 @@
         "Tử Thần": { rank: "S", type: "costume", name: "Tử Thần", str: 250, vit: 100, mp: 100, effect: "Đổi Avatar thành Tử Thần", img: "cos/Sung_Jinwoo_God_of_Death.png", avatar: "cos/Sung_Jinwoo_God_of_Death.png", sellPrice: 100000 },
     };
 
+    // --- DỮ LIỆU THÀNH TỰU VÀ DANH HIỆU (TITLE) ---
+    const TITLE_DATA = {
+        "weakest": { name: "Weakest Hunter", target: null, req: 0, str: 0, vit: 10, agi: 0, int: 0, desc: "Danh hiệu khởi đầu. Tăng 10 VIT." },
+        "wolf_slayer": { name: "Wolf Slayer", target: "Lycan Đầu Đàn", req: 5, str: 10, vit: 0, agi: 5, int: 0, desc: "Tiêu diệt 5 Lycan Đầu Đàn. Tăng 10 STR, 5 AGI." },
+        "goblin_slayer": { name: "Goblin Slayer", target: "BOSS: Thủ Lĩnh Yêu Tinh", req: 5, str: 15, vit: 10, agi: 0, int: 0, desc: "Tiêu diệt 5 Thủ Lĩnh Yêu Tinh. Tăng 15 STR, 10 VIT." },
+        "spider_slayer": { name: "Thợ Săn Côn Trùng", target: "BOSS: Nhện Khổng Lồ", req: 5, str: 20, vit: 0, agi: 20, int: 0, desc: "Tiêu diệt 5 Nhện Khổng Lồ. Tăng 20 STR, 20 AGI." },
+        "orc_slayer": { name: "Kẻ Đồ Tể Orc", target: "BOSS: Đại Tù Trưởng Kargalgan", req: 5, str: 0, vit: 30, agi: 0, int: 50, desc: "Tiêu diệt 5 Đại Tù Trưởng Kargalgan. Tăng 30 VIT, 50 INT." },
+        "demon_hunter": { name: "Thợ Săn Ác Quỷ", target: "BOSS: Vua Quỷ Baran", req: 1, str: 50, vit: 50, agi: 50, int: 50, desc: "Tiêu diệt Vua Quỷ Baran. Tăng 50 toàn chỉ số cơ bản." },
+        "shadow_monarch": { name: "Shadow Monarch", target: "BOSS: Chỉ Huy Binh Đoàn Xích Huyết Igris", req: 1, str: 100, vit: 50, agi: 50, int: 100, desc: "Đánh bại Igris. Tăng 100 STR, 100 INT, 50 VIT, 50 AGI." }
+    };
+
     // --- HỆ THỐNG TẠO ĐỒ RANDOM CHỈ SỐ ---
     function generateItem(itemName) {
         const base = ITEM_DATA[itemName];
         if (!base) return null;
 
-        // Hàm random dao động từ 90% đến 120% chỉ số gốc
         const randomize = (val) => {
             if (!val || val === 0) return 0;
-            // Chỉ giảm tối đa 5% nhưng cho phép tăng tới 15%
+    
             const min = Math.floor(val * 0.95);
             const max = Math.ceil(val * 1.15);
             return Math.floor(Math.random() * (max - min + 1)) + min;
         };
 
-        // Trả về một Object item riêng biệt với UID độc nhất
         return {
             uid: Date.now().toString(36) + Math.random().toString(36).substring(2),
             name: itemName,
@@ -2553,11 +2558,118 @@
     
     window.closePopup = function() { document.getElementById('levelPopup').style.display = 'none'; }
 
-    window.updateTitle = async function() {
-        currentUser.title = document.getElementById('titleSelect').value;
-        await set(ref(db, 'users/' + currentUser.username), currentUser);
-        render();
-    }
+    // --- HỆ THỐNG XỬ LÝ TITLE & THÀNH TỰU ---
+    window.renderAchievements = function() {
+        if (!currentUser.kills) currentUser.kills = {};
+        if (!currentUser.unlockedTitles) currentUser.unlockedTitles = ["weakest"];
+        
+        const listDiv = document.getElementById('achievementList');
+        if (!listDiv) return;
+        
+        let html = "";
+        for (let key in TITLE_DATA) {
+            const t = TITLE_DATA[key];
+            const isUnlocked = currentUser.unlockedTitles.includes(key);
+            const isEquipped = (currentUser.equippedTitle === key);
+            
+            // Xử lý thanh tiến trình (Progress Bar)
+            const currentKills = t.target ? (currentUser.kills[t.target] || 0) : t.req;
+            const progressVal = Math.min(currentKills, t.req);
+            const percent = t.req > 0 ? (progressVal / t.req) * 100 : 100;
+            
+            // Xử lý Trạng thái Nút bấm
+            let btnHtml = "";
+            if (isEquipped) {
+                btnHtml = `<button class="sl-shop-price-btn" style="color: #111; background: linear-gradient(to bottom, #8ea1b2, #5a6e84) !important;">ĐANG DÙNG</button>`;
+            } else if (isUnlocked) {
+                btnHtml = `<button class="sl-shop-price-btn" style="color: #fff; background: linear-gradient(to bottom, #5cb8ff, #1a75ff) !important;" onclick="equipTitle('${key}')">TRANG BỊ</button>`;
+            } else {
+                btnHtml = `<button class="sl-shop-price-btn" style="color: #aaa; filter: grayscale(1); cursor: not-allowed;">CHƯA MỞ</button>`;
+            }
+
+            html += `
+            <div class="sl-shop-item" style="border-color: ${isUnlocked ? '#00ff00' : '#444'}; opacity: ${isUnlocked ? 1 : 0.6}; padding: 15px;">
+                <div style="flex: 1;">
+                    <h3 style="color: ${isEquipped ? 'gold' : (isUnlocked ? '#00ff00' : '#888')}; margin: 0 0 5px 0; font-size: 24px; text-shadow: ${isEquipped ? '0 0 10px gold' : 'none'};">${t.name}</h3>
+                    <p style="color: #ccc; font-size: 16px; margin: 0 0 10px 0;">${t.desc}</p>
+                    
+                    <!-- Khung tiến trình diệt Boss -->
+                    ${t.target ? `
+                    <div style="font-size: 14px; color: #aaa; margin-bottom: 5px;">Tiến trình: ${t.target} (${progressVal}/${t.req})</div>
+                    <div style="width: 80%; height: 8px; background: #222; border: 1px solid #444; border-radius: 4px;">
+                        <div style="width: ${percent}%; height: 100%; background: ${isUnlocked ? '#00ff00' : '#ff9900'}; box-shadow: 0 0 8px ${isUnlocked ? '#00ff00' : '#ff9900'}; transition: width 0.5s;"></div>
+                    </div>
+                    ` : ''}
+                </div>
+                <div class="sl-shop-action" style="min-width: 130px; display: flex; align-items: center; justify-content: flex-end;">
+                    ${btnHtml}
+                </div>
+            </div>`;
+        }
+        listDiv.innerHTML = html;
+        
+        
+        const titleDisp = document.getElementById('equippedTitleDisplay');
+        if (titleDisp) {
+            titleDisp.innerText = currentUser.equippedTitle && TITLE_DATA[currentUser.equippedTitle] ? `[ ${TITLE_DATA[currentUser.equippedTitle].name} ]` : "Chưa trang bị";
+            titleDisp.style.color = currentUser.equippedTitle ? "gold" : "#fff";
+            titleDisp.style.textShadow = currentUser.equippedTitle ? "0 0 10px gold" : "none";
+        }
+    };
+
+    window.equipTitle = async function(titleId) {
+        if (!currentUser.unlockedTitles.includes(titleId)) return;
+        
+        
+        if (currentUser.equippedTitle && TITLE_DATA[currentUser.equippedTitle]) {
+            const oldT = TITLE_DATA[currentUser.equippedTitle];
+            currentUser.str -= oldT.str;
+            currentUser.vit -= oldT.vit;
+            currentUser.agi -= oldT.agi;
+            currentUser.int -= oldT.int;
+            currentUser.maxHp -= oldT.vit * 10;
+            currentUser.maxMp -= oldT.int * 5;
+        
+            currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
+            currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
+        }
+
+       
+        currentUser.equippedTitle = titleId;
+        const newT = TITLE_DATA[titleId];
+        currentUser.str += newT.str;
+        currentUser.vit += newT.vit;
+        currentUser.agi += newT.agi;
+        currentUser.int += newT.int;
+        
+        currentUser.maxHp += newT.vit * 10;
+        currentUser.maxMp += newT.int * 5;
+        
+        currentUser.hp += newT.vit * 10;
+        currentUser.mp += newT.int * 5;
+
+        alert(`Đã trang bị danh hiệu [${newT.name}]! Lực chiến tăng mạnh!`);
+        await saveUserData();
+    };
+
+    window.checkAchievements = function() {
+        if (!currentUser.unlockedTitles) currentUser.unlockedTitles = ["weakest"];
+        let unlockedNew = false;
+        
+        for (let key in TITLE_DATA) {
+            const t = TITLE_DATA[key];
+            if (t.target && !currentUser.unlockedTitles.includes(key)) {
+                const currentKills = currentUser.kills[t.target] || 0;
+                if (currentKills >= t.req) {
+                    currentUser.unlockedTitles.push(key);
+                    unlockedNew = true;
+                    // Phóng to thông báo lên Log chiến đấu
+                    logBattle(`<span style="color:#00ff00; font-size:20px; font-weight:bold; text-shadow: 0 0 10px #00ff00;">🏆 ĐẠT THÀNH TỰU MỚI: [ ${t.name} ]! Hãy vào mục Danh Hiệu để kiểm tra.</span>`);
+                }
+            }
+        }
+        if (unlockedNew) saveUserData();
+    };
 
     // --- CHỨC NĂNG TẨY ĐIỂM (CÓ BẢO MẬT CHỈ SỐ) ---
     window.resetSkills = async function() {
@@ -2792,10 +2904,10 @@
         if (enemy) updateCombatUI();
         if (document.getElementById('cashText')) document.getElementById('cashText').innerText = currentUser.cash;
         if (window.renderBag) window.renderBag();
-
-        // Dán đoạn này vào trong cùng của hàm function render() {}
+        if (window.renderAchievements) window.renderAchievements();
+        
         window.updatePlayerAvatar = function() {
-        let defaultAvatar = "char/Sungjinwoo.png"; // <-- Đổi lại tên file gốc của bạn nếu khác
+        let defaultAvatar = "char/Sungjinwoo.png"; 
         if (currentUser.equipped && currentUser.equipped.costume) {
             const costumeName = currentUser.equipped.costume.name;
             if (ITEM_DATA[costumeName] && ITEM_DATA[costumeName].avatar) {
@@ -2810,7 +2922,6 @@
         if (dpImg) dpImg.src = defaultAvatar;
     };
         updatePlayerAvatar(); // Kích hoạt ngay lập tức
-        // XỬ LÝ MÀU SẮC VÀ CHỮ CỦA NÚT COSTUME TRONG SHOP (CHUẨN GAME ARISE)
         if (!currentUser.ownedCostumes) currentUser.ownedCostumes = [];
         
         const costumes = ["costume_black_suit", "costume_mining", "costume_wish", "costume_light_outing", "costume_incapable", "costume_summer_2", "costume_night_lord", "costume_dragon_monarch", "costume_god_of_death"];
@@ -4215,6 +4326,9 @@
             enemyExp += Math.floor(enemyExp * 0.10 * currentUser.skills["Phát Triển Cấp Tốc"]);
         }
         logBattle(`<span style="color:#00ff00">Chiến thắng! Nhận ${enemy.exp} EXP và ${rewardCash} CASH.</span>`);
+        if (!currentUser.kills) currentUser.kills = {};
+        currentUser.kills[enemy.name] = (currentUser.kills[enemy.name] || 0) + 1;
+        checkAchievements();
         currentUser.exp += enemyExp;
 
         // Logic rớt đồ tự động lấy theo loại Cổng Đỏ hiện tại
