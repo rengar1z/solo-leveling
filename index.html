@@ -1404,7 +1404,15 @@
 
         .btn-sell { color: #ff4d4d !important; }
         .btn-sell::after { border-color: #ff4d4d !important; }
-        .btn-sell:hover { background: rgba(255, 77, 77, 0.1) !important; }        
+        .btn-sell:hover { background: rgba(255, 77, 77, 0.1) !important; }
+
+
+        /* ================= TOOLTIP TRÊN MOBILE ================= */
+        .icon-mode.mobile-active .skill-tooltip {
+            visibility: visible !important;
+            opacity: 1 !important;
+            bottom: 125% !important;
+        }
     </style>
 </head>
 <body>
@@ -3029,15 +3037,33 @@
         log.innerHTML = msg + "<br>" + log.innerHTML;
     }
 
+    // --- HỆ THỐNG CHẠM THÔNG MINH CHO MOBILE ---
+    window.safeCast = function(btnElement, funcName) {
+        const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        
+        if (isTouch) {
+            if (!btnElement.classList.contains('mobile-active')) {
+                document.querySelectorAll('.combat-skill-btn').forEach(b => b.classList.remove('mobile-active'));
+                btnElement.classList.add('mobile-active');
+                return;
+            }
+        }
+        btnElement.classList.remove('mobile-active');
+        if (funcName === 'playerAttack') {
+            playerAttack();
+        } else {
+            window[funcName]();
+        }
+    };
+
     // --- TỰ ĐỘNG SINH NÚT DỰA VÀO KỸ NĂNG ĐÃ HỌC ---
     function switchToIconMode() {
         const pre = getPrefix();
         const skillRow = document.getElementById(pre === 'd-' ? 'd-skillRow' : 'skillRow');
-        skillRow.innerHTML = ''; // Quét sạch thanh kỹ năng
+        skillRow.innerHTML = ''; 
 
-        // 1. Luôn thêm nút Đánh Thường đầu tiên
         skillRow.innerHTML += `
-            <button id="${pre}btnAttack" class="icon-mode combat-skill-btn" onclick="playerAttack()" style="border-color: #00bfff;">
+            <button id="${pre}btnAttack" class="icon-mode combat-skill-btn" onclick="safeCast(this, 'playerAttack')" style="border-color: #00bfff;">
                 <img src="skill/basic_attack.png">
                 <div class="skill-tooltip" style="border-color: #00bfff; box-shadow: 0 0 15px #00bfff;">
                     <h4 style="color: #00bfff; margin: 0 0 5px 0; font-size: 18px;">TẤN CÔNG (STR)</h4>
@@ -3046,14 +3072,12 @@
             </button>
         `;
         
-        // 2. Quét Database, ai học chiêu CHỦ ĐỘNG nào thì vẽ nút chiêu đó ra
         for (let s in currentUser.skills) {
             const data = skillData[s];
             if (currentUser.skills[s] > 0 && data && data.type === 'active') {
                 let color = data.branch === "Sát Thủ" ? "#4a90e2" : data.branch === "Pháp Sư" ? "#9933ff" : data.branch === "Đấu Sĩ" ? "#ff4d4d" : "#00bfff";
-
                 skillRow.innerHTML += `
-                    <button class="icon-mode combat-skill-btn" data-mp="${data.mp}" onclick="window.${data.func}()" style="border-color: ${color};">
+                    <button class="icon-mode combat-skill-btn" data-mp="${data.mp}" onclick="safeCast(this, '${data.func}')" style="border-color: ${color};">
                         <img src="${data.icon}">
                         <div class="skill-tooltip" style="border-color: ${color}; box-shadow: 0 0 15px ${color};">
                             <h4 style="color: ${color}; margin: 0 0 5px 0; font-size: 18px;">${s.toUpperCase()}</h4>
@@ -3065,17 +3089,14 @@
                 `;
             }
         }
-
-        // Tắt nút bỏ chạy
         if (isDungeonMode) {
             document.getElementById('btnExitDungeon').disabled = true;
             document.getElementById('btnExitDungeon').style.opacity = "0.4";
         } else {
             const btnFind = document.getElementById('btnFindEnemy');
             if (btnFind) { btnFind.disabled = true; btnFind.style.opacity = "0.4"; btnFind.innerText = "ĐANG CHIẾN ĐẤU..."; }
-        }
-        
-        updateCombatUI(); // Cập nhật màu sắc ngay lập tức
+        }    
+        updateCombatUI(); 
     }
 
     function resetToButtonMode() {
