@@ -3608,7 +3608,6 @@
             return item;
         }).filter(item => item !== null && ITEM_DATA[item.name]);
 
-        // Cập nhật lại đồ đang mặc cho nick cũ
         ['weapon', 'shield', 'accessory', 'helmet', 'gloves'].forEach(slot => {
             const eq = currentUser.equipped[slot];
             if (eq && eq.str === undefined && ITEM_DATA[eq.name]) {
@@ -3678,7 +3677,7 @@
             </div>
 
             <div style="margin-top: 12px; color: #ff4d4d; font-size: 13px; text-align: center; border-top: 1px dashed rgba(255,0,0,0.4); padding-top: 8px; font-weight: bold;">
-                ⚠️ Nhấp đúp để tháo
+                ⚠️ NHẤN ĐÚP CHUỘT ĐỂ THÁO
             </div>
         </div>
     </div>`;
