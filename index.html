@@ -1413,6 +1413,127 @@
             opacity: 1 !important;
             bottom: 125% !important;
         }
+
+        /* ================= GIAO DIỆN ACHIEVEMENT (CHUẨN SOLO LEVELING: ARISE) ================= */
+        .ach-row {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(90deg, #323d4a, #2a3441); /* Nền xanh xám thép */
+            border-top: 2px solid #5cb8ff; /* Viền ngọc lam mỏng ở trên */
+            padding: 12px 20px;
+            margin-bottom: 8px;
+            border-radius: 2px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: background 0.3s;
+        }
+
+        .ach-row:hover {
+            background: linear-gradient(90deg, #3e4a59, #313d4b);
+        }
+
+        /* Khung chứa Icon Cúp */
+        .ach-icon-trophy {
+            width: 45px;
+            height: 45px;
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            filter: drop-shadow(0 0 5px rgba(255, 204, 0, 0.4));
+        }
+
+        .ach-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-right: 30px;
+        }
+
+        .ach-text-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .ach-title {
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 0 3px 0;
+            letter-spacing: 0.5px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        }
+
+        .ach-desc {
+            color: #a4b3c6; /* Màu chữ mô tả xám xanh */
+            font-size: 14px;
+            font-family: sans-serif;
+        }
+
+        .ach-progress-text {
+            color: #d1d8e0;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        /* Thanh tiến trình mỏng */
+        .ach-progress-bar-bg {
+            width: 100%;
+            height: 4px;
+            background: #4a5461;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .ach-progress-bar-fill {
+            height: 100%;
+            background: #ffcc00; /* Màu vàng chuẩn */
+            box-shadow: 0 0 5px rgba(255, 204, 0, 0.8);
+            transition: width 0.4s ease-out;
+        }
+
+        /* Ô Vuông Phần Thưởng (Kiêm nút Trang Bị) bên phải */
+        .ach-reward-box {
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, #44546a, #2c3847);
+            border: 1px solid #5a6e84;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .ach-reward-box:hover:not(.locked) {
+            filter: brightness(1.2);
+            border-color: #5cb8ff;
+            transform: scale(1.05);
+        }
+
+        .ach-reward-box.locked {
+            filter: grayscale(1) opacity(0.5);
+            cursor: not-allowed;
+        }
+
+        .ach-reward-box.equipped {
+            border-color: #ffcc00;
+            box-shadow: inset 0 0 15px rgba(255, 204, 0, 0.3), 0 0 10px rgba(255, 204, 0, 0.4);
+            background: linear-gradient(135deg, #5c5235, #3a321d);
+        }
+
+        .ach-reward-icon { font-size: 26px; margin-bottom: 2px; }
+        .ach-btn-text { font-size: 11px; font-weight: bold; font-family: 'Oswald', sans-serif; }
     </style>
 </head>
 <body>
@@ -1570,7 +1691,7 @@
                 <button class="tab-btn" onclick="openTab(event, 'tab-logs')">LOGS</button>
                 <button class="tab-btn" onclick="openTab(event, 'tab-arena')">ARENA</button>
                 <button class="tab-btn" onclick="openTab(event, 'tab-dungeon')" style="color: #ff4d4d;">DUNGEON</button>
-                <button class="tab-btn" onclick="openTab(event, 'tab-achievement')" style="color: #00ff00;">TITLE</button>
+                <button class="tab-btn" onclick="openTab(event, 'tab-achievement')" style="color: #00ff00;">ACHIEVEMENTS</button>
             </div>
 
             <div class="tabs-content">
@@ -2391,7 +2512,6 @@
                 }
             }
             
-            // Mặc bộ mới vào
             currentUser.equipped.costume = { name: itemId };
             currentUser.str += (itemData.str || 0); 
             currentUser.vit += (itemData.vit || 0);
@@ -2402,7 +2522,7 @@
                 currentUser.hp += itemData.vit * 10; 
             }
         }
-        // TRƯỜNG HỢP 3: CHƯA SỞ HỮU -> BẤM ĐỂ MUA
+        
         else {
             if (currentUser.cash < shopItem.price) return alert(`Không đủ Cash! Cần ${shopItem.price} Cash.`);
             currentUser.cash -= shopItem.price;
@@ -2466,7 +2586,6 @@
         const data = s.val();
         if (data.password !== p) return alert('Mật mã sai');
     
-        // DÒNG QUAN TRỌNG NHẤT BỊ THIẾU ĐÂY RỒI: Tải dữ liệu từ database vào nhân vật
         currentUser = data; 
         
         if (!currentUser.skills) {
@@ -2558,7 +2677,7 @@
     
     window.closePopup = function() { document.getElementById('levelPopup').style.display = 'none'; }
 
-    // --- HỆ THỐNG XỬ LÝ TITLE & THÀNH TỰU ---
+    // --- HỆ THỐNG XỬ LÝ ACHIEVEMENT (GIAO DIỆN CHUẨN ARISE) ---
     window.renderAchievements = function() {
         if (!currentUser.kills) currentUser.kills = {};
         if (!currentUser.unlockedTitles) currentUser.unlockedTitles = ["weakest"];
@@ -2572,43 +2691,52 @@
             const isUnlocked = currentUser.unlockedTitles.includes(key);
             const isEquipped = (currentUser.equippedTitle === key);
             
-            // Xử lý thanh tiến trình (Progress Bar)
             const currentKills = t.target ? (currentUser.kills[t.target] || 0) : t.req;
             const progressVal = Math.min(currentKills, t.req);
             const percent = t.req > 0 ? (progressVal / t.req) * 100 : 100;
             
-            // Xử lý Trạng thái Nút bấm
-            let btnHtml = "";
+            // Xử lý Giao diện Ô Phần Thưởng (Kiêm nút bấm Trang bị)
+            let boxClass = "ach-reward-box";
+            let boxContent = "";
+            let onClickAttr = "";
+            
             if (isEquipped) {
-                btnHtml = `<button class="sl-shop-price-btn" style="color: #111; background: linear-gradient(to bottom, #8ea1b2, #5a6e84) !important;">ĐANG DÙNG</button>`;
+                boxClass += " equipped";
+                boxContent = `<div class="ach-reward-icon">👑</div><div class="ach-btn-text" style="color:#ffcc00;">ĐANG DÙNG</div>`;
             } else if (isUnlocked) {
-                btnHtml = `<button class="sl-shop-price-btn" style="color: #fff; background: linear-gradient(to bottom, #5cb8ff, #1a75ff) !important;" onclick="equipTitle('${key}')">TRANG BỊ</button>`;
+                onClickAttr = `onclick="equipTitle('${key}')"`;
+                boxContent = `<div class="ach-reward-icon" style="filter: drop-shadow(0 0 5px #00ff00);">📜</div><div class="ach-btn-text" style="color:#00ff00;">TRANG BỊ</div>`;
             } else {
-                btnHtml = `<button class="sl-shop-price-btn" style="color: #aaa; filter: grayscale(1); cursor: not-allowed;">CHƯA MỞ</button>`;
+                boxClass += " locked";
+                boxContent = `<div class="ach-reward-icon">🔒</div><div class="ach-btn-text" style="color:#aaa;">CHƯA MỞ</div>`;
             }
 
+            // Xuất cấu trúc HTML y hệt ảnh Arise
             html += `
-            <div class="sl-shop-item" style="border-color: ${isUnlocked ? '#00ff00' : '#444'}; opacity: ${isUnlocked ? 1 : 0.6}; padding: 15px;">
-                <div style="flex: 1;">
-                    <h3 style="color: ${isEquipped ? 'gold' : (isUnlocked ? '#00ff00' : '#888')}; margin: 0 0 5px 0; font-size: 24px; text-shadow: ${isEquipped ? '0 0 10px gold' : 'none'};">${t.name}</h3>
-                    <p style="color: #ccc; font-size: 16px; margin: 0 0 10px 0;">${t.desc}</p>
-                    
-                    <!-- Khung tiến trình diệt Boss -->
-                    ${t.target ? `
-                    <div style="font-size: 14px; color: #aaa; margin-bottom: 5px;">Tiến trình: ${t.target} (${progressVal}/${t.req})</div>
-                    <div style="width: 80%; height: 8px; background: #222; border: 1px solid #444; border-radius: 4px;">
-                        <div style="width: ${percent}%; height: 100%; background: ${isUnlocked ? '#00ff00' : '#ff9900'}; box-shadow: 0 0 8px ${isUnlocked ? '#00ff00' : '#ff9900'}; transition: width 0.5s;"></div>
+            <div class="ach-row">
+                <div class="ach-icon-trophy">🏆</div>
+                <div class="ach-content">
+                    <div class="ach-text-row">
+                        <div>
+                            <div class="ach-title">${t.name}</div>
+                            <div class="ach-desc">${t.desc}</div>
+                        </div>
+                        <div class="ach-progress-text">
+                            ${progressVal}/${t.req} <span style="font-size: 14px; opacity: 0.7;">🔎</span>
+                        </div>
                     </div>
-                    ` : ''}
+                    <div class="ach-progress-bar-bg">
+                        <div class="ach-progress-bar-fill" style="width: ${percent}%;"></div>
+                    </div>
                 </div>
-                <div class="sl-shop-action" style="min-width: 130px; display: flex; align-items: center; justify-content: flex-end;">
-                    ${btnHtml}
+                <div class="${boxClass}" ${onClickAttr}>
+                    ${boxContent}
                 </div>
             </div>`;
         }
         listDiv.innerHTML = html;
         
-        
+        // Cập nhật lên Panel Status bên ngoài
         const titleDisp = document.getElementById('equippedTitleDisplay');
         if (titleDisp) {
             titleDisp.innerText = currentUser.equippedTitle && TITLE_DATA[currentUser.equippedTitle] ? `[ ${TITLE_DATA[currentUser.equippedTitle].name} ]` : "Chưa trang bị";
