@@ -1872,61 +1872,58 @@
                     <p id="streak"></p>
                 </div>
 
-                <!-- ================= TAB BAG (TÚI ĐỒ) - ĐÃ VÁ LỖI THẺ ĐÓNG ================= -->
+                <!-- ================= TAB BAG (TÚI ĐỒ) - ĐÃ GỘP THÀNH 1 KHUNG LỚN ================= -->
 <div id="tab-bag" class="tab-panel">
-    <div style="display: flex; gap: 20px; align-items: stretch;">
-        
-        <!-- ================= CỘT TRÁI: BẢNG TRANG BỊ & MÔ HÌNH NHÂN VẬT (BẢN MỚI) ================= -->
-        <div class="card" style="flex: 1; border-color: #00bfff; display: flex; flex-direction: column; height: 500px; box-sizing: border-box; position: relative;">
+    <!-- Khung Card trải dài toàn màn hình -->
+    <div class="card" style="border-color: #00bfff; display: flex; flex-direction: column; height: 600px; box-sizing: border-box; position: relative; box-shadow: inset 0 0 15px rgba(0,191,255,0.1);">
+
+        <!-- THANH MENU TAB BÊN TRONG TÚI ĐỒ -->
+        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 15px; padding-bottom: 15px; position: relative; border-bottom: 1px dashed rgba(0, 191, 255, 0.4); min-height: 46px;">
             
-            <!-- THANH MENU TAB & NÚT CHUYỂN GÓC NHÌN -->
-            <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; position: relative;">
-                <button class="square-icon-tab eq-tab-btn active" onclick="switchEqTab(event, 'basic')" title="Trang Bị">
-                    🧙‍♂️
-                </button>
-                <button class="square-icon-tab eq-tab-btn" onclick="switchEqTab(event, 'artifact')" title="Cổ Vật">
-                    🔮
-                </button>
-                
-                <!-- NÚT TOGGLE GÓC NHÌN ĐẶT Ở GÓC PHẢI -->
-                <button onclick="toggleEquipView()" class="square-icon-tab" style="position: absolute; right: 0; width: 46px; height: 46px; background: rgba(0, 191, 255, 0.2);" title="Chuyển đổi góc nhìn">
-                    👤
-                </button>
+            <!-- Nhóm nút bên trái -->
+            <div style="display: flex; gap: 10px;">
+                <button class="square-icon-tab eq-tab-btn" onclick="switchEqTab(event, 'basic')" title="Trang Bị (Danh sách)">🧙‍♂️</button>
+                <button class="square-icon-tab eq-tab-btn" onclick="switchEqTab(event, 'artifact')" title="Cổ Vật (Danh sách)">🔮</button>
+                <!-- NÚT TÚI ĐỒ MỚI ĐƯỢC THÊM VÀO -->
+                <button class="square-icon-tab eq-tab-btn" onclick="switchEqTab(event, 'inventory')" title="Kho Đồ">🎒</button>
             </div>
             
-            <!-- GIAO DIỆN 1: DẠNG DANH SÁCH (MẶC ĐỊNH HIỂN THỊ) -->
-            <div id="equippedListArea" style="flex: 1; overflow-y: auto; padding-right: 5px; display: block;">
-                <!-- Đây là nơi ID cũ được bọc lại -->
-                <div id="equippedArea"></div> 
-            </div>
+            <!-- NÚT MÔ HÌNH NHÂN VẬT (Bật sáng mặc định) -->
+            <button id="btnToggleVisual" onclick="toggleEquipView()" class="square-icon-tab active" style="position: absolute; right: 0; width: 46px; height: 46px; background: rgba(0, 191, 255, 0.15);" title="Mô Hình Nhân Vật">
+                👤
+            </button>
+        </div>
 
-            <!-- GIAO DIỆN 2: DẠNG MÔ HÌNH NHÂN VẬT (MẶC ĐỊNH ẨN) -->
-            <div id="characterVisualArea" style="flex: 1; display: none; background: rgba(0,20,40,0.4); border: 1px solid rgba(0,191,255,0.3); border-radius: 8px; padding: 10px;">
-                <div class="char-equip-grid">
-                    <!-- Cột trái -->
-                    <div class="eq-slot" title="Mũ">Helmet</div>
-                    <!-- Cột giữa (Hình nhân vật) -->
-                    <div class="char-model-placeholder" style="grid-row: span 4;">
-                    </div>
-                    <!-- Cột phải -->
-                    <div class="eq-slot" title="Dây chuyền">Necklace</div>
-                    
-                    <div class="eq-slot" title="Áo">Armor</div>
-                    <div class="eq-slot" title="Nhẫn 1">Ring 1</div>
-                    
-                    <div class="eq-slot" title="Găng tay">Gloves</div>
-                    <div class="eq-slot" title="Nhẫn 2">Ring 2</div>
-
-                    <div class="eq-slot" title="Vũ khí">Weapon</div>
-                    <div class="eq-slot" title="Giày">Shoes</div>
+        <!-- GIAO DIỆN 1: MÔ HÌNH NHÂN VẬT (MẶC ĐỊNH HIỂN THỊ) -->
+        <div id="characterVisualArea" style="flex: 1; display: block; background: rgba(0,20,40,0.4); border-radius: 8px; padding: 10px;">
+            <div class="char-equip-grid">
+                <!-- Cột trái -->
+                <div class="eq-slot" title="Mũ">Helmet</div>
+                <!-- Cột giữa (Hình nhân vật) -->
+                <div class="char-model-placeholder" style="grid-row: span 4;">
+                    <img id="visual-p-img" src="char/Sungjinwoo.png" style="max-width: 100%; max-height: 100%; object-fit: contain; filter: drop-shadow(0 0 15px rgba(0, 191, 255, 0.4)); transition: all 0.3s ease;">
                 </div>
+                <!-- Cột phải -->
+                <div class="eq-slot" title="Dây chuyền">Necklace</div>
+                
+                <div class="eq-slot" title="Áo">Armor</div>
+                <div class="eq-slot" title="Nhẫn 1">Ring 1</div>
+                
+                <div class="eq-slot" title="Găng tay">Gloves</div>
+                <div class="eq-slot" title="Nhẫn 2">Ring 2</div>
+
+                <div class="eq-slot" title="Vũ khí">Weapon</div>
+                <div class="eq-slot" title="Giày">Shoes</div>
             </div>
         </div>
-        <!-- ================= KẾT THÚC CỘT TRÁI ================= -->
 
+        <!-- GIAO DIỆN 2: DANH SÁCH ĐỒ ĐANG MẶC (Ẩn) -->
+        <div id="equippedListArea" style="flex: 1; overflow-y: auto; padding-right: 5px; display: none;">
+            <div id="equippedArea"></div> 
+        </div>
 
-        <!-- ================= CỘT PHẢI: TÚI ĐỒ VÀ BỘ LỌC (GIỮ NGUYÊN) ================= -->
-        <div class="card" style="flex: 1; display: flex; flex-direction: column; height: 500px; box-sizing: border-box; border-color: #00bfff; box-shadow: inset 0 0 15px rgba(0,191,255,0.1);">
+        <!-- GIAO DIỆN 3: TÚI ĐỒ & BỘ LỌC (Ẩn) -->
+        <div id="inventoryCardArea" style="flex: 1; display: none; flex-direction: column;">
             <div class="sl-shop-filter-row" style="justify-content: center; margin-bottom: 15px; flex-wrap: wrap;">
                 <div class="sl-shop-filter-btn inv-filter-btn active" title="Vũ Khí" onclick="switchInvTab('weapon', this)">⚔️</div>
                 <div class="sl-shop-filter-btn inv-filter-btn" title="Phòng Cụ" onclick="switchInvTab('armor', this)">🛡️</div>
@@ -1934,12 +1931,12 @@
                 <div class="sl-shop-filter-btn inv-filter-btn" title="Tiêu Hao" onclick="switchInvTab('consum', this)">🧪</div>
                 <div class="sl-shop-filter-btn inv-filter-btn" title="Vật Liệu" onclick="switchInvTab('material', this)">💎</div>
             </div>
-            <div id="inventoryArea" class="sl-shop-list" style="padding-right: 5px;"></div>
+            <div id="inventoryArea" class="sl-shop-list" style="padding-right: 5px; flex: 1; overflow-y: auto;"></div>
         </div>
-        <!-- ================= KẾT THÚC CỘT PHẢI ================= -->
 
     </div>
 </div>
+<!-- ================= KẾT THÚC TAB BAG ================= -->
 <div id="tab-shop" class="tab-panel" style="display: none;">
     <div class="sl-shop-list" id="shopItemsContainer">
         
@@ -5014,6 +5011,58 @@
             console.error("LỖI: Không tìm thấy khung giao diện, hãy kiểm tra lại HTML!");
         }
     };
+
+    <script>
+    // Hàm xử lý khi bấm các nút Nhóm Trái (Trang bị, Cổ vật, TÚI ĐỒ)
+    window.switchEqTab = function(evt, tabName) {
+        window.currentEqTab = tabName;
+        
+        // Tắt đèn toàn bộ các nút
+        const btns = document.getElementsByClassName("eq-tab-btn");
+        for (let i = 0; i < btns.length; i++) btns[i].classList.remove("active");
+        if(evt) evt.currentTarget.classList.add("active"); // Bật sáng nút vừa bấm
+        
+        // Tắt đèn nút Mô hình Nhân vật bên phải
+        const btnToggleVisual = document.getElementById('btnToggleVisual');
+        if(btnToggleVisual) btnToggleVisual.classList.remove('active');
+
+        // Gọi 3 khung giao diện ra
+        const visualArea = document.getElementById('characterVisualArea');
+        const listArea = document.getElementById('equippedListArea');
+        const invArea = document.getElementById('inventoryCardArea');
+
+        // Luôn giấu Mô hình nhân vật đi khi bấm vào nhóm này
+        if (visualArea) visualArea.style.display = 'none';
+
+        // Phân nhánh hiển thị:
+        if (tabName === 'inventory') {
+            if (listArea) listArea.style.display = 'none';
+            if (invArea) invArea.style.display = 'flex'; // HIỂN THỊ TÚI ĐỒ
+        } else {
+            if (invArea) invArea.style.display = 'none';
+            if (listArea) listArea.style.display = 'block'; // HIỂN THỊ LIST ĐỒ ĐANG MẶC
+        }
+        
+        // Cập nhật lại danh sách items
+        if(window.renderBag) window.renderBag();
+    };
+
+    // Hàm xử lý riêng khi bấm lại nút Mô hình Nhân vật (👤)
+    window.toggleEquipView = function() {
+        // Tắt đèn 3 nút bên trái
+        const btns = document.getElementsByClassName("eq-tab-btn");
+        for (let i = 0; i < btns.length; i++) btns[i].classList.remove("active");
+        
+        // Bật đèn chính nó
+        const btnToggleVisual = document.getElementById('btnToggleVisual');
+        if (btnToggleVisual) btnToggleVisual.classList.add('active');
+
+        // HIỂN THỊ LẠI MÔ HÌNH NHÂN VẬT VÀ GIẤU CÁC KHUNG KHÁC
+        document.getElementById('characterVisualArea').style.display = 'block';
+        document.getElementById('equippedListArea').style.display = 'none';
+        document.getElementById('inventoryCardArea').style.display = 'none';
+    };
+</script>
     setTimeout(startNewBattle, 2000);
 </script>
 </body>
