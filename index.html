@@ -584,18 +584,20 @@
             cursor: pointer;
         }
         
+        
         .item-img-premium {
             width: 60px;
             height: 60px;
-            object-fit: cover;
+            object-fit: contain; 
+            padding: 6px; 
+            box-sizing: border-box; 
             border: 2px solid #00bfff;
             border-radius: 8px;
             background: radial-gradient(circle, #003366, #000);
             box-shadow: 0 0 10px rgba(0, 191, 255, 0.4);
             transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
             vertical-align: middle;
-        }
-
+}
         /* Khi rê chuột hoặc chạm vào ảnh */
         .item-icon-wrapper:hover .item-img-premium,
         .item-icon-wrapper:active .item-img-premium {
