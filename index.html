@@ -1523,19 +1523,23 @@
                             <div id="equippedArea" style="flex: 1; overflow-y: auto; padding-right: 5px;"></div>
                         </div>
 
-                        <!-- BÊN PHẢI: KHO ĐỒ PHÂN LOẠI (Làm tương tự bên trái) -->
-                        <div class="card" style="flex: 1; display: flex; flex-direction: column; height: 500px; box-sizing: border-box;">
-                            
-                            <div class="tabs-header" style="height: 45px; flex-shrink: 0; align-items: stretch; margin-bottom: 15px; border-bottom: 1px solid rgba(0,191,255,0.5); background: rgba(0, 10, 30, 0.8);">
-                                <button class="tab-btn inv-tab-btn active" style="padding: 0; font-size: 16px;" onclick="switchInvTab(event, 'equip')">TRANG BỊ</button>
-                                <button class="tab-btn inv-tab-btn" style="padding: 0; font-size: 16px;" onclick="switchInvTab(event, 'consum')">TIÊU HAO</button>
-                                <button class="tab-btn inv-tab-btn" style="padding: 0; font-size: 16px; color: #cc66ff;" onclick="switchInvTab(event, 'rare')">VẬT LIỆU</button>
+                            <!-- BÊN PHẢI: KHO ĐỒ PHÂN LOẠI -->
+                            <div class="card" style="flex: 1; display: flex; flex-direction: column; height: 500px; box-sizing: border-box; border-color: #00bfff; box-shadow: inset 0 0 15px rgba(0,191,255,0.1);">
+            
+                                <h3 class="sl-shop-col-title" style="color: #00bfff; border-color: rgba(0,191,255,0.3);">🎒 KHO ĐỒ</h3>
+            
+                                <div class="sl-shop-filter-row" style="justify-content: center; margin-bottom: 15px; flex-wrap: wrap;">
+                                <div class="sl-shop-filter-btn inv-filter-btn active" title="Tất Cả" onclick="switchInvTab('all', this)">🔠</div>
+                                <div class="sl-shop-filter-btn inv-filter-btn" title="Vũ Khí" onclick="switchInvTab('weapon', this)">⚔️</div>
+                                <div class="sl-shop-filter-btn inv-filter-btn" title="Phòng Cụ" onclick="switchInvTab('armor', this)">🛡️</div>
+                                <div class="sl-shop-filter-btn inv-filter-btn" title="Trang Sức" onclick="switchInvTab('accessory', this)">💍</div>
+                                <div class="sl-shop-filter-btn inv-filter-btn" title="Tiêu Hao" onclick="switchInvTab('consum', this)">🧪</div>
+                                <div class="sl-shop-filter-btn inv-filter-btn" title="Vật Liệu" onclick="switchInvTab('material', this)">💎</div>
                             </div>
-                            
-                            <!-- Bỏ max-height cũ, dùng flex: 1 để đồng bộ hoàn toàn với khung bên trái -->
-                            <div id="inventoryArea" style="flex: 1; overflow-y: auto; padding-right: 5px;"></div>
-                        </div>
+            
+                            <div id="inventoryArea" class="sl-shop-list" style="padding-right: 5px;"></div>
 
+                            </div>
                     </div>
                 </div>
 
@@ -3020,14 +3024,29 @@
     // --- QUẢN LÝ CHUYỂN TAB TRONG TÚI ĐỒ ---
     window.currentInvTab = 'equip'; // Mặc định mở tab Trang bị
 
-    window.switchInvTab = function(evt, tabName) {
-        window.currentInvTab = tabName;
-        const btns = document.getElementsByClassName("inv-tab-btn");
-        for (let i = 0; i < btns.length; i++) btns[i].classList.remove("active");
-        evt.currentTarget.classList.add("active");
-        renderBag(); // Tải lại đồ theo tab mới
-    }
+   // Mặc định mở tab Tất cả
+    window.currentInvTab = 'all'; 
 
+    window.switchInvTab = function(tabName, btnElement) {
+        window.currentInvTab = tabName;
+        
+        // Tắt độ sáng của tất cả các nút filter trong túi đồ
+        const btns = document.getElementsByClassName("inv-filter-btn");
+        for (let i = 0; i < btns.length; i++) {
+            btns[i].classList.remove("active");
+        }
+        
+        // Bật sáng nút vừa bấm (nếu có truyền vào)
+        if (btnElement) {
+            btnElement.classList.add("active");
+        } else if (tabName === 'all') {
+            // Backup cho trường hợp nút SELL từ tab Shop gọi sang
+            if(btns[0]) btns[0].classList.add("active");
+        }
+
+        // Tải lại danh sách đồ
+        renderBag(); 
+    }
     //Trang bi item
     window.renderBag = function() {
         if (!currentUser.inventory) currentUser.inventory = [];
@@ -3039,10 +3058,8 @@
         if (!eqArea || !invArea) return;
         
         eqArea.innerHTML = ''; invArea.innerHTML = '';
-
-        // ==========================================
+        
         // 1. TỰ ĐỘNG CHUYỂN ĐỔI DATA CŨ SANG DATA MỚI
-        // ==========================================
         currentUser.inventory = currentUser.inventory.map(item => {
             if (typeof item === 'string') {
                 const base = ITEM_DATA[item];
@@ -3060,19 +3077,15 @@
                 currentUser.equipped[slot] = { uid: Date.now().toString(36) + Math.random().toString(36).substring(2), name: eq.name, str: base.str, vit: base.vit, mp: base.mp };
             }
         });
-
-        // ==========================================
+   
         // 2. TỰ ĐỘNG DỌN RÁC (XÓA ĐỒ ĐANG MẶC BỊ LỖI)
-        // ==========================================
         ['weapon', 'shield', 'accessory', 'helmet', 'gloves', 'costume'].forEach(slot => {
             if (currentUser.equipped[slot] && !ITEM_DATA[currentUser.equipped[slot].name]) {
                 currentUser.equipped[slot] = null;
             }
         });
 
-        // ==========================================
         // 3. DỌN TÚI ĐỒ (XÓA ĐỒ TRONG KHO BỊ LỖI)
-        // ==========================================
         currentUser.inventory = currentUser.inventory.filter(itemObj => ITEM_DATA[itemObj.name]);
 
         // ================= HIỂN THỊ ĐỒ ĐANG TRANG BỊ (LỌC THEO TAB) =================
@@ -3127,9 +3140,24 @@
             
             // --- KIỂM TRA XEM MÓN ĐỒ CÓ THUỘC TAB HIỆN TẠI KHÔNG ---
             let isMatch = false;
-            if (window.currentInvTab === 'equip' && ['weapon', 'shield', 'accessory', 'helmet', 'gloves', 'costume'].includes(itemData.type)) isMatch = true;
-            if (window.currentInvTab === 'consum' && itemData.type === 'consumable') isMatch = true;
-            if (window.currentInvTab === 'rare' && ['material', 'rare'].includes(itemData.type)) isMatch = true;
+            const type = itemData.type;
+
+            if (window.currentInvTab === 'all') {
+                isMatch = true;
+            } else if (window.currentInvTab === 'weapon' && type === 'weapon') {
+                isMatch = true;
+            } else if (window.currentInvTab === 'armor' && ['shield', 'helmet', 'gloves', 'costume'].includes(type)) {
+                isMatch = true;
+            } else if (window.currentInvTab === 'accessory' && type === 'accessory') {
+                isMatch = true;
+            } else if (window.currentInvTab === 'consum' && type === 'consumable') {
+                isMatch = true;
+            } else if (window.currentInvTab === 'material' && ['material', 'rare'].includes(type)) {
+                isMatch = true;
+            }
+            
+            // Backup cho code cũ chưa đổi
+            if (window.currentInvTab === 'equip' && ['weapon', 'shield', 'accessory', 'helmet', 'gloves', 'costume'].includes(type)) isMatch = true;
 
             // Nếu đúng Tab thì mới vẽ ra HTML
             if (isMatch) {
