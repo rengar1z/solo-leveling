@@ -5035,6 +5035,25 @@
         if(window.renderBag) window.renderBag();
     };
 
+    // Khởi tạo tab mặc định là 'weapon' (Vũ khí) khớp với giao diện HTML ban đầu
+window.currentInvTab = 'weapon';
+
+// Thêm hàm xử lý chuyển tab trong kho đồ bị thiếu
+window.switchInvTab = function(tabName, btnElement) {
+    window.currentInvTab = tabName;
+    
+    // Đổi trạng thái nút bấm (xóa class active ở các nút cũ, thêm vào nút hiện tại)
+    const btns = document.querySelectorAll('.inv-filter-btn');
+    btns.forEach(btn => btn.classList.remove('active'));
+    if (btnElement) {
+        btnElement.classList.add('active');
+    }
+    
+    // Gọi lại hàm render túi đồ để vẽ lại danh sách item theo tab mới
+    if (window.renderBag) window.renderBag();
+};
+    
+
     // Hàm xử lý riêng khi bấm lại nút Mô hình Nhân vật (👤)
     window.toggleEquipView = function() {
         // Tắt đèn 3 nút bên trái
