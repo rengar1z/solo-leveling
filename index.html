@@ -1271,7 +1271,9 @@
         .sl-shop-icon-box img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain; /* Đổi từ cover thành contain để ảnh thu nhỏ lại vừa vặn */
+            padding: 4px; /* Thêm một chút đệm để ảnh không chạm viền */
+            box-sizing: border-box;
         }
 
         .sl-shop-info {
