@@ -3431,6 +3431,14 @@
         if (typeof enemy !== 'undefined' && enemy && enemy.shieldHP > 0) {
             eHTML += `<div class="status-icon" title="Giáp Ma Thuật (Còn: ${enemy.shieldHP})" style="border-color: #00ffff; box-shadow: 0 0 5px #00ffff;"><img src="effect/Heal_Effect.png" style="width: 20px; height: 20px; object-fit: contain;"></div>`;
         }
+
+        //ICON RAGE CHO BOSS
+        if (typeof enemy !== 'undefined' && enemy && enemy.isEnraged) {
+            if (enemy.bossType === "igris") {
+                eHTML += `<div class="status-icon" title="Huyết Kỵ Sĩ (ATK +30%)" style="border-color: #ff0000; box-shadow: 0 0 10px #ff0000;">
+                            <img src="effect/Sian_Halat_Scarlet_Domination_Effect.png" style="width: 20px; height: 20px; object-fit: contain;" alt="Rage">
+                          </div>`;
+            }
         eBoard.innerHTML = eHTML;
     };
     
