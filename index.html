@@ -1143,9 +1143,9 @@
             position: relative;
             width: 28px;
             height: 28px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid #555;
-            border-radius: 4px;
+            background: transparent !important;
+            border: none !important;            
+            box-shadow: none !important;      
             display: flex;
             align-items: center;
             justify-content: center;
@@ -3399,7 +3399,7 @@
     function getPrefix() { return isDungeonMode ? 'd-' : ''; }
 
     window.renderStatusIcons = function() {
-        const pre = getPrefix(); // Tự động lấy tiền tố 'd-' nếu đang đi Hầm Ngục
+        const pre = getPrefix(); 
         const pBoard = document.getElementById(pre + 'p-status-board');
         const eBoard = document.getElementById(pre + 'e-status-board');
         if (!pBoard || !eBoard) return;
@@ -3407,36 +3407,36 @@
         // --- 1. VẼ ICON CHO NGƯỜI CHƠI ---
         let pHTML = "";
         if (typeof playerBleedTurns !== 'undefined' && playerBleedTurns > 0) {
-            pHTML += `<div class="status-icon" title="Chảy máu (Mất 5% HP mỗi lượt)" style="border-color: red; box-shadow: 0 0 5px red;"><img src="effect/Burn_Effect.png" style="width: 20px; height: 20px; object-fit: contain;"><div class="status-turn">${playerBleedTurns}</div></div>`;
+            pHTML += `<div class="status-icon" title="Chảy máu (Mất 5% HP mỗi lượt)"><img src="effect/Burn_Effect.png" style="width: 100%; height: 100%; object-fit: contain;"><div class="status-turn">${playerBleedTurns}</div></div>`;
         }
         if (typeof playerArmorBreakTurns !== 'undefined' && playerArmorBreakTurns > 0) {
-            pHTML += `<div class="status-icon" title="Giảm Giáp (Mất 30% Thủ)" style="border-color: orange; box-shadow: 0 0 5px orange;"><img src="effect/Defense_Decrease_Effect.png" style="width: 20px; height: 20px; object-fit: contain;"><div class="status-turn">${playerArmorBreakTurns}</div></div>`;
+            pHTML += `<div class="status-icon" title="Giảm Giáp (Mất 30% Thủ)"><img src="effect/Defense_Decrease_Effect.png" style="width: 100%; height: 100%; object-fit: contain;"><div class="status-turn">${playerArmorBreakTurns}</div></div>`;
         }
         if (typeof isPlayerStunned !== 'undefined' && isPlayerStunned) {
-            pHTML += `<div class="status-icon" title="Choáng (Mất lượt)" style="border-color: yellow; box-shadow: 0 0 5px yellow;"><img src="effect/Stun_Effect.png" style="width: 20px; height: 20px; object-fit: contain;"></div>`;
+            pHTML += `<div class="status-icon" title="Choáng (Mất lượt)"><img src="effect/Stun_Effect.png" style="width: 100%; height: 100%; object-fit: contain;"></div>`;
         }
         if (typeof isPlayerCountering !== 'undefined' && isPlayerCountering) {
-            pHTML += `<div class="status-icon" title="Thủ Thế (Chuẩn bị Phản đòn)" style="border-color: gold; box-shadow: 0 0 5px gold;"><span style="font-size:16px;">⚔️</span></div>`;
+            pHTML += `<div class="status-icon" title="Thủ Thế (Chuẩn bị Phản đòn)"><span style="font-size:24px;">⚔️</span></div>`;
         }
         pBoard.innerHTML = pHTML;
 
         // --- 2. VẼ ICON CHO QUÁI VẬT ---
         let eHTML = "";
         if (typeof enemyPoisonTurns !== 'undefined' && enemyPoisonTurns > 0) {
-            eHTML += `<div class="status-icon" title="Trúng Độc (Mất 5% HP mỗi lượt)" style="border-color: #00ff00; box-shadow: 0 0 5px #00ff00;"><span style="font-size:16px;">☠️</span><div class="status-turn">${enemyPoisonTurns}</div></div>`;
+            eHTML += `<div class="status-icon" title="Trúng Độc (Mất 5% HP mỗi lượt)"><span style="font-size:24px;">☠️</span><div class="status-turn">${enemyPoisonTurns}</div></div>`;
         }
         if (typeof enemyDefBreakTurns !== 'undefined' && enemyDefBreakTurns > 0) {
-            eHTML += `<div class="status-icon" title="Phá Giáp (Mất 50% Thủ)" style="border-color: #9933ff; box-shadow: 0 0 5px #9933ff;"><img src="effect/Defense_Decrease_Effect.png" style="width: 20px; height: 20px; object-fit: contain;"><div class="status-turn">${enemyDefBreakTurns}</div></div>`;
+            eHTML += `<div class="status-icon" title="Phá Giáp (Mất 50% Thủ)"><img src="effect/Defense_Decrease_Effect.png" style="width: 100%; height: 100%; object-fit: contain;"><div class="status-turn">${enemyDefBreakTurns}</div></div>`;
         }
         if (typeof enemy !== 'undefined' && enemy && enemy.shieldHP > 0) {
-            eHTML += `<div class="status-icon" title="Giáp Ma Thuật (Còn: ${enemy.shieldHP})" style="border-color: #00ffff; box-shadow: 0 0 5px #00ffff;"><img src="effect/Heal_Effect.png" style="width: 20px; height: 20px; object-fit: contain;"></div>`;
+            eHTML += `<div class="status-icon" title="Giáp Ma Thuật (Còn: ${enemy.shieldHP})"><img src="effect/Heal_Effect.png" style="width: 100%; height: 100%; object-fit: contain;"></div>`;
         }
 
         //ICON RAGE CHO BOSS
         if (typeof enemy !== 'undefined' && enemy && enemy.isEnraged) {
             if (enemy.bossType === "igris") {
-                eHTML += `<div class="status-icon" title="Huyết Kỵ Sĩ (ATK +30%)" style="border-color: #ff0000; box-shadow: 0 0 10px #ff0000;">
-                            <img src="effect/Sian_Halat_Scarlet_Domination_Effect.png" style="width: 20px; height: 20px; object-fit: contain;" alt="Rage">
+                eHTML += `<div class="status-icon" title="Huyết Kỵ Sĩ (ATK +30%)">
+                            <img src="effect/Sian_Halat_Scarlet_Domination_Effect.png" style="width: 100%; height: 100%; object-fit: contain;" alt="Rage">
                           </div>`;
             }
         }
