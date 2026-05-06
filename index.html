@@ -2237,6 +2237,19 @@
             </div>
         </div>
 
+        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_Frieren')">
+            <div class="sl-shop-icon-box" style="border-color: #ffcc00;">
+                <img src="cos/Frieren.png">
+            </div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name" style="color: #ffcc00;">Frieren</p>
+                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 350 INT, 80 VIT, 300 MP.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button id="btn-costume_Frieren" class="sl-shop-price-btn">100000 CASH</button>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -2662,6 +2675,7 @@
         "Chúa Tể Màn Đêm": { rank: "A", type: "costume", name: "Chúa Tể Màn Đêm", str: 50, vit: 20, mp: 0, effect: "Đổi Avatar thành Chúa Tể Màn Đêm", img: "cos/Sung_Jinwoo_Night_Lord.png", avatar: "cos/Sung_Jinwoo_Night_Lord.png", sellPrice: 20000 },
         "Vua Của Loài Rồng Hủy Diệt Bầu Trời": { rank: "S", type: "costume", name: "Vua Của Loài Rồng Hủy Diệt Bầu Trời", str: 250, vit: 100, mp: 100, effect: "Đổi Avatar thành Vua Của Loài Rồng", img: "cos/Sung_Jinwoo_Monarch_of_the_Heaven-Annihilating_Dragons.png", avatar: "cos/Sung_Jinwoo_Monarch_of_the_Heaven-Annihilating_Dragons.png", sellPrice: 100000 },
         "Tử Thần": { rank: "S", type: "costume", name: "Tử Thần", str: 250, vit: 100, mp: 100, effect: "Đổi Avatar thành Tử Thần", img: "cos/Sung_Jinwoo_God_of_Death.png", avatar: "cos/Sung_Jinwoo_God_of_Death.png", sellPrice: 100000 },
+        "Frieren": { rank: "S", type: "costume", name: "Frieren", int: 350, vit: 80, mp: 300, effect: "Đổi Avatar thành Frieren", img: "cos/Frieren.png", avatar: "cos/Frieren.png", sellPrice: 100000 },
     };
 
     // --- DỮ LIỆU THÀNH TỰU VÀ DANH HIỆU (TITLE) ---
@@ -2713,7 +2727,8 @@
         "costume_summer_2": { name: "Kỳ Nghỉ Hè 2", price: 10000, type: "item", itemId: "Kỳ Nghỉ Hè 2" },
         "costume_night_lord": { name: "Chúa Tể Màn Đêm", price: 20000, type: "item", itemId: "Chúa Tể Màn Đêm" },
         "costume_dragon_monarch": { name: "Vua Của Loài Rồng Hủy Diệt Bầu Trời", price: 100000, type: "item", itemId: "Vua Của Loài Rồng Hủy Diệt Bầu Trời" },
-        "costume_god_of_death": { name: "Tử Thần", price: 100000, type: "item", itemId: "Tử Thần" }
+        "costume_god_of_death": { name: "Tử Thần", price: 100000, type: "item", itemId: "Tử Thần" },
+        "costume_Frieren": { name: "Frieren", price: 100000, type: "item", itemId: "Frieren" }
     };
 
     // --- CƠ SỞ DỮ LIỆU KỸ NĂNG ĐA NHÁNH (MULTI-CLASS) ---
@@ -3357,7 +3372,7 @@
         updatePlayerAvatar(); // Kích hoạt ngay lập tức
         if (!currentUser.ownedCostumes) currentUser.ownedCostumes = [];
         
-        const costumes = ["costume_black_suit", "costume_mining", "costume_wish", "costume_light_outing", "costume_incapable", "costume_summer_2", "costume_night_lord", "costume_dragon_monarch", "costume_god_of_death"];
+        const costumes = ["costume_black_suit", "costume_mining", "costume_wish", "costume_light_outing", "costume_incapable", "costume_summer_2", "costume_night_lord", "costume_dragon_monarch", "costume_god_of_death", "costume_Frieren"];
         
         costumes.forEach(shopId => {
             const btn = document.getElementById('btn-' + shopId);
