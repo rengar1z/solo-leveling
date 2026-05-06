@@ -3431,7 +3431,7 @@
         // --- 2. VẼ ICON CHO QUÁI VẬT ---
         let eHTML = "";
         if (typeof enemyPoisonTurns !== 'undefined' && enemyPoisonTurns > 0) {
-            eHTML += `<div class="status-icon" title="Trúng Độc (Mất 5% HP mỗi lượt)"><span style="font-size:24px;">☠️</span><div class="status-turn">${enemyPoisonTurns}</div></div>`;
+            eHTML += `<div class="status-icon" title="Trúng Độc (Mất 5% HP mỗi lượt)"><img src="effect/Stun_Effect.png" style="width: 100%; height: 100%; object-fit: contain;">Poison_Effect.png<div class="status-turn">${enemyPoisonTurns}</div></div>`;
         }
         if (typeof enemyDefBreakTurns !== 'undefined' && enemyDefBreakTurns > 0) {
             eHTML += `<div class="status-icon" title="Phá Giáp (Mất 50% Thủ)"><img src="effect/Defense_Decrease_Effect.png" style="width: 100%; height: 100%; object-fit: contain;"><div class="status-turn">${enemyDefBreakTurns}</div></div>`;
