@@ -3407,13 +3407,13 @@
         // --- 1. VẼ ICON CHO NGƯỜI CHƠI ---
         let pHTML = "";
         if (typeof playerBleedTurns !== 'undefined' && playerBleedTurns > 0) {
-            pHTML += `<div class="status-icon" title="Chảy máu (Mất 5% HP mỗi lượt)" style="border-color: red; box-shadow: 0 0 5px red;"><span style="font-size:16px;">🩸</span><div class="status-turn">${playerBleedTurns}</div></div>`;
+            pHTML += `<div class="status-icon" title="Chảy máu (Mất 5% HP mỗi lượt)" style="border-color: red; box-shadow: 0 0 5px red;"><img src="effect/Burn_Effect.png" style="width: 20px; height: 20px; object-fit: contain;"><div class="status-turn">${playerBleedTurns}</div></div>`;
         }
         if (typeof playerArmorBreakTurns !== 'undefined' && playerArmorBreakTurns > 0) {
-            pHTML += `<div class="status-icon" title="Giảm Giáp (Mất 30% Thủ)" style="border-color: orange; box-shadow: 0 0 5px orange;"><span style="font-size:16px;">🛡️</span><div class="status-turn">${playerArmorBreakTurns}</div></div>`;
+            pHTML += `<div class="status-icon" title="Giảm Giáp (Mất 30% Thủ)" style="border-color: orange; box-shadow: 0 0 5px orange;"><img src="effect/Defense_Decrease_Effect.png" style="width: 20px; height: 20px; object-fit: contain;"><div class="status-turn">${playerArmorBreakTurns}</div></div>`;
         }
         if (typeof isPlayerStunned !== 'undefined' && isPlayerStunned) {
-            pHTML += `<div class="status-icon" title="Choáng (Mất lượt)" style="border-color: yellow; box-shadow: 0 0 5px yellow;"><span style="font-size:16px;">💫</span></div>`;
+            pHTML += `<div class="status-icon" title="Choáng (Mất lượt)" style="border-color: yellow; box-shadow: 0 0 5px yellow;"><img src="effect/Stun_Effect.png" style="width: 20px; height: 20px; object-fit: contain;"></div>`;
         }
         if (typeof isPlayerCountering !== 'undefined' && isPlayerCountering) {
             pHTML += `<div class="status-icon" title="Thủ Thế (Chuẩn bị Phản đòn)" style="border-color: gold; box-shadow: 0 0 5px gold;"><span style="font-size:16px;">⚔️</span></div>`;
@@ -3426,10 +3426,10 @@
             eHTML += `<div class="status-icon" title="Trúng Độc (Mất 5% HP mỗi lượt)" style="border-color: #00ff00; box-shadow: 0 0 5px #00ff00;"><span style="font-size:16px;">☠️</span><div class="status-turn">${enemyPoisonTurns}</div></div>`;
         }
         if (typeof enemyDefBreakTurns !== 'undefined' && enemyDefBreakTurns > 0) {
-            eHTML += `<div class="status-icon" title="Phá Giáp (Mất 50% Thủ)" style="border-color: #9933ff; box-shadow: 0 0 5px #9933ff;"><span style="font-size:16px;">💔</span><div class="status-turn">${enemyDefBreakTurns}</div></div>`;
+            eHTML += `<div class="status-icon" title="Phá Giáp (Mất 50% Thủ)" style="border-color: #9933ff; box-shadow: 0 0 5px #9933ff;"><img src="effect/Defense_Decrease_Effect.png" style="width: 20px; height: 20px; object-fit: contain;"><div class="status-turn">${enemyDefBreakTurns}</div></div>`;
         }
         if (typeof enemy !== 'undefined' && enemy && enemy.shieldHP > 0) {
-            eHTML += `<div class="status-icon" title="Giáp Ma Thuật (Còn: ${enemy.shieldHP})" style="border-color: #00ffff; box-shadow: 0 0 5px #00ffff;"><span style="font-size:16px;">🔰</span></div>`;
+            eHTML += `<div class="status-icon" title="Giáp Ma Thuật (Còn: ${enemy.shieldHP})" style="border-color: #00ffff; box-shadow: 0 0 5px #00ffff;"><img src="effect/Heal_Effect.png" style="width: 20px; height: 20px; object-fit: contain;"></div>`;
         }
         eBoard.innerHTML = eHTML;
     };
