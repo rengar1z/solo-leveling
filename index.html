@@ -276,6 +276,77 @@
             color: #fff;
         }
 
+        /* ================= CSS CHO MENU DROPDOWN (GOM TAB) ================= */
+        .dropdown-group {
+            flex: 1;
+            position: relative;
+            display: flex;
+            outline: none; /* Bỏ viền xanh mặc định khi chạm trên mobile */
+        }
+        
+        .dropdown-main-btn {
+            width: 100%;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            flex-direction: column;
+            box-shadow: 0 15px 30px rgba(0, 191, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-top: none;
+            background: rgba(5, 15, 25, 0.95); /* Nền tối đậm làm nổi bật tab con */
+        }
+
+        /* Hiển thị dropdown khi rê chuột (PC) hoặc chạm/focus (Mobile) */
+        .dropdown-group:hover .dropdown-content,
+        .dropdown-group:focus-within .dropdown-content {
+            display: flex;
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        /* Giao diện nút bên trong Menu */
+        .sub-tab {
+            clip-path: none !important; /* Xóa cắt góc để nó thành hình chữ nhật chuẩn */
+            border: none !important;
+            border-bottom: 1px solid rgba(0, 191, 255, 0.3) !important;
+            margin: 0 !important;
+            text-align: center;
+            width: 100%;
+            background: transparent !important;
+        }
+        
+        .sub-tab:last-child {
+            border-bottom: none !important;
+        }
+
+        .sub-tab:hover {
+            background: rgba(0, 191, 255, 0.2) !important;
+        }
+
+        /* TỰ ĐỘNG LÀM SÁNG NÚT CHA KHI TAB CON BÊN TRONG ĐANG ĐƯỢC CHỌN */
+        .dropdown-group:has(.sub-tab.active) .dropdown-main-btn {
+            background: linear-gradient(to right, #e2e8f0, #ffffff) !important;
+            color: #111 !important; 
+            font-weight: bold;
+            border: 1px solid #fff !important;
+            z-index: 10; 
+            filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.8));
+        }
+        
+        /* Bỏ viền phân cách bên phải của HOME để khít khìn khịt với RAID */
+        .dropdown-group:first-child .dropdown-main-btn {
+            border-right: none !important;
+        }
+
         /* ================= TAB ĐANG ĐƯỢC CHỌN (SÁNG LÊN) ================= */
         .tab-btn.active {
             background: linear-gradient(to right, #e2e8f0, #ffffff) !important;
@@ -1864,16 +1935,29 @@
         </div>
 
         <div class="tabs-container">
-            <div class="tabs-header">
-                <button class="tab-btn active" onclick="openTab(event, 'tab-mission')">QUEST</button>
-                <button class="tab-btn" onclick="openTab(event, 'tab-bag')">BAG</button>
-                <button class="tab-btn" onclick="openTab(event, 'tab-shop')">SHOP</button>
-                <button class="tab-btn" onclick="openTab(event, 'tab-skills')">SKILLS</button>
-                <button class="tab-btn" onclick="openTab(event, 'tab-logs')">LOGS</button>
-                <button class="tab-btn" onclick="openTab(event, 'tab-arena')">ARENA</button>
-                <button class="tab-btn" onclick="openTab(event, 'tab-dungeon')">DUNGEON</button>
-                <button class="tab-btn" onclick="openTab(event, 'tab-achievement')">ACHIEVEMENTS</button>
+            <div class="tabs-header" style="overflow: visible;">
+            <!-- NHÓM 1: HOME -->
+            <div class="dropdown-group" tabindex="0">
+                <div class="tab-btn dropdown-main-btn" style="clip-path: polygon(15px 0, 100% 0, 100% 100%, 0 100%, 0 15px);">HOME ▼</div>
+                <div class="dropdown-content">
+                    <button class="tab-btn sub-tab active" onclick="openTab(event, 'tab-mission'); this.closest('.dropdown-group').blur();">QUEST</button>
+                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-bag'); this.closest('.dropdown-group').blur();">BAG</button>
+                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-shop'); this.closest('.dropdown-group').blur();">SHOP</button>
+                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-skills'); this.closest('.dropdown-group').blur();">SKILLS</button>
+                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-logs'); this.closest('.dropdown-group').blur();">LOGS</button>
+                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-achievement'); this.closest('.dropdown-group').blur();">ACHIEVEMENTS</button>
+                </div>
             </div>
+
+            <!-- NHÓM 2: RAID -->
+            <div class="dropdown-group" tabindex="0">
+                <div class="tab-btn dropdown-main-btn" style="clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%); border-right: 1px solid rgba(255, 255, 255, 0.2) !important;">RAID ▼</div>
+                <div class="dropdown-content">
+                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-arena'); this.closest('.dropdown-group').blur();">ARENA</button>
+                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-dungeon'); this.closest('.dropdown-group').blur();">DUNGEON</button>
+                </div>
+            </div>
+        </div>
 
             <div class="tabs-content">
                 <div id="tab-mission" class="tab-panel active">
