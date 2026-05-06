@@ -2376,7 +2376,13 @@
                                 </div>
                             </div>
                         </div>
-                    </div>                
+                    </div>
+                        <!-- CỔNG ĐẢO JEJU (HẠNG S+) -->
+                        <div class="dungeon-card" onclick="enterDungeon('jeju_island')" style="border-color: #00ffff; box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);">
+                            <h3 style="color: #00ffff; text-shadow: 0 0 15px #00ffff;">CHIẾN DỊCH ĐẢO JEJU</h3>
+                            <p style="font-size: 20px; color: #ccc;">Số ải: 5 | Độ khó: <span style="color: #00ffff; font-weight: bold;">Hạng S+</span></p>
+                            <button class="tab-btn btn-system" style="border-color: #00ffff; color: #00ffff !important; font-size: 24px;">TIẾN VÀO HẦM NGỤC</button>
+                        </div>
                 </div>
 
                 <div id="tab-achievement" class="tab-panel">
@@ -2493,6 +2499,7 @@
     let playerBleedTurns = 0; // <--- THÊM BIẾN NÀY: Theo dõi số lượt bạn bị chảy máu
     let playerArmorBreakTurns = 0; // <--- THÊM BIẾN NÀY: Đếm số lượt bạn bị Boss phá giáp
     window.counterCooldown = 0;
+    window.playerVulnerabilityTurns = 0;
 
     // --- DỮ LIỆU HẦM NGỤC (MỨC ĐỘ: TÂN THỦ & CÀY CUỐC) ---
     const dungeonData = {
@@ -2570,6 +2577,16 @@
                 { name: "Rồng Sét Wyvern", hp: 65000, atk: 1400, def: 350, exp: 10000, img: "bot/enemy.png" },
                 { name: "Cận Vệ Hoàng Gia Đỏ", hp: 80000, atk: 1600, def: 500, exp: 15000, img: "bot/enemy.png" },
                 { name: "BOSS: Vua Quỷ Baran", hp: 180000, atk: 2500, def: 600, exp: 50000, img: "boss/Boss_Baran_of_White_Flames.png", isBoss: true, bossType: "baran" }
+            ]
+        },
+        "jeju_island": {
+            name: "Chiến Dịch Đảo Jeju",
+            stages: [
+                { name: "Kiến Lính Đột Biến", hp: 60000, atk: 1200, def: 300, exp: 8000, img: "bot/Boss_1st_Gen._Fire_Ant_Leader.png" },
+                { name: "Kiến Cánh Trinh Sát", hp: 80000, atk: 1500, def: 350, exp: 12000, img: "bot/Boss_Purple_Blade_Camula.png" },
+                { name: "Kiến Cận Vệ Hoàng Gia", hp: 120000, atk: 2000, def: 500, exp: 18000, img: "bot/Boss_1st_Gen._White_Ant_Leader.png" },
+                { name: "Nữ Hoàng Kiến", hp: 200000, atk: 2500, def: 600, exp: 35000, img: "boss/Boss_Queen_Ant.png", isBoss: true, bossType: "ant_queen" },
+                { name: "BOSS: Vua Kiến", hp: 300000, atk: 3500, def: 800, exp: 100000, img: "boss/Boss_Ant_King.png", isBoss: true, bossType: "beru" }
             ]
         }
     };
@@ -3425,6 +3442,9 @@
         }
         if (typeof isPlayerCountering !== 'undefined' && isPlayerCountering) {
             pHTML += `<div class="status-icon" title="Thủ Thế (Chuẩn bị Phản đòn)"><span style="font-size:24px;">⚔️</span></div>`;
+        }
+        if (window.playerVulnerabilityTurns && window.playerVulnerabilityTurns > 0) {
+            pHTML += `<div class="status-icon" title="Chấn động (Nhận thêm 5% ST)"><img src="effect/Punishment_Effect.png" style="width: 100%; height: 100%; object-fit: contain;"></span><div class="status-turn">${window.playerVulnerabilityTurns}</div></div>`;
         }
         pBoard.innerHTML = pHTML;
 
@@ -4552,6 +4572,67 @@
                 specialAttackLog = `<span style="color:#ff3333; font-weight:bold;">💪 SỨC MẠNH PHI THƯỜNG!</span> Một đòn vung kiếm với lực ép nghẹt thở từ Quân Vương, gây ${Math.floor(dmg)} ST và <span style="color:orange;">[PHÁ GIÁP]</span> 3 lượt tới!`;
             }
         }
+
+        // 9. KỸ NĂNG CỦA VUA KIẾN BERU (ĐẢO JEJU)
+        if (isDungeonMode && enemy.bossType === "beru") {
+            let rand = Math.random(); 
+            
+            // --- GIAI ĐOẠN 2: CHỮA LÀNH & NÉN CƠ THỂ (Dưới 50% Máu) ---
+            if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasCompressed) {
+                enemy.hasCompressed = true;
+                let healAmount = Math.floor(enemy.maxHp * 0.30); // Phép chữa lành: Hồi 30% Máu
+                enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
+                
+                enemy.atk = Math.floor(enemy.atk * 1.50); // Thao túng kích thước: Tăng 50% ATK vĩnh viễn
+                
+                dmg = 0;
+                isSpecialAttack = true;
+                specialAttackLog = `<span style="color:#00ff00; font-weight:bold; text-shadow: 0 0 10px #00ff00;">💚 CHỮA LÀNH & NÉN CƠ THỂ!</span> Vua Kiến dùng năng lực của Min Byung-Gyu hồi phục <span style="color:#00ff00">${healAmount} HP</span>! Hắn nén cơ thể lại, sát khí tỏa ra ngút trời, <span style="color:#ff3333; font-weight:bold;">Sức mạnh tăng 50%</span>!`;
+            }
+            
+            // --- CÁC CHIÊU THỨC SỬ DỤNG NGẪU NHIÊN ---
+            else if (rand <= 0.20) { 
+                // Độc tê liệt: Choáng + Rút máu
+                let rawDmg = enemyAtk * 1.5; 
+                dmg = Math.max(50, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true;
+                isPlayerStunned = true;
+                applyBleedToPlayer = true; 
+                specialAttackLog = `<span style="color:#00ff00; font-weight:bold; text-shadow: 0 0 5px #00ff00;">☠️ NỌC ĐỘC TÊ LIỆT!</span> Vua Kiến phun chất độc đậm đặc chết người, gây ${Math.floor(dmg)} ST, khiến bạn bị <span style="color:yellow;">[CHOÁNG]</span> và chất độc ăn mòn cơ thể 2 lượt tới!`;
+            } 
+            else if (rand <= 0.40) { 
+                // Ma thuật băng giá: Xuyên phá giáp
+                let rawDmg = enemyAtk * 1.8; 
+                dmg = Math.max(80, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true;
+                effectArmorBreak = 3; 
+                specialAttackLog = `<span style="color:#00ffff; font-weight:bold;">❄️ MA THUẬT BĂNG GIÁ!</span> Những dải băng sắc nhọn khổng lồ đâm xuyên qua bạn, gây ${Math.floor(dmg)} ST Phép và <span style="color:orange;">[PHÁ GIÁP]</span> trong 3 lượt!`;
+            } 
+            else if (rand <= 0.60) { 
+                // Tham ăn (Bạo thực): Gây sát thương và hút máu
+                let rawDmg = enemyAtk * 1.5; 
+                dmg = Math.max(60, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true;
+                let healAmount = Math.floor(dmg * 2.5); 
+                enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
+                specialAttackLog = `<span style="color:#cc0000; font-weight:bold;">🦇 KẺ THAM ĂN!</span> Vua Kiến lao đến cắn xé sinh lực của bạn, gây ${Math.floor(dmg)} ST và tàn bạo hồi phục <span style="color:#00ff00">${healAmount} HP</span>!`;
+            }
+            else if (rand <= 0.80) { 
+                // CHIÊU MỚI: Tiếng thét hủy diệt
+                let rawDmg = enemyAtk * 1.2; 
+                dmg = Math.max(30, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true;
+                window.playerVulnerabilityTurns = 3; // Khóa mục tiêu 3 lượt
+                specialAttackLog = `<span style="color:#cc33ff; font-weight:bold; text-shadow: 0 0 10px #cc33ff;">🔊 TIẾNG THÉT HỦY DIỆT!</span> Vua Kiến rống lên một dải âm thanh chói tai, gây ${Math.floor(dmg)} ST. Thính giác và cơ thể bạn chấn động, <span style="color:#ff33ff; font-weight:bold;">[NHẬN THÊM 5% SÁT THƯƠNG]</span> trong 3 lượt tới!`;
+            }
+            else {
+                // Sức mạnh phi thường: Cú đấm One-shot
+                let rawDmg = enemyAtk * 3.0; 
+                dmg = Math.max(200, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true;
+                specialAttackLog = `<span style="color:#ff0000; font-weight:bold; text-shadow: 0 0 10px #ff0000;">💥 SỨC MẠNH PHI THƯỜNG!</span> Tốc độ vượt xa nhận thức! Vua Kiến xuất hiện ngay trước mặt và đấm bay bạn với sức công phá kinh hoàng, giáng <span style="color:red; font-size:24px;">${Math.floor(dmg)}</span> sát thương!`;
+            }
+        }
         
         // --- CƠ CHẾ KỸ NĂNG CỦA CÁC BOSS CỔNG ĐỎ ---
         if (currentRedGateId && enemy.isBoss) {
@@ -4688,6 +4769,7 @@
                 if (currentUser.equipped && currentUser.equipped.accessory && currentUser.equipped.accessory.name === "Ice Elf Cloak") dmg *= 0.95;
                 if (currentUser.equipped && currentUser.equipped.helmet && currentUser.equipped.helmet.name === "Mũ bảo hộ của hiệp sĩ đỏ") dmg *= 0.92;
                 if (currentUser.equipped && currentUser.equipped.gloves && currentUser.equipped.gloves.name === "Bao tay của kẻ thống trị") dmg *= 0.97;
+                if (window.playerVulnerabilityTurns && window.playerVulnerabilityTurns > 0) { dmg *= 1.05 }
                 
                 dmg = Math.floor(dmg);
 
@@ -4724,6 +4806,14 @@
             playerArmorBreakTurns--;
             if (playerArmorBreakTurns === 0) {
                 logBattle(`<span style="color:#aaa; font-style:italic;">🛡️ Lời nguyền suy yếu đã tan biến. Khả năng phòng thủ của bạn trở lại bình thường.</span>`);
+            }
+        }
+
+        // --- XỬ LÝ DƯ ÂM TIẾNG THÉT ---
+        if (window.playerVulnerabilityTurns && window.playerVulnerabilityTurns > 0 && currentUser.hp > 0) {
+            window.playerVulnerabilityTurns--;
+            if (window.playerVulnerabilityTurns === 0) {
+                logBattle(`<span style="color:#aaa; font-style:italic;">Dư âm tiếng thét của Vua Kiến đã tan biến, thính giác của bạn trở lại bình thường.</span>`);
             }
         }
 
@@ -5008,6 +5098,7 @@
         playerArmorBreakTurns = 0;
         window.counterCooldown = 0;
         window.potionCooldown = 0;
+        window.playerVulnerabilityTurns = 0;
 
         document.getElementById('e-name').innerText = enemy.name;
         document.getElementById('e-img').src = enemy.img;
@@ -5062,6 +5153,7 @@
         playerArmorBreakTurns = 0;
         window.counterCooldown = 0;
         window.potionCooldown = 0;
+        window.playerVulnerabilityTurns = 0;
 
         document.getElementById('dStageText').innerText = `Ải ${dCurrentStage + 1}/${dungeonData[dCurrentId].stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
         if(enemy.isBoss) {
@@ -5112,6 +5204,7 @@
         playerArmorBreakTurns = 0;
         window.counterCooldown = 0;
         window.potionCooldown = 0;
+        window.playerVulnerabilityTurns = 0;
         
         document.getElementById('dStageText').innerText = `Ải ${rgCurrentStage + 1}/${gateData.stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
         document.getElementById('dStageText').style.color = gateData.themeColor;
