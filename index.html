@@ -312,23 +312,6 @@
             text-shadow: 0 0 5px #00bfff;
         }
         
-        #titleSelect option {
-            background-color: #001a33;
-            color: #fff;
-            font-family: 'Oswald', sans-serif;
-            padding: 10px;
-        }
-
-        #titleSelect {
-            font-size: 32px;
-            background: transparent;
-            border: none;
-            color: #fff;
-            outline: none;
-            cursor: pointer;
-            font-family: 'Oswald', sans-serif;
-        }
-
         .row {
             display: flex;
             justify-content: space-between;
@@ -977,37 +960,6 @@
             box-shadow: 0 0 5px #00bfff;
         }
 
-        /* --- CSS MỚI: THANH CUỘN NGANG CHO CỬA HÀNG COSTUME --- */
-        .costume-scroll-container {
-            display: flex;
-            gap: 20px;
-            overflow-x: auto;
-            flex-wrap: nowrap;
-            padding-bottom: 15px;
-            justify-content: flex-start; 
-        }
-
-        .costume-scroll-container::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        .costume-scroll-container::-webkit-scrollbar-track {
-            background: rgba(0, 30, 60, 0.5);
-            border-radius: 4px;
-        }
-
-        .costume-scroll-container::-webkit-scrollbar-thumb {
-            background: #ffcc00;
-            border-radius: 4px;
-            box-shadow: 0 0 5px #ffcc00;
-        }
-
-        /* Ép kích thước thẻ Costume để không bị bóp méo khi có quá nhiều đồ */
-        .costume-card {
-            flex: 0 0 260px;
-            margin-top: 5px;
-        }
-
         /* ================= GIAO DIỆN CHIẾN ĐẤU (ARENA & DUNGEON) ================= */
 
         /* 2. Chữ "VS" rực lửa */
@@ -1193,32 +1145,6 @@
         }
         
         /* ================= GIAO DIỆN CỬA HÀNG CHUẨN SOLO LEVELING ANIME ================= */
-        .sl-shop-header-nav {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .sl-shop-tab {
-            flex: 1;
-            text-align: center;
-            padding: 12px;
-            font-size: 24px;
-            color: #555;
-            border: 1px solid #444;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            background: rgba(0,0,0,0.5);
-            transition: 0.3s;
-        }
-
-        .sl-shop-tab.active {
-            color: #fff;
-            border-color: #00bfff;
-            text-shadow: 0 0 10px #00bfff;
-            box-shadow: inset 0 0 15px rgba(0, 191, 255, 0.3);
-        }
 
         .sl-shop-filter-row {
             display: flex;
@@ -1363,13 +1289,6 @@
             transform: scale(1.05);
         }
 
-        /* Đường kẻ chia cắt các phân mục */
-        .sl-shop-divider {
-            border-bottom: 1px solid rgba(0, 191, 255, 0.3);
-            margin: 15px 0;
-        }
-
-        /* TẠO NÚT BẤM CHUẨN GAME SOLO LEVELING: ARISE (Cắt góc, nền kim loại) */
         .sl-shop-price-btn {
             position: relative;
             font-family: 'Oswald', sans-serif;
@@ -1448,14 +1367,7 @@
         .btn-sell { color: #ff4d4d !important; }
         .btn-sell::after { border-color: #ff4d4d !important; }
         .btn-sell:hover { background: rgba(255, 77, 77, 0.1) !important; }
-
-
-        /* ================= TOOLTIP TRÊN MOBILE ================= */
-        .icon-mode.mobile-active .skill-tooltip {
-            visibility: visible !important;
-            opacity: 1 !important;
-            bottom: 125% !important;
-        }
+   
 
         /* ================= GIAO DIỆN ACHIEVEMENT (CHUẨN SOLO LEVELING: ARISE) ================= */
         .ach-row {
