@@ -2321,10 +2321,10 @@
                         </div>
                         
                         <!-- CỔNG HỘI THỢ SĂN (HẠNG A+) -->
-                        <div class="dungeon-card" onclick="enterDungeon('hunters_guild_gate')" style="border-color: #9933ff; box-shadow: 0 0 15px rgba(153, 51, 255, 0.4);">
-                            <h3 style="color: #9933ff; text-shadow: 0 0 10px #9933ff;">CỔNG HỘI THỢ SĂN HIGH ORC</h3>
-                            <p style="font-size: 20px; color: #ccc;">Số ải: 5 | Độ khó: Hạng A+</p>
-                            <button class="tab-btn btn-system" style="border-color: #9933ff; color: #9933ff !important; font-size: 24px;">TIẾN VÀO HẦM NGỤC</button>
+                        <div class="dungeon-card" onclick="enterDungeon('hunters_guild_gate')" style="border-color: #ff9900; box-shadow: 0 0 10px rgba(255, 153, 0, 0.5);">
+                            <h3 style="color: #ff9900; text-shadow: 0 0 8px rgba(255, 153, 0, 0.6);">CỔNG HỘI THỢ SĂN HIGH ORC</h3>
+                            <p style="font-size: 20px; color: #ccc;">Số ải: 5 | Độ khó: <span style="color: #ff9900; font-weight: bold; text-shadow: 0 0 8px rgba(255, 153, 0, 0.6);">Hạng A+</span></p>
+                            <button class="tab-btn btn-system" style="border-color: #ff9900; color: #ff9900 !important; font-size: 24px;">TIẾN VÀO HẦM NGỤC</button>
                         </div>
                         
                         <!-- CỔNG LÂU ĐÀI QUỶ (HẠNG S) -->
@@ -2332,6 +2332,13 @@
                             <h3 style="color: #ff3333; text-shadow: 0 0 15px #ff0000;">LÂU ĐÀI QUỶ</h3>
                             <p style="font-size: 20px; color: #ccc;">Độ khó: <span style="color: #ff3333; font-weight: bold;">Số tầng: 4 | Độ khó: S</span></p>
                             <button class="tab-btn btn-system" style="border-color: #cc0000; color: #ff3333 !important; font-size: 24px;">TIẾN VÀO HẦM NGỤC</button>
+                        </div>
+
+                        <!-- CỔNG ĐẢO JEJU (HẠNG S+) -->
+                        <div class="dungeon-card" onclick="enterDungeon('jeju_island')" style="background: rgba(20, 0, 30, 0.8); border-color: #9900ff; box-shadow: 0 0 25px rgba(153, 0, 255, 0.6), inset 0 0 15px rgba(153, 0, 255, 0.3);">
+                            <h3 style="color: #cc33ff; text-shadow: 0 0 15px #cc00ff, 0 0 30px #9900ff; letter-spacing: 2px;">CHIẾN DỊCH ĐẢO JEJU</h3>
+                            <p style="font-size: 20px; color: #ccc;">Số ải: 5 | Độ khó: <span style="color: #cc33ff; font-weight: bold; text-shadow: 0 0 8px #9900ff;">HẠNG S+ (THẢM HỌA)</span></p>
+                            <button class="tab-btn btn-system" style="border-color: #9900ff; color: #cc33ff !important; font-size: 24px; box-shadow: inset 0 0 10px rgba(153, 0, 255, 0.4);">TIẾN VÀO HẦM NGỤC</button>
                         </div>
                     </div> <!-- ĐÓNG THẺ QUAN TRỌNG: Kết thúc dungeonListArea -->
 
@@ -2377,12 +2384,6 @@
                             </div>
                         </div>
                     </div>
-                        <!-- CỔNG ĐẢO JEJU (HẠNG S+) -->
-                        <div class="dungeon-card" onclick="enterDungeon('jeju_island')" style="border-color: #00ffff; box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);">
-                            <h3 style="color: #00ffff; text-shadow: 0 0 15px #00ffff;">CHIẾN DỊCH ĐẢO JEJU</h3>
-                            <p style="font-size: 20px; color: #ccc;">Số ải: 5 | Độ khó: <span style="color: #00ffff; font-weight: bold;">Hạng S+</span></p>
-                            <button class="tab-btn btn-system" style="border-color: #00ffff; color: #00ffff !important; font-size: 24px;">TIẾN VÀO HẦM NGỤC</button>
-                        </div>
                 </div>
 
                 <div id="tab-achievement" class="tab-panel">
@@ -3536,7 +3537,9 @@
                             // Bạn chuẩn bị 1 tấm ảnh Baran Rage và thay đường dẫn vào đây nhé:
                             enemy.img = "boss/Boss_Baran_the_Demon_King.png"; 
                             eImgElement.src = enemy.img; // Cập nhật hiển thị ngay lập tức
-                        }
+                        } else if(enemy.bossType === "beru") {
+                            enemy.img = "boss/Rage_Ant_King.png";
+                            eImgElement.src = enemy.img;
                         
                         // (Sau này nếu muốn Igris hay Vulcan đổi ảnh, bạn cứ thêm else if vào đây)
                         // else if (enemy.bossType === "igris") { ... }
