@@ -4761,12 +4761,14 @@
                 isMyTurn = false; 
                 updateCombatUI();
                 
+                switchToIconMode();
                 setTimeout(() => {
                     logBattle(`<span style="color:yellow; font-weight:bold;">Tâm trí bạn trở nên trống rỗng... Bạn đã bị mất lượt!</span>`);
                     setTimeout(enemyTurn, 1200); 
                 }, 1000);
             } else {
-                isMyTurn = true; 
+                isMyTurn = true;
+                switchToIconMode();
                 updateCombatUI();
             }
         }
