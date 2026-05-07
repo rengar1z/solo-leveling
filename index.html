@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solo Leveling</title>
@@ -2264,37 +2265,9 @@
                 </div>
 
                 <div id="tab-arena" class="tab-panel">
-                    <div id="combatArea" class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 30px; background: rgba(0, 15, 30, 0.6); border: 2px solid #00bfff; border-radius: 12px; min-height: 350px; box-shadow: 0 0 30px rgba(0, 191, 255, 0.15);">
-    
-                        <!-- NGƯỜI CHƠI -->
-                        <div style="text-align: center; width: 40%;">
-                            <div id="p-name" style="color: #00bfff; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #00bfff; margin-bottom: 15px; text-transform: uppercase;">SUNG JIN WOO</div>
-                            <img id="p-img" src="char/Sungjinwoo.png" class="avatar-frame" style="border-color: #00bfff; box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);">
-                            
-                            <div class="combat-hp-track" style="border-color: #00bfff;">
-                                <div id="p-hp-bar" class="combat-hp-fill-player" style="width: 100%;"></div>
-                            </div>
-                            <div id="p-hp-text" class="combat-hp-text" style="color: #00bfff;">HP: 100/100</div>
-                            
-                            <!-- KHAY ICON TRẠNG THÁI (NGƯỜI CHƠI) -->
-                            <div id="p-status-board" class="status-board"></div>
-                        </div>
-
-                        <!-- CHỮ VS -->
-                        <div class="vs-text" style="color: gold; text-shadow: 0 0 10px #ffcc00, 0 0 20px gold, 0 0 40px #fff;">VS</div>
-
-                        <!-- ĐỐI THỦ -->
-                        <div style="text-align: center; width: 40%;">
-                            <div id="e-name" style="color: #ff4d4d; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #ff4d4d; margin-bottom: 15px; text-transform: uppercase;">ĐỐI THỦ</div>
-                            <img id="e-img" src="bot/enemy.png" class="avatar-frame" style="border-color: #ff4d4d; box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);">
-                            
-                            <div class="combat-hp-track" style="border-color: #ff4d4d;">
-                                <div id="e-hp-bar" class="combat-hp-fill-enemy" style="width: 100%;"></div>
-                            </div>
-                            <div id="e-hp-text" class="combat-hp-text" style="color: #ff4d4d;">HP: 100/100</div>
-                            
-                            <!-- KHAY ICON TRẠNG THÁI (QUÁI VẬT) -->
-                            <div id="e-status-board" class="status-board"></div>
+                    <div id="phaser-game-container" style="width: 100%; height: 400px; background: #000; border: 2px solid #00bfff; border-radius: 12px; box-shadow: 0 0 30px rgba(0, 191, 255, 0.15); overflow: hidden; position: relative;">
+                        <div id="combat-placeholder" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #555; font-size: 24px;">
+                            BẤM "TÌM ĐỐI THỦ MỚI" ĐỂ BẮT ĐẦU
                         </div>
                     </div>
 
@@ -2309,7 +2282,7 @@
                         <button id="btnFindEnemy" class="tab-btn btn-system" onclick="startNewBattle()" style="width: 100%;">TÌM ĐỐI THỦ MỚI</button>
                     </div>
                 </div>
-
+                
                 <div id="tab-dungeon" class="tab-panel">             
                     <div id="dungeonListArea">
                      
@@ -2477,6 +2450,90 @@
 </div>
 
 <script type="module">
+    // ==========================================
+    // KHỞI TẠO HỆ THỐNG PHASER (COMBAT SCENE)
+    // ==========================================
+    let gameScene = new Phaser.Scene('Game');
+    
+    // Biến lưu trữ các Object trên khung hình Phaser
+    let pSprite, eSprite;
+    let pHealthBar, eHealthBar;
+    
+    gameScene.preload = function() {
+        // Tải tạm 2 tấm ảnh hiện tại của bạn
+        this.load.image('player', 'char/Sungjinwoo.png');
+        this.load.image('enemy', 'bot/enemy.png');
+    };
+
+    gameScene.create = function() {
+        // Lấy kích thước màn hình
+        let w = this.sys.game.config.width;
+        let h = this.sys.game.config.height;
+
+        // Vẽ cái nền xanh đen mờ mờ cho có không khí
+        let bg = this.add.rectangle(0, 0, w, h, 0x000a1a).setOrigin(0,0);
+
+        // --- NHÂN VẬT CHÍNH (TRÁI) ---
+        pSprite = this.add.sprite(w * 0.2, h * 0.5, 'player');
+        // Thu nhỏ ảnh cho vừa khung
+        pSprite.setScale(Math.min((h*0.6) / pSprite.height, 1)); 
+
+        // --- QUÁI VẬT (PHẢI) ---
+        eSprite = this.add.sprite(w * 0.8, h * 0.5, 'enemy');
+        eSprite.setScale(Math.min((h*0.6) / eSprite.height, 1));
+
+        // CHỮ VS Ở GIỮA
+        this.add.text(w * 0.5, h * 0.5, 'VS', { font: 'bold 60px Oswald', fill: '#ffcc00' }).setOrigin(0.5).setShadow(0,0,'#ff0000', 10);
+    };
+
+    // Hàm gọi từ Web qua Phaser để kích hoạt hiệu ứng đánh
+    window.phaserPlayerAttack = function() {
+        if (!gameScene.sys.isActive()) return;
+        
+        // 1. Nhân vật Lướt Lên (Tween)
+        gameScene.tweens.add({
+            targets: pSprite,
+            x: gameScene.sys.game.config.width * 0.4, // Chạy ra giữa
+            duration: 150,
+            yoyo: true, // Chạy xong lùi về chỗ cũ
+            onYoyo: () => {
+                // 2. Chạm mục tiêu -> Giật màn hình và chớp đỏ Quái vật
+                gameScene.cameras.main.shake(100, 0.02);
+                eSprite.setTint(0xff0000); // Nhuốm đỏ máu
+                gameScene.time.delayedCall(100, () => { eSprite.clearTint(); }); // Trả lại màu gốc sau 0.1s
+            }
+        });
+    };
+
+    window.phaserEnemyAttack = function() {
+         if (!gameScene.sys.isActive()) return;
+         
+         gameScene.tweens.add({
+            targets: eSprite,
+            x: gameScene.sys.game.config.width * 0.6, 
+            duration: 150,
+            yoyo: true,
+            onYoyo: () => {
+                gameScene.cameras.main.shake(150, 0.03);
+                pSprite.setTint(0xff0000);
+                gameScene.time.delayedCall(100, () => { pSprite.clearTint(); });
+            }
+        });
+    };
+
+    // Cấu hình tổng thể của Phaser
+    let config = {
+        type: Phaser.AUTO,
+        width: 800, // Chiều rộng ảo, sẽ tự scale theo khung div
+        height: 400,
+        parent: 'phaser-game-container', // Nhúng vào đúng cái Div ở Bước 2
+        scene: gameScene,
+        transparent: true // Nền trong suốt để thấy được box-shadow của HTML
+    };
+
+    // Khởi tạo Game object nhưng chưa chạy vội
+    let phaserGame = null;
+    // ==========================================
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
     import { getDatabase, ref, set, get, child } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
@@ -2763,6 +2820,7 @@
         "Thịnh Nộ Quân Vương": { branch: "Đấu Sĩ", type: "active", maxLv: 1, cost: 20, mp: 100, func: "useMonarchWrath", desc: "Tế 10% HP hiện tại. Xuyên 80% Giáp.", icon: "skill/thinhnoquanvuong.png" },
         "Phản Đòn": { branch: "Đấu Sĩ", type: "active", maxLv: 1, cost: 10, mp: 30, func: "useCounterAttack", desc: "Thủ thế. Chặn 100% sát thương đòn tiếp theo và phản lại 150% ST đó lên kẻ địch.", icon: "skill/phandon.png" },
     };
+    
 
     window.buyShopItem = async function(itemId) {
         const item = SHOP_DATA[itemId];
@@ -4129,7 +4187,11 @@
         if (!btnAttack.classList.contains('icon-mode')) { switchToIconMode(); logBattle("Sẵn sàng! Hãy chọn kỹ năng để tấn công."); return; }
     
         let hit = calcPlayerDamage({ multi: 2.0, stat: 'str' }); 
-        enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
+        enemy.hp = Math.max(0, enemy.hp - hit.dmg);
+        
+        triggerShake();
+        if (typeof window.phaserPlayerAttack === 'function') window.phaserPlayerAttack(); // <--- GỌI ANIMATION PHASER Ở ĐÂY
+        
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 BẠO KÍCH!</span> ` : "";
         logBattle(`${critLog}Chém thường gây <span style="color:#ff4d4d">${hit.dmg}</span> sát thương!`);
         updateCombatUI(); checkBattleEnd(); 
@@ -4349,7 +4411,7 @@
         let specialAttackLog = "";
         let applyBleedToPlayer = false;
 
-        // BỔ SUNG CỜ HIỆU (INTENTS) DÀNH CHO CÁC CHIÊU TRỪ CHỈ SỐ
+
         let effectArmorBreak = 0;
         let effectManaSteal = 0;
 
@@ -4797,6 +4859,7 @@
                 dmg = Math.floor(dmg);
 
                 triggerPlayerShake();
+                if (typeof window.phaserEnemyAttack === 'function') window.phaserEnemyAttack(); // <--- CHÈN VÀO ĐÂY
                 currentUser.hp = Math.max(0, currentUser.hp - dmg);
                 
                 if (isSpecialAttack) {
@@ -5129,6 +5192,16 @@
 
         const btnAttack = document.getElementById('btnAttack');
         if (btnAttack) btnAttack.disabled = false;
+        // --- CHẠY PHASER KHI BẤM "TÌM ĐỐI THỦ" ---
+        document.getElementById('combat-placeholder').style.display = 'none'; // Giấu chữ chờ
+        if (!phaserGame) {
+            phaserGame = new Phaser.Game(config); // Lần đầu thì tạo Game
+        } else {
+            // Các lần sau chỉ cần load lại ảnh Quái mới
+            gameScene.load.image('newEnemy', enemy.img);
+            gameScene.load.once('complete', () => { eSprite.setTexture('newEnemy'); });
+            gameScene.load.start();
+        }
         updateCombatUI();
     };
 
