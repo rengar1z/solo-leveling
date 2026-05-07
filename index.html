@@ -3709,6 +3709,24 @@ const SHADOW_DATA = {
             }
         });
 
+        const eImgElement = document.getElementById(pre + 'e-img');
+        if (eImgElement) {
+            if (typeof enemyPoisonTurns !== 'undefined' && enemyPoisonTurns > 0) {
+                eImgElement.classList.add('poisoned-img');
+            } else {
+                eImgElement.classList.remove('poisoned-img');
+            }
+        }
+
+        const pImgElement = document.getElementById(pre + 'p-img');
+        if (pImgElement) {
+            if (typeof playerBleedTurns !== 'undefined' && playerBleedTurns > 0) {
+                pImgElement.classList.add('bleeding-img');
+            } else {
+                pImgElement.classList.remove('bleeding-img');
+            }
+        }
+
         // --- 5. VẼ ICON HIỆU ỨNG (BUFF/DEBUFF) ---
         if (typeof renderStatusIcons === "function") {
             renderStatusIcons();
