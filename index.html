@@ -2524,9 +2524,13 @@
     // Cấu hình tổng thể của Phaser
     let config = {
         type: Phaser.AUTO,
-        width: 800, // Chiều rộng ảo, sẽ tự scale theo khung div
-        height: 400,
-        parent: 'phaser-game-container', // Nhúng vào đúng cái Div ở Bước 2
+        scale: {
+            mode: Phaser.Scale.FIT,               // Tự động phóng to/thu nhỏ để vừa khít Container
+            autoCenter: Phaser.Scale.CENTER_BOTH, // Tự động căn giữa hoàn hảo cả 2 chiều
+            width: 800,                           // Kích thước chuẩn
+            height: 400                           // Kích thước chuẩn
+        },
+        parent: 'phaser-game-container', // Nhúng vào đúng cái Div
         scene: gameScene,
         transparent: true // Nền trong suốt để thấy được box-shadow của HTML
     };
