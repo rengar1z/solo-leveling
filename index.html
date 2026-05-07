@@ -5226,12 +5226,17 @@
         if (btnAttack) btnAttack.disabled = false;
         // --- CHẠY PHASER KHI BẤM "TÌM ĐỐI THỦ" ---
        
+        // --- CHẠY PHASER KHI BẤM "TÌM ĐỐI THỦ" ---
         if (!phaserGame) {
-            phaserGame = new Phaser.Game(config); // Lần đầu thì tạo Game
+            phaserGame = new Phaser.Game(config); 
         } else {
-            // Các lần sau chỉ cần load lại ảnh Quái mới
             gameScene.load.image('newEnemy', enemy.img);
-            gameScene.load.once('complete', () => { eSprite.setTexture('newEnemy'); });
+            gameScene.load.once('complete', () => { 
+                eSprite.setTexture('newEnemy'); 
+                
+                // THÊM DÒNG NÀY ĐỂ ÉP LẠI KÍCH THƯỚC SAU KHI ĐỔI ẢNH!
+                eSprite.setDisplaySize(150, 200); 
+            });
             gameScene.load.start();
         }
         updateCombatUI();
