@@ -1946,6 +1946,7 @@
                     <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-bag')">BAG</button>
                     <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-shop')">SHOP</button>
                     <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-skills')">SKILLS</button>
+                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-shadows')">SHADOW ARMY</button>
                     <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-logs')">LOGS</button>
                     <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-achievement')">ACHIEVEMENTS</button>
                 </div>
@@ -2403,6 +2404,13 @@
                     <div id="achievementList" class="sl-shop-list" style="max-height: 550px; padding-right: 10px;"></div>
                 </div>
 
+                <div id="tab-shadows" class="tab-panel">
+                    <h2 style="color: #cc33ff; text-shadow: 0 0 15px #cc33ff; text-align: center; font-size: 40px; letter-spacing: 5px;">SHADOW ARMY</h2>
+                    <p style="text-align: center; color: #aaa; margin-bottom: 20px;">Lãnh chúa, đây là những bề tôi trung thành của ngài.</p>
+                    <div id="shadowArmyList" class="sl-shop-list" style="max-height: 550px; padding-right: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        </div>
+                </div>
+
                 <div id="dungeonCombatUI" class="hidden">
                     <h3 id="dDungeonTitle" style="color: #ffcc00; text-align: center; margin-bottom: 5px; font-size: 32px;">Làng Của Goblin</h3>
                     <h4 id="dStageText" style="color: #fff; text-align: center; margin-top: 0; font-size: 24px;">Ải 1/5</h4>
@@ -2470,7 +2478,21 @@
         <button onclick="closePopup()" style="padding: 15px 40px;">TIẾP TỤC</button>
     </div>
 </div>
-
+    
+<div id="extractionPopup" class="welcome-overlay hidden" style="z-index: 9999;">
+    <div class="welcome-box" style="border-color: #9933ff; box-shadow: 0 0 40px rgba(153, 51, 255, 0.6); background: linear-gradient(to bottom, #1a0033, #000000);">
+        <div class="alert-header" style="color: #cc33ff; border-bottom: 1px solid #cc33ff; font-weight: bold; font-size: 28px; text-shadow: 0 0 10px #cc33ff;">[ THÔNG BÁO HỆ THỐNG ]</div>
+        <div class="alert-content" style="font-size: 20px; line-height: 1.5;">
+            <p style="color: #fff;">Có thể dùng <span style="color:#cc33ff; font-weight:bold; text-shadow: 0 0 5px #cc33ff;">Trích Xuất Bóng Tối</span> lên mục tiêu này.</p>
+            <p id="extractTargetName" style="color:#ff4d4d; font-weight:bold; font-size: 32px; text-transform: uppercase; text-shadow: 0 0 10px red; margin: 15px 0;"></p>
+            <p style="font-size: 16px; color:#aaa; font-style: italic;">Tỷ lệ thành công: <span style="color: yellow;">5%</span></p>
+        </div>
+        <div style="display: flex; gap: 15px; margin-top: 25px;">
+            <button class="tab-btn btn-system" style="flex:1; border-color: #9933ff; color: #cc33ff !important; font-size: 20px;" onclick="attemptExtraction()">TRÍCH XUẤT</button>
+            <button class="tab-btn btn-system" style="flex:1; border-color: #555; color: #aaa !important; font-size: 20px;" onclick="skipExtraction()">BỎ QUA</button>
+        </div>
+    </div>
+</div>
 <script type="module">
     // HỆ THỐNG HIỆU ỨNG CHIẾN ĐẤU BẰNG HTML GỐC
     window.playDashEffect = function(isPlayerAttack) {
@@ -2664,6 +2686,14 @@
         }
     };
 
+    // --- DỮ LIỆU SHADOW ARMY ---
+const SHADOW_DATA = {
+        "hobgoblin_leader": { name: "Thủ Lĩnh Yêu Tinh", str: 50, vit: 40, agi: 10, int: 0, skillName: "Bản Năng Lỳ Lợm", skillDesc: "Giảm 8% mọi sát thương gánh chịu.", img: "boss/Boss_Hobgoblin_Leader.png" },        
+        "igris": { name: "Igris Chóp Đỏ", str: 100, vit: 50, agi: 50, int: 0, skillName: "Hiệp Sĩ Tiên Phong", skillDesc: "Tăng 15% sát thương Bạo Kích.", img: "boss/igris.png" },
+        "beru": { name: "Vua Kiến Beru", str: 150, vit: 30, agi: 100, int: 0, skillName: "Kẻ Săn Mồi", skillDesc: "Hồi 3% HP tối đa ở cuối mỗi lượt.", img: "boss/Boss_Ant_King.png" },
+        "kargalgan": { name: "Tusk (Kargalgan)", str: 0, vit: 50, agi: 0, int: 150, skillName: "Khúc Ca Của Orc", skillDesc: "Tăng 20% sát thương Phép (INT).", img: "boss/Boss_Almighty_Shaman,_Kargalgan.png" },
+        "cerberus": { name: "Cerberus", str: 80, vit: 80, agi: 20, int: 0, skillName: "Nanh Vuốt Địa Ngục", skillDesc: "Các đòn tấn công vật lý bỏ qua 10% Giáp địch.", img: "boss/Boss_The_Gatekeeper_of_Hell,_Cerberus.png" }
+    };
     // --- DỮ LIỆU ITEM (ĐÃ THÊM RANK S, A, B, C, D) ---
     const ITEM_DATA = {
         // --- VẬT PHẨM TIÊU HAO (MÁU, MANA, BUFF VĨNH VIỄN) ---
@@ -4087,6 +4117,75 @@
         renderBag();
     };
 
+    window.renderShadowArmy = function() {
+        if (!currentUser.ownedShadows) currentUser.ownedShadows = [];
+        const listDiv = document.getElementById('shadowArmyList');
+        if (!listDiv) return;
+
+        if (currentUser.ownedShadows.length === 0) {
+            listDiv.innerHTML = `<div style="grid-column: span 2; text-align:center; color:#555; font-size:24px; padding: 50px;">Ngài chưa trích xuất được Bóng Ma nào.</div>`;
+            return;
+        }
+
+        let html = "";
+        currentUser.ownedShadows.forEach(bossId => {
+            const data = SHADOW_DATA[bossId];
+            const isEquipped = currentUser.equippedShadow === bossId;
+            const borderCol = isEquipped ? "#cc33ff" : "#444";
+            
+            html += `
+            <div class="card" style="border-color: ${borderCol}; background: rgba(20,0,40,0.6); position: relative; padding: 15px;">
+                ${isEquipped ? '<div style="position:absolute; top:0; right:0; background:#cc33ff; color:#000; padding:3px 10px; font-weight:bold;">ĐANG TRIỆU HỒI</div>' : ''}
+                <div style="display:flex; gap: 15px;">
+                    <img src="${data.img}" style="width: 80px; height: 80px; object-fit: cover; border: 1px solid ${borderCol}; border-radius: 5px; box-shadow: 0 0 10px ${borderCol};">
+                    <div>
+                        <h3 style="margin:0; color:#fff; text-shadow: 0 0 5px ${borderCol};">${data.name}</h3>
+                        <div style="font-size:13px; color:#aaa; margin-top:5px;">
+                            ${data.str ? `STR +${data.str} ` : ''} ${data.vit ? `VIT +${data.vit} ` : ''}
+                            ${data.agi ? `AGI +${data.agi} ` : ''} ${data.int ? `INT +${data.int} ` : ''}
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 15px; border-top: 1px dashed #555; padding-top: 10px;">
+                    <b style="color:#00bfff;">${data.skillName}:</b> <span style="color:#ccc;">${data.skillDesc}</span>
+                </div>
+                <button class="tab-btn btn-system" style="width: 100%; margin-top: 15px; border-color: ${borderCol}; color: ${isEquipped ? '#fff' : '#aaa'} !important;" onclick="equipShadow('${bossId}')">
+                    ${isEquipped ? 'THU HỒI' : 'TRIỆU HỒI BÓNG TỐI'}
+                </button>
+            </div>`;
+        });
+        listDiv.innerHTML = html;
+    };
+
+    window.equipShadow = async function(bossId) {
+        // Tháo bóng cũ (Trừ chỉ số)
+        if (currentUser.equippedShadow && SHADOW_DATA[currentUser.equippedShadow]) {
+            let oldData = SHADOW_DATA[currentUser.equippedShadow];
+            currentUser.str -= oldData.str; currentUser.vit -= oldData.vit;
+            currentUser.agi -= oldData.agi; currentUser.int -= oldData.int;
+            currentUser.maxHp -= oldData.vit * 10; currentUser.maxMp -= oldData.int * 5;
+            currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
+            currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
+        }
+
+        // Nếu bấm lại con đang dùng -> Tháo ra
+        if (currentUser.equippedShadow === bossId) {
+            currentUser.equippedShadow = null;
+        } 
+        // Lắp bóng mới (Cộng chỉ số)
+        else {
+            currentUser.equippedShadow = bossId;
+            let newData = SHADOW_DATA[bossId];
+            currentUser.str += newData.str; currentUser.vit += newData.vit;
+            currentUser.agi += newData.agi; currentUser.int += newData.int;
+            currentUser.maxHp += newData.vit * 10; currentUser.maxMp += newData.int * 5;
+            currentUser.hp += newData.vit * 10; currentUser.mp += newData.int * 5;
+        }
+
+        await saveUserData();
+        renderShadowArmy(); // Cập nhật lại hình ảnh tab Army
+    };
+
     // --- HỆ THỐNG TÍNH TOÁN SÁT THƯƠNG ĐA DỤNG (MULTI-BUILD) ---
     function calcPlayerDamage(config) {
         // config = { multi: 2.0, stat: 'str', ignoreDef: 0, bonusCritRate: 0 }
@@ -4099,11 +4198,19 @@
         let minDmg = maxDmg * precision;
         let finalDmg = Math.floor(Math.random() * (maxDmg - minDmg + 1) + minDmg);
 
-        // 2. Xử lý Phòng ngự quái vật & Xuyên Giáp (Dành cho Pháp sư)
         let enemyDef = enemy.def || 0;
-        if (config.ignoreDef) {
-            enemyDef = Math.floor(enemyDef * (1 - config.ignoreDef)); // Xuyên giáp theo %
+        let totalIgnoreDef = config.ignoreDef || 0; // Lấy xuyên giáp gốc từ kỹ năng (nếu có)
+
+        // KÍCH HOẠT BÓNG MA: CERBERUS (Tăng thêm 10% xuyên giáp cho đòn vật lý)
+        if (config.stat === 'str' && currentUser.equippedShadow === "cerberus") {
+            totalIgnoreDef += 0.10;
         }
+
+        // Áp dụng tổng lượng xuyên giáp vào phòng thủ của quái
+        if (totalIgnoreDef > 0) {
+            enemyDef = Math.floor(enemyDef * (1 - totalIgnoreDef)); 
+        }
+        
         finalDmg = Math.max(5, finalDmg - enemyDef);
 
         // 3. Nội tại Vũ khí (Chỉ áp dụng cho đòn Vật lý - STR)
@@ -4116,6 +4223,8 @@
         // 4. AGI: Tính toán Bạo kích
         let critRate = (currentUser.agi * 0.5) + (config.bonusCritRate || 0);
         let critMulti = 1.5 + (currentUser.agi * 0.01);
+        // KÍCH HOẠT BÓNG MA: IGRIS
+        if (currentUser.equippedShadow === "igris") critMulti += 0.15;
         
         // ---> BUFF CỦA NHÁNH SÁT THỦ <---
         if (currentUser.skills["Nhát Chém Tử Thần"] > 0) {
@@ -4138,6 +4247,8 @@
         if (config.stat === 'int' && currentUser.skills["Lõi Ma Thuật"] > 0) {
             finalDmg *= 1.25; 
         }
+        // KÍCH HOẠT BÓNG MA: TUSK
+        if (config.stat === 'int' && currentUser.equippedShadow === "kargalgan") finalDmg *= 1.20;
 
         // 7. CƠ CHẾ CHẶN SÁT THƯƠNG CỦA LỚP GIÁP ẢO (SHIELD BARRIER)
         let actualDmg = Math.floor(finalDmg);
@@ -4888,6 +4999,12 @@
             logBattle(`<span style="color:#00bfff">🔮 Essence of Magic hồi phục ${manaRegen} MP.</span>`);
         }
 
+        if (currentUser.hp > 0 && currentUser.equippedShadow === "beru") {
+        let beruHeal = Math.floor(currentUser.maxHp * 0.03);
+        currentUser.hp = Math.min(currentUser.maxHp, currentUser.hp + beruHeal);
+        logBattle(`<span style="color:#00ff00; font-weight:bold; font-style:italic;">🦇 Bóng ma Beru đang chữa lành cho bạn: Hồi phục ${beruHeal} HP.</span>`);
+        }
+
         updateCombatUI();
         if (typeof render === "function") render(); 
 
@@ -5015,6 +5132,16 @@
                 logBattle(`<span style="color:gold; font-size:18px;">🔥 BOSS rơi đồ: <b>${droppedItem}</b>!</span>`);
             }
         }
+        
+        if (!currentUser.ownedShadows) currentUser.ownedShadows = [];
+        if (enemy.isBoss && enemy.bossType && SHADOW_DATA[enemy.bossType]) {
+            // Kiểm tra xem đã sở hữu bóng ma này chưa
+            if (!currentUser.ownedShadows.includes(enemy.bossType)) {
+                document.getElementById('extractTargetName').innerText = enemy.name;
+                window.currentExtractTarget = enemy.bossType;
+                document.getElementById('extractionPopup').classList.remove('hidden');
+            }
+        }
 
         checkLevelUp(); 
         saveUserData(); 
@@ -5093,6 +5220,28 @@
         }
     }
 
+    window.attemptExtraction = async function() {
+        document.getElementById('extractionPopup').classList.add('hidden');
+        const chance = 0.05; // Tỷ lệ 5%. Bạn có thể đổi thành 1.0 (100%) để test thử cho nhanh nhé!
+        
+        if (Math.random() <= chance) {
+            currentUser.ownedShadows.push(window.currentExtractTarget);
+            const shadowName = SHADOW_DATA[window.currentExtractTarget].name;
+            alert(`🔥 TRÍCH XUẤT THÀNH CÔNG! Trỗi dậy đi, [${shadowName}]!`);
+            logBattle(`<span style="color:#cc33ff; font-weight:bold; font-size: 18px; text-shadow: 0 0 10px #cc33ff;">Trích xuất thành công! ${shadowName} đã gia nhập Đội Quân Bóng Tối!</span>`);
+            await saveUserData();
+            if(window.renderShadowArmy) window.renderShadowArmy();
+        } else {
+            alert("Trích xuất thất bại... Bóng ma đã tan biến vào hư vô.");
+            logBattle(`<span style="color:#888; font-style:italic;">Trích xuất thất bại, mục tiêu đã tan biến.</span>`);
+        }
+        window.currentExtractTarget = null;
+    };
+
+    window.skipExtraction = function() {
+        document.getElementById('extractionPopup').classList.add('hidden');
+        window.currentExtractTarget = null;
+    };
 
     function checkBattleEnd() {
         if (enemy.hp <= 0) { winBattle(); } 
