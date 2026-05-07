@@ -2511,31 +2511,36 @@
         });
     };
 
-    // Hàm gọi từ Web qua Phaser để kích hoạt hiệu ứng đánh
+    // --- HIỆU ỨNG NGƯỜI CHƠI TẤN CÔNG ---
     window.phaserPlayerAttack = function() {
         if (!gameScene.sys.isActive()) return;
         
-        // 1. Nhân vật Lướt Lên (Tween)
+        // Lấy chiều rộng thực tế (pixel) của màn hình hiện tại
+        let currentWidth = gameScene.scale.width; 
+        
         gameScene.tweens.add({
             targets: pSprite,
-            x: gameScene.sys.game.config.width * 0.4, // Chạy ra giữa
+            x: currentWidth * 0.4, // Chạy ra vị trí 40% màn hình
             duration: 150,
             yoyo: true, // Chạy xong lùi về chỗ cũ
             onYoyo: () => {
-                // 2. Chạm mục tiêu -> Giật màn hình và chớp đỏ Quái vật
                 gameScene.cameras.main.shake(100, 0.02);
                 eSprite.setTint(0xff0000); // Nhuốm đỏ máu
-                gameScene.time.delayedCall(100, () => { eSprite.clearTint(); }); // Trả lại màu gốc sau 0.1s
+                gameScene.time.delayedCall(100, () => { eSprite.clearTint(); }); 
             }
         });
     };
 
+    // --- HIỆU ỨNG QUÁI VẬT TẤN CÔNG ---
     window.phaserEnemyAttack = function() {
          if (!gameScene.sys.isActive()) return;
          
+         // Lấy chiều rộng thực tế (pixel) của màn hình hiện tại
+         let currentWidth = gameScene.scale.width; 
+         
          gameScene.tweens.add({
             targets: eSprite,
-            x: gameScene.sys.game.config.width * 0.6, 
+            x: currentWidth * 0.6, // Quái vật chạy ra vị trí 60% màn hình
             duration: 150,
             yoyo: true,
             onYoyo: () => {
@@ -2545,7 +2550,6 @@
             }
         });
     };
-
     // Cấu hình tổng thể của Phaser
     let config = {
         type: Phaser.AUTO,
