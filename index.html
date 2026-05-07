@@ -3645,20 +3645,20 @@
                             enemy.img = "boss/Boss_Baran_the_Demon_King.png"; 
                             eImgElement.src = enemy.img; 
                             
-                            // BẮN LỆNH CHO PHASER ĐỔI ẢNH NGAY TRONG TRẬN
-                            gameScene.load.image('rageBoss', enemy.img);
-                            gameScene.load.once('complete', () => { eSprite.setTexture('rageBoss'); eSprite.setDisplaySize(150, 200); });
+                            let uniqueKey = 'rageBoss_' + Date.now();
+                            gameScene.load.image(uniqueKey, enemy.img);
+                            gameScene.load.once('complete', () => { eSprite.setTexture(uniqueKey); eSprite.setDisplaySize(150, 200); });
                             gameScene.load.start();
 
                         } else if(enemy.bossType === "beru") {
                             enemy.img = "boss/Rage_Ant_King.png";
                             eImgElement.src = enemy.img;
                             
-                            // BẮN LỆNH CHO PHASER ĐỔI ẢNH NGAY TRONG TRẬN
-                            gameScene.load.image('rageBoss', enemy.img);
-                            gameScene.load.once('complete', () => { eSprite.setTexture('rageBoss'); eSprite.setDisplaySize(150, 200); });
+                            let uniqueKey = 'rageBoss_' + Date.now();
+                            gameScene.load.image(uniqueKey, enemy.img);
+                            gameScene.load.once('complete', () => { eSprite.setTexture(uniqueKey); eSprite.setDisplaySize(150, 200); });
                             gameScene.load.start();
-                        }        
+                        }
                         
                         // (Sau này nếu muốn Igris hay Vulcan đổi ảnh, bạn cứ thêm else if vào đây)
                         // else if (enemy.bossType === "igris") { ... }
