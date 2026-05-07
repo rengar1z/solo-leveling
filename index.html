@@ -2406,9 +2406,17 @@
 
                 <div id="tab-shadows" class="tab-panel">
                     <h2 style="color: #cc33ff; text-shadow: 0 0 15px #cc33ff; text-align: center; font-size: 40px; letter-spacing: 5px;">SHADOW ARMY</h2>
-                    <p style="text-align: center; color: #aaa; margin-bottom: 20px;">Lãnh chúa, đây là những bề tôi trung thành của ngài.</p>
-                    <div id="shadowArmyList" class="sl-shop-list" style="max-height: 550px; padding-right: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    
+                    <div style="display: flex; gap: 20px; margin-top: 20px; align-items: flex-start;">
+                        <div style="width: 35%; background: rgba(0,0,0,0.5); border: 2px solid #555; border-radius: 8px; padding: 15px; max-height: 500px; overflow-y: auto;">
+                            <div style="color: #aaa; text-align: center; margin-bottom: 15px; font-style: italic; border-bottom: 1px solid #444; padding-bottom: 10px;">Lãnh chúa, hãy chọn bề tôi của ngài.</div>
+                            <div id="shadowListContainer" style="display: flex; flex-direction: column; gap: 10px;">
+                                </div>
                         </div>
+                        
+                        <div id="shadowDetailContainer" style="width: 65%; background: rgba(20,0,40,0.8); border: 2px solid #cc33ff; border-radius: 8px; padding: 25px; box-shadow: 0 0 30px rgba(153,51,255,0.2); display: none;">
+                            </div>
+                    </div>
                 </div>
 
                 <div id="dungeonCombatUI" class="hidden">
@@ -2688,11 +2696,11 @@
 
     // --- DỮ LIỆU SHADOW ARMY ---
 const SHADOW_DATA = {
-        "hobgoblin_leader": { name: "Thủ Lĩnh Yêu Tinh", str: 50, vit: 40, agi: 10, int: 0, skillName: "Bản Năng Lỳ Lợm", skillDesc: "Giảm 8% mọi sát thương gánh chịu.", img: "boss/Boss_Hobgoblin_Leader.png" },        
-        "igris": { name: "Igris Chóp Đỏ", str: 100, vit: 50, agi: 50, int: 0, skillName: "Hiệp Sĩ Tiên Phong", skillDesc: "Tăng 15% sát thương Bạo Kích.", img: "boss/igris.png" },
-        "beru": { name: "Vua Kiến Beru", str: 150, vit: 30, agi: 100, int: 0, skillName: "Kẻ Săn Mồi", skillDesc: "Hồi 3% HP tối đa ở cuối mỗi lượt.", img: "boss/Boss_Ant_King.png" },
-        "kargalgan": { name: "Tusk (Kargalgan)", str: 0, vit: 50, agi: 0, int: 150, skillName: "Khúc Ca Của Orc", skillDesc: "Tăng 20% sát thương Phép (INT).", img: "boss/Boss_Almighty_Shaman,_Kargalgan.png" },
-        "cerberus": { name: "Cerberus", str: 80, vit: 80, agi: 20, int: 0, skillName: "Nanh Vuốt Địa Ngục", skillDesc: "Các đòn tấn công vật lý bỏ qua 10% Giáp địch.", img: "boss/Boss_The_Gatekeeper_of_Hell,_Cerberus.png" }
+        "hobgoblin_leader": { rank: "Hạng C", name: "Thủ Lĩnh Yêu Tinh", str: 50, vit: 40, agi: 10, int: 0, skillName: "Bản Năng Lỳ Lợm", skillDesc: "Giảm 8% mọi sát thương gánh chịu.", img: "boss/Boss_Hobgoblin_Leader.png", bio: "Từng là thủ lĩnh của một bộ tộc Goblin trong hầm ngục. Dù chậm chạp nhưng có sức chịu đựng vô cùng đáng gờm." },
+        "igris": { rank: "Hiệp Sĩ", name: "Igris Chóp Đỏ", str: 100, vit: 50, agi: 50, int: 0, skillName: "Hiệp Sĩ Tiên Phong", skillDesc: "Tăng 15% sát thương Bạo Kích.", img: "boss/igris.png", bio: "Chỉ huy quân đoàn Hiệp sĩ đỏ bảo vệ ngai vàng vô trống. Là một kiếm sư điêu luyện, mang lòng trung thành tuyệt đối với quân vương." },
+        "beru": { rank: "Tướng Quân", name: "Vua Kiến Beru", str: 150, vit: 30, agi: 100, int: 0, skillName: "Kẻ Săn Mồi", skillDesc: "Hồi 3% HP tối đa ở cuối mỗi lượt.", img: "boss/Boss_Ant_King.png", bio: "Vị vua sinh ra để tiêu diệt nhân loại trên Đảo Jeju. Mang trong mình sức mạnh tuyệt đối, tốc độ kinh hoàng và khả năng tự chữa lành." },
+        "kargalgan": { rank: "Tinh Anh", name: "Tusk (Kargalgan)", str: 0, vit: 50, agi: 0, int: 150, skillName: "Khúc Ca Của Orc", skillDesc: "Tăng 20% sát thương Phép (INT).", img: "boss/Boss_Almighty_Shaman,_Kargalgan.png", bio: "Đại pháp sư của loài High Orc. Sở hữu ma lực khổng lồ và khả năng sử dụng các nguyền chú hắc ám." },
+        "cerberus": { rank: "Tinh Anh", name: "Cerberus", str: 80, vit: 80, agi: 20, int: 0, skillName: "Nanh Vuốt Địa Ngục", skillDesc: "Các đòn tấn công vật lý bỏ qua 10% Giáp địch.", img: "boss/Boss_The_Gatekeeper_of_Hell,_Cerberus.png", bio: "Chó gác cổng địa ngục trong Hầm ngục Demon Castle. Sở hữu ba chiếc đầu với hàm răng sắc nhọn có thể nghiền nát mọi thứ." }
     };
     // --- DỮ LIỆU ITEM (ĐÃ THÊM RANK S, A, B, C, D) ---
     const ITEM_DATA = {
@@ -4117,13 +4125,15 @@ const SHADOW_DATA = {
         renderBag();
     };
 
+    // 1. Hàm vẽ Danh sách bên trái
     window.renderShadowArmy = function() {
         if (!currentUser.ownedShadows) currentUser.ownedShadows = [];
-        const listDiv = document.getElementById('shadowArmyList');
+        const listDiv = document.getElementById('shadowListContainer');
         if (!listDiv) return;
 
         if (currentUser.ownedShadows.length === 0) {
-            listDiv.innerHTML = `<div style="grid-column: span 2; text-align:center; color:#555; font-size:24px; padding: 50px;">Ngài chưa trích xuất được Bóng Ma nào.</div>`;
+            listDiv.innerHTML = `<div style="text-align:center; color:#555; padding: 20px;">Kho lưu trữ trống.</div>`;
+            document.getElementById('shadowDetailContainer').style.display = 'none';
             return;
         }
 
@@ -4131,30 +4141,71 @@ const SHADOW_DATA = {
         currentUser.ownedShadows.forEach(bossId => {
             const data = SHADOW_DATA[bossId];
             const isEquipped = currentUser.equippedShadow === bossId;
-            const borderCol = isEquipped ? "#cc33ff" : "#444";
+            const textColor = isEquipped ? "#cc33ff" : "#fff";
+            const borderColor = isEquipped ? "#cc33ff" : "#444";
+            const eqText = isEquipped ? " <span style='font-size: 12px;'>(ĐANG TRIỆU HỒI)</span>" : "";
             
+            // Vẽ nút bấm tên từng con
             html += `
-            <div class="card" style="border-color: ${borderCol}; background: rgba(20,0,40,0.6); position: relative; padding: 15px;">
-                ${isEquipped ? '<div style="position:absolute; top:0; right:0; background:#cc33ff; color:#000; padding:3px 10px; font-weight:bold;">ĐANG TRIỆU HỒI</div>' : ''}
-                <div style="display:flex; gap: 15px;">
-                    <img src="${data.img}" style="width: 80px; height: 80px; object-fit: cover; border: 1px solid ${borderCol}; border-radius: 5px; box-shadow: 0 0 10px ${borderCol};">
-                    <div>
-                        <h3 style="margin:0; color:#fff; text-shadow: 0 0 5px ${borderCol};">${data.name}</h3>
-                        <div style="font-size:13px; color:#aaa; margin-top:5px;">
-                            ${data.str ? `STR +${data.str} ` : ''} ${data.vit ? `VIT +${data.vit} ` : ''}
-                            ${data.agi ? `AGI +${data.agi} ` : ''} ${data.int ? `INT +${data.int} ` : ''}
-                        </div>
-                    </div>
-                </div>
-                <div style="margin-top: 15px; border-top: 1px dashed #555; padding-top: 10px;">
-                    <b style="color:#00bfff;">${data.skillName}:</b> <span style="color:#ccc;">${data.skillDesc}</span>
-                </div>
-                <button class="tab-btn btn-system" style="width: 100%; margin-top: 15px; border-color: ${borderCol}; color: ${isEquipped ? '#fff' : '#aaa'} !important;" onclick="equipShadow('${bossId}')">
-                    ${isEquipped ? 'THU HỒI' : 'TRIỆU HỒI BÓNG TỐI'}
-                </button>
-            </div>`;
+            <button class="tab-btn" style="text-align: left; padding: 12px 15px; color: ${textColor}; border-color: ${borderColor}; background: rgba(255,255,255,0.05); text-transform: uppercase; letter-spacing: 1px;" onclick="showShadowDetails('${bossId}')">
+                <b>${data.name}</b>${eqText}
+            </button>`;
         });
         listDiv.innerHTML = html;
+
+        // Tự động load lại chi tiết nếu đang xem dở một con (khi vừa bấm Triệu Hồi)
+        if (window.currentViewingShadow) {
+            showShadowDetails(window.currentViewingShadow);
+        }
+    };
+
+    // 2. Hàm hiển thị Chi tiết bên phải khi bấm vào tên
+    window.showShadowDetails = function(bossId) {
+        window.currentViewingShadow = bossId; // Lưu lại ID con quái đang xem
+        const data = SHADOW_DATA[bossId];
+        const detailDiv = document.getElementById('shadowDetailContainer');
+        const isEquipped = currentUser.equippedShadow === bossId;
+        const btnColor = isEquipped ? "#cc33ff" : "#8eefff";
+
+        // Tùy chỉnh màu Rank cho ngầu
+        let rankColor = "#fff";
+        if(data.rank === "Hiệp Sĩ") rankColor = "#ff4d4d";
+        else if(data.rank === "Tinh Anh") rankColor = "#ff9900";
+        else if(data.rank === "Tướng Quân") rankColor = "gold";
+        else rankColor = "#aaa";
+
+        detailDiv.innerHTML = `
+            <div style="display: flex; gap: 20px; align-items: stretch;">
+                <img src="${data.img}" style="width: 160px; height: 160px; object-fit: cover; border: 2px solid #cc33ff; border-radius: 8px; box-shadow: 0 0 20px rgba(204,51,255,0.5);">
+                <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h2 style="margin: 0 0 5px 0; color: #fff; font-size: 32px; text-transform: uppercase; text-shadow: 0 0 10px rgba(255,255,255,0.3);">${data.name}</h2>
+                        <div style="color: ${rankColor}; font-weight: bold; font-size: 18px; margin-bottom: 15px; text-shadow: 0 0 5px ${rankColor};">Hạng: ${data.rank}</div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 5px; border: 1px solid #444;">
+                        <div style="color: #ff4d4d; font-size: 16px;">❤️ VIT: +${data.vit}</div>
+                        <div style="color: #ff9900; font-size: 16px;">⚔️ STR: +${data.str}</div>
+                        <div style="color: #00ffcc; font-size: 16px;">💨 AGI: +${data.agi}</div>
+                        <div style="color: #cc66ff; font-size: 16px;">🔮 INT: +${data.int}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 5px; color: #ccc; font-size: 16px; font-style: italic; border-left: 4px solid #cc33ff; line-height: 1.5;">
+                "${data.bio}"
+            </div>
+
+            <div style="margin-top: 20px; padding: 15px; background: rgba(0, 191, 255, 0.1); border: 1px solid #00bfff; border-radius: 5px;">
+                <h4 style="margin: 0 0 8px 0; color: #00bfff; font-size: 18px; text-transform: uppercase;">[ Nội Tại ] ${data.skillName}</h4>
+                <p style="margin: 0; color: #fff; font-size: 16px;">${data.skillDesc}</p>
+            </div>
+
+            <button class="tab-btn btn-system" style="width: 100%; margin-top: 25px; font-size: 22px; padding: 15px; border-color: ${btnColor}; color: ${isEquipped ? '#fff' : btnColor} !important; background: ${isEquipped ? 'rgba(204,51,255,0.3)' : 'transparent'}; box-shadow: ${isEquipped ? '0 0 20px rgba(204,51,255,0.5)' : 'none'};" onclick="equipShadow('${bossId}')">
+                ${isEquipped ? 'THU HỒI BÓNG TỐI' : 'TRIỆU HỒI BÓNG TỐI'}
+            </button>
+        `;
+        detailDiv.style.display = 'block';
     };
 
     window.equipShadow = async function(bossId) {
