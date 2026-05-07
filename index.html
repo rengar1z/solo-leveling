@@ -3379,20 +3379,23 @@
         if (window.renderAchievements) window.renderAchievements();
         
         window.updatePlayerAvatar = function() {
-        let defaultAvatar = "char/Sungjinwoo.png"; 
-        if (currentUser.equipped && currentUser.equipped.costume) {
-            const costumeName = currentUser.equipped.costume.name;
-            if (ITEM_DATA[costumeName] && ITEM_DATA[costumeName].avatar) {
-                defaultAvatar = ITEM_DATA[costumeName].avatar;
+            let defaultAvatar = "char/Sungjinwoo.png"; 
+            if (currentUser.equipped && currentUser.equipped.costume) {
+                const costumeName = currentUser.equipped.costume.name;
+                if (ITEM_DATA[costumeName] && ITEM_DATA[costumeName].avatar) {
+                    defaultAvatar = ITEM_DATA[costumeName].avatar;
+                }
             }
-        }
-        
-        // Quét toàn bộ Avatar trong ARENA và DUNGEON để ép nó đổi ảnh
-        const pImg = document.getElementById('p-img');
-        const dpImg = document.getElementById('d-p-img');
-        if (pImg) pImg.src = defaultAvatar;
-        if (dpImg) dpImg.src = defaultAvatar;
-    };
+            
+            const pImg = document.getElementById('p-img');
+            if (pImg) pImg.src = defaultAvatar;
+
+            const dpImg = document.getElementById('d-p-img');
+            if (dpImg) dpImg.src = defaultAvatar;
+  
+            const visualPImg = document.getElementById('visual-p-img');
+            if (visualPImg) visualPImg.src = defaultAvatar;
+        };
         updatePlayerAvatar(); // Kích hoạt ngay lập tức
         if (!currentUser.ownedCostumes) currentUser.ownedCostumes = [];
         
