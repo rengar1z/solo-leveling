@@ -2265,14 +2265,38 @@
                 </div>
 
                 <div id="tab-arena" class="tab-panel">
-                    <div id="phaser-game-container" style="width: 100%; height: 400px; background: #000; border: 2px solid #00bfff; border-radius: 12px; box-shadow: 0 0 30px rgba(0, 191, 255, 0.15); overflow: hidden; position: relative;">
-                        <div id="combat-placeholder" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #555; font-size: 24px;">
-                            BẤM "TÌM ĐỐI THỦ MỚI" ĐỂ BẮT ĐẦU
+                    <div id="combatArea" class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 30px; background: rgba(0, 15, 30, 0.6); border: 2px solid #00bfff; border-radius: 12px; min-height: 350px; box-shadow: 0 0 30px rgba(0, 191, 255, 0.15); position: relative; overflow: hidden;">
+    
+                        <div id="phaser-game-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;"></div>
+
+                        <div style="text-align: center; width: 40%; z-index: 1;">
+                            <div id="p-name" style="color: #00bfff; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #00bfff; margin-bottom: 15px; text-transform: uppercase;">SUNG JIN WOO</div>
+                            <img id="p-img" src="char/Sungjinwoo.png" class="avatar-frame" style="opacity: 0; border-color: #00bfff; box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);">
+                            
+                            <div class="combat-hp-track" style="border-color: #00bfff;">
+                                <div id="p-hp-bar" class="combat-hp-fill-player" style="width: 100%;"></div>
+                            </div>
+                            <div id="p-hp-text" class="combat-hp-text" style="color: #00bfff;">HP: 100/100</div>
+                            <div id="p-status-board" class="status-board"></div>
+                        </div>
+
+                        <div class="vs-text" style="color: gold; text-shadow: 0 0 10px #ffcc00, 0 0 20px gold, 0 0 40px #fff; z-index: 1;">VS</div>
+
+                        <div style="text-align: center; width: 40%; z-index: 1;">
+                            <div id="e-name" style="color: #ff4d4d; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #ff4d4d; margin-bottom: 15px; text-transform: uppercase;">ĐỐI THỦ</div>
+                            <img id="e-img" src="bot/enemy.png" class="avatar-frame" style="opacity: 0; border-color: #ff4d4d; box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);">
+                            
+                            <div class="combat-hp-track" style="border-color: #ff4d4d;">
+                                <div id="e-hp-bar" class="combat-hp-fill-enemy" style="width: 100%;"></div>
+                            </div>
+                            <div id="e-hp-text" class="combat-hp-text" style="color: #ff4d4d;">HP: 100/100</div>
+                            <div id="e-status-board" class="status-board"></div>
                         </div>
                     </div>
 
                     <div id="battleLog">
                         Sẵn sàng khiêu chiến...
+                    </div>
                     </div>
 
                     <div id="actionControls" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px; width: 100%;">
@@ -2465,25 +2489,26 @@
         this.load.image('enemy', 'bot/enemy.png');
     };
 
-    gameScene.create = function() {
-        // Lấy kích thước màn hình
-        let w = this.sys.game.config.width;
-        let h = this.sys.game.config.height;
+   gameScene.create = function() {
+        let w = this.scale.width;
+        let h = this.scale.height;
 
-        // Vẽ cái nền xanh đen mờ mờ cho có không khí
-        let bg = this.add.rectangle(0, 0, w, h, 0x000a1a).setOrigin(0,0);
+        // Xóa sạch hình nền bg của Phaser đi, để nó trong suốt
 
-        // --- NHÂN VẬT CHÍNH (TRÁI) ---
-        pSprite = this.add.sprite(w * 0.2, h * 0.5, 'player');
-        // Thu nhỏ ảnh cho vừa khung
-        pSprite.setScale(Math.min((h*0.6) / pSprite.height, 1)); 
+        // Vị trí khớp với khung tàng hình HTML (22% và 78% màn hình)
+        pSprite = this.add.sprite(w * 0.22, h * 0.4, 'player');
+        pSprite.setDisplaySize(150, 200); // Ép kích thước chuẩn bằng đúng ảnh cũ HTML
 
-        // --- QUÁI VẬT (PHẢI) ---
-        eSprite = this.add.sprite(w * 0.8, h * 0.5, 'enemy');
-        eSprite.setScale(Math.min((h*0.6) / eSprite.height, 1));
+        eSprite = this.add.sprite(w * 0.78, h * 0.4, 'enemy');
+        eSprite.setDisplaySize(150, 200);
 
-        // CHỮ VS Ở GIỮA
-        this.add.text(w * 0.5, h * 0.5, 'VS', { font: 'bold 60px Oswald', fill: '#ffcc00' }).setOrigin(0.5).setShadow(0,0,'#ff0000', 10);
+        // Chữ VS đã có HTML lo, không cần vẽ bằng Phaser nữa
+
+        // Tự động căn chỉnh khi bạn kéo thả / đổi size trình duyệt
+        this.scale.on('resize', function (gameSize) {
+            pSprite.setPosition(gameSize.width * 0.22, gameSize.height * 0.4);
+            eSprite.setPosition(gameSize.width * 0.78, gameSize.height * 0.4);
+        });
     };
 
     // Hàm gọi từ Web qua Phaser để kích hoạt hiệu ứng đánh
@@ -2525,14 +2550,13 @@
     let config = {
         type: Phaser.AUTO,
         scale: {
-            mode: Phaser.Scale.FIT,               // Tự động phóng to/thu nhỏ để vừa khít Container
-            autoCenter: Phaser.Scale.CENTER_BOTH, // Tự động căn giữa hoàn hảo cả 2 chiều
-            width: 800,                           // Kích thước chuẩn
-            height: 400                           // Kích thước chuẩn
+            mode: Phaser.Scale.RESIZE, // Ép Phaser lấp đầy 100% cái div combatArea
+            parent: 'phaser-game-container',
+            width: '100%',
+            height: '100%'
         },
-        parent: 'phaser-game-container', // Nhúng vào đúng cái Div
         scene: gameScene,
-        transparent: true // Nền trong suốt để thấy được box-shadow của HTML
+        transparent: true // Cho phép nhìn xuyên thấu qua nền HTML
     };
 
     // Khởi tạo Game object nhưng chưa chạy vội
@@ -5190,8 +5214,8 @@
         window.potionCooldown = 0;
         window.playerVulnerabilityTurns = 0;
 
-        //document.getElementById('e-name').innerText = enemy.name;
-        //document.getElementById('e-img').src = enemy.img;
+        document.getElementById('e-name').innerText = enemy.name;
+        document.getElementById('e-img').src = enemy.img;
         document.getElementById('battleLog').innerHTML = `Đã tìm thấy <span style="color:#ff4d4d">${enemy.name}</span>!`;
 
         const btnAttack = document.getElementById('btnAttack');
