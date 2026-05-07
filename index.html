@@ -5222,7 +5222,7 @@ const SHADOW_DATA = {
 
     window.attemptExtraction = async function() {
         document.getElementById('extractionPopup').classList.add('hidden');
-        const chance = 0.05; // Tỷ lệ 5%. Bạn có thể đổi thành 1.0 (100%) để test thử cho nhanh nhé!
+        const chance = 0.1; // Tỷ lệ 5%. Bạn có thể đổi thành 1.0 (100%) để test thử cho nhanh nhé!
         
         if (Math.random() <= chance) {
             currentUser.ownedShadows.push(window.currentExtractTarget);
