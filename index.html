@@ -4531,6 +4531,7 @@ const SHADOW_DATA = {
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         
         enemyPoisonTurns += 3; // Cộng dồn 3 lượt trúng độc
+        window.enemyNewlyPoisoned = true;
         
         logBattle(`<span style="color:#00ff00; text-shadow: 0 0 5px #00ff00;">DAO ĐỘC!</span> Gây ${hit.dmg} sát thương và khiến địch <span style="color:#00ff00; font-weight:bold;">[Trúng Độc]</span> 3 lượt tới!`);
         updateCombatUI(); checkBattleEnd();
@@ -4575,13 +4576,17 @@ const SHADOW_DATA = {
 
         // --- CƠ CHẾ ĐỘC CỦA BOSS ---
         if (enemyPoisonTurns > 0) {
-            let poisonDmg = Math.floor(enemy.maxHp * 0.05);
-            enemy.hp = Math.max(0, enemy.hp - poisonDmg);
-            enemyPoisonTurns--;
-            logBattle(`<span style="color:#00ff00; font-style:italic;">☠️ Độc tính phát tác! Kẻ địch mất ${poisonDmg} HP.</span>`);
-            if (enemy.hp <= 0) { updateCombatUI(); return setTimeout(winBattle, 1000); }
+            // Kiểm tra xem có phải vừa mới dính độc ở lượt này không
+            if (window.enemyNewlyPoisoned) {
+                window.enemyNewlyPoisoned = false; // Hạ cờ xuống, bỏ qua không rút máu
+            } else {
+                let poisonDmg = Math.floor(enemy.maxHp * 0.05); // Rút 5% HP tối đa của Boss
+                enemy.hp = Math.max(0, enemy.hp - poisonDmg);
+                enemyPoisonTurns--;
+                logBattle(`<span style="color:#00ff00; font-style:italic;">☠️ Độc tính phát tác! Kẻ địch mất ${poisonDmg} HP.</span>`);
+                if (enemy.hp <= 0) { updateCombatUI(); return setTimeout(winBattle, 1000); }
+            }
         }
-
         // --- XỬ LÝ SÁT THƯƠNG RÚT MÁU KHI BỊ THƯƠNG ---
         if (playerBleedTurns > 0 && currentUser.hp > 0) { 
             let bleedDmg = Math.floor(currentUser.maxHp * 0.05); 
@@ -5379,12 +5384,16 @@ const SHADOW_DATA = {
                 setTimeout(() => {
                     
                     // ============ FIX LỖI: BOSS BỊ CHOÁNG VẪN PHẢI DÍNH ĐỘC ============
-                    if (enemyPoisonTurns > 0) {
-                        let poisonDmg = Math.floor(enemy.maxHp * 0.05);
-                        enemy.hp = Math.max(0, enemy.hp - poisonDmg);
-                        enemyPoisonTurns--;
-                        logBattle(`<span style="color:#00ff00; font-style:italic;">☠️ Độc tính phát tác! Kẻ địch mất ${poisonDmg} HP.</span>`);
-                        if (enemy.hp <= 0) { updateCombatUI(); return setTimeout(winBattle, 500); }
+                   if (enemyPoisonTurns > 0) {
+                        if (window.enemyNewlyPoisoned) {
+                            window.enemyNewlyPoisoned = false;
+                        } else {
+                            let poisonDmg = Math.floor(enemy.maxHp * 0.05);
+                            enemy.hp = Math.max(0, enemy.hp - poisonDmg);
+                            enemyPoisonTurns--;
+                            logBattle(`<span style="color:#00ff00; font-style:italic;">☠️ Độc tính phát tác! Kẻ địch mất ${poisonDmg} HP.</span>`);
+                            if (enemy.hp <= 0) { updateCombatUI(); return setTimeout(winBattle, 500); }
+                        }
                     }
                     // ====================================================================
 
