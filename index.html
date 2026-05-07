@@ -2482,9 +2482,14 @@
     let pHealthBar, eHealthBar;
     
     gameScene.preload = function() {
-        // Tải tạm 2 tấm ảnh hiện tại của bạn
         this.load.image('player', 'char/Sungjinwoo.png');
-        this.load.image('enemy', 'bot/enemy.png');
+        
+        // KIỂM TRA: Nếu đã có dữ liệu quái vật thì load ảnh của nó, nếu chưa thì xài mặc định
+        if (typeof enemy !== 'undefined' && enemy && enemy.img) {
+            this.load.image('enemy', enemy.img);
+        } else {
+            this.load.image('enemy', 'bot/enemy.png');
+        }
     };
 
    gameScene.create = function() {
