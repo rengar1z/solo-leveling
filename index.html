@@ -5241,11 +5241,12 @@
         if (!phaserGame) {
             phaserGame = new Phaser.Game(config); 
         } else {
-            gameScene.load.image('newEnemy', enemy.img);
+            // ÉP TẠO TÊN DUY NHẤT ĐỂ PHASER KHÔNG BỊ LÚ
+            let uniqueKey = 'enemy_' + Date.now(); 
+            
+            gameScene.load.image(uniqueKey, enemy.img);
             gameScene.load.once('complete', () => { 
-                eSprite.setTexture('newEnemy'); 
-                
-                // THÊM DÒNG NÀY ĐỂ ÉP LẠI KÍCH THƯỚC SAU KHI ĐỔI ẢNH!
+                eSprite.setTexture(uniqueKey); 
                 eSprite.setDisplaySize(150, 200); 
             });
             gameScene.load.start();
@@ -5317,9 +5318,12 @@
         if (!phaserGame) {
             phaserGame = new Phaser.Game(config);
         } else {
-            gameScene.load.image('newEnemy', enemy.img);
+            // ÉP TẠO TÊN DUY NHẤT ĐỂ PHASER KHÔNG BỊ LÚ
+            let uniqueKey = 'enemy_' + Date.now(); 
+            
+            gameScene.load.image(uniqueKey, enemy.img);
             gameScene.load.once('complete', () => { 
-                eSprite.setTexture('newEnemy'); 
+                eSprite.setTexture(uniqueKey); 
                 eSprite.setDisplaySize(150, 200); 
             });
             gameScene.load.start();
@@ -5377,14 +5381,16 @@
         if (!phaserGame) {
             phaserGame = new Phaser.Game(config);
         } else {
-            gameScene.load.image('newEnemy', enemy.img);
+            // ÉP TẠO TÊN DUY NHẤT ĐỂ PHASER KHÔNG BỊ LÚ
+            let uniqueKey = 'enemy_' + Date.now(); 
+            
+            gameScene.load.image(uniqueKey, enemy.img);
             gameScene.load.once('complete', () => { 
-                eSprite.setTexture('newEnemy'); 
+                eSprite.setTexture(uniqueKey); 
                 eSprite.setDisplaySize(150, 200); 
             });
             gameScene.load.start();
         }
-
         document.getElementById('btnNextStage').classList.add('hidden');
         document.getElementById('btnExitDungeon').classList.add('hidden'); // KHÓA NÚT THOÁT
 
