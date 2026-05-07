@@ -2472,103 +2472,34 @@
 </div>
 
 <script type="module">
-    // ==========================================
-    // KHỞI TẠO HỆ THỐNG PHASER (COMBAT SCENE)
-    // ==========================================
-    let gameScene = new Phaser.Scene('Game');
+    // HỆ THỐNG HIỆU ỨNG CHIẾN ĐẤU BẰNG HTML GỐC
+    window.playDashEffect = function(isPlayerAttack) {
+        const pre = getPrefix(); // Tự động nhận diện đang ở Arena hay Dungeon
+        const attackerImg = document.getElementById(pre + (isPlayerAttack ? 'p-img' : 'e-img'));
+        const targetImg = document.getElementById(pre + (isPlayerAttack ? 'e-img' : 'p-img'));
+        
+        if (!attackerImg || !targetImg) return;
+
+        // Tính toán hướng lướt: Người lướt qua phải (1), Quái lướt qua trái (-1)
+        const direction = isPlayerAttack ? 1 : -1;
+        
+        // 1. Kích hoạt hiệu ứng lướt tới rồi lùi về (Animation API)
+        attackerImg.animate([
+            { transform: 'translateX(0) scale(1)' },
+            { transform: `translateX(${100 * direction}px) scale(1.1)`, offset: 0.5 }, // Lướt lên giữa sân
+            { transform: 'translateX(0) scale(1)' }
+        ], { duration: 300, easing: 'ease-in-out' });
+
+        // 2. Kích hoạt quái chớp đỏ ngay khoảnh khắc bị chạm vào
+        setTimeout(() => {
+            targetImg.animate([
+                { filter: 'brightness(1) sepia(0)' },
+                { filter: 'brightness(0.6) sepia(1) hue-rotate(-50deg) saturate(5)' }, // Chớp đỏ máu
+                { filter: 'brightness(1) sepia(0)' }
+            ], { duration: 200 });
+        }, 150);
+    };
     
-    // Biến lưu trữ các Object trên khung hình Phaser
-    let pSprite, eSprite;
-    let pHealthBar, eHealthBar;
-    
-    gameScene.preload = function() {
-        this.load.image('player', 'char/Sungjinwoo.png');
-        
-        // KIỂM TRA: Nếu đã có dữ liệu quái vật thì load ảnh của nó, nếu chưa thì xài mặc định
-        if (typeof enemy !== 'undefined' && enemy && enemy.img) {
-            this.load.image('enemy', enemy.img);
-        } else {
-            this.load.image('enemy', 'bot/enemy.png');
-        }
-    };
-
-   gameScene.create = function() {
-        let w = this.scale.width;
-        let h = this.scale.height;
-
-        // Xóa sạch hình nền bg của Phaser đi, để nó trong suốt
-
-        // Vị trí khớp với khung tàng hình HTML (22% và 78% màn hình)
-        pSprite = this.add.sprite(w * 0.22, h * 0.4, 'player');
-        pSprite.setDisplaySize(150, 200); // Ép kích thước chuẩn bằng đúng ảnh cũ HTML
-
-        eSprite = this.add.sprite(w * 0.78, h * 0.4, 'enemy');
-        eSprite.setDisplaySize(150, 200);
-
-        // Chữ VS đã có HTML lo, không cần vẽ bằng Phaser nữa
-
-        // Tự động căn chỉnh khi bạn kéo thả / đổi size trình duyệt
-        this.scale.on('resize', function (gameSize) {
-            pSprite.setPosition(gameSize.width * 0.22, gameSize.height * 0.4);
-            eSprite.setPosition(gameSize.width * 0.78, gameSize.height * 0.4);
-        });
-    };
-
-    // --- HIỆU ỨNG NGƯỜI CHƠI TẤN CÔNG ---
-    window.phaserPlayerAttack = function() {
-        if (!gameScene.sys.isActive()) return;
-        
-        // Lấy chiều rộng thực tế (pixel) của màn hình hiện tại
-        let currentWidth = gameScene.scale.width; 
-        
-        gameScene.tweens.add({
-            targets: pSprite,
-            x: currentWidth * 0.4, // Chạy ra vị trí 40% màn hình
-            duration: 150,
-            yoyo: true, // Chạy xong lùi về chỗ cũ
-            onYoyo: () => {
-                gameScene.cameras.main.shake(100, 0.02);
-                eSprite.setTint(0xff0000); // Nhuốm đỏ máu
-                gameScene.time.delayedCall(100, () => { eSprite.clearTint(); }); 
-            }
-        });
-    };
-
-    // --- HIỆU ỨNG QUÁI VẬT TẤN CÔNG ---
-    window.phaserEnemyAttack = function() {
-         if (!gameScene.sys.isActive()) return;
-         
-         // Lấy chiều rộng thực tế (pixel) của màn hình hiện tại
-         let currentWidth = gameScene.scale.width; 
-         
-         gameScene.tweens.add({
-            targets: eSprite,
-            x: currentWidth * 0.6, // Quái vật chạy ra vị trí 60% màn hình
-            duration: 150,
-            yoyo: true,
-            onYoyo: () => {
-                gameScene.cameras.main.shake(150, 0.03);
-                pSprite.setTint(0xff0000);
-                gameScene.time.delayedCall(100, () => { pSprite.clearTint(); });
-            }
-        });
-    };
-    // Cấu hình tổng thể của Phaser
-    let config = {
-        type: Phaser.AUTO,
-        scale: {
-            mode: Phaser.Scale.RESIZE, // Ép Phaser lấp đầy 100% cái div combatArea
-            parent: 'phaser-game-container',
-            width: '100%',
-            height: '100%'
-        },
-        scene: gameScene,
-        transparent: true // Cho phép nhìn xuyên thấu qua nền HTML
-    };
-
-    // Khởi tạo Game object nhưng chưa chạy vội
-    let phaserGame = null;
-    // ==========================================
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
     import { getDatabase, ref, set, get, child } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
@@ -4235,7 +4166,7 @@
         enemy.hp = Math.max(0, enemy.hp - hit.dmg);
         
         triggerShake();
-        if (typeof window.phaserPlayerAttack === 'function') window.phaserPlayerAttack(); // <--- GỌI ANIMATION PHASER Ở ĐÂY
+        window.playDashEffect(true);
         
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 BẠO KÍCH!</span> ` : "";
         logBattle(`${critLog}Chém thường gây <span style="color:#ff4d4d">${hit.dmg}</span> sát thương!`);
@@ -4904,7 +4835,7 @@
                 dmg = Math.floor(dmg);
 
                 triggerPlayerShake();
-                if (typeof window.phaserEnemyAttack === 'function') window.phaserEnemyAttack(); // <--- CHÈN VÀO ĐÂY
+                window.playDashEffect(false);
                 currentUser.hp = Math.max(0, currentUser.hp - dmg);
                 
                 if (isSpecialAttack) {
