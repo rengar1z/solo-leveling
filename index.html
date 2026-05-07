@@ -2994,6 +2994,7 @@ const SHADOW_DATA = {
         
         render();
         window.renderSkills(); 
+        if (!currentUser.ownedShadows) currentUser.ownedShadows = [];
     }
 
     window.completeMission = async function() {
