@@ -2955,6 +2955,8 @@ const SHADOW_DATA = {
             inventory: [], // Thêm mảng chứa đồ
             equipped: { weapon: null, shield: null, accessory: null }, // Thêm các ô trang bị
             skills: { "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Siêu Giác Quan": 0, "Thợ Săn Tiền Thưởng": 0, "Bàn Tay May Mắn": 0 },
+            ownedShadows: [], 
+            equippedShadow: null,
             isNew: true
 };
         await set(ref(db, 'users/' + u), userData);
@@ -2994,7 +2996,7 @@ const SHADOW_DATA = {
         
         render();
         window.renderSkills(); 
-        if (!currentUser.ownedShadows) currentUser.ownedShadows = [];
+        if(window.renderShadowArmy) window.renderShadowArmy();
     }
 
     window.completeMission = async function() {
