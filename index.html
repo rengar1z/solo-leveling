@@ -4619,7 +4619,28 @@ const SHADOW_DATA = {
                 logBattle(`<span style="color:#aaa; font-style:italic;">🛡️ Lời nguyền suy yếu đã tan biến. Khả năng phòng thủ của bạn trở lại bình thường.</span>`);       
             }
         }
-        if (currentUser.hp <= 0) { updateCombatUI(); return; }
+        
+        if (currentUser.hp <= 0) { 
+            updateCombatUI(); 
+            logBattle(`<span style="color:red; font-size: 20px;">BẠN ĐÃ THẤT BẠI DO VẾT THƯƠNG QUÁ NẶNG!</span>`);
+            resetToButtonMode(); 
+            
+            if (currentRedGateId) {
+                currentRedGateId = null; 
+                document.getElementById('dDungeonTitle').style.color = "#ffcc00"; 
+                document.getElementById('dDungeonTitle').style.textShadow = "none";
+                document.getElementById('btnExitDungeon').classList.remove('hidden');
+                document.getElementById('btnExitDungeon').innerText = "BỎ MẠNG & THOÁT KHỎI CỔNG ĐỎ";
+            } 
+            else if (isDungeonMode) {
+                document.getElementById('btnNextStage').classList.add('hidden');
+                document.getElementById('btnExitDungeon').classList.remove('hidden');
+            } else {
+                const btnFind = document.getElementById('btnFindEnemy');
+                if(btnFind) btnFind.disabled = false;
+            }
+            return; 
+        }
 
         // --- XỬ LÝ DƯ ÂM TIẾNG THÉT ---
         if (window.playerVulnerabilityTurns && window.playerVulnerabilityTurns > 0 && currentUser.hp > 0) {
