@@ -2680,6 +2680,13 @@
     let playerArmorBreakTurns = 0; // <--- THÊM BIẾN NÀY: Đếm số lượt bạn bị Boss phá giáp
     window.counterCooldown = 0;
     window.playerVulnerabilityTurns = 0;
+    window.enemyBurnTurns = 0; 
+    window.enemyDefBreakTurns = 0; 
+    window.stealthDodge = false; 
+    window.stealthCrit = false; 
+    if (currentUser) {
+        currentUser.shieldHP = 0; // Tránh việc khiên từ trận trước mang sang trận sau
+    }
 
     // --- DỮ LIỆU HẦM NGỤC (MỨC ĐỘ: TÂN THỦ & CÀY CUỐC) ---
     const dungeonData = {
@@ -4598,7 +4605,7 @@ const SHADOW_DATA = {
         currentUser.mp -= 20; 
         
         let shieldAmount = Math.floor(currentUser.maxMp * 0.30);
-        currentUser.shieldHP = (currentUser.shieldHP || 0) + shieldAmount;
+        currentUser.shieldHP = shieldAmount;
         
         logBattle(`<span style="color:#00ffff; font-weight:bold; font-size:18px;">🛡️ KHIÊN MA THUẬT!</span> Chướng ngại vật ma lực được dựng lên, hấp thụ <span style="color:#00ffff">${shieldAmount}</span> sát thương!`);
         updateCombatUI(); checkBattleEnd(); 
@@ -4772,7 +4779,13 @@ const SHADOW_DATA = {
             logBattle(`<span style="color:#ff3300; font-style:italic;">🔥 Lửa Hắc Ám thiêu đốt! Kẻ địch mất ${burnDmg} HP.</span>`);
             if (enemy.hp <= 0) { updateCombatUI(); return setTimeout(winBattle, 1000); }
         }
-
+        // --- (THÊM MỚI VÀO ĐÂY) CƠ CHẾ VỠ GIÁP ĐẾM LÙI ---
+        if (window.enemyDefBreakTurns && window.enemyDefBreakTurns > 0) {
+            window.enemyDefBreakTurns--;
+            if (window.enemyDefBreakTurns === 0) {
+            logBattle(`<span style="color:#aaa; font-style:italic;">🛡️ Lớp giáp của kẻ địch đã khôi phục!</span>`);
+        }
+    }
         // --- CƠ CHẾ ĐỘC CỦA BOSS ---
         if (enemyPoisonTurns > 0) {
             // Kiểm tra xem có phải vừa mới dính độc ở lượt này không
@@ -5794,6 +5807,20 @@ const SHADOW_DATA = {
                         currentUser.hp = Math.max(0, currentUser.hp - bleedDmg);
                         playerBleedTurns--;
                         logBattle(`<span style="color:red; font-style:italic;">🩸 Vết thương rỉ máu! Bạn mất thêm ${bleedDmg} HP.</span>`);
+                    }
+                    // Thêm xử lý Thiêu Đốt khi Boss choáng
+                    if (window.enemyBurnTurns && window.enemyBurnTurns > 0) {
+                        let burnDmg = Math.floor(enemy.maxHp * 0.03);
+                        enemy.hp = Math.max(0, enemy.hp - burnDmg);
+                        window.enemyBurnTurns--;
+                        logBattle(`<span style="color:#ff3300; font-style:italic;">🔥 Lửa Hắc Ám thiêu đốt! Kẻ địch mất ${burnDmg} HP.</span>`);
+                        if (enemy.hp <= 0) { updateCombatUI(); return setTimeout(winBattle, 500); }
+                    }
+
+                    // Thêm đếm lùi Vỡ Giáp khi Boss choáng
+                    if (window.enemyDefBreakTurns && window.enemyDefBreakTurns > 0) {
+                        window.enemyDefBreakTurns--;
+                        if (window.enemyDefBreakTurns === 0) logBattle(`<span style="color:#aaa; font-style:italic;">🛡️ Lớp giáp của kẻ địch đã khôi phục!</span>`);
                     }
                     if (playerArmorBreakTurns > 0 && currentUser.hp > 0) {
                         playerArmorBreakTurns--;
