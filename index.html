@@ -1819,6 +1819,18 @@
             border-color: #ff0000 !important;
             box-shadow: inset 0 0 20px rgba(255,0,0,0.5) !important;
         }
+
+        /* --- HIỆU ỨNG PHÁ GIÁP (ARMOR BREAK) --- */
+        @keyframes armorBreakAura {
+            0% { filter: drop-shadow(0 0 10px #ff9900) brightness(0.8); transform: scale(1); }
+            100% { filter: drop-shadow(0 0 25px #ff6600) brightness(1.1); transform: scale(0.98); }
+        }
+        .armor-break-img {
+            animation: armorBreakAura 0.6s infinite alternate !important;
+            border-color: #ff9900 !important;
+            border-style: dashed !important; /* Đổi viền thành nét đứt để tạo cảm giác giáp bị vỡ */
+            box-shadow: inset 0 0 20px rgba(255,153,0,0.5) !important;
+        }
     </style>
 </head>
 <body>
@@ -3736,22 +3748,32 @@ const SHADOW_DATA = {
 
         const eImgElement = document.getElementById(pre + 'e-img');
         if (eImgElement) {
+            // Bước 1: Xóa sạch các hiệu ứng cũ trước khi xét
+            eImgElement.classList.remove('poisoned-img', 'armor-break-img');
+            
+            // Bước 2: Xếp hạng ưu tiên hiển thị
             if (typeof enemyPoisonTurns !== 'undefined' && enemyPoisonTurns > 0) {
-                eImgElement.classList.add('poisoned-img');
-            } else {
-                eImgElement.classList.remove('poisoned-img');
+                eImgElement.classList.add('poisoned-img'); // Ưu tiên 1: Hiện Độc Xanh
+            } 
+            else if (typeof enemyDefBreakTurns !== 'undefined' && enemyDefBreakTurns > 0) {
+                eImgElement.classList.add('armor-break-img'); // Ưu tiên 2: Hiện Phá Giáp Cam (nếu không dính độc)
             }
         }
 
         const pImgElement = document.getElementById(pre + 'p-img');
         if (pImgElement) {
+            // Bước 1: Xóa sạch hiệu ứng cũ
+            pImgElement.classList.remove('bleeding-img', 'armor-break-img');
+            
+            // Bước 2: Xếp hạng ưu tiên hiển thị
             if (typeof playerBleedTurns !== 'undefined' && playerBleedTurns > 0) {
-                pImgElement.classList.add('bleeding-img');
-            } else {
-                pImgElement.classList.remove('bleeding-img');
+                pImgElement.classList.add('bleeding-img'); // Ưu tiên 1: Hiện Chảy Máu Đỏ
+            } 
+            else if (typeof playerArmorBreakTurns !== 'undefined' && playerArmorBreakTurns > 0) {
+                pImgElement.classList.add('armor-break-img'); // Ưu tiên 2: Hiện Phá Giáp Cam
             }
         }
-
+        
         // --- 5. VẼ ICON HIỆU ỨNG (BUFF/DEBUFF) ---
         if (typeof renderStatusIcons === "function") {
             renderStatusIcons();
