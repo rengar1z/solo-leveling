@@ -5082,9 +5082,19 @@ const SHADOW_DATA = {
             if (isPlayerCountering) {
                 isPlayerCountering = false; 
                 let counterDmg = Math.floor(dmg * 1.5); 
-                enemy.hp = Math.max(0, enemy.hp - counterDmg);
+                if (enemy.shieldHP && enemy.shieldHP > 0) {
+                    if (counterDmg >= enemy.shieldHP) {
+                        counterDmg -= enemy.shieldHP;
+                        enemy.shieldHP = 0;
+                        logBattle(`<span style="color:#00ffff; font-weight:bold;">💥 Lực phản đòn quá mạnh đã đánh VỠ NÁT Lớp Giáp Ma Thuật của địch!</span>`);
+                        enemy.hp = Math.max(0, enemy.hp - counterDmg);
+                    } else {
+                        enemy.shieldHP -= counterDmg;
+                    }
+                } else {
+                    enemy.hp = Math.max(0, enemy.hp - counterDmg);
+                }
                 dmg = 0; 
-                
                 isPlayerStunned = false; 
                 applyBleedToPlayer = false; 
                 effectArmorBreak = 0; // Chặn đứt bùa hại
@@ -5410,7 +5420,11 @@ const SHADOW_DATA = {
             
             // Xử lý cơ chế Quái vật bị choáng
             if (isEnemyStunned) {
-                isEnemyStunned = false; // Xóa hiệu ứng choáng cho lượt sau
+                isEnemyStunned = false; 
+                
+        
+                if (window.counterCooldown && window.counterCooldown > 0) window.counterCooldown--;
+                if (window.potionCooldown && window.potionCooldown > 0) window.potionCooldown--; 
                 setTimeout(() => {
                     
                     // ============ FIX LỖI: BOSS BỊ CHOÁNG VẪN PHẢI DÍNH ĐỘC ============
@@ -5499,6 +5513,7 @@ const SHADOW_DATA = {
         window.counterCooldown = 0;
         window.potionCooldown = 0;
         window.playerVulnerabilityTurns = 0;
+        window.enemyAtkBuffTurns = 0;
 
         document.getElementById('e-name').innerText = enemy.name;
         document.getElementById('e-img').src = enemy.img;
@@ -5560,6 +5575,7 @@ const SHADOW_DATA = {
         window.counterCooldown = 0;
         window.potionCooldown = 0;
         window.playerVulnerabilityTurns = 0;
+        window.enemyAtkBuffTurns = 0;
 
         document.getElementById('dStageText').innerText = `Ải ${dCurrentStage + 1}/${dungeonData[dCurrentId].stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
         if(enemy.isBoss) {
@@ -5616,6 +5632,7 @@ const SHADOW_DATA = {
         window.counterCooldown = 0;
         window.potionCooldown = 0;
         window.playerVulnerabilityTurns = 0;
+        window.enemyAtkBuffTurns = 0;
         
         document.getElementById('dStageText').innerText = `Ải ${rgCurrentStage + 1}/${gateData.stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
         document.getElementById('dStageText').style.color = gateData.themeColor;
