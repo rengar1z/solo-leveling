@@ -2890,7 +2890,6 @@ const SHADOW_DATA = {
         const itemId = shopItem.itemId;
         const itemData = ITEM_DATA[itemId];
 
-        // Lớp bảo vệ 1: Tránh lỗi bấm nhầm vật phẩm không tồn tại
         if (!itemData) {
             console.error("Lỗi: Không tìm thấy dữ liệu vật phẩm cho", itemId);
             return alert("Vật phẩm này đang bảo trì!");
@@ -2900,6 +2899,7 @@ const SHADOW_DATA = {
         if (currentUser.equipped.costume && currentUser.equipped.costume.name === itemId) {
             currentUser.str -= (itemData.str || 0);
             currentUser.vit -= (itemData.vit || 0);
+            currentUser.int -= (itemData.int || 0); 
             currentUser.maxMp -= (itemData.mp || 0);
             currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
             if (itemData.vit > 0) {
@@ -2908,30 +2908,28 @@ const SHADOW_DATA = {
             }
             currentUser.equipped.costume = null;
         }
-        // TRƯỜNG HỢP 2: ĐÃ MUA NHƯNG CHƯA MẶC -> BẤM ĐỂ MẶC
+    
         else if (currentUser.ownedCostumes.includes(itemId)) {
-            // Nếu đang mặc bộ khác thì tự động tháo bộ cũ ra trước
             if (currentUser.equipped.costume) {
                 const oldData = ITEM_DATA[currentUser.equipped.costume.name];
                 
-                // Lớp bảo vệ 2: FIX LỖI KẸT DATA Ở ĐÂY
                 if (oldData) { 
                     currentUser.str -= (oldData.str || 0); 
                     currentUser.vit -= (oldData.vit || 0);
+                    currentUser.int -= (oldData.int || 0); // Đã bổ sung INT
                     currentUser.maxMp -= (oldData.mp || 0); 
                     currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
                     if (oldData.vit > 0) { 
                         currentUser.maxHp -= oldData.vit * 10; 
                         currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp); 
                     }
-                } else {
-                    console.warn("Cảnh báo: Phát hiện trang phục cũ bị lỗi dữ liệu. Đã tháo bỏ an toàn.");
                 }
             }
             
             currentUser.equipped.costume = { name: itemId };
             currentUser.str += (itemData.str || 0); 
             currentUser.vit += (itemData.vit || 0);
+            currentUser.int += (itemData.int || 0); 
             currentUser.maxMp += (itemData.mp || 0); 
             currentUser.mp += (itemData.mp || 0);
             if (itemData.vit > 0) { 
@@ -2939,7 +2937,6 @@ const SHADOW_DATA = {
                 currentUser.hp += itemData.vit * 10; 
             }
         }
-        
         else {
             if (currentUser.cash < shopItem.price) return alert(`Không đủ Cash! Cần ${shopItem.price} Cash.`);
             currentUser.cash -= shopItem.price;
@@ -2948,7 +2945,7 @@ const SHADOW_DATA = {
         }
 
         await set(ref(db, 'users/' + currentUser.username), currentUser);
-        render(); // Gọi render để nút bấm đổi màu lập tức
+        render(); 
     };
     
     const enemies = [
