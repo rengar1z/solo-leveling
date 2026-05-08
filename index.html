@@ -5252,11 +5252,9 @@ const SHADOW_DATA = {
         }
     }
 
-    // --- SỬ DỤNG VẬT PHẨM TRONG CHIẾN ĐẤU ---
     window.useCombatPotion = function(itemName) {
-        if (!isMyTurn) return;
+        if (!isMyTurn || (enemy && enemy.hp <= 0)) return;
         
-        // Chặn nếu đang dính Cooldown 2 lượt
         if (window.potionCooldown && window.potionCooldown > 0) {
             logBattle(`<span style="color:orange">⏳ Phải chờ thêm ${window.potionCooldown} lượt nữa mới được dùng vật phẩm!</span>`);
             return;
