@@ -2917,19 +2917,22 @@ const SHADOW_DATA = {
         "Nhát Chém Tử Thần": { branch: "Sát Thủ", type: "passive", maxLv: 1, cost: 10, desc: "[Bị động] Tăng thêm 30% Sát thương Bạo Kích.", icon: "skill/amsat.jpg" },
         "Ném Dao": { branch: "Sát Thủ", type: "active", maxLv: 1, cost: 5, mp: 20, func: "useDaggerThrow", desc: "Phóng dao gây ST. 30% gây Choáng.", icon: "skill/dagger.jpg" },
         "Dagger Rush": { branch: "Sát Thủ", type: "active", maxLv: 1, cost: 10, mp: 35, func: "useDaggerRush", desc: "Tung loạt dao găm chớp nhoáng.", icon: "skill/dagger.jpg" },
-        "Tàn sát": { branch: "Sát Thủ", type: "active", maxLv: 1, cost: 15, mp: 50, func: "useTanSat", desc: "Nhắm vào tử huyệt, tăng 20% Tỷ lệ Bạo.", icon: "skill/amsat.jpg" },
+        "Tàn sát": { branch: "Sát Thủ", type: "active", maxLv: 1, cost: 15, mp: 50, func: "useTanSat", desc: "Tàng hình vào bóng tối. Chắc chắn NÉ 100% đòn tiếp theo của địch và đòn đánh kế tiếp của bạn 100% BẠO KÍCH.", icon: "skill/tanghinh.jpg" },
         "Dao Độc": { branch: "Sát Thủ", type: "active", maxLv: 1, cost: 10, mp: 35, func: "usePoisonDagger", desc: "Tẩm kịch độc vào dao. Gây sát thương và khiến địch trúng độc, mất 5% HP tối đa mỗi lượt (Kéo dài 3 lượt).", icon: "skill/dagger.jpg" },
 
         // --- NHÁNH PHÁP SƯ (XUYÊN GIÁP) ---
         "Lõi Ma Thuật": { branch: "Pháp Sư", type: "passive", maxLv: 1, cost: 5, desc: "[Bị động] Kích hoạt lõi ma lực. Tăng 25% sát thương cho mọi kỹ năng Phép Thuật (INT).", icon: "skill/loimathuat.png" },
         "Hút Ma Lực": { branch: "Pháp Sư", type: "active", maxLv: 1, cost: 10, mp: 10, func: "useManaDrain", desc: "Gây ST Phép. Hồi MP bằng 50% ST gây ra.", icon: "skill/hutmaluc.png" },
+        "Ngọn Lửa Hắc Ám": { branch: "Pháp Sư", type: "active", maxLv: 1, cost: 10, mp: 40, func: "useDarkFlame", desc: "Gây ST Phép. Khiến địch [Thiêu Đốt] mất 3% Máu Tối Đa và giảm 15% Sức mạnh trong 3 lượt.", icon: "skill/flame_ball.png" },
         "Bão Cầu Lửa": { branch: "Pháp Sư", type: "active", maxLv: 1, cost: 10, mp: 30, func: "useFireStorm", desc: "Cầu lửa thiêu rụi. ST tính bằng INT.", icon: "skill/flame_ball.png" },
+        "Khiên Ma Thuật": { branch: "Pháp Sư", type: "active", maxLv: 1, cost: 10, mp: 20, func: "useManaShield", desc: "Tiêu hao ma lực tạo lớp khiên bảo vệ hấp thụ sát thương bằng 30% MP Tối đa.", icon: "skill/cothethep.png" },
         "Trích Xuất Bóng Tối": { branch: "Pháp Sư", type: "active", maxLv: 1, cost: 15, mp: 60, func: "useShadowStrike", desc: "ST Phép (INT). Bỏ qua 50% Giáp.", icon: "skill/trichxuatbongtoi.png" },
 
         // --- NHÁNH ĐẤU SĨ (HÚT MÁU / BERSERKER) ---
         "Cơ Thể Thép": { branch: "Đấu Sĩ", type: "passive", maxLv: 1, cost: 10, desc: "[Bị động] Lớp da cứng như thép, giảm 20% sát thương gánh chịu.", icon: "skill/cothethep.png" },
         "Sát Khí": { branch: "Đấu Sĩ", type: "passive", maxLv: 1, cost: 5, desc: "Khi HP < 30%, sát thương gây ra tăng 20%.", icon: "skill/satkhi.png" },
         "Hấp Huyết": { branch: "Đấu Sĩ", type: "active", maxLv: 1, cost: 10, mp: 40, func: "useBloodThirst", desc: "Gây ST Vật Lý. Hồi máu dựa trên ST và VIT.", icon: "skill/haphuyet.png" },
+        "Cú Nện Phá Địa": { branch: "Đấu Sĩ", type: "active", maxLv: 1, cost: 15, mp: 45, func: "useEarthShatter", desc: "Gây sát thương Vật lý. Khiến địch [Vỡ Giáp] giảm 40% Phòng thủ trong 2 lượt.", icon: "skill/amsat.jpg" },
         "Thịnh Nộ Quân Vương": { branch: "Đấu Sĩ", type: "active", maxLv: 1, cost: 20, mp: 100, func: "useMonarchWrath", desc: "Tế 10% HP hiện tại. Xuyên 80% Giáp.", icon: "skill/thinhnoquanvuong.png" },
         "Phản Đòn": { branch: "Đấu Sĩ", type: "active", maxLv: 1, cost: 10, mp: 30, func: "useCounterAttack", desc: "Thủ thế. Chặn 100% sát thương đòn tiếp theo và phản lại 150% ST đó lên kẻ địch.", icon: "skill/phandon.png" },
     };
@@ -3628,6 +3631,12 @@ const SHADOW_DATA = {
 
         // --- 1. VẼ ICON CHO NGƯỜI CHƠI ---
         let pHTML = "";
+        if (window.stealthDodge || window.stealthCrit) {
+            pHTML += `<div class="status-icon" title="Tàng Hình (Né 100% & Chí Mạng 100%)"><span style="font-size:24px;">🌫️</span></div>`;
+        }
+        if (currentUser.shieldHP && currentUser.shieldHP > 0) {
+            pHTML += `<div class="status-icon" title="Khiên Ma Thuật (Độ bền: ${currentUser.shieldHP})"><img src="effect/Heal_Effect.png" style="width: 100%; height: 100%; object-fit: contain;"></div>`;
+        }
         if (typeof playerBleedTurns !== 'undefined' && playerBleedTurns > 0) {
             pHTML += `<div class="status-icon" title="Chảy máu (Mất 5% HP mỗi lượt)"><img src="effect/Burn_Effect.png" style="width: 100%; height: 100%; object-fit: contain;"><div class="status-turn">${playerBleedTurns}</div></div>`;
         }
@@ -3661,6 +3670,12 @@ const SHADOW_DATA = {
         }
         if (typeof enemy !== 'undefined' && enemy && enemy.shieldHP > 0) {
             eHTML += `<div class="status-icon" title="Giáp Ma Thuật (Còn: ${enemy.shieldHP})"><img src="effect/Heal_Effect.png" style="width: 100%; height: 100%; object-fit: contain;"></div>`;
+        }
+        if (window.enemyBurnTurns && window.enemyBurnTurns > 0) {
+            eHTML += `<div class="status-icon" title="Thiêu Đốt (Mất 3% HP, Giảm 15% ATK)"><img src="effect/Burn_Effect.png" style="width: 100%; height: 100%; object-fit: contain;"><div class="status-turn">${window.enemyBurnTurns}</div></div>`;
+        }
+        if (window.enemyDefBreakTurns && window.enemyDefBreakTurns > 0) {
+            eHTML += `<div class="status-icon" title="Vỡ Giáp (Giảm 40% Thủ)"><img src="effect/Defense_Decrease_Effect.png" style="width: 100%; height: 100%; object-fit: contain;"><div class="status-turn">${window.enemyDefBreakTurns}</div></div>`;
         }
        
       if (window.enemyAtkBuffTurns && window.enemyAtkBuffTurns > 0) {
@@ -4438,12 +4453,17 @@ const SHADOW_DATA = {
         let finalDmg = Math.floor(Math.random() * (maxDmg - minDmg + 1) + minDmg);
 
         let enemyDef = enemy.def || 0;
-        let totalIgnoreDef = config.ignoreDef || 0; // Lấy xuyên giáp gốc từ kỹ năng (nếu có)
+        let totalIgnoreDef = config.ignoreDef || 0;
 
-        // KÍCH HOẠT BÓNG MA: CERBERUS (Tăng thêm 10% xuyên giáp cho đòn vật lý)
-        if (config.stat === 'str' && currentUser.equippedShadow === "cerberus") {
-            totalIgnoreDef += 0.10;
+        // --- ÁP DỤNG DEBUFF VỠ GIÁP ---
+        if (window.enemyDefBreakTurns && window.enemyDefBreakTurns > 0) {
+            enemyDef = Math.floor(enemyDef * 0.6); // Trừ 40% Giáp cơ bản trước
         }
+        
+
+        if (config.stat === 'str' && currentUser.equippedShadow === "cerberus") totalIgnoreDef += 0.10;
+        if (totalIgnoreDef > 0) enemyDef = Math.floor(enemyDef * (1 - totalIgnoreDef)); 
+        finalDmg = Math.max(5, finalDmg - enemyDef);
 
         // Áp dụng tổng lượng xuyên giáp vào phòng thủ của quái
         if (totalIgnoreDef > 0) {
@@ -4462,18 +4482,15 @@ const SHADOW_DATA = {
         // 4. AGI: Tính toán Bạo kích
         let critRate = (currentUser.agi * 0.25) + (config.bonusCritRate || 0);
         let critMulti = 1.5 + (currentUser.agi * 0.01);
-        // KÍCH HOẠT BÓNG MA: IGRIS
         if (currentUser.equippedShadow === "igris") critMulti += 0.15;
-        
-        // ---> BUFF CỦA NHÁNH SÁT THỦ <---
-        if (currentUser.skills["Nhát Chém Tử Thần"] > 0) {
-            critMulti += 0.30; // Cộng thẳng 30% Sát thương Bạo Kích
-        }
+        if (currentUser.skills["Nhát Chém Tử Thần"] > 0) critMulti += 0.30;
 
         let isCrit = false;
-        if (Math.random() * 100 < critRate) {
+        // --- ÁP DỤNG BUFF TÀN SÁT (100% CHÍ MẠNG) ---
+        if (window.stealthCrit || Math.random() * 100 < critRate) {
             finalDmg = finalDmg * critMulti;
             isCrit = true;
+            window.stealthCrit = false; // Chém xong thì mất buff Chí mạng
         }
         
         // 5. BỊ ĐỘNG: SÁT KHÍ (Buff 20% sát thương khi máu đỏ)
@@ -4536,14 +4553,15 @@ const SHADOW_DATA = {
         updateCombatUI(); checkBattleEnd(); 
     };
 
+    // --- SKILL SÁT THỦ: TÀN SÁT (NÂNG CẤP TÀNG HÌNH) ---
     window.useTanSat = function() {
         if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 50) { if(currentUser.mp < 50) logBattle("<span style='color:orange'>Thiếu 50 MP!</span>"); return; }
         currentUser.mp -= 50; 
-        // Tàn sát: Nhắm vào điểm yếu nên tăng tĩnh 20% Tỷ lệ Bạo kích
-        let hit = calcPlayerDamage({ multi: 4.5, stat: 'str', bonusCritRate: 20 }); 
-        enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
-        let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 TỬ HUYỆT!</span> ` : "";
-        logBattle(`${critLog}<span style="color:#ff4d4d">TÀN SÁT!!!</span> Gây <span style="color:#ff0000; font-size:18px;">${hit.dmg}</span> sát thương!`);
+        
+        window.stealthDodge = true; 
+        window.stealthCrit = true;  
+        
+        logBattle(`<span style="color:#aaa; font-size:18px; font-weight:bold; font-style:italic;">🌫️ Khói mù tỏa ra... Bạn hòa mình vào bóng tối! (Tàng hình: Né 100% đòn tiếp theo và Chí mạng 100% đòn đánh kế tiếp)</span>`);
         updateCombatUI(); checkBattleEnd();
     };
 
@@ -4557,6 +4575,33 @@ const SHADOW_DATA = {
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 XUYÊN THẤU!</span> ` : "";
         logBattle(`${critLog}<span style="color:#9933ff; text-shadow: 0 0 5px #9933ff;">TRÍCH XUẤT BÓNG TỐI!</span> Phá giáp địch, gây <span style="color:#9933ff">${hit.dmg}</span> sát thương Phép!`);
         updateCombatUI(); checkBattleEnd();
+    };
+    
+    // --- SKILL PHÁP SƯ: NGỌN LỬA HẮC ÁM (ĐỐT & DEBUFF) ---
+    window.useDarkFlame = function() {
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 40) { if(currentUser.mp < 40) logBattle("<span style='color:orange'>Thiếu 40 MP!</span>"); return; }
+        currentUser.mp -= 40; 
+        
+        let hit = calcPlayerDamage({ multi: 1.5, stat: 'int' }); 
+        enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
+        window.enemyBurnTurns = 3; // Kích hoạt Đốt 3 lượt
+        
+        let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 BẠO KÍCH!</span> ` : "";
+        logBattle(`${critLog}<span style="color:#ff3300; text-shadow: 0 0 5px #ff3300;">🔥 NGỌN LỬA HẮC ÁM!</span> Gây ${hit.dmg} ST Phép và khiến địch <span style="color:#ff3300; font-weight:bold;">[Thiêu Đốt]</span> (Mất HP và giảm Sức mạnh)!`);
+        
+        updateCombatUI(); checkBattleEnd();
+    };
+
+    // --- SKILL PHÁP SƯ: KHIÊN MA THUẬT (BUFF SINH TỒN) ---
+    window.useManaShield = function() {
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 20) { if(currentUser.mp < 20) logBattle("<span style='color:orange'>Thiếu 20 MP!</span>"); return; }
+        currentUser.mp -= 20; 
+        
+        let shieldAmount = Math.floor(currentUser.maxMp * 0.30);
+        currentUser.shieldHP = (currentUser.shieldHP || 0) + shieldAmount;
+        
+        logBattle(`<span style="color:#00ffff; font-weight:bold; font-size:18px;">🛡️ KHIÊN MA THUẬT!</span> Chướng ngại vật ma lực được dựng lên, hấp thụ <span style="color:#00ffff">${shieldAmount}</span> sát thương!`);
+        updateCombatUI(); checkBattleEnd(); 
     };
 
     // --- BỔ SUNG CHIÊU PHÁP SƯ: HÚT MA LỰC ---
@@ -4617,6 +4662,21 @@ const SHADOW_DATA = {
         
         logBattle(`<span style="color:gold; font-weight:bold;">🛡️ Bạn nắm chặt vũ khí, vào thế phòng thủ sẵn sàng phản công!</span>`);
         updateCombatUI(); checkBattleEnd(); // Chuyển lượt cho quái đánh
+    };
+
+    // --- SKILL ĐẤU SĨ: CÚ NỆN PHÁ ĐỊA (DEBUFF GIÁP ĐỊCH) ---
+    window.useEarthShatter = function() {
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 45) { if(currentUser.mp < 45) logBattle("<span style='color:orange'>Thiếu 45 MP!</span>"); return; }
+        currentUser.mp -= 45; 
+        
+        let hit = calcPlayerDamage({ multi: 2.2, stat: 'str' }); 
+        enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
+        window.enemyDefBreakTurns = 2; // Kích hoạt Vỡ Giáp 2 lượt
+        
+        let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 ĐẠI CHẤN!</span> ` : "";
+        logBattle(`${critLog}<span style="color:#ff9900; font-weight:bold; font-size:18px;">🌋 CÚ NỆN PHÁ ĐỊA!</span> Gây ${hit.dmg} ST và khiến địch <span style="color:orange; font-weight:bold;">[VỠ GIÁP]</span> giảm 40% Phòng thủ!`);
+        
+        updateCombatUI(); checkBattleEnd();
     };
     
     // --- KỸ NĂNG KHỐNG CHẾ (NÉM DAO) ---
@@ -4704,6 +4764,15 @@ const SHADOW_DATA = {
     function enemyTurn() {
         if (!enemy || enemy.hp <= 0 || !currentUser) return;
 
+        // --- CƠ CHẾ ĐỐT CỦA PHÁP SƯ ---
+        if (window.enemyBurnTurns && window.enemyBurnTurns > 0) {
+            let burnDmg = Math.floor(enemy.maxHp * 0.03); // Đốt 3% máu tối đa
+            enemy.hp = Math.max(0, enemy.hp - burnDmg);
+            window.enemyBurnTurns--;
+            logBattle(`<span style="color:#ff3300; font-style:italic;">🔥 Lửa Hắc Ám thiêu đốt! Kẻ địch mất ${burnDmg} HP.</span>`);
+            if (enemy.hp <= 0) { updateCombatUI(); return setTimeout(winBattle, 1000); }
+        }
+
         // --- CƠ CHẾ ĐỘC CỦA BOSS ---
         if (enemyPoisonTurns > 0) {
             // Kiểm tra xem có phải vừa mới dính độc ở lượt này không
@@ -4765,6 +4834,11 @@ const SHADOW_DATA = {
 
         const defensePower = currentUser.vit || 0; 
         let enemyAtk = enemy.atk || 10;
+
+        // --- GIẢM ATK ĐỊCH NẾU ĐANG BỊ ĐỐT ---
+        if (window.enemyBurnTurns && window.enemyBurnTurns > 0) {
+            enemyAtk = Math.floor(enemyAtk * 0.85); // Giảm 15% Sức mạnh
+        }
 
         // --- CƠ CHẾ BUFF SỨC MẠNH TẠM THỜI (TINH THỂ MÁU) ---
         if (window.enemyAtkBuffTurns && window.enemyAtkBuffTurns > 0) {
@@ -5196,6 +5270,12 @@ const SHADOW_DATA = {
         if (currentUser.skills["Bước Chân Bóng Tối"] > 0) dodgeChance += 0.10;
         if (currentUser.skills["Siêu Giác Quan"] > 0) dodgeChance += (0.03 * currentUser.skills["Siêu Giác Quan"]);
 
+        // --- ÁP DỤNG BUFF TÀN SÁT (100% NÉ TRÁNH) ---
+        if (window.stealthDodge) {
+            dodgeChance = 1.0; // Ép tỷ lệ né lên 100%
+            window.stealthDodge = false; // Địch vung đòn xong thì mất tàng hình
+        }
+
         // Lọc bỏ đoạn "gây X sát thương..."
         let skillNameOnly = isSpecialAttack ? specialAttackLog.split(/, gây|, giáng|, nhận/)[0] + "..." : "";
 
@@ -5284,6 +5364,19 @@ const SHADOW_DATA = {
 
                 triggerPlayerShake();
                 window.playDashEffect(false);
+
+                // --- CHÈN LỚP KHIÊN MA THUẬT VÀO TRƯỚC KHI BỊ TRỪ MÁU ---
+                if (dmg > 0 && currentUser.shieldHP && currentUser.shieldHP > 0) {
+                if (dmg >= currentUser.shieldHP) {
+                    dmg -= currentUser.shieldHP;
+                    currentUser.shieldHP = 0;
+                    logBattle(`<span style="color:#00ffff; font-style:italic; font-weight:bold;">💥 CHOANG! Lớp Khiên Ma Thuật của bạn đã bị đập vỡ!</span>`);
+            } else {
+                currentUser.shieldHP -= dmg;
+                logBattle(`<span style="color:#00ffff; font-style:italic;">🛡️ Khiên Ma Thuật đã hấp thụ hoàn toàn ${Math.floor(dmg)} sát thương!</span>`);
+                dmg = 0; 
+            }
+        }
                 currentUser.hp = Math.max(0, currentUser.hp - dmg);
                 
                 if (isSpecialAttack) {
@@ -5775,6 +5868,7 @@ const SHADOW_DATA = {
         window.potionCooldown = 0;
         window.playerVulnerabilityTurns = 0;
         window.enemyAtkBuffTurns = 0;
+        window.enemyBurnTurns = 0; window.enemyDefBreakTurns = 0; window.stealthDodge = false; window.stealthCrit = false; currentUser.shieldHP = 0;
 
         document.getElementById('e-name').innerText = enemy.name;
         document.getElementById('e-img').src = enemy.img;
@@ -5837,6 +5931,7 @@ const SHADOW_DATA = {
         window.potionCooldown = 0;
         window.playerVulnerabilityTurns = 0;
         window.enemyAtkBuffTurns = 0;
+        window.enemyBurnTurns = 0; window.enemyDefBreakTurns = 0; window.stealthDodge = false; window.stealthCrit = false; currentUser.shieldHP = 0;
 
         document.getElementById('dStageText').innerText = `Ải ${dCurrentStage + 1}/${dungeonData[dCurrentId].stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
         if(enemy.isBoss) {
@@ -5946,6 +6041,7 @@ const SHADOW_DATA = {
         window.potionCooldown = 0;
         window.playerVulnerabilityTurns = 0;
         window.enemyAtkBuffTurns = 0;
+        window.enemyBurnTurns = 0; window.enemyDefBreakTurns = 0; window.stealthDodge = false; window.stealthCrit = false; currentUser.shieldHP = 0;
         
         document.getElementById('dStageText').innerText = `Ải ${rgCurrentStage + 1}/${gateData.stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
         document.getElementById('dStageText').style.color = gateData.themeColor;
