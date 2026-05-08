@@ -3165,6 +3165,10 @@ const SHADOW_DATA = {
     window.equipTitle = async function(titleId) {
         if (!currentUser.unlockedTitles.includes(titleId)) return;
         
+        // === 1. CHẶN THAY DANH HIỆU TRONG CHIẾN ĐẤU ===
+        if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
+            return alert("⚠️ HỆ THỐNG: Tập trung vào trận chiến! Không thể thay đổi Danh Hiệu lúc này!");
+        }
         
         if (currentUser.equippedTitle && TITLE_DATA[currentUser.equippedTitle]) {
             const oldT = TITLE_DATA[currentUser.equippedTitle];
@@ -3179,7 +3183,6 @@ const SHADOW_DATA = {
             currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
         }
 
-       
         currentUser.equippedTitle = titleId;
         const newT = TITLE_DATA[titleId];
         currentUser.str += newT.str;
@@ -3190,13 +3193,13 @@ const SHADOW_DATA = {
         currentUser.maxHp += newT.vit * 10;
         currentUser.maxMp += newT.int * 5;
         
-        currentUser.hp += newT.vit * 10;
-        currentUser.mp += newT.int * 5;
+        // === 2. XÓA BỎ DÒNG CỘNG MÁU/MANA HIỆN TẠI TẠI ĐÂY ===
+        // (Đã xóa dòng: currentUser.hp += newT.vit * 10; currentUser.mp += newT.int * 5;)
 
         alert(`Đã trang bị danh hiệu [${newT.name}]! Lực chiến tăng mạnh!`);
         await saveUserData();
     };
-
+    
     window.checkAchievements = function() {
         if (!currentUser.unlockedTitles) currentUser.unlockedTitles = ["weakest"];
         let unlockedNew = false;
@@ -4301,7 +4304,13 @@ const SHADOW_DATA = {
         `;
         popup.style.display = 'flex';
     };
+    
     window.equipShadow = async function(bossId) {
+        // === 1. CHẶN ĐỔI BÓNG MA TRONG CHIẾN ĐẤU ===
+        if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
+            return alert("⚠️ HỆ THỐNG: Khí tức hỗn loạn! Không thể thay đổi Đội Hình Bóng Tối khi đang chiến đấu!");
+        }
+
         // Tháo bóng cũ (Trừ chỉ số)
         if (currentUser.equippedShadow && SHADOW_DATA[currentUser.equippedShadow]) {
             let oldData = SHADOW_DATA[currentUser.equippedShadow];
@@ -4323,11 +4332,13 @@ const SHADOW_DATA = {
             currentUser.str += newData.str; currentUser.vit += newData.vit;
             currentUser.agi += newData.agi; currentUser.int += newData.int;
             currentUser.maxHp += newData.vit * 10; currentUser.maxMp += newData.int * 5;
-            currentUser.hp += newData.vit * 10; currentUser.mp += newData.int * 5;
+            
+            // === 2. XÓA BỎ DÒNG CỘNG MÁU/MANA HIỆN TẠI TẠI ĐÂY ===
+            // (Đã xóa dòng: currentUser.hp += newData.vit * 10; currentUser.mp += newData.int * 5;)
         }
 
         await saveUserData();
-        renderShadowArmy(); // Cập nhật lại hình ảnh tab Army
+        renderShadowArmy(); 
     };
 
     // --- HỆ THỐNG TÍNH TOÁN SÁT THƯƠNG ĐA DỤNG (MULTI-BUILD) ---
