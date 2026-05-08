@@ -4447,7 +4447,6 @@ const SHADOW_DATA = {
 
     // --- HỆ THỐNG TÍNH TOÁN SÁT THƯƠNG ĐA DỤNG (MULTI-BUILD) ---
     function calcPlayerDamage(config) {
-        // config = { multi: 2.0, stat: 'str', ignoreDef: 0, bonusCritRate: 0 }
         let multi = config.multi || 1.0;
         let baseStat = currentUser[config.stat || 'str'] || 0; 
 
@@ -4457,25 +4456,26 @@ const SHADOW_DATA = {
         let minDmg = maxDmg * precision;
         let finalDmg = Math.floor(Math.random() * (maxDmg - minDmg + 1) + minDmg);
 
+        // 2. TÍNH TOÁN GIÁP VÀ XUYÊN GIÁP CỦA ĐỊCH
         let enemyDef = enemy.def || 0;
         let totalIgnoreDef = config.ignoreDef || 0;
 
-        // --- ÁP DỤNG DEBUFF VỠ GIÁP ---
+        // Bị Vỡ Giáp (Từ chiêu Cú Nện Phá Địa) -> Giảm 40% giáp gốc
         if (window.enemyDefBreakTurns && window.enemyDefBreakTurns > 0) {
-            enemyDef = Math.floor(enemyDef * 0.6); // Trừ 40% Giáp cơ bản trước
+            enemyDef = Math.floor(enemyDef * 0.6); 
         }
-        
 
+        // Nội tại Bóng Ma Cerberus (Chỉ áp dụng cho chiêu Vật lý - STR)
         if (config.stat === 'str' && currentUser.equippedShadow === "cerberus") {
             totalIgnoreDef += 0.10;
         }
 
-        // Áp dụng tổng lượng xuyên giáp vào phòng thủ của quái
+        // Áp dụng Xuyên Giáp (Trừ thẳng vào % Giáp còn lại của địch)
         if (totalIgnoreDef > 0) {
             enemyDef = Math.floor(enemyDef * (1 - totalIgnoreDef)); 
         }
         
-        // Trừ giáp vào sát thương (Chỉ thực hiện 1 lần duy nhất)
+        // --- CHỈ TRỪ GIÁP 1 LẦN DUY NHẤT TẠI ĐÂY ---
         finalDmg = Math.max(5, finalDmg - enemyDef);
 
         // 3. Nội tại Vũ khí (Chỉ áp dụng cho đòn Vật lý - STR)
@@ -4492,7 +4492,7 @@ const SHADOW_DATA = {
         if (currentUser.skills["Nhát Chém Tử Thần"] > 0) critMulti += 0.30;
 
         let isCrit = false;
-        // --- ÁP DỤNG BUFF TÀN SÁT (100% CHÍ MẠNG) ---
+        // Áp dụng buff Tàn Sát của Sát Thủ (100% Chí mạng)
         if (window.stealthCrit || Math.random() * 100 < critRate) {
             finalDmg = finalDmg * critMulti;
             isCrit = true;
@@ -4504,31 +4504,26 @@ const SHADOW_DATA = {
             finalDmg *= 1.20; 
         }
 
-        // 6. BỊ ĐỘNG: LÕI MA THUẬT (Buff 25% Sát Thương Phép)
-        // Nếu đòn đánh có hệ số là 'int' (Phép) và đã học chiêu Lõi Ma Thuật -> Nhân 1.25 ST
-        if (config.stat === 'int' && currentUser.skills["Lõi Ma Thuật"] > 0) {
-            finalDmg *= 1.25; 
+        // 6. BỊ ĐỘNG: LÕI MA THUẬT & TUSK (Buff hệ Pháp Sư)
+        if (config.stat === 'int') {
+            if (currentUser.skills["Lõi Ma Thuật"] > 0) finalDmg *= 1.25; 
+            if (currentUser.equippedShadow === "kargalgan") finalDmg *= 1.20;
         }
-        // KÍCH HOẠT BÓNG MA: TUSK
-        if (config.stat === 'int' && currentUser.equippedShadow === "kargalgan") finalDmg *= 1.20;
 
-        // 7. CƠ CHẾ CHẶN SÁT THƯƠNG CỦA LỚP GIÁP ẢO (SHIELD BARRIER)
+        // 7. CƠ CHẾ CHẶN SÁT THƯƠNG CỦA LỚP GIÁP ẢO (SHIELD BARRIER BÊN QUÁI)
         let actualDmg = Math.floor(finalDmg);
         if (enemy.shieldHP && enemy.shieldHP > 0) {
             if (actualDmg >= enemy.shieldHP) {
-                // Đame to hơn Giáp -> Vỡ giáp, đame dư đâm thẳng vào máu đỏ
                 actualDmg -= enemy.shieldHP;
                 enemy.shieldHP = 0;
                 logBattle(`<span style="color:#00ffff; font-weight:bold;">💥 CHOANG! LỚP GIÁP MA THUẬT CỦA KẺ ĐỊCH ĐÃ BỊ BẠN ĐÁNH VỠ!</span>`);
             } else {
-                // Đame yếu hơn Giáp -> Giáp chịu hết, máu đỏ không mất giọt nào
                 enemy.shieldHP -= actualDmg;
                 logBattle(`<span style="color:#00ffff; font-style:italic;">🛡️ Lớp giáp ma thuật đã hấp thụ ${actualDmg} sát thương! (Giáp còn: ${enemy.shieldHP})</span>`);
                 actualDmg = 0; 
             }
         }
 
-        // CHỈ ĐẶT 1 DÒNG RETURN DUY NHẤT Ở CUỐI CÙNG HÀM NÀY
         return { dmg: actualDmg, isCrit: isCrit };
     }
     
