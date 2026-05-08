@@ -2356,8 +2356,6 @@
 
                 <div id="tab-arena" class="tab-panel">
                     <div id="combatArea" class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 30px; background: rgba(0, 15, 30, 0.6); border: 2px solid #00bfff; border-radius: 12px; min-height: 350px; box-shadow: 0 0 30px rgba(0, 191, 255, 0.15); position: relative; overflow: hidden;">
-    
-                        <div id="phaser-game-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;"></div>
 
                         <div style="text-align: center; width: 40%; z-index: 1;">
                             <div id="p-name" style="color: #00bfff; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #00bfff; margin-bottom: 15px; text-transform: uppercase;">SUNG JIN WOO</div>
@@ -3353,86 +3351,86 @@ const SHADOW_DATA = {
 
     // --- HIỂN THỊ DANH SÁCH SKILL (ĐÃ THÊM CƠ CHẾ THU GỌN) ---
     window.renderSkills = function() {
-        Object.keys(skillData).forEach(s => { if (currentUser.skills[s] === undefined) currentUser.skills[s] = 0; });
+    Object.keys(skillData).forEach(s => { if (currentUser.skills[s] === undefined) currentUser.skills[s] = 0; });
 
-        if (document.getElementById('skPoints')) document.getElementById('skPoints').innerText = currentUser.skillPoints || 0;
-        const list = document.getElementById('skillList');
-        if (!list) return;
-        
-        let currentClass = null;
-        for (let s in currentUser.skills) {
-            if (currentUser.skills[s] > 0 && skillData[s] && skillData[s].branch !== "Chung") {
-                currentClass = skillData[s].branch; 
-                break;
-            }
+    if (document.getElementById('skPoints')) document.getElementById('skPoints').innerText = currentUser.skillPoints || 0;
+    const list = document.getElementById('skillList');
+    if (!list) return;
+    
+    let currentClass = null;
+    for (let s in currentUser.skills) {
+        if (currentUser.skills[s] > 0 && skillData[s] && skillData[s].branch !== "Chung") {
+            currentClass = skillData[s].branch; 
+            break;
         }
+    }
 
-        let html = `<div style="text-align: right; margin-bottom: 15px;"><button onclick="resetSkills()" style="background: #ff4d4d; border-color: #cc0000; color: #fff; font-size: 16px;">🔄 TẨY ĐIỂM ĐỔI NHÁNH (1000 CASH)</button></div>`;
+    let html = `<div style="text-align: right; margin-bottom: 15px;"><button onclick="resetSkills()" style="background: #ff4d4d; border-color: #cc0000; color: #fff; font-size: 16px;">🔄 TẨY ĐIỂM ĐỔI NHÁNH (1000 CASH)</button></div>`;
 
-        const branches = ["Sát Thủ", "Pháp Sư", "Đấu Sĩ", "Chung"];
-        branches.forEach(branch => {
-            let branchColor = branch === 'Sát Thủ' ? '#4a90e2' : branch === 'Pháp Sư' ? '#9933ff' : branch === 'Đấu Sĩ' ? '#ff4d4d' : '#8eefff';
-            let isBranchLocked = (currentClass !== null && currentClass !== branch && branch !== "Chung");
-            let displayColor = isBranchLocked ? '#555' : branchColor; 
-            
-            // Đọc trạng thái xem nhánh này đang được mở hay đóng
-            let isOpen = window.branchToggleState[branch];
-            
-            // KHUNG THANH TIÊU ĐỀ (Click vào để sổ ra hoặc thu gọn)
-            html += `
-                <div style="cursor: pointer; background: rgba(0, 10, 30, 0.8); padding: 12px 15px; margin-top: 15px; border-radius: 6px; border-left: 5px solid ${displayColor}; border-bottom: 1px solid rgba(0,0,0,0.5); box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; justify-content: space-between; align-items: center; transition: 0.2s;" onclick="toggleSkillBranch('${branch}')">
-                    <h3 style="color: ${displayColor}; margin: 0; font-size: 22px; letter-spacing: 1px;">[ NHÁNH ${branch.toUpperCase()} ] ${isBranchLocked ? '<span style="color:red; font-size:16px;">(ĐÃ KHÓA)</span>' : ''}</h3>
-                    <span style="color: ${displayColor}; font-size: 20px; transition: 0.3s; transform: ${isOpen ? 'rotate(90deg)' : 'rotate(0deg)'};">▶</span>
-                </div>
-                
-                <!-- BỌC DANH SÁCH SKILL VÀO MỘT THẺ DIV CÓ CHỨC NĂNG ẨN/HIỆN -->
-                <div style="display: ${isOpen ? 'block' : 'none'}; padding: 10px 0; border-left: 2px dashed ${displayColor}; margin-left: 2px; padding-left: 10px; animation: fadeIn 0.3s ease;">
-            `;
-            
-            Object.keys(skillData).forEach(s => {
-                const data = skillData[s];
-                if (data.branch === branch) {
-                    const lv = currentUser.skills[s];
-                    const isMax = lv >= data.maxLv;
-                    let canUpgrade = currentUser.skillPoints >= data.cost && !isMax && !isBranchLocked;
-                    
-                    let dynamicText = "";
-                    if (lv > 0 && data.maxLv > 1) {
-                        if (s === "Phát Triển Cấp Tốc") dynamicText = `<br><span style="color:#00ff00; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 10}% EXP</span>`;
-                        if (s === "Thợ Săn Tiền Thưởng") dynamicText = `<br><span style="color:gold; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 15}% CASH</span>`;
-                        if (s === "Siêu Giác Quan") dynamicText = `<br><span style="color:#8eefff; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 3}% Né Đòn</span>`;
-                        if (s === "Thể Chất Siêu Phàm") dynamicText = `<br><span style="color:#ff4d4d; font-size:14px; font-weight:bold;">↳ Đã cộng vĩnh viễn: +${lv * 5} STR/VIT</span>`;
-                    }
+    const branches = ["Sát Thủ", "Pháp Sư", "Đấu Sĩ", "Chung"];
+    
+    // Tối ưu thuật toán: Gom nhóm dữ liệu skill trước khi lặp thay vì lặp mù quáng
+    const skillsByBranch = {};
+    Object.keys(skillData).forEach(s => {
+        const branch = skillData[s].branch;
+        if (!skillsByBranch[branch]) skillsByBranch[branch] = [];
+        skillsByBranch[branch].push(s);
+    });
 
-                    html += `
-                        <div class="skill-item ${lv === 0 ? 'locked' : 'unlocked'}" style="position: relative; border-color: ${lv > 0 ? displayColor : '#333'}; opacity: ${isBranchLocked ? 0.4 : 1}; pointer-events: ${isBranchLocked ? 'none' : 'auto'}; margin-bottom: 8px; background: rgba(0,0,0,0.6);">
-                            
-                            <!-- TOOLTIP -->
-                            <div class="skill-list-tooltip" style="border: 1px solid ${displayColor}; box-shadow: 0 0 15px ${displayColor};">
-                                <h4 style="color: ${displayColor}; margin: 0 0 5px 0; font-size: 20px; text-transform: uppercase;">${s}</h4>
-                                <span style="color: #ccc; font-size: 15px;">${data.desc}</span>
-                                ${data.mp ? `<br><hr style="border-color: #444; margin: 8px 0;"><span style="color: #00bfff; font-size: 14px; font-weight:bold;">Tiêu hao: ${data.mp} MP</span>` : ''}
-                            </div>
-
-                            <div style="display: flex; align-items: center;">
-                                <img src="${data.icon}" style="width: 60px; height: 75x; object-fit: contain; margin-right: 15px; filter: ${isBranchLocked ? 'grayscale(1)' : 'none'};">
-                                <div style="display: flex; flex-direction: column;">
-                                    <span>${s} ${isMax ? '<span style="color: gold;">[MAX]</span>' : `(Lv.${lv}/${data.maxLv})`}</span>
-                                    ${!isMax ? `<small style="color: #aaa; font-size: 12px;">Cần: ${data.cost} Điểm</small>` : ''}
-                                    ${dynamicText}
-                                </div>
-                            </div>
-                            <button class="add-skill-btn" onclick="upgradeSkill(event, '${s}')" ${canUpgrade ? '' : 'disabled'} style="background: ${displayColor}; color: #000;">+</button>
-                        </div>
-                    `;
-                }
-            });
-
-            // ĐÓNG THẺ DIV CỦA DANH SÁCH SKILL
-            html += `</div>`; 
-        });
+    branches.forEach(branch => {
+        let branchColor = branch === 'Sát Thủ' ? '#4a90e2' : branch === 'Pháp Sư' ? '#9933ff' : branch === 'Đấu Sĩ' ? '#ff4d4d' : '#8eefff';
+        let isBranchLocked = (currentClass !== null && currentClass !== branch && branch !== "Chung");
+        let displayColor = isBranchLocked ? '#555' : branchColor; 
+        let isOpen = window.branchToggleState[branch];
         
-        list.innerHTML = html;
+        html += `
+            <div style="cursor: pointer; background: rgba(0, 10, 30, 0.8); padding: 12px 15px; margin-top: 15px; border-radius: 6px; border-left: 5px solid ${displayColor}; border-bottom: 1px solid rgba(0,0,0,0.5); box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; justify-content: space-between; align-items: center; transition: 0.2s;" onclick="toggleSkillBranch('${branch}')">
+                <h3 style="color: ${displayColor}; margin: 0; font-size: 22px; letter-spacing: 1px;">[ NHÁNH ${branch.toUpperCase()} ] ${isBranchLocked ? '<span style="color:red; font-size:16px;">(ĐÃ KHÓA)</span>' : ''}</h3>
+                <span style="color: ${displayColor}; font-size: 20px; transition: 0.3s; transform: ${isOpen ? 'rotate(90deg)' : 'rotate(0deg)'};">▶</span>
+            </div>
+            <div style="display: ${isOpen ? 'block' : 'none'}; padding: 10px 0; border-left: 2px dashed ${displayColor}; margin-left: 2px; padding-left: 10px; animation: fadeIn 0.3s ease;">
+        `;
+        
+        // Chỉ lặp qua những skill thuộc nhánh này
+        if (skillsByBranch[branch]) {
+            skillsByBranch[branch].forEach(s => {
+                const data = skillData[s];
+                const lv = currentUser.skills[s];
+                const isMax = lv >= data.maxLv;
+                let canUpgrade = currentUser.skillPoints >= data.cost && !isMax && !isBranchLocked;
+                
+                let dynamicText = "";
+                if (lv > 0 && data.maxLv > 1) {
+                    if (s === "Phát Triển Cấp Tốc") dynamicText = `<br><span style="color:#00ff00; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 10}% EXP</span>`;
+                    if (s === "Thợ Săn Tiền Thưởng") dynamicText = `<br><span style="color:gold; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 15}% CASH</span>`;
+                    if (s === "Siêu Giác Quan") dynamicText = `<br><span style="color:#8eefff; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 3}% Né Đòn</span>`;
+                    if (s === "Thể Chất Siêu Phàm") dynamicText = `<br><span style="color:#ff4d4d; font-size:14px; font-weight:bold;">↳ Đã cộng vĩnh viễn: +${lv * 5} STR/VIT</span>`;
+                }
+
+                html += `
+                    <div class="skill-item ${lv === 0 ? 'locked' : 'unlocked'}" style="position: relative; border-color: ${lv > 0 ? displayColor : '#333'}; opacity: ${isBranchLocked ? 0.4 : 1}; pointer-events: ${isBranchLocked ? 'none' : 'auto'}; margin-bottom: 8px; background: rgba(0,0,0,0.6);">
+                        <div class="skill-list-tooltip" style="border: 1px solid ${displayColor}; box-shadow: 0 0 15px ${displayColor};">
+                            <h4 style="color: ${displayColor}; margin: 0 0 5px 0; font-size: 20px; text-transform: uppercase;">${s}</h4>
+                            <span style="color: #ccc; font-size: 15px;">${data.desc}</span>
+                            ${data.mp ? `<br><hr style="border-color: #444; margin: 8px 0;"><span style="color: #00bfff; font-size: 14px; font-weight:bold;">Tiêu hao: ${data.mp} MP</span>` : ''}
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <img src="${data.icon}" style="width: 60px; height: 75x; object-fit: contain; margin-right: 15px; filter: ${isBranchLocked ? 'grayscale(1)' : 'none'};">
+                            <div style="display: flex; flex-direction: column;">
+                                <span>${s} ${isMax ? '<span style="color: gold;">[MAX]</span>' : `(Lv.${lv}/${data.maxLv})`}</span>
+                                ${!isMax ? `<small style="color: #aaa; font-size: 12px;">Cần: ${data.cost} Điểm</small>` : ''}
+                                ${dynamicText}
+                            </div>
+                        </div>
+                        <button class="add-skill-btn" onclick="upgradeSkill(event, '${s}')" ${canUpgrade ? '' : 'disabled'} style="background: ${displayColor}; color: #000;">+</button>
+                    </div>
+                `;
+            });
+        }
+        html += `</div>`; 
+    });
+    
+    list.innerHTML = html;
     };
 
     // --- LOGIC NÂNG CẤP SKILL KẾT HỢP KHÓA NHÁNH ---
@@ -3873,102 +3871,99 @@ const SHADOW_DATA = {
         log.innerHTML = msg + "<br>" + log.innerHTML;
     }
    
-    function switchToIconMode() {
-        const pre = getPrefix();
-        const skillRow = document.getElementById(pre === 'd-' ? 'd-skillRow' : 'skillRow');
-        skillRow.innerHTML = ''; 
-
-        // 1. Nút đánh thường
-        skillRow.innerHTML += `
-            <button id="${pre}btnAttack" class="icon-mode combat-skill-btn" onclick="playerAttack()" style="border-color: #00bfff;">
-                <img src="skill/basic_attack.png">
-                <div class="skill-tooltip" style="border-color: #00bfff; box-shadow: 0 0 15px #00bfff;">
-                    <h4 style="color: #00bfff; margin: 0 0 5px 0; font-size: 18px;">TẤN CÔNG (STR)</h4>
-                    <span style="color: #ccc; font-size: 14px;">Tấn công vật lý cơ bản.</span>
-                </div>
-            </button>
-        `;
-        
-        for (let s in currentUser.skills) {
-            const data = skillData[s];
-            if (currentUser.skills[s] > 0 && data && data.type === 'active') {
-                let color = data.branch === "Sát Thủ" ? "#4a90e2" : data.branch === "Pháp Sư" ? "#9933ff" : data.branch === "Đấu Sĩ" ? "#ff4d4d" : "#00bfff";
-                
-                let cdBadgeSkill = '';
-                if (s === 'Phản Đòn' && window.counterCooldown && window.counterCooldown > 0) {
-                    cdBadgeSkill = `<div class="potion-cd-badge" style="background:#cc6600; border-color:#fff;">${window.counterCooldown}</div>`;
-                }
-
-                skillRow.innerHTML += `
-                    <button class="icon-mode combat-skill-btn" data-mp="${data.mp}" onclick="${data.func}()" style="border-color: ${color}; position: relative;">
-                        <img src="${data.icon}">
-                        ${cdBadgeSkill} <div class="skill-tooltip" style="border-color: ${color}; box-shadow: 0 0 15px ${color};">
-                            <h4 style="color: ${color}; margin: 0 0 5px 0; font-size: 18px;">${s.toUpperCase()}</h4>
-                            <span style="color: #00ff00; font-size: 14px;">Tiêu hao: ${data.mp} MP</span><br>
-                            <hr style="border-color: #444; margin: 5px 0;">
-                            <span style="color: #ccc; font-size: 14px;">${data.desc}</span>
-                        </div>
-                    </button>
-                `;
-            }
-        }
-
-        // 3. MENU BÌNH HỒI PHỤC (MỚI)
-        let potionCounts = {};
-        let hasPotion = false;
-        currentUser.inventory.forEach(item => {
-            if (ITEM_DATA[item.name] && (ITEM_DATA[item.name].effectType === "heal_hp" || ITEM_DATA[item.name].effectType === "heal_mp")) {
-                potionCounts[item.name] = (potionCounts[item.name] || 0) + 1;
-                hasPotion = true;
-            }
-        });
-
-        let potionListHTML = "";
-        if (!hasPotion) {
-            potionListHTML = `<div style="color:#aaa; font-size:14px; text-align:center;">Túi thuốc trống</div>`;
-        } else {
-            for (let pName in potionCounts) {
-                let pData = ITEM_DATA[pName];
-                let color = pData.effectType === 'heal_hp' ? '#ff4d4d' : '#00bfff';
-                potionListHTML += `
-                    <div class="potion-item-btn" style="border-color: ${color};" onclick="useCombatPotion('${pName}')">
-                        <img src="${pData.img}" style="width:30px; height:30px; object-fit:contain;">
-                        <div>
-                            <div style="color:${color}; font-weight:bold; font-size:14px;">${pName}</div>
-                            <div style="color:#ccc; font-size:12px;">Số lượng: ${potionCounts[pName]}</div>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        // Tạo số đếm Cooldown Đỏ nếu đang chờ delay
-        let cdBadge = (window.potionCooldown && window.potionCooldown > 0) 
-            ? `<div class="potion-cd-badge">${window.potionCooldown}</div>` : ``;
-
-        let imgFilter = (window.potionCooldown && window.potionCooldown > 0) ? `filter: grayscale(1); opacity: 0.5;` : ``;
-
-        // Thêm Icon Túi thuốc vào cuối dàn kỹ năng
-        skillRow.innerHTML += `
-            <div class="combat-potion-wrapper icon-mode combat-skill-btn" style="border-color: #00ff00;">
-                <img src="cons/Item_Maxheal_Dust.png" style="${imgFilter}">
-                ${cdBadge}
-                <div class="combat-potion-menu">
-                    <div style="color: #00ff00; font-size: 16px; font-weight:bold; margin-bottom:5px; border-bottom:1px dashed #00ff00; padding-bottom:5px; text-align:center;">📦 TÚI VẬT PHẨM</div>
-                    ${potionListHTML}
-                </div>
+    window.switchToIconMode = function() {
+    const pre = getPrefix();
+    const skillRow = document.getElementById(pre === 'd-' ? 'd-skillRow' : 'skillRow');
+    
+    // Dùng biến gom HTML thay vì += trực tiếp vào skillRow
+    let iconHTML = `
+        <button id="${pre}btnAttack" class="icon-mode combat-skill-btn" onclick="playerAttack()" style="border-color: #00bfff;">
+            <img src="skill/basic_attack.png">
+            <div class="skill-tooltip" style="border-color: #00bfff; box-shadow: 0 0 15px #00bfff;">
+                <h4 style="color: #00bfff; margin: 0 0 5px 0; font-size: 18px;">TẤN CÔNG (STR)</h4>
+                <span style="color: #ccc; font-size: 14px;">Tấn công vật lý cơ bản.</span>
             </div>
-        `;
-        
-        if (isDungeonMode) {
-            document.getElementById('btnExitDungeon').disabled = true;
-            document.getElementById('btnExitDungeon').style.opacity = "0.4";
-        } else {
-            const btnFind = document.getElementById('btnFindEnemy');
-            if (btnFind) { btnFind.disabled = true; btnFind.style.opacity = "0.4"; btnFind.innerText = "ĐANG CHIẾN ĐẤU..."; }
-        }    
-        updateCombatUI(); 
+        </button>
+    `;
+    
+    for (let s in currentUser.skills) {
+        const data = skillData[s];
+        if (currentUser.skills[s] > 0 && data && data.type === 'active') {
+            let color = data.branch === "Sát Thủ" ? "#4a90e2" : data.branch === "Pháp Sư" ? "#9933ff" : data.branch === "Đấu Sĩ" ? "#ff4d4d" : "#00bfff";
+            let cdBadgeSkill = '';
+            if (s === 'Phản Đòn' && window.counterCooldown && window.counterCooldown > 0) {
+                cdBadgeSkill = `<div class="potion-cd-badge" style="background:#cc6600; border-color:#fff;">${window.counterCooldown}</div>`;
+            }
+
+            iconHTML += `
+                <button class="icon-mode combat-skill-btn" data-mp="${data.mp}" onclick="${data.func}()" style="border-color: ${color}; position: relative;">
+                    <img src="${data.icon}">
+                    ${cdBadgeSkill} <div class="skill-tooltip" style="border-color: ${color}; box-shadow: 0 0 15px ${color};">
+                        <h4 style="color: ${color}; margin: 0 0 5px 0; font-size: 18px;">${s.toUpperCase()}</h4>
+                        <span style="color: #00ff00; font-size: 14px;">Tiêu hao: ${data.mp} MP</span><br>
+                        <hr style="border-color: #444; margin: 5px 0;">
+                        <span style="color: #ccc; font-size: 14px;">${data.desc}</span>
+                    </div>
+                </button>
+            `;
+        }
     }
+
+    // MENU BÌNH HỒI PHỤC
+    let potionCounts = {};
+    let hasPotion = false;
+    currentUser.inventory.forEach(item => {
+        if (ITEM_DATA[item.name] && (ITEM_DATA[item.name].effectType === "heal_hp" || ITEM_DATA[item.name].effectType === "heal_mp")) {
+            potionCounts[item.name] = (potionCounts[item.name] || 0) + 1;
+            hasPotion = true;
+        }
+    });
+
+    let potionListHTML = "";
+    if (!hasPotion) {
+        potionListHTML = `<div style="color:#aaa; font-size:14px; text-align:center;">Túi thuốc trống</div>`;
+    } else {
+        for (let pName in potionCounts) {
+            let pData = ITEM_DATA[pName];
+            let color = pData.effectType === 'heal_hp' ? '#ff4d4d' : '#00bfff';
+            potionListHTML += `
+                <div class="potion-item-btn" style="border-color: ${color};" onclick="useCombatPotion('${pName}')">
+                    <img src="${pData.img}" style="width:30px; height:30px; object-fit:contain;">
+                    <div>
+                        <div style="color:${color}; font-weight:bold; font-size:14px;">${pName}</div>
+                        <div style="color:#ccc; font-size:12px;">Số lượng: ${potionCounts[pName]}</div>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    let cdBadge = (window.potionCooldown && window.potionCooldown > 0) ? `<div class="potion-cd-badge">${window.potionCooldown}</div>` : ``;
+    let imgFilter = (window.potionCooldown && window.potionCooldown > 0) ? `filter: grayscale(1); opacity: 0.5;` : ``;
+
+    iconHTML += `
+        <div class="combat-potion-wrapper icon-mode combat-skill-btn" style="border-color: #00ff00;">
+            <img src="cons/Item_Maxheal_Dust.png" style="${imgFilter}">
+            ${cdBadge}
+            <div class="combat-potion-menu">
+                <div style="color: #00ff00; font-size: 16px; font-weight:bold; margin-bottom:5px; border-bottom:1px dashed #00ff00; padding-bottom:5px; text-align:center;">📦 TÚI VẬT PHẨM</div>
+                ${potionListHTML}
+            </div>
+        </div>
+    `;
+    
+    // Cập nhật DOM 1 lần
+    skillRow.innerHTML = iconHTML;
+
+    if (isDungeonMode) {
+        document.getElementById('btnExitDungeon').disabled = true;
+        document.getElementById('btnExitDungeon').style.opacity = "0.4";
+    } else {
+        const btnFind = document.getElementById('btnFindEnemy');
+        if (btnFind) { btnFind.disabled = true; btnFind.style.opacity = "0.4"; btnFind.innerText = "ĐANG CHIẾN ĐẤU..."; }
+    }    
+    updateCombatUI(); 
+}
     
     function resetToButtonMode() {
         const pre = getPrefix();
@@ -4023,198 +4018,139 @@ const SHADOW_DATA = {
     };
     //Trang bi item
     window.renderBag = function() {
-        if (!currentUser.inventory) currentUser.inventory = [];
-        if (!currentUser.equipped) currentUser.equipped = { weapon: null, shield: null, accessory: null, helmet: null, gloves: null, costume: null };
-        if (currentUser.cash === undefined) currentUser.cash = 0;
+    if (!currentUser.inventory) currentUser.inventory = [];
+    if (!currentUser.equipped) currentUser.equipped = { weapon: null, shield: null, accessory: null, helmet: null, gloves: null, costume: null };
+    if (currentUser.cash === undefined) currentUser.cash = 0;
+
+    const invArea = document.getElementById('inventoryArea');
+    if (!invArea) return; 
     
-        // --- SỬA TẠI ĐÂY ---
-        // Chỉ lấy invArea, xóa bỏ eqArea vì HTML cũ đã bị gỡ bỏ
-        const invArea = document.getElementById('inventoryArea');
-        if (!invArea) return; 
-    
-        invArea.innerHTML = '';
-        
-        // 1. TỰ ĐỘNG CHUYỂN ĐỔI DATA CŨ SANG DATA MỚI
-        currentUser.inventory = currentUser.inventory.map(item => {
-            if (typeof item === 'string') {
-                const base = ITEM_DATA[item];
-                if (!base) return null;
-                return { uid: Date.now().toString(36) + Math.random().toString(36).substring(2), name: item, str: base.str, vit: base.vit, mp: base.mp };
-            }
-            return item;
-        }).filter(item => item !== null && ITEM_DATA[item.name]);
+    // 1. TỰ ĐỘNG CHUYỂN ĐỔI DATA CŨ VÀ DỌN RÁC (Giữ nguyên logic của bạn)
+    currentUser.inventory = currentUser.inventory.map(item => {
+        if (typeof item === 'string') {
+            const base = ITEM_DATA[item];
+            if (!base) return null;
+            return { uid: Date.now().toString(36) + Math.random().toString(36).substring(2), name: item, str: base.str, vit: base.vit, mp: base.mp };
+        }
+        return item;
+    }).filter(item => item !== null && ITEM_DATA[item.name]);
 
-        ['weapon', 'shield', 'accessory', 'helmet', 'gloves'].forEach(slot => {
-            const eq = currentUser.equipped[slot];
-            if (eq && eq.str === undefined && ITEM_DATA[eq.name]) {
-                const base = ITEM_DATA[eq.name];
-                currentUser.equipped[slot] = { uid: Date.now().toString(36) + Math.random().toString(36).substring(2), name: eq.name, str: base.str, vit: base.vit, mp: base.mp };
-            }
-        });
-   
-        // 2. TỰ ĐỘNG DỌN RÁC (XÓA ĐỒ ĐANG MẶC BỊ LỖI)
-        ['weapon', 'shield', 'accessory', 'helmet', 'gloves', 'costume'].forEach(slot => {
-            if (currentUser.equipped[slot] && !ITEM_DATA[currentUser.equipped[slot].name]) {
-                currentUser.equipped[slot] = null;
-            }
-        });
+    ['weapon', 'shield', 'accessory', 'helmet', 'gloves'].forEach(slot => {
+        const eq = currentUser.equipped[slot];
+        if (eq && eq.str === undefined && ITEM_DATA[eq.name]) {
+            const base = ITEM_DATA[eq.name];
+            currentUser.equipped[slot] = { uid: Date.now().toString(36) + Math.random().toString(36).substring(2), name: eq.name, str: base.str, vit: base.vit, mp: base.mp };
+        }
+    });
 
-        // 3. DỌN TÚI ĐỒ (XÓA ĐỒ TRONG KHO BỊ LỖI)
-        currentUser.inventory = currentUser.inventory.filter(itemObj => ITEM_DATA[itemObj.name]);
+    ['weapon', 'shield', 'accessory', 'helmet', 'gloves', 'costume'].forEach(slot => {
+        if (currentUser.equipped[slot] && !ITEM_DATA[currentUser.equipped[slot].name]) {
+            currentUser.equipped[slot] = null;
+        }
+    });
 
-        // ================= HIỂN THỊ ĐỒ ĐANG TRANG BỊ TRỰC TIẾP LÊN MÔ HÌNH =================
-        const allSlots = ['weapon', 'shield', 'helmet', 'gloves', 'accessory']; 
-        
-        allSlots.forEach(slot => {
-            const slotEl = document.getElementById('slot-' + slot);
-            if (!slotEl) return;
-            
-            const itemObj = currentUser.equipped[slot];
-            if (itemObj) {
-                const itemData = ITEM_DATA[itemObj.name];
-                const rank = itemData.rank || 'D'; 
-                
-                slotEl.classList.add('has-item'); // Xóa viền thừa của ô vuông
-                
-                // Gắn thẳng hình ảnh, Tooltip và sự kiện Double-click vào ô Trang bị
-                slotEl.innerHTML = `
-                <div class="item-icon-wrapper rank-${rank}" 
-                 style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;" 
-                 ondblclick="unequipItem('${slot}')"
-                 ontouchstart="window.startPress('${slot}')"
-                 ontouchend="window.endPress()"
-                 ontouchmove="window.endPress()">
-        
-                <img src="${itemData.img}" 
-                 class="item-img-premium" 
-                 style="width: 100%; height: 100%; padding: 4px; border-radius: 6px;">
-        
-                <div class="item-tooltip">
-                <div class="sl-tt-top">
-                <div class="sl-tt-img-box">
-                    <img src="${itemData.img}">
-                </div>
-                <div class="sl-tt-info">
-                    <div class="sl-tt-title text-rank-${rank}">[ITEM: ${itemObj.name}]</div>
-                    <div class="sl-tt-line">
-                        ITEM CLASS: <span class="text-rank-${rank}" style="font-weight:bold;">${rank}</span>
-                    </div>
-                    <div class="sl-tt-line">TYPE: ${slot.toUpperCase()}</div>
-                </div>
-            </div>
+    currentUser.inventory = currentUser.inventory.filter(itemObj => ITEM_DATA[itemObj.name]);
 
-            <div class="sl-tt-bottom">
-                ${itemData.effect ? itemData.effect + '<br>' : ''}
-                ${[
-                    itemObj.vit > 0 ? '+' + itemObj.vit + ' VITALITY' : '',
-                    itemObj.str > 0 ? '+' + itemObj.str + ' STRENGTH' : '',
-                    itemObj.mp > 0 ? '+' + itemObj.mp + ' MANA' : ''
-                ].filter(Boolean).join(', ')}
-            </div>
-
-            <div style="margin-top: 12px; color: #ff4d4d; font-size: 13px; text-align: center; border-top: 1px dashed rgba(255,0,0,0.4); padding-top: 8px; font-weight: bold;">
-                ⚠️ NHẤN ĐÚP CHUỘT ĐỂ THÁO
-            </div>
-        </div>
-    </div>`;
-            } else {
-                // Trả về trạng thái trống
-                slotEl.classList.remove('has-item');
-                slotEl.innerHTML = slot.toUpperCase();
-            }
-        });
-
-        // ================= HIỂN THỊ KHO ĐỒ (ĐÃ LỌC THEO TAB) =================
-        let hasItem = false;
-        
-        currentUser.inventory.forEach((itemObj, index) => {
+    // ================= HIỂN THỊ ĐỒ ĐANG TRANG BỊ =================
+    // (Phần này giữ nguyên logic gán innerHTML trực tiếp vì nó chỉ có 5 ô cố định, không tốn tài nguyên)
+    const allSlots = ['weapon', 'shield', 'helmet', 'gloves', 'accessory']; 
+    allSlots.forEach(slot => {
+        const slotEl = document.getElementById('slot-' + slot);
+        if (!slotEl) return;
+        const itemObj = currentUser.equipped[slot];
+        if (itemObj) {
             const itemData = ITEM_DATA[itemObj.name];
-            if (!itemData) return;
-            
-            const rank = itemData.rank || 'D';
-            const sellPrice = itemData.sellPrice || 10;
-            
-            // --- KIỂM TRA XEM MÓN ĐỒ CÓ THUỘC TAB HIỆN TẠI KHÔNG ---
-            let isMatch = false;
-            const type = itemData.type;
+            const rank = itemData.rank || 'D'; 
+            slotEl.classList.add('has-item');
+            slotEl.innerHTML = `
+            <div class="item-icon-wrapper rank-${rank}" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;" ondblclick="unequipItem('${slot}')" ontouchstart="window.startPress('${slot}')" ontouchend="window.endPress()" ontouchmove="window.endPress()">
+                <img src="${itemData.img}" class="item-img-premium" style="width: 100%; height: 100%; padding: 4px; border-radius: 6px;">
+                <div class="item-tooltip">
+                    <div class="sl-tt-top">
+                        <div class="sl-tt-img-box"><img src="${itemData.img}"></div>
+                        <div class="sl-tt-info">
+                            <div class="sl-tt-title text-rank-${rank}">[ITEM: ${itemObj.name}]</div>
+                            <div class="sl-tt-line">ITEM CLASS: <span class="text-rank-${rank}" style="font-weight:bold;">${rank}</span></div>
+                            <div class="sl-tt-line">TYPE: ${slot.toUpperCase()}</div>
+                        </div>
+                    </div>
+                    <div class="sl-tt-bottom">
+                        ${itemData.effect ? itemData.effect + '<br>' : ''}
+                        ${[itemObj.vit > 0 ? '+' + itemObj.vit + ' VITALITY' : '', itemObj.str > 0 ? '+' + itemObj.str + ' STRENGTH' : '', itemObj.mp > 0 ? '+' + itemObj.mp + ' MANA' : ''].filter(Boolean).join(', ')}
+                    </div>
+                    <div style="margin-top: 12px; color: #ff4d4d; font-size: 13px; text-align: center; border-top: 1px dashed rgba(255,0,0,0.4); padding-top: 8px; font-weight: bold;">⚠️ NHẤN ĐÚP CHUỘT ĐỂ THÁO</div>
+                </div>
+            </div>`;
+        } else {
+            slotEl.classList.remove('has-item');
+            slotEl.innerHTML = slot.toUpperCase();
+        }
+    });
 
-            if (window.currentInvTab === 'all') {
-                isMatch = true;
-            } else if (window.currentInvTab === 'weapon' && type === 'weapon') {
-                isMatch = true;
-            } else if (window.currentInvTab === 'armor' && ['shield', 'helmet', 'gloves', 'costume'].includes(type)) {
-                isMatch = true;
-            } else if (window.currentInvTab === 'accessory' && type === 'accessory') {
-                isMatch = true;
-            } else if (window.currentInvTab === 'consum' && type === 'consumable') {
-                isMatch = true;
-            } else if (window.currentInvTab === 'material' && ['material', 'rare'].includes(type)) {
-                isMatch = true;
-            }
-            
-            // Backup cho code cũ chưa đổi
-            if (window.currentInvTab === 'equip' && ['weapon', 'shield', 'accessory', 'helmet', 'gloves', 'costume'].includes(type)) isMatch = true;
+    // ================= TỐI ƯU KHO ĐỒ BẰNG STRING CONCATENATION =================
+    let hasItem = false;
+    let bagHTML = ""; // Dùng biến này để gom HTML
+    
+    currentUser.inventory.forEach((itemObj, index) => {
+        const itemData = ITEM_DATA[itemObj.name];
+        if (!itemData) return;
+        
+        const rank = itemData.rank || 'D';
+        const sellPrice = itemData.sellPrice || 10;
+        let isMatch = false;
+        const type = itemData.type;
 
-            // Nếu đúng Tab thì mới vẽ ra HTML
-            if (isMatch) {
-                hasItem = true;
-                invArea.innerHTML += `
-                <div class="stat-item rank-${rank}" style="padding: 12px; border-left: 4px solid;">
-                    <div style="display: flex; gap: 15px; align-items: center; flex: 1;">
-                        <div class="item-icon-wrapper rank-${rank}">
-                            <img src="${itemData.img}" class="item-img-premium">
-                            
-                            <!-- BẢNG THÔNG TIN (CHUẨN MANHWA) -->
-                            <div class="item-tooltip">
-                                <div class="sl-tt-top">
-                                    <div class="sl-tt-img-box"><img src="${itemData.img}"></div>
-                                    <div class="sl-tt-info">
-                                        <!-- Tên Item được đổ màu theo Rank -->
-                                        <div class="sl-tt-title text-rank-${rank}">[ITEM: ${itemObj.name}]</div>
-                                        
-                                        <!-- Chữ trắng, riêng Hạng có màu -->
-                                        <div class="sl-tt-line">ITEM CLASS: <span class="text-rank-${rank}" style="font-weight:bold;">${rank}</span></div>
-                                        <div class="sl-tt-line">TYPE: ${itemData.type.toUpperCase()}</div>
-                                    </div>
-                                </div>
-                                <div class="sl-tt-bottom">
-                                    ${itemData.effect ? itemData.effect + '<br>' : ''}
-                                    ${!['consumable', 'material'].includes(itemData.type) ? 
-                                        [
-                                            itemObj.vit > 0 ? `+${itemObj.vit} VITALITY` : '',
-                                            itemObj.str > 0 ? `+${itemObj.str} STRENGTH` : '',
-                                            itemObj.mp > 0 ? `+${itemObj.mp} MANA` : ''
-                                        ].filter(Boolean).join(', ')
-                                    : ''}
-                                    <div class="sl-tt-price">Giá bán: ${sellPrice} Cash</div>
+        if (window.currentInvTab === 'all') isMatch = true;
+        else if (window.currentInvTab === 'weapon' && type === 'weapon') isMatch = true;
+        else if (window.currentInvTab === 'armor' && ['shield', 'helmet', 'gloves', 'costume'].includes(type)) isMatch = true;
+        else if (window.currentInvTab === 'accessory' && type === 'accessory') isMatch = true;
+        else if (window.currentInvTab === 'consum' && type === 'consumable') isMatch = true;
+        else if (window.currentInvTab === 'material' && ['material', 'rare'].includes(type)) isMatch = true;
+        if (window.currentInvTab === 'equip' && ['weapon', 'shield', 'accessory', 'helmet', 'gloves', 'costume'].includes(type)) isMatch = true;
+
+        if (isMatch) {
+            hasItem = true;
+            bagHTML += `
+            <div class="stat-item rank-${rank}" style="padding: 12px; border-left: 4px solid;">
+                <div style="display: flex; gap: 15px; align-items: center; flex: 1;">
+                    <div class="item-icon-wrapper rank-${rank}">
+                        <img src="${itemData.img}" class="item-img-premium">
+                        <div class="item-tooltip">
+                            <div class="sl-tt-top">
+                                <div class="sl-tt-img-box"><img src="${itemData.img}"></div>
+                                <div class="sl-tt-info">
+                                    <div class="sl-tt-title text-rank-${rank}">[ITEM: ${itemObj.name}]</div>
+                                    <div class="sl-tt-line">ITEM CLASS: <span class="text-rank-${rank}" style="font-weight:bold;">${rank}</span></div>
+                                    <div class="sl-tt-line">TYPE: ${itemData.type.toUpperCase()}</div>
                                 </div>
                             </div>
-                            
-                        </div>
-                        <div style="display: flex; flex-direction: column;">
-                            <b class="text-rank-${rank}" style="font-size: 20px;">${itemObj.name}</b>
-                            <small style="color:#aaa; font-size:16px;">Hạng: ${rank}</small>
+                            <div class="sl-tt-bottom">
+                                ${itemData.effect ? itemData.effect + '<br>' : ''}
+                                ${!['consumable', 'material'].includes(itemData.type) ? [itemObj.vit > 0 ? `+${itemObj.vit} VITALITY` : '', itemObj.str > 0 ? `+${itemObj.str} STRENGTH` : '', itemObj.mp > 0 ? `+${itemObj.mp} MANA` : ''].filter(Boolean).join(', ') : ''}
+                                <div class="sl-tt-price">Giá bán: ${sellPrice} Cash</div>
+                            </div>
                         </div>
                     </div>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 8px; justify-content: center;">
-                        ${itemData.type === 'consumable' 
-                            ? `<button class="sl-shop-price-btn bag-action-btn btn-use" onclick="useItem(${index})">DÙNG</button>` 
-                            : (['material', 'rare'].includes(itemData.type) 
-                                ? `` 
-                                : `<button class="sl-shop-price-btn bag-action-btn btn-equip" onclick="equipItem(${index})">MẶC</button>`)
-                        }
-                        <button class="sl-shop-price-btn bag-action-btn btn-sell" onclick="sellItem(${index}, ${sellPrice})">BÁN (${sellPrice})</button>
+                    <div style="display: flex; flex-direction: column;">
+                        <b class="text-rank-${rank}" style="font-size: 20px;">${itemObj.name}</b>
+                        <small style="color:#aaa; font-size:16px;">Hạng: ${rank}</small>
                     </div>
-                </div>`;
-            }
-        });
-
-        if (!hasItem) {
-            invArea.innerHTML = '<p style="color: #aaa; text-align: center; font-size: 20px; padding: 20px;">Ngăn chứa này đang trống</p>';
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px; justify-content: center;">
+                    ${itemData.type === 'consumable' ? `<button class="sl-shop-price-btn bag-action-btn btn-use" onclick="useItem(${index})">DÙNG</button>` : (['material', 'rare'].includes(itemData.type) ? `` : `<button class="sl-shop-price-btn bag-action-btn btn-equip" onclick="equipItem(${index})">MẶC</button>`)}
+                    <button class="sl-shop-price-btn bag-action-btn btn-sell" onclick="sellItem(${index}, ${sellPrice})">BÁN (${sellPrice})</button>
+                </div>
+            </div>`;
         }
-    }
+    });
 
+    // Chỉ can thiệp DOM đúng 1 lần duy nhất
+    if (!hasItem) {
+        invArea.innerHTML = '<p style="color: #aaa; text-align: center; font-size: 20px; padding: 20px;">Ngăn chứa này đang trống</p>';
+    } else {
+        invArea.innerHTML = bagHTML;
+    }
+}
     window.equipItem = async function(index) {
         if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
             return alert("⚠️ HỆ THỐNG: Khí tức quái vật quá áp đảo, bạn không thể thay đổi trang bị lúc này!");
