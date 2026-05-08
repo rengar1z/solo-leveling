@@ -2900,10 +2900,10 @@ const SHADOW_DATA = {
             currentUser.str -= (itemData.str || 0);
             currentUser.vit -= (itemData.vit || 0);
             currentUser.int -= (itemData.int || 0); 
-            currentUser.maxMp -= (itemData.mp || 0);
+            //currentUser.maxMp -= (itemData.mp || 0);
             currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
             if (itemData.vit > 0) {
-                currentUser.maxHp -= itemData.vit * 10;
+                //currentUser.maxHp -= itemData.vit * 10;
                 currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
             }
             currentUser.equipped.costume = null;
@@ -3786,15 +3786,20 @@ const SHADOW_DATA = {
             </button>
         `;
         
-        // 2. Nút kỹ năng
         for (let s in currentUser.skills) {
             const data = skillData[s];
             if (currentUser.skills[s] > 0 && data && data.type === 'active') {
                 let color = data.branch === "Sát Thủ" ? "#4a90e2" : data.branch === "Pháp Sư" ? "#9933ff" : data.branch === "Đấu Sĩ" ? "#ff4d4d" : "#00bfff";
+                
+                let cdBadgeSkill = '';
+                if (s === 'Phản Đòn' && window.counterCooldown && window.counterCooldown > 0) {
+                    cdBadgeSkill = `<div class="potion-cd-badge" style="background:#cc6600; border-color:#fff;">${window.counterCooldown}</div>`;
+                }
+
                 skillRow.innerHTML += `
-                    <button class="icon-mode combat-skill-btn" data-mp="${data.mp}" onclick="${data.func}()" style="border-color: ${color};">
+                    <button class="icon-mode combat-skill-btn" data-mp="${data.mp}" onclick="${data.func}()" style="border-color: ${color}; position: relative;">
                         <img src="${data.icon}">
-                        <div class="skill-tooltip" style="border-color: ${color}; box-shadow: 0 0 15px ${color};">
+                        ${cdBadgeSkill} <div class="skill-tooltip" style="border-color: ${color}; box-shadow: 0 0 15px ${color};">
                             <h4 style="color: ${color}; margin: 0 0 5px 0; font-size: 18px;">${s.toUpperCase()}</h4>
                             <span style="color: #00ff00; font-size: 14px;">Tiêu hao: ${data.mp} MP</span><br>
                             <hr style="border-color: #444; margin: 5px 0;">
@@ -4129,7 +4134,7 @@ const SHADOW_DATA = {
         currentUser.str += itemObj.str;
         currentUser.vit += itemObj.vit;
         
-        currentUser.mp += itemObj.mp; 
+        currentUser.maxMp += itemObj.mp;
         if (itemObj.vit > 0) {
             currentUser.maxHp += itemObj.vit * 10;
         }
