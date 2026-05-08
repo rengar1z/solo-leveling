@@ -4656,6 +4656,7 @@ const SHADOW_DATA = {
         let effectArmorBreak = 0;
         let effectManaSteal = 0;
         let effectLifeStealRate = 0;
+        let effectVulnerability = 0;
 
         // --- CƠ CHẾ KỸ NĂNG CỦA BOSS HẦM NGỤC THƯỜNG ---
         // 1. KỸ NĂNG CỦA THỦ LĨNH YÊU TINH (GOBLIN)
@@ -4950,9 +4951,9 @@ const SHADOW_DATA = {
                 // CHIÊU MỚI: Tiếng thét hủy diệt
                 let rawDmg = enemyAtk * 1.2; 
                 dmg = Math.max(30, Math.floor(rawDmg * (1 - vitDmgReduction))); 
-                isSpecialAttack = true;
-                window.playerVulnerabilityTurns = 3; // Khóa mục tiêu 3 lượt
-                specialAttackLog = `<span style="color:#cc33ff; font-weight:bold; text-shadow: 0 0 10px #cc33ff;">🔊 TIẾNG THÉT HỦY DIỆT!</span> Vua Kiến rống lên một dải âm thanh chói tai, gây ${Math.floor(dmg)} ST. Thính giác và cơ thể bạn chấn động, <span style="color:#ff33ff; font-weight:bold;">[NHẬN THÊM 5% SÁT THƯƠNG]</span> trong 3 lượt tới!`;
+                isSpecialAttack = true;        
+                effectVulnerability = 3;      
+                specialAttackLog = `<span style="color:#cc33ff; font-weight:bold; text-shadow: 0 0 10px #cc33ff;">🔊 TIẾNG THÉT HỦY DIỆT!</span> Vua Kiến rống lên một dải âm thanh chói tai...`;
             }
             else {
                 // Sức mạnh phi thường: Cú đấm One-shot
@@ -5067,6 +5068,7 @@ const SHADOW_DATA = {
             effectArmorBreak = 0; // Hủy debuff
             effectManaSteal = 0;  // Hủy debuff
             effectLifeStealRate = 0;
+            effectVulnerability = 0;
             
             if (isSpecialAttack) logBattle(skillNameOnly);
             logBattle(`<span style="color:#8eefff; font-weight:bold;">💨 NÉ TRÁNH! Cảm quan nhạy bén giúp bạn lướt qua đòn đánh hoàn hảo!</span>`);
@@ -5088,6 +5090,7 @@ const SHADOW_DATA = {
                 effectArmorBreak = 0; // Chặn đứt bùa hại
                 effectManaSteal = 0;  // Chặn đứt việc mất máu/mana
                 effectLifeStealRate = 0;
+                effectVulnerability = 0;
                 
                 triggerShake();
                 if (isSpecialAttack) logBattle(skillNameOnly);
@@ -5099,8 +5102,10 @@ const SHADOW_DATA = {
                 }
             } 
             else {
-                // ÁP DỤNG HIỆU ỨNG KARGALGAN TẠI ĐÂY (VÌ ĐÃ ĐÁNH TRÚNG)
                 if (effectArmorBreak > 0) playerArmorBreakTurns = effectArmorBreak;
+                if (effectVulnerability > 0) {
+                    window.playerVulnerabilityTurns = (window.playerVulnerabilityTurns || 0) + effectVulnerability;
+                }
                 if (effectManaSteal > 0) {
                     let manaSteal = Math.min(currentUser.mp, effectManaSteal);
                     currentUser.mp -= manaSteal;
@@ -5113,6 +5118,7 @@ const SHADOW_DATA = {
                     enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
                     logBattle(`<span style="color:#00ff00; font-weight:bold; font-style:italic;">🩸 Kẻ địch tước đoạt sinh lực của bạn, tự phục hồi ${healAmount} HP!</span>`);
                 }
+                
                 
                 if (currentUser.skills["Cơ Thể Thép"] > 0) dmg *= 0.80; 
                 
