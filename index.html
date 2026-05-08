@@ -4600,6 +4600,9 @@ const SHADOW_DATA = {
             playerArmorBreakTurns--;
             if (playerArmorBreakTurns === 0) {
                 logBattle(`<span style="color:#aaa; font-style:italic;">🛡️ Lời nguyền suy yếu đã tan biến. Khả năng phòng thủ của bạn trở lại bình thường.</span>`);
+
+                // --- THÊM 1 DÒNG NÀY ĐỂ NGĂN BOSS ĐÁNH KHI BẠN ĐÃ CHẾT VÌ ĐỘC ---
+            if (currentUser.hp <= 0) { updateCombatUI(); return; }
             }
         }
 
@@ -4835,6 +4838,7 @@ const SHADOW_DATA = {
             
             // --- GIAI ĐOẠN 1: TINH THỂ MÁU (Dưới 50% Máu) ---
             if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasAbsorbedDemons) {
+                enemy.isEnraged = true;
                 enemy.hasAbsorbedDemons = true;
                 let healAmount = Math.floor(enemy.maxHp * 0.20); // Hồi 20% Máu
                 enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
@@ -4891,6 +4895,7 @@ const SHADOW_DATA = {
             
             // --- GIAI ĐOẠN 2: CHỮA LÀNH & NÉN CƠ THỂ (Dưới 50% Máu) ---
             if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasCompressed) {
+                enemy.isEnraged = true;
                 enemy.hasCompressed = true;
                 let healAmount = Math.floor(enemy.maxHp * 0.30); // Phép chữa lành: Hồi 30% Máu
                 enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
@@ -5395,8 +5400,19 @@ const SHADOW_DATA = {
                             if (enemy.hp <= 0) { updateCombatUI(); return setTimeout(winBattle, 500); }
                         }
                     }
-                    // ====================================================================
-
+                    if (playerBleedTurns > 0 && currentUser.hp > 0) {
+                        let bleedDmg = Math.floor(currentUser.maxHp * 0.05);
+                        currentUser.hp = Math.max(0, currentUser.hp - bleedDmg);
+                        playerBleedTurns--;
+                        logBattle(`<span style="color:red; font-style:italic;">🩸 Vết thương rỉ máu! Bạn mất thêm ${bleedDmg} HP.</span>`);
+                    }
+                    if (playerArmorBreakTurns > 0 && currentUser.hp > 0) {
+                        playerArmorBreakTurns--;
+                        if (playerArmorBreakTurns === 0) logBattle(`<span style="color:#aaa; font-style:italic;">🛡️ Lời nguyền suy yếu đã tan biến.</span>`);
+                    }
+                    if (window.playerVulnerabilityTurns && window.playerVulnerabilityTurns > 0) {
+                        window.playerVulnerabilityTurns--;
+                    }   
                     logBattle(`<span style="color:yellow; font-weight:bold;">Kẻ địch đang bị choáng, mất lượt!</span>`);
                     isMyTurn = true;
                     updateCombatUI(); // Trả lại lượt cho bạn
