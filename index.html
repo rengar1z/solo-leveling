@@ -1831,6 +1831,52 @@
             border-style: dashed !important; /* Đổi viền thành nét đứt để tạo cảm giác giáp bị vỡ */
             box-shadow: inset 0 0 20px rgba(255,153,0,0.5) !important;
         }
+
+        #lootModal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); z-index: 9999; 
+            justify-content: center; align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .loot-box {
+            background: linear-gradient(180deg, #1a1a1a 0%, #050505 100%);
+            border: 2px solid #ffcc00; box-shadow: 0 0 40px rgba(255, 204, 0, 0.4);
+            padding: 30px; border-radius: 15px; text-align: center; 
+            width: 90%; max-width: 600px;
+            animation: lootPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes lootPop { 
+            0% { transform: scale(0.5) translateY(100px); opacity: 0; } 
+            100% { transform: scale(1) translateY(0); opacity: 1; } 
+        }
+        #lootItemsArea {
+            display: flex; flex-wrap: wrap; justify-content: center; 
+            min-height: 120px; max-height: 300px; overflow-y: auto;
+            background: #000; border-radius: 10px; padding: 15px; border: 1px inset #333;
+        }
+        .loot-item-card {
+            width: 85px; padding: 10px; margin: 8px; border-radius: 8px;
+            background: #111; text-align: center; position: relative;
+            transition: transform 0.2s; cursor: pointer;
+        }
+        .loot-item-card:hover { transform: scale(1.15); z-index: 10; }
+        .loot-item-card img { width: 50px; height: 50px; object-fit: contain; margin-bottom: 5px; }
+        .loot-name { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; }
+        
+        /* Hào quang theo Rank */
+        .loot-rank-S { border: 2px solid #ff0000; box-shadow: inset 0 0 15px rgba(255,0,0,0.5), 0 0 10px red; color: #ff4d4d; }
+        .loot-rank-A { border: 2px solid #ff9900; box-shadow: inset 0 0 15px rgba(255,153,0,0.5), 0 0 10px orange; color: #ffcc00; }
+        .loot-rank-B { border: 2px solid #00bfff; box-shadow: inset 0 0 15px rgba(0,191,255,0.5), 0 0 10px #00bfff; color: #8eefff; }
+        .loot-rank-C { border: 2px solid #00ff00; box-shadow: inset 0 0 15px rgba(0,255,0,0.5), 0 0 10px #00ff00; color: #80ff80; }
+        .loot-rank-D { border: 2px solid #aaaaaa; box-shadow: inset 0 0 10px rgba(170,170,170,0.5); color: #cccccc; }
+
+        .loot-btn {
+            margin-top: 25px; padding: 12px 40px; font-size: 22px; font-weight: bold; font-family: 'Oswald';
+            background: linear-gradient(90deg, #cc6600, #ff9900); color: white; 
+            border: 2px solid white; cursor: pointer; border-radius: 8px; 
+            box-shadow: 0 0 15px #ff9900; transition: 0.2s;
+        }
+        .loot-btn:hover { background: #fff; color: #cc6600; box-shadow: 0 0 25px #fff; transform: scale(1.05); }
     </style>
 </head>
 <body>
@@ -2537,6 +2583,22 @@
             <button class="tab-btn btn-system" style="flex:1; border-color: #555; color: #aaa !important; font-size: 20px;" onclick="skipExtraction()">BỎ QUA</button>
         </div>
     </div>
+</div>
+    
+<div id="lootModal">
+        <div class="loot-box">
+            <h1 style="color: #ffcc00; text-shadow: 0 0 15px #ffcc00; margin-top: 0; font-size: 32px;">🔥 CHIẾN THẮNG 🔥</h1>
+            <hr style="border-color: #444; margin-bottom: 15px;">
+            
+            <div id="lootBasicInfo" style="font-size: 20px; margin-bottom: 20px; font-weight: bold;">
+                </div>
+            
+            <h3 style="color: #fff; text-align: left; margin: 0 0 10px 10px;">Vật phẩm thu được:</h3>
+            <div id="lootItemsArea">
+                </div>
+            
+            <button onclick="collectLoot()" class="loot-btn">NHẬN TẤT CẢ</button>
+        </div>
 </div>
 <script type="module">
     // HỆ THỐNG HIỆU ỨNG CHIẾN ĐẤU BẰNG HTML GỐC
@@ -5339,7 +5401,43 @@ const SHADOW_DATA = {
         checkBattleEnd(); 
     };
 
+    window.showLootUI = function(exp, gold, itemsArray) {
+        const modal = document.getElementById('lootModal');
+        const info = document.getElementById('lootBasicInfo');
+        const area = document.getElementById('lootItemsArea');
+        
+        info.innerHTML = `<span style="color:#00ff00;">+${exp} EXP</span> &nbsp;&nbsp;|&nbsp;&nbsp; <span style="color:gold;">+${gold} Vàng</span>`;
+        
+        let html = '';
+        if (itemsArray.length === 0) {
+            html = `<div style="color:#666; font-style:italic; margin-top: 30px;">Không có vật phẩm nào rớt ra...</div>`;
+        } else {
+            itemsArray.forEach(item => {
+                // Xác định Rank và Hào quang
+                let rankClass = item.rank ? `loot-rank-${item.rank}` : 'loot-rank-D';
+                let imgSrc = item.icon || 'https://via.placeholder.com/50?text=?'; 
+                
+                html += `
+                    <div class="loot-item-card ${rankClass}" title="${item.name}">
+                        <img src="${imgSrc}" onerror="this.src='https://via.placeholder.com/50?text=Item'">
+                        <div class="loot-name">${item.name}</div>
+                    </div>
+                `;
+            });
+        }
+        
+        area.innerHTML = html;
+        modal.style.display = 'flex'; // Bật Pop-up
+    };
+
+    window.collectLoot = function() {
+        document.getElementById('lootModal').style.display = 'none'; // Tắt Pop-up
+    };
+
     function winBattle() {
+        // === BƯỚC 4.1: TẠO MẢNG HỨNG ĐỒ RỚT RA ĐỂ ĐƯA LÊN GIAO DIỆN ===
+        let droppedItemsForUI = [];
+
         let rewardCash = currentRedGateId ? Math.floor(enemy.exp * 2.5) : Math.floor(enemy.exp * 1.5);
         // KÍCH HOẠT: THỢ SĂN TIỀN THƯỞNG
         if (currentUser.skills["Thợ Săn Tiền Thưởng"] > 0) {
@@ -5366,20 +5464,36 @@ const SHADOW_DATA = {
             let dropChance = (enemy.isBoss ? 1.0 : 0.05) + luckBonus; 
             if (Math.random() <= dropChance) {
                 const rareItems = RED_GATES[currentRedGateId].rareDrops;
-                const droppedItem = rareItems[Math.floor(Math.random() * rareItems.length)];
-                currentUser.inventory.push(generateItem(droppedItem));
-                logBattle(`<span style="color:${RED_GATES[currentRedGateId].themeColor}; font-size:18px;">✨ CỔNG ĐỎ RƠI ĐỒ HIẾM: <b>${droppedItem}</b>!</span>`);
+                const droppedItemName = rareItems[Math.floor(Math.random() * rareItems.length)];
+                const newItem = generateItem(droppedItemName); 
+                currentUser.inventory.push(newItem); // Bỏ vào kho
+                droppedItemsForUI.push(newItem);     // === BƯỚC 4.2: Bỏ vào khay hiển thị UI ===
+                logBattle(`<span style="color:${RED_GATES[currentRedGateId].themeColor}; font-size:18px;">✨ CỔNG ĐỎ RƠI ĐỒ HIẾM: <b>${droppedItemName}</b>!</span>`);
             }
         } else if (isDungeonMode && enemy.isBoss) {
             let dropChance = 0.10 + luckBonus; // Mặc định 10% + buff
             if (Math.random() <= dropChance) { 
                 const items = ["Dagger", "Shield", "Essence of Magic"];
-                const droppedItem = items[Math.floor(Math.random() * items.length)];
-                currentUser.inventory.push(generateItem(droppedItem));
-                logBattle(`<span style="color:gold; font-size:18px;">🔥 BOSS rơi đồ: <b>${droppedItem}</b>!</span>`);
+                const droppedItemName = items[Math.floor(Math.random() * items.length)];
+                const newItem = generateItem(droppedItemName); 
+                currentUser.inventory.push(newItem); // Bỏ vào kho
+                droppedItemsForUI.push(newItem);     // === BƯỚC 4.2: Bỏ vào khay hiển thị UI ===
+                logBattle(`<span style="color:gold; font-size:18px;">🔥 BOSS rơi đồ: <b>${droppedItemName}</b>!</span>`);
             }
         }
         
+        // === BƯỚC 4.3: KÍCH HOẠT HIỂN THỊ GIAO DIỆN 3D LOOT ĐỒ ===
+        let itemsWithDataForUI = droppedItemsForUI.map(itemObj => {
+            let data = ITEM_DATA[itemObj.name];
+            return {
+                name: itemObj.name,
+                rank: data ? data.rank : 'D',
+                icon: data ? data.img : 'https://via.placeholder.com/50?text=?'
+            };
+        });
+        window.showLootUI(enemyExp, rewardCash, itemsWithDataForUI);
+        // ========================================================
+
         if (!currentUser.ownedShadows) currentUser.ownedShadows = [];
         if (enemy.isBoss && enemy.bossType && SHADOW_DATA[enemy.bossType]) {
             // Kiểm tra xem đã sở hữu bóng ma này chưa
@@ -5423,17 +5537,9 @@ const SHADOW_DATA = {
 
             // Hầm Ngục Côn Trùng -> 10% mở Cổng Đỏ (Ngẫu nhiên ra Vua Băng hoặc Igris)
             if (dCurrentId === 'insect_dungeon') {
-                if (Math.random() <= 0.9) { // LỚP 1: 10% Tỷ lệ xuất hiện Cổng Đỏ
-                    
-                    // LỚP 2: Tung đồng xu 50-50 chọn cổng
-                    if (Math.random() <= 0.5) {
-                        spawnedRedGate = "ice_world";       // 50% ra Cổng Băng Giá
-                    } else {
-                        spawnedRedGate = "red_knight_tomb"; // 50% ra Cổng Hiệp Sĩ Đỏ (Igris)
-                    }
-                    
-                    // Mẹo: Nếu bạn muốn Igris hiếm hơn (Ví dụ 70% Băng - 30% Igris) 
-                    // thì chỉ cần đổi (Math.random() <= 0.7) là được.
+                if (Math.random() <= 0.9) { // Fixed lại tỷ lệ 10% cho bạn
+                    if (Math.random() <= 0.5) { spawnedRedGate = "ice_world"; } 
+                    else { spawnedRedGate = "red_knight_tomb"; }
                 }
             }
 
@@ -5441,7 +5547,7 @@ const SHADOW_DATA = {
             if (spawnedRedGate) {
                 logBattle(`<span style="color:red; font-size:18px; font-weight:bold; text-shadow: 0 0 10px red;">[CẢNH BÁO MỨC ĐỘ NGUY HIỂM: A] - KHÔNG GIAN SỤP ĐỔ! MỘT CỔNG ĐỎ BẤT NGỜ HÚT BẠN VÀO TRONG!</span>`);
                 setTimeout(() => { enterRedGate(spawnedRedGate); }, 2500);
-                return; // Dừng việc chuyển ải bình thường lại
+                return; 
             }
         }
         
