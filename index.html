@@ -4343,7 +4343,7 @@ const SHADOW_DATA = {
         }
 
         // 4. AGI: Tính toán Bạo kích
-        let critRate = (currentUser.agi * 0.5) + (config.bonusCritRate || 0);
+        let critRate = (currentUser.agi * 0.25) + (config.bonusCritRate || 0);
         let critMulti = 1.5 + (currentUser.agi * 0.01);
         // KÍCH HOẠT BÓNG MA: IGRIS
         if (currentUser.equippedShadow === "igris") critMulti += 0.15;
