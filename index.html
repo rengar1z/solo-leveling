@@ -4466,14 +4466,16 @@ const SHADOW_DATA = {
         }
         
 
-        if (config.stat === 'str' && currentUser.equippedShadow === "cerberus") totalIgnoreDef += 0.10;
+        if (config.stat === 'str' && currentUser.equippedShadow === "cerberus") {
+            totalIgnoreDef += 0.10;
+        }
 
         // Áp dụng tổng lượng xuyên giáp vào phòng thủ của quái
         if (totalIgnoreDef > 0) {
             enemyDef = Math.floor(enemyDef * (1 - totalIgnoreDef)); 
         }
         
-        // Trừ giáp vào sát thương (Chỉ trừ 1 lần)
+        // Trừ giáp vào sát thương (Chỉ thực hiện 1 lần duy nhất)
         finalDmg = Math.max(5, finalDmg - enemyDef);
 
         // 3. Nội tại Vũ khí (Chỉ áp dụng cho đòn Vật lý - STR)
