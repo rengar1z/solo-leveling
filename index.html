@@ -5454,6 +5454,11 @@ const SHADOW_DATA = {
             const shadowName = SHADOW_DATA[window.currentExtractTarget].name;
             alert(`🔥 TRÍCH XUẤT THÀNH CÔNG! Trỗi dậy đi, [${shadowName}]!`);
             logBattle(`<span style="color:#cc33ff; font-weight:bold; font-size: 18px; text-shadow: 0 0 10px #cc33ff;">Trích xuất thành công! ${shadowName} đã gia nhập Đội Quân Bóng Tối!</span>`);
+            if (window.currentExtractTarget === "beru") {
+                setTimeout(() => {
+                    logBattle(`<span style="color:#cc33ff; font-weight:bold; font-size: 20px; font-style:italic;">Beru: 'Thần... xin... quy... phục... Chủ nhân...'</span>`);
+                }, 800);
+            }
             await saveUserData();
             if(window.renderShadowArmy) window.renderShadowArmy();
         } else {
@@ -5653,6 +5658,58 @@ const SHADOW_DATA = {
         document.getElementById('btnExitDungeon').innerText = "BỎ CUỘC & THOÁT";
         
         document.getElementById('d-battleLog').innerHTML = `Tiến vào Ải ${dCurrentStage + 1}! Khám phá thấy <span style="color:#ff4d4d">${enemy.name}</span>!`;
+        // === THÊM LỜI THOẠI CỦA CÁC BOSS HẦM NGỤC THEO CỐT TRUYỆN ===
+        if (enemy.isBoss) {
+            let bossDialog = "";
+            let bossWarning = "";
+            
+            switch(enemy.bossType) {
+                case "kasaka":
+                    bossWarning = `<span style="color:#00ff00; font-weight:bold;">[CẢNH BÁO E] CHÚA TỂ HẦM NGỤC XUẤT HIỆN!</span>`;
+                    bossDialog = `<span style="color:#00ff00; font-style:italic; font-size: 18px;">Đôi mắt xà tinh màu vàng khè chằm chằm nhìn bạn như một con mồi ngon...</span>`;
+                    break;
+                case "hobgoblin_leader":
+                    bossWarning = `<span style="color:#ff9900; font-weight:bold;">[CẢNH BÁO C] THỦ LĨNH YÊU TINH XUẤT HIỆN!</span>`;
+                    bossDialog = `<span style="color:#ff9900; font-style:italic; font-size: 20px;">Thủ Lĩnh Yêu Tinh: 'Kikiki... Lại có thêm thịt tươi tự nộp mạng sao? Bọn con người thật ngu ngốc!'</span>`;
+                    break;
+                case "giant_spider":
+                    bossWarning = `<span style="color:#00bfff; font-weight:bold;">[CẢNH BÁO C+] NHỆN KHỔNG LỒ XUẤT HIỆN!</span>`;
+                    bossDialog = `<span style="color:#aaa; font-style:italic; font-size: 18px;">*Két... Két...* </span>`;
+                    break;
+                case "kargalgan":
+                    bossWarning = `<span style="color:#ff3333; font-weight:bold;">[CẢNH BÁO A+] ĐẠI TÙ TRƯỞNG HIGH ORC XUẤT HIỆN! Áp lực ma lực đè nặng lên vai bạn!</span>`;
+                    bossDialog = `<span style="color:#ff3333; font-style:italic; font-size: 20px;">Kargalgan: 'Những sinh vật hạ đẳng dơ bẩn... Ai cho phép các ngươi bước vào lãnh địa của tộc High Orc?'</span>`;
+                    break;
+                case "cerberus":
+                    bossWarning = `<span style="color:#ff0000; font-weight:bold;">[CẢNH BÁO A+] KẺ GÁC CỔNG ĐỊA NGỤC ĐÃ TỈNH GIẤC!</span>`;
+                    bossDialog = `<span style="color:#ff4d4d; font-style:italic; font-size: 18px;">*Grrrrr... Rống!!!* Tiếng gầm gừ cắn xé không gian!</span>`;
+                    break;
+                case "vulcan":
+                    bossWarning = `<span style="color:#ff8c00; font-weight:bold;">[CẢNH BÁO S] CHÚA TỂ THAM LAM VULCAN XUẤT HIỆN! Hơi nóng dung nham làm bốc hơi mọi thứ!</span>`;
+                    bossDialog = `<span style="color:#ff8c00; font-style:italic; font-size: 20px;">Vulcan: 'Khà khà khà! Ta ngửi thấy mùi linh hồn tươi mới... Hãy để ngọn lửa của ta thiêu rụi ngươi!'</span>`;
+                    break;
+                case "metus":
+                    bossWarning = `<span style="color:#00e6e6; font-weight:bold;">[CẢNH BÁO S] KẺ DẪN DẮT LINH HỒN METUS XUẤT HIỆN! Tiếng khóc than của vong linh vang vọng...</span>`;
+                    bossDialog = `<span style="color:#00e6e6; font-style:italic; font-size: 20px;">Metus: 'Hỡi kẻ đang thở... Hãy gia nhập dàn đồng ca của cái chết... Sự tĩnh lặng là giải thoát tuyệt đối!'</span>`;
+                    break;
+                case "baran":
+                    bossWarning = `<span style="color:#ff0000; font-weight:bold; text-shadow: 0 0 10px red;">[CẢNH BÁO S+] VUA QUỶ BARAN ĐÃ TỌA LÊN NGAI VÀNG! Cả không gian như muốn vỡ vụn...</span>`;
+                    bossDialog = `<span style="color:#ff3333; font-style:italic; font-size: 22px; text-shadow: 0 0 5px #ff0000;">Baran: 'Kẻ mang mùi hương của kẻ phản bội... Ngươi nghĩ mình có tư cách chạm tới ngai vàng này sao?'</span>`;
+                    break;
+                case "beru":
+                    bossWarning = `<span style="color:#ffcc00; font-weight:bold; text-shadow: 0 0 5px gold;">[CẢNH BÁO S+] VUA KIẾN BERU XUẤT HIỆN! Một áp lực kinh hoàng bao trùm lấy bạn...</span>`;
+                    bossDialog = `<span style="color:#cc33ff; font-style:italic; font-size: 22px; text-shadow: 0 0 5px #cc33ff;">Beru: 'Ngươi... là... Vua của... con người?'</span>`;
+                    break;
+            }
+
+            // In ra Dòng cảnh báo trước, 1 giây sau mới in Câu thoại cho kịch tính!
+            if (bossWarning) {
+                document.getElementById('d-battleLog').innerHTML = bossWarning;
+                setTimeout(() => {
+                    logBattle(bossDialog);
+                }, 1000); 
+            }
+        }
 
         if (currentUser.equippedShadow && SHADOW_DATA[currentUser.equippedShadow]) {
             const shadowName = SHADOW_DATA[currentUser.equippedShadow].name;
@@ -5711,7 +5768,6 @@ const SHADOW_DATA = {
             } else if (enemy.bossType === "fire_lord") {
                 introLog += `<br><span style="color:#ff4d4d; font-style:italic; font-weight:bold; text-shadow: 0 0 5px #ff0000;">"Chúa Tể Dung Nham gầm rống, nhiệt độ bỗng chốc tăng lên dữ dội..."</span>`;
             } else if (enemy.bossType === "igris") {
-                // LỜI THOẠI CỦA IGRIS
                 introLog += `<br><span style="color:#cc0000; font-style:italic; font-weight:bold; text-shadow: 0 0 5px #cc0000;">"Thề nguyện trung thành với Quân Vương Bóng Tối. Tôi là thanh kiếm của ngài...."</span>`;
         }
         }
