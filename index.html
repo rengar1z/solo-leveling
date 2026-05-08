@@ -2916,9 +2916,7 @@ const SHADOW_DATA = {
         "Siêu Giác Quan": { branch: "Chung", type: "passive", maxLv: 3, cost: 5, desc: "Tăng thêm 3% tỷ lệ né tránh đòn đánh mỗi cấp.", icon: "https://cdn-icons-png.flaticon.com/512/709/709612.png" },        
         "Thợ Săn Tiền Thưởng": { branch: "Chung", type: "passive", maxLv: 3, cost: 2, desc: "Tăng 15% Cash nhận được sau mỗi trận thắng.", icon: "skill/amsat.jpg" },
         "Bàn Tay May Mắn": { branch: "Chung", type: "passive", maxLv: 1, cost: 5, desc: "Tăng 10% tỷ lệ rớt đồ hiếm khi tiêu diệt Boss.", icon: "skill/amsat.jpg" },
-        "Phản Đòn": { branch: "Đấu Sĩ", type: "active", maxLv: 1, cost: 10, mp: 30, func: "useCounterAttack", desc: "Thủ thế. Chặn 100% sát thương đòn tiếp theo và phản lại 150% ST đó lên kẻ địch.", icon: "wp/shield.png" },
-        "Dao Độc": { branch: "Sát Thủ", type: "active", maxLv: 1, cost: 10, mp: 35, func: "usePoisonDagger", desc: "Tẩm kịch độc vào dao. Gây sát thương và khiến địch trúng độc, mất 5% HP tối đa mỗi lượt (Kéo dài 3 lượt).", icon: "skill/dagger.jpg" },
-
+    
         // --- NHÁNH SÁT THỦ (TỐC ĐỘ / BẠO KÍCH) ---
         "Bước Chân Bóng Tối": { branch: "Sát Thủ", type: "passive", maxLv: 1, cost: 5, desc: "Có 10% cơ hội né tránh hoàn toàn đòn đánh.", icon: "skill/tanghinh.jpg" },
         "Nhát Chém Tử Thần": { branch: "Sát Thủ", type: "passive", maxLv: 1, cost: 10, desc: "[Bị động] Tăng thêm 30% Sát thương Bạo Kích.", icon: "skill/amsat.jpg" },
@@ -4469,14 +4467,13 @@ const SHADOW_DATA = {
         
 
         if (config.stat === 'str' && currentUser.equippedShadow === "cerberus") totalIgnoreDef += 0.10;
-        if (totalIgnoreDef > 0) enemyDef = Math.floor(enemyDef * (1 - totalIgnoreDef)); 
-        finalDmg = Math.max(5, finalDmg - enemyDef);
 
         // Áp dụng tổng lượng xuyên giáp vào phòng thủ của quái
         if (totalIgnoreDef > 0) {
             enemyDef = Math.floor(enemyDef * (1 - totalIgnoreDef)); 
         }
         
+        // Trừ giáp vào sát thương (Chỉ trừ 1 lần)
         finalDmg = Math.max(5, finalDmg - enemyDef);
 
         // 3. Nội tại Vũ khí (Chỉ áp dụng cho đòn Vật lý - STR)
