@@ -3703,8 +3703,14 @@ const SHADOW_DATA = {
         const dynamicBtns = document.querySelectorAll(`#${pre === 'd-' ? 'd-skillRow' : 'skillRow'} .combat-skill-btn`);
         dynamicBtns.forEach(btn => {
             btn.disabled = !isMyTurn;
-            const cost = parseInt(btn.getAttribute('data-mp') || 0); 
-            // Kiểm tra xem nút này có phải là nút Phản Đòn không
+            let cost = parseInt(btn.getAttribute('data-mp') || 0); 
+            
+            // === FIX LỖI ĐỒNG BỘ MP CỦA THỊNH NỘ QUÂN VƯƠNG ===
+            const isMonarchWrath = btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('useMonarchWrath');
+            if (isMonarchWrath) {
+                cost = 100 + (monarchWrathUses * 50); 
+            }
+
             const isCounterSkill = btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('useCounterAttack');
             
             let isLocked = false;
@@ -4610,12 +4616,10 @@ const SHADOW_DATA = {
         if (playerArmorBreakTurns > 0 && currentUser.hp > 0) {
             playerArmorBreakTurns--;
             if (playerArmorBreakTurns === 0) {
-                logBattle(`<span style="color:#aaa; font-style:italic;">🛡️ Lời nguyền suy yếu đã tan biến. Khả năng phòng thủ của bạn trở lại bình thường.</span>`);
-
-                // --- THÊM 1 DÒNG NÀY ĐỂ NGĂN BOSS ĐÁNH KHI BẠN ĐÃ CHẾT VÌ ĐỘC ---
-            if (currentUser.hp <= 0) { updateCombatUI(); return; }
-            }
+                logBattle(`<span style="color:#aaa; font-style:italic;">🛡️ Lời nguyền suy yếu đã tan biến. Khả năng phòng thủ của bạn trở lại bình thường.</span>`);       
         }
+            
+        if (currentUser.hp <= 0) { updateCombatUI(); return; }
 
         // --- XỬ LÝ DƯ ÂM TIẾNG THÉT ---
         if (window.playerVulnerabilityTurns && window.playerVulnerabilityTurns > 0 && currentUser.hp > 0) {
@@ -5122,8 +5126,10 @@ const SHADOW_DATA = {
                     let manaSteal = Math.min(currentUser.mp, effectManaSteal);
                     currentUser.mp -= manaSteal;
                     enemy.hp = Math.min(enemy.maxHp, enemy.hp + (manaSteal * 10));
-                    // Sửa lại đoạn Log để hiển thị chính xác số Mana bị mất
+                    // Sửa câu của Kargalgan
                     specialAttackLog = specialAttackLog.replace("hút cạn MP!", `hút cạn <span style="color:#00bfff">${manaSteal} MP</span>!`);
+                    // Sửa câu của Metus
+                    specialAttackLog = specialAttackLog.replace("[THIÊU ĐỐT 150 MP]", `[THIÊU ĐỐT <span style="color:#00bfff">${manaSteal} MP</span>]`);
                 }
                 if (effectLifeStealRate > 0) {
                     let healAmount = Math.floor(dmg * effectLifeStealRate);
