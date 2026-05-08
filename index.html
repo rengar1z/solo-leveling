@@ -4548,14 +4548,13 @@ const SHADOW_DATA = {
     // --- SKILL: DAO ĐỘC (POISON DAGGER) ---
     window.usePoisonDagger = function() {
         if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 35) { if(currentUser.mp < 35) logBattle("<span style='color:orange'>Thiếu 35 MP!</span>"); return; }
-        currentUser.mp -= 35; 
-        
+        currentUser.mp -= 35;     
         let hit = calcPlayerDamage({ multi: 1.0, stat: 'str' }); // Dame gốc đánh vào
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
-        
-        enemyPoisonTurns += 3; // Cộng dồn 3 lượt trúng độc
-        window.enemyNewlyPoisoned = true;
-        
+       if (enemyPoisonTurns === 0) {
+            window.enemyNewlyPoisoned = true; 
+        }
+        enemyPoisonTurns += 3;
         logBattle(`<span style="color:#00ff00; text-shadow: 0 0 5px #00ff00;">DAO ĐỘC!</span> Gây ${hit.dmg} sát thương và khiến địch <span style="color:#00ff00; font-weight:bold;">[Trúng Độc]</span> 3 lượt tới!`);
         updateCombatUI(); checkBattleEnd();
     };
