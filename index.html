@@ -5401,26 +5401,60 @@ const SHADOW_DATA = {
         checkBattleEnd(); 
     };
 
+    // === HÀM HIỂN THỊ GIAO DIỆN LOOT ĐỒ (CÓ TOOLTIP XỊN) ===
     window.showLootUI = function(exp, gold, itemsArray) {
         const modal = document.getElementById('lootModal');
         const info = document.getElementById('lootBasicInfo');
         const area = document.getElementById('lootItemsArea');
         
+        // Mở khóa thanh cuộn để Tooltip bay lên không bị cắt viền
+        area.style.overflow = 'visible'; 
+
         info.innerHTML = `<span style="color:#00ff00;">+${exp} EXP</span> &nbsp;&nbsp;|&nbsp;&nbsp; <span style="color:gold;">+${gold} Vàng</span>`;
         
         let html = '';
         if (itemsArray.length === 0) {
             html = `<div style="color:#666; font-style:italic; margin-top: 30px;">Không có vật phẩm nào rớt ra...</div>`;
         } else {
-            itemsArray.forEach(item => {
-                // Xác định Rank và Hào quang
-                let rankClass = item.rank ? `loot-rank-${item.rank}` : 'loot-rank-D';
-                let imgSrc = item.icon || 'https://via.placeholder.com/50?text=?'; 
+            itemsArray.forEach(itemObj => {
+                let itemData = ITEM_DATA[itemObj.name];
+                if (!itemData) return;
+
+                let rank = itemData.rank || 'D';
+                let rankClass = `loot-rank-${rank}`;
+
+                // === DỰNG KHUNG TOOLTIP Y HỆT TRONG TÚI ĐỒ ===
+                let tooltipHTML = `
+                    <div class="item-tooltip" style="left: 50%; top: auto; bottom: 110%; transform: translateX(-50%); width: 320px !important;">
+                        <div class="sl-tt-top">
+                            <div class="sl-tt-img-box"><img src="${itemData.img}"></div>
+                            <div class="sl-tt-info">
+                                <div class="sl-tt-title text-rank-${rank}">[ITEM: ${itemObj.name}]</div>
+                                <div class="sl-tt-line">ITEM CLASS: <span class="text-rank-${rank}" style="font-weight:bold;">${rank}</span></div>
+                                <div class="sl-tt-line">TYPE: ${itemData.type.toUpperCase()}</div>
+                            </div>
+                        </div>
+                        <div class="sl-tt-bottom">
+                            ${itemData.effect ? itemData.effect + '<br>' : ''}
+                            ${!['consumable', 'material'].includes(itemData.type) ? 
+                                [
+                                    itemObj.vit > 0 ? '+' + itemObj.vit + ' VITALITY' : '',
+                                    itemObj.str > 0 ? '+' + itemObj.str + ' STRENGTH' : '',
+                                    itemObj.mp > 0 ? '+' + itemObj.mp + ' MANA' : ''
+                                ].filter(Boolean).join(', ')
+                            : ''}
+                            <div class="sl-tt-price">Giá bán: ${itemData.sellPrice || 10} Cash</div>
+                        </div>
+                    </div>
+                `;
                 
+                // === GHÉP VÀO THẺ CARD VÀ BẬT CLASS HOVER ===
+                // Thêm class 'item-icon-wrapper' để tự động bắt CSS hover mà bạn đã làm sẵn
                 html += `
-                    <div class="loot-item-card ${rankClass}" title="${item.name}">
-                        <img src="${imgSrc}" onerror="this.src='https://via.placeholder.com/50?text=Item'">
-                        <div class="loot-name">${item.name}</div>
+                    <div class="loot-item-card ${rankClass} item-icon-wrapper" style="overflow: visible;">
+                        <img src="${itemData.img}" onerror="this.src='https://via.placeholder.com/50?text=Item'">
+                        <div class="loot-name">${itemObj.name}</div>
+                        ${tooltipHTML}
                     </div>
                 `;
             });
@@ -5484,12 +5518,7 @@ const SHADOW_DATA = {
         
         // === BƯỚC 4.3: KÍCH HOẠT HIỂN THỊ GIAO DIỆN 3D LOOT ĐỒ ===
         let itemsWithDataForUI = droppedItemsForUI.map(itemObj => {
-            let data = ITEM_DATA[itemObj.name];
-            return {
-                name: itemObj.name,
-                rank: data ? data.rank : 'D',
-                icon: data ? data.img : 'https://via.placeholder.com/50?text=?'
-            };
+            window.showLootUI(enemyExp, rewardCash, droppedItemsForUI);
         });
         window.showLootUI(enemyExp, rewardCash, itemsWithDataForUI);
         // ========================================================
