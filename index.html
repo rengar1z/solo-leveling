@@ -1752,6 +1752,17 @@
             display: flex;
         }
 
+        /* === THÊM KHỐI CODE NÀY ĐỂ LẬP CÂY CẦU TÀNG HÌNH === */
+        .combat-potion-menu::after {
+            content: "";
+            position: absolute;
+            top: 100%;      /* Nằm ngay sát dưới đáy của menu */
+            left: 0;
+            width: 100%;
+            height: 25px;   /* Độ cao cây cầu lấp vừa đủ khoảng trống 15% */
+            background: transparent; /* Tàng hình 100% */
+        }
+
         .potion-item-btn {
             display: flex;
             align-items: center;
@@ -4615,7 +4626,7 @@ const SHADOW_DATA = {
         }
 
         const defensePower = currentUser.vit || 0; 
-        const enemyAtk = enemy.atk || 10;
+        let enemyAtk = enemy.atk || 10;
 
         // --- CƠ CHẾ BUFF SỨC MẠNH TẠM THỜI (TINH THỂ MÁU) ---
         if (window.enemyAtkBuffTurns && window.enemyAtkBuffTurns > 0) {
@@ -4644,6 +4655,7 @@ const SHADOW_DATA = {
 
         let effectArmorBreak = 0;
         let effectManaSteal = 0;
+        let effectLifeStealRate = 0;
 
         // --- CƠ CHẾ KỸ NĂNG CỦA BOSS HẦM NGỤC THƯỜNG ---
         // 1. KỸ NĂNG CỦA THỦ LĨNH YÊU TINH (GOBLIN)
@@ -4826,8 +4838,8 @@ const SHADOW_DATA = {
                 let rawDmg = enemyAtk * 1.5; 
                 dmg = Math.max(20, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                 isSpecialAttack = true;
-                let healAmount = Math.floor(dmg * 2.5); // Hút máu cực mạnh (250% lượng ST gây ra)
-                enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
+                
+                effectLifeStealRate = 2.5; // Bật cờ hút 250% máu
                 specialAttackLog = `<span style="color:#00ffff; font-weight:bold; text-shadow: 0 0 5px #00ffff;">👻 ĐOẠT MẠNG!</span> Chướng khí từ Metus xé rách sinh lực của bạn gây ${Math.floor(dmg)} ST và bồi đắp lại <span style="color:#00ff00">${healAmount} HP</span> cho hắn!`;
             }
         }
@@ -5054,6 +5066,7 @@ const SHADOW_DATA = {
             applyBleedToPlayer = false; 
             effectArmorBreak = 0; // Hủy debuff
             effectManaSteal = 0;  // Hủy debuff
+            effectLifeStealRate = 0;
             
             if (isSpecialAttack) logBattle(skillNameOnly);
             logBattle(`<span style="color:#8eefff; font-weight:bold;">💨 NÉ TRÁNH! Cảm quan nhạy bén giúp bạn lướt qua đòn đánh hoàn hảo!</span>`);
@@ -5074,6 +5087,7 @@ const SHADOW_DATA = {
                 applyBleedToPlayer = false; 
                 effectArmorBreak = 0; // Chặn đứt bùa hại
                 effectManaSteal = 0;  // Chặn đứt việc mất máu/mana
+                effectLifeStealRate = 0;
                 
                 triggerShake();
                 if (isSpecialAttack) logBattle(skillNameOnly);
@@ -5094,7 +5108,12 @@ const SHADOW_DATA = {
                     // Sửa lại đoạn Log để hiển thị chính xác số Mana bị mất
                     specialAttackLog = specialAttackLog.replace("hút cạn MP!", `hút cạn <span style="color:#00bfff">${manaSteal} MP</span>!`);
                 }
-
+                if (effectLifeStealRate > 0) {
+                    let healAmount = Math.floor(dmg * effectLifeStealRate);
+                    enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
+                    logBattle(`<span style="color:#00ff00; font-weight:bold; font-style:italic;">🩸 Kẻ địch tước đoạt sinh lực của bạn, tự phục hồi ${healAmount} HP!</span>`);
+                }
+                
                 if (currentUser.skills["Cơ Thể Thép"] > 0) dmg *= 0.80; 
                 
                 if (currentUser.equipped && currentUser.equipped.shield && currentUser.equipped.shield.name === "Shield") dmg *= 0.985;
