@@ -3585,6 +3585,13 @@ const SHADOW_DATA = {
         if (typeof enemy !== 'undefined' && enemy && enemy.shieldHP > 0) {
             eHTML += `<div class="status-icon" title="Giáp Ma Thuật (Còn: ${enemy.shieldHP})"><img src="effect/Heal_Effect.png" style="width: 100%; height: 100%; object-fit: contain;"></div>`;
         }
+       
+      if (window.enemyAtkBuffTurns && window.enemyAtkBuffTurns > 0) {
+            eHTML += `<div class="status-icon" title="Sát thương tăng vọt (Còn ${window.enemyAtkBuffTurns} lượt)">
+                        <img src="effect/Attack_Increase_Effect.png" style="width: 100%; height: 100%; object-fit: contain;">
+                        <div class="status-turn">${window.enemyAtkBuffTurns}</div>
+                      </div>`;
+        }
 
         //ICON RAGE CHO BOSS
         if (typeof enemy !== 'undefined' && enemy && enemy.isEnraged) {
@@ -3594,6 +3601,7 @@ const SHADOW_DATA = {
                           </div>`;
             }
         }
+        
         eBoard.innerHTML = eHTML;
     };
     
