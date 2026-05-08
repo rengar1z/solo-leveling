@@ -4162,8 +4162,11 @@ const SHADOW_DATA = {
             render(); 
         }
     }
-
     window.useItem = async function(index) {
+        // === FIX BUG UỐNG THUỐC KHÔNG MẤT LƯỢT ===
+        if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
+            return alert("⚠️ HỆ THỐNG: Không thể lôi đồ trong túi ra dùng khi đang đối mặt với quái vật! Hãy sử dụng Túi Thuốc Nhanh ở khay Kỹ năng.");
+        }
         const itemObj = currentUser.inventory[index];
         const itemData = ITEM_DATA[itemObj.name];
         
@@ -4935,7 +4938,7 @@ const SHADOW_DATA = {
                 let healAmount = Math.floor(enemy.maxHp * 0.30); // Phép chữa lành: Hồi 30% Máu
                 enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
                 
-                enemy.atk = Math.floor(enemy.atk * 1.10); // Thao túng kích thước: Tăng 10% ATK vĩnh viễn
+                enemy.atk = Math.floor(enemy.atk * 1.43); // Thao túng kích thước: Tăng 10% ATK vĩnh viễn
                 
                 dmg = 0;
                 isSpecialAttack = true;
