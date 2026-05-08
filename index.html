@@ -4878,6 +4878,9 @@ const SHADOW_DATA = {
             if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasAbsorbedDemons) {
                 enemy.isEnraged = true;
                 enemy.hasAbsorbedDemons = true;
+
+                enemy.atk = Math.floor(enemy.atk * 1.3);
+                
                 let healAmount = Math.floor(enemy.maxHp * 0.20); // Hồi 20% Máu
                 enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
                 
