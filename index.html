@@ -1876,6 +1876,16 @@
             box-shadow: 0 0 15px #ff9900; transition: 0.2s;
         }
         .loot-btn:hover { background: #fff; color: #cc6600; box-shadow: 0 0 25px #fff; transform: scale(1.05); }
+
+        /* Tối ưu hoá luồng render cho các khu vực nặng */
+        #inventoryArea, 
+        .sl-shop-list, 
+        #battleLog, 
+        #d-battleLog, 
+        #shadowGridContainer {
+        contain: content;
+        transform: translateZ(0); /* Bật tăng tốc phần cứng GPU */
+        }
     </style>
 </head>
 <body>
