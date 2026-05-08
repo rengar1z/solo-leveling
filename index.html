@@ -5464,8 +5464,23 @@ const SHADOW_DATA = {
         modal.style.display = 'flex'; // Bật Pop-up
     };
 
+    window.pendingPopups = { extraction: null, levelUp: null }; 
+
     window.collectLoot = function() {
-        document.getElementById('lootModal').style.display = 'none'; // Tắt Pop-up
+        document.getElementById('lootModal').style.display = 'none'; 
+        
+        
+        if (window.pendingPopups && window.pendingPopups.extraction) {
+            document.getElementById('extractTargetName').innerText = window.pendingPopups.extraction.targetName;
+            window.currentExtractTarget = window.pendingPopups.extraction.bossType;
+            document.getElementById('extractionPopup').classList.remove('hidden');
+            window.pendingPopups.extraction = null; // Xóa khỏi hàng đợi
+        } 
+       
+        else if (window.pendingPopups && window.pendingPopups.levelUp) {
+            showPopup(window.pendingPopups.levelUp.oldJob, window.pendingPopups.levelUp.newJob);
+            window.pendingPopups.levelUp = null; // Xóa khỏi hàng đợi
+        }
     };
 
     function winBattle() {
@@ -5516,24 +5531,38 @@ const SHADOW_DATA = {
             }
         }
         
-        // === BƯỚC 4.3: KÍCH HOẠT HIỂN THỊ GIAO DIỆN 3D LOOT ĐỒ ===
-        let itemsWithDataForUI = droppedItemsForUI.map(itemObj => {
-            window.showLootUI(enemyExp, rewardCash, droppedItemsForUI);
-        });
-        window.showLootUI(enemyExp, rewardCash, itemsWithDataForUI);
-        // ========================================================
+        // === ĐƯA POPUP VÀO HÀNG ĐỢI ĐỂ TRÁNH XUNG ĐỘT GÂY MẤT NÚT ===
+        window.pendingPopups = { extraction: null, levelUp: null }; 
+        
+        window.showLootUI(enemyExp, rewardCash, droppedItemsForUI);
 
         if (!currentUser.ownedShadows) currentUser.ownedShadows = [];
         if (enemy.isBoss && enemy.bossType && SHADOW_DATA[enemy.bossType]) {
-            // Kiểm tra xem đã sở hữu bóng ma này chưa
             if (!currentUser.ownedShadows.includes(enemy.bossType)) {
-                document.getElementById('extractTargetName').innerText = enemy.name;
-                window.currentExtractTarget = enemy.bossType;
-                document.getElementById('extractionPopup').classList.remove('hidden');
+                // Đưa Trích xuất vào Hàng đợi thay vì hiện ngay lập tức
+                window.pendingPopups.extraction = { targetName: enemy.name, bossType: enemy.bossType };
             }
         }
 
-        checkLevelUp(); 
+        // Thay thế checkLevelUp() bằng logic đưa bảng Lên cấp vào Hàng đợi
+        let leveledUp = false; 
+        let oldJob = getJob(currentUser.level); 
+        while (currentUser.exp >= currentUser.need) {
+            currentUser.exp -= currentUser.need;
+            currentUser.level++; 
+            currentUser.need += 50; 
+            currentUser.points += 3; 
+            currentUser.skillPoints += 2;
+            currentUser.maxHp += 20; 
+            currentUser.maxMp += 10;
+            currentUser.hp = currentUser.maxHp; 
+            currentUser.mp = currentUser.maxMp;
+            leveledUp = true; 
+        }
+        if (leveledUp) {
+            window.pendingPopups.levelUp = { oldJob: oldJob, newJob: getJob(currentUser.level) };
+        }
+
         saveUserData(); 
         setTimeout(resetToButtonMode, 1500);
 
@@ -5604,7 +5633,7 @@ const SHADOW_DATA = {
 
     window.attemptExtraction = async function() {
         document.getElementById('extractionPopup').classList.add('hidden');
-        const chance = 1; // Tỷ lệ 5%. Bạn có thể đổi thành 1.0 (100%) để test thử cho nhanh nhé!
+        const chance = 1; 
         
         if (Math.random() <= chance) {
             currentUser.ownedShadows.push(window.currentExtractTarget);
@@ -5612,9 +5641,7 @@ const SHADOW_DATA = {
             alert(`🔥 TRÍCH XUẤT THÀNH CÔNG! Trỗi dậy đi, [${shadowName}]!`);
             logBattle(`<span style="color:#cc33ff; font-weight:bold; font-size: 18px; text-shadow: 0 0 10px #cc33ff;">Trích xuất thành công! ${shadowName} đã gia nhập Đội Quân Bóng Tối!</span>`);
             if (window.currentExtractTarget === "beru") {
-                setTimeout(() => {
-                    logBattle(`<span style="color:#cc33ff; font-weight:bold; font-size: 20px; font-style:italic;">Beru: 'Thần... xin... quy... phục... Chủ nhân...'</span>`);
-                }, 800);
+                setTimeout(() => { logBattle(`<span style="color:#cc33ff; font-weight:bold; font-size: 20px; font-style:italic;">Beru: 'Thần... xin... quy... phục... Chủ nhân...'</span>`); }, 800);
             }
             await saveUserData();
             if(window.renderShadowArmy) window.renderShadowArmy();
@@ -5623,11 +5650,23 @@ const SHADOW_DATA = {
             logBattle(`<span style="color:#888; font-style:italic;">Trích xuất thất bại, mục tiêu đã tan biến.</span>`);
         }
         window.currentExtractTarget = null;
+        
+        // Trích xuất xong thì gọi bảng Lên cấp (nếu có)
+        if (window.pendingPopups && window.pendingPopups.levelUp) {
+            showPopup(window.pendingPopups.levelUp.oldJob, window.pendingPopups.levelUp.newJob);
+            window.pendingPopups.levelUp = null;
+        }
     };
 
     window.skipExtraction = function() {
         document.getElementById('extractionPopup').classList.add('hidden');
         window.currentExtractTarget = null;
+        
+        // Bỏ qua trích xuất thì cũng gọi bảng Lên cấp (nếu có)
+        if (window.pendingPopups && window.pendingPopups.levelUp) {
+            showPopup(window.pendingPopups.levelUp.oldJob, window.pendingPopups.levelUp.newJob);
+            window.pendingPopups.levelUp = null;
+        }
     };
 
     function checkBattleEnd() {
