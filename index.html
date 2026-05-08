@@ -4617,8 +4617,8 @@ const SHADOW_DATA = {
             playerArmorBreakTurns--;
             if (playerArmorBreakTurns === 0) {
                 logBattle(`<span style="color:#aaa; font-style:italic;">🛡️ Lời nguyền suy yếu đã tan biến. Khả năng phòng thủ của bạn trở lại bình thường.</span>`);       
+            }
         }
-            
         if (currentUser.hp <= 0) { updateCombatUI(); return; }
 
         // --- XỬ LÝ DƯ ÂM TIẾNG THÉT ---
@@ -4845,7 +4845,7 @@ const SHADOW_DATA = {
                 isSpecialAttack = true;
                 
                 effectLifeStealRate = 2.5; // Bật cờ hút 250% máu
-                specialAttackLog = `<span style="color:#00ffff; font-weight:bold; text-shadow: 0 0 5px #00ffff;">👻 ĐOẠT MẠNG!</span> Chướng khí từ Metus xé rách sinh lực của bạn gây ${Math.floor(dmg)} ST và bồi đắp lại <span style="color:#00ff00">${healAmount} HP</span> cho hắn!`;
+                specialAttackLog = `<span style="color:#00ffff; font-weight:bold; text-shadow: 0 0 5px #00ffff;">👻 ĐOẠT MẠNG!</span> Chướng khí từ Metus xé rách sinh lực của bạn gây ${Math.floor(dmg)} ST!`;
             }
         }
 
@@ -4942,15 +4942,6 @@ const SHADOW_DATA = {
                 effectArmorBreak = 3; 
                 specialAttackLog = `<span style="color:#00ffff; font-weight:bold;">❄️ MA THUẬT BĂNG GIÁ!</span> Những dải băng sắc nhọn khổng lồ đâm xuyên qua bạn, gây ${Math.floor(dmg)} ST Phép và <span style="color:orange;">[PHÁ GIÁP]</span> trong 3 lượt!`;
             } 
-            else if (rand <= 0.60) { 
-                // Tham ăn (Bạo thực): Gây sát thương và hút máu
-                let rawDmg = enemyAtk * 1.5; 
-                dmg = Math.max(60, Math.floor(rawDmg * (1 - vitDmgReduction))); 
-                isSpecialAttack = true;
-                let healAmount = Math.floor(dmg * 2.5); 
-                enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
-                specialAttackLog = `<span style="color:#cc0000; font-weight:bold;">🦇 KẺ THAM ĂN!</span> Vua Kiến lao đến cắn xé sinh lực của bạn, gây ${Math.floor(dmg)} ST và tàn bạo hồi phục <span style="color:#00ff00">${healAmount} HP</span>!`;
-            }
             else if (rand <= 0.60) { 
                 // Tham ăn (Bạo thực): Gây sát thương và hút máu
                 let rawDmg = enemyAtk * 1.5; 
@@ -5459,7 +5450,11 @@ const SHADOW_DATA = {
                     }
                     if (window.playerVulnerabilityTurns && window.playerVulnerabilityTurns > 0) {
                         window.playerVulnerabilityTurns--;
-                    }   
+                    }
+                    if (currentUser.hp <= 0) {
+                        updateCombatUI();
+                        return enemyTurn();
+                    }
                     logBattle(`<span style="color:yellow; font-weight:bold;">Kẻ địch đang bị choáng, mất lượt!</span>`);
                     isMyTurn = true;
                     updateCombatUI(); // Trả lại lượt cho bạn
