@@ -4100,6 +4100,10 @@ const SHADOW_DATA = {
     }
 
     window.equipItem = async function(index) {
+        if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
+            return alert("⚠️ HỆ THỐNG: Khí tức quái vật quá áp đảo, bạn không thể thay đổi trang bị lúc này!");
+        }
+        
         const itemObj = currentUser.inventory[index];
         const itemData = ITEM_DATA[itemObj.name];
         const slot = itemData.type;
@@ -4116,11 +4120,10 @@ const SHADOW_DATA = {
         // Cộng chỉ số random của món đồ
         currentUser.str += itemObj.str;
         currentUser.vit += itemObj.vit;
-        currentUser.maxMp += itemObj.mp;
+        
         currentUser.mp += itemObj.mp; 
         if (itemObj.vit > 0) {
             currentUser.maxHp += itemObj.vit * 10;
-            currentUser.hp += itemObj.vit * 10;
         }
 
         await saveUserData();
@@ -4128,6 +4131,9 @@ const SHADOW_DATA = {
     }
 
     window.unequipItem = async function(slot, doSave = true) {
+        if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
+            return alert("⚠️ HỆ THỐNG: Không thể tháo trang bị khi đang trong trạng thái chiến đấu!");
+        }
         const itemObj = currentUser.equipped[slot];
         if (!itemObj) return;
         
@@ -5448,10 +5454,10 @@ const SHADOW_DATA = {
             // Xử lý cơ chế Quái vật bị choáng
             if (isEnemyStunned) {
                 isEnemyStunned = false; 
-                
         
                 if (window.counterCooldown && window.counterCooldown > 0) window.counterCooldown--;
                 if (window.potionCooldown && window.potionCooldown > 0) window.potionCooldown--; 
+                if (window.enemyAtkBuffTurns && window.enemyAtkBuffTurns > 0) window.enemyAtkBuffTurns--;
                 setTimeout(() => {
                     
                     // ============ FIX LỖI: BOSS BỊ CHOÁNG VẪN PHẢI DÍNH ĐỘC ============
