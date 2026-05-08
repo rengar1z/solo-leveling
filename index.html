@@ -1844,15 +1844,6 @@
         }
         .loot-btn:hover { background: #fff; color: #cc6600; box-shadow: 0 0 25px #fff; transform: scale(1.05); }
 
-        /* Tối ưu hoá luồng render cho các khu vực nặng */
-        #inventoryArea, 
-        .sl-shop-list, 
-        #battleLog, 
-        #d-battleLog, 
-        #shadowGridContainer {
-        contain: content;
-        transform: translateZ(0); /* Bật tăng tốc phần cứng GPU */
-        }
     </style>
 </head>
 <body>
@@ -3815,9 +3806,17 @@ const SHADOW_DATA = {
         if (pImg) { pImg.classList.add('shake'); setTimeout(() => pImg.classList.remove('shake'), 300); }
     }
 
-    function logBattle(msg) {
-        const log = document.getElementById(getPrefix() + 'battleLog');
-        log.innerHTML = msg + "<br>" + log.innerHTML;
+    window.logBattle = function(msg) {
+        const logArea = document.getElementById(getPrefix() + 'battleLog');
+        if (!logArea) return;
+
+        // Chèn thêm text vào trên cùng mà không bắt máy tính vẽ lại các dòng cũ
+        logArea.insertAdjacentHTML('afterbegin', `<div style="margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px dashed rgba(0, 191, 255, 0.2);">${msg}</div>`);
+
+        // Dọn rác: Chỉ giữ tối đa 40 dòng thông báo trên màn hình
+        while (logArea.childElementCount > 40) {
+            logArea.removeChild(logArea.lastChild);
+        }
     }
    
     window.switchToIconMode = function() {
