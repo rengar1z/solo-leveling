@@ -4778,10 +4778,10 @@ const SHADOW_DATA = {
                 enemy.hasFrenzy = true; 
                 let shieldAmount = Math.floor(enemy.maxHp * 0.30); // Độ bền đáng kinh ngạc: Tạo khiên 30% máu
                 enemy.shieldHP = shieldAmount; 
-                enemy.atk = Math.floor(enemy.atk * 1.50); // Cơn thịnh nộ: Tăng vĩnh viễn 50% ATK
+                enemy.atk = Math.floor(enemy.atk * 1.10); // Cơn thịnh nộ: Tăng vĩnh viễn 10% ATK
                 dmg = 0; 
                 isSpecialAttack = true;
-                specialAttackLog = `<span style="color:#ff0000; font-weight:bold; text-shadow: 0 0 10px #ff0000;">💢 CƠN THỊNH NỘ!</span> Vulcan gầm thét điên cuồng! Hắn kích hoạt <span style="color:#ff9900;">Độ Bền Vượt Trội</span> và <span style="color:#ff3333;">tăng vĩnh viễn 50% Chỉ số Sức mạnh</span>!`;
+                specialAttackLog = `<span style="color:#ff0000; font-weight:bold; text-shadow: 0 0 10px #ff0000;">💢 CƠN THỊNH NỘ!</span> Vulcan gầm thét điên cuồng! Hắn kích hoạt <span style="color:#ff9900;">Độ Bền Vượt Trội</span> và <span style="color:#ff3333;">tăng Sát thương gây ra</span>!`;
             } 
             
             // --- CÁC ĐÒN TẤN CÔNG NGẪU NHIÊN ---
@@ -4913,11 +4913,11 @@ const SHADOW_DATA = {
                 let healAmount = Math.floor(enemy.maxHp * 0.30); // Phép chữa lành: Hồi 30% Máu
                 enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
                 
-                enemy.atk = Math.floor(enemy.atk * 1.50); // Thao túng kích thước: Tăng 50% ATK vĩnh viễn
+                enemy.atk = Math.floor(enemy.atk * 1.10); // Thao túng kích thước: Tăng 10% ATK vĩnh viễn
                 
                 dmg = 0;
                 isSpecialAttack = true;
-                specialAttackLog = `<span style="color:#00ff00; font-weight:bold; text-shadow: 0 0 10px #00ff00;">💚 CHỮA LÀNH & NÉN CƠ THỂ!</span> Vua Kiến dùng năng lực của Min Byung-Gyu hồi phục <span style="color:#00ff00">${healAmount} HP</span>! Hắn nén cơ thể lại, sát khí tỏa ra ngút trời, <span style="color:#ff3333; font-weight:bold;">Sức mạnh tăng 50%</span>!`;
+                specialAttackLog = `<span style="color:#00ff00; font-weight:bold; text-shadow: 0 0 10px #00ff00;">💚 CHỮA LÀNH & NÉN CƠ THỂ!</span> Vua Kiến dùng năng lực của Min Byung-Gyu hồi phục <span style="color:#00ff00">${healAmount} HP</span>! Hắn nén cơ thể lại, sát khí tỏa ra ngút trời, <span style="color:#ff3333; font-weight:bold;">Sức mạnh tăng vọt</span>!`;
             }
             
             // --- CÁC CHIÊU THỨC SỬ DỤNG NGẪU NHIÊN ---
@@ -4947,13 +4947,15 @@ const SHADOW_DATA = {
                 enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
                 specialAttackLog = `<span style="color:#cc0000; font-weight:bold;">🦇 KẺ THAM ĂN!</span> Vua Kiến lao đến cắn xé sinh lực của bạn, gây ${Math.floor(dmg)} ST và tàn bạo hồi phục <span style="color:#00ff00">${healAmount} HP</span>!`;
             }
-            else if (rand <= 0.80) { 
-                // CHIÊU MỚI: Tiếng thét hủy diệt
-                let rawDmg = enemyAtk * 1.2; 
-                dmg = Math.max(30, Math.floor(rawDmg * (1 - vitDmgReduction))); 
-                isSpecialAttack = true;        
-                effectVulnerability = 3;      
-                specialAttackLog = `<span style="color:#cc33ff; font-weight:bold; text-shadow: 0 0 10px #cc33ff;">🔊 TIẾNG THÉT HỦY DIỆT!</span> Vua Kiến rống lên một dải âm thanh chói tai...`;
+            else if (rand <= 0.60) { 
+                // Tham ăn (Bạo thực): Gây sát thương và hút máu
+                let rawDmg = enemyAtk * 1.5; 
+                dmg = Math.max(60, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true;
+
+                // === THAY THẾ TOÀN BỘ ĐOẠN NÀY ===
+                effectLifeStealRate = 2.5; 
+                specialAttackLog = `<span style="color:#cc0000; font-weight:bold;">🦇 KẺ THAM ĂN!</span> Vua Kiến lao đến cắn xé sinh lực của bạn, gây ${Math.floor(dmg)} ST!`;
             }
             else {
                 // Sức mạnh phi thường: Cú đấm One-shot
