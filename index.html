@@ -10,14 +10,14 @@
         body {
             margin: 0;
             font-family: 'Oswald', sans-serif;
-            background: #030811; /* Đổi nền trang thành đen ánh xanh sâu thẳm */
+            background: #030811; 
             color: #8eefff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             overflow: hidden; 
-
+            /* ĐÃ XÓA DÒNG ÉP XUNG GPU BỊ LỖI Ở ĐÂY */
         }
 
         #debug {
@@ -34,7 +34,6 @@
         }
 
         .wrapper {
-            /* KÍCH THƯỚC CHUẨN CLIENT: Mở rộng tối đa nhưng vẫn giữ form cửa sổ */
             width: 1450px; 
             max-width: 98vw; 
             height: 880px; 
@@ -42,29 +41,26 @@
             
             background: radial-gradient(circle at center, #02152d, #000814, #000);
             border: 2px solid #00bfff;
-            box-shadow: 0 0 50px rgba(0, 191, 255, 0.25);
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.2); 
             position: relative;
             overflow: hidden; 
             display: flex;
             flex-direction: column;
             border-radius: 12px; 
-
-            /* KÍCH HOẠT TĂNG TỐC PHẦN CỨNG GPU (GIÚP GAME MƯỢT HƠN RẤT NHIỀU) */
+            
+            /* ĐÂY MỚI LÀ CHỖ CHUẨN ĐỂ ĐẶT ÉP XUNG GPU GIÚP GAME MƯỢT */
             transform: translateZ(0);
             will-change: transform;
         }
 
         .panel {
-            /* CHÌA KHÓA CHỐNG KÉO GIÃN: Khóa cứng nội dung ở 1200px và tự động căn giữa */
             width: 100%;
             max-width: 1200px; 
             margin: 0 auto; 
             height: 100%;
             border: none; 
-            box-shadow: inset 0 0 20px rgba(0, 191, 255, 0.3);
             padding: 25px;
-            background: rgba(0, 20, 50, .45);
-            backdrop-filter: blur(5px);
+            background: rgba(0, 15, 35, 0.85); 
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
