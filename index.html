@@ -2873,14 +2873,6 @@
                 { name: "BOSS: Vua Tiên Băng", hp: 10000, atk: 350, def: 180, exp: 3000, img: "boss/bakura.png", isBoss: true, bossType: "ice_king" }
             ]
         },
-        "fire_hell": {
-            name: "CỔNG ĐỎ: HỎA NGỤC CHIẾN", themeColor: "#ff4d4d", rareDrops: ["Vulcan's Sword", "Demon Horn"], 
-            stages: [
-                { name: "Quỷ Lửa Tinh Nhuệ", hp: 4000, atk: 250, def: 100, exp: 400, img: "bot/HanSongYi.jpg" },
-                { name: "Chó Săn Địa Ngục", hp: 5500, atk: 300, def: 150, exp: 600, img: "bot/HanSongYi.jpg" },
-                { name: "BOSS: Chúa Tể Dung Nham", hp: 18000, atk: 500, def: 250, exp: 5000, img: "char/HanSongYi.jpg", isBoss: true, bossType: "fire_lord" }
-            ]
-        },
         "red_knight_tomb": {
             name: "CỔNG ĐỎ: NƠI AN NGHỈ CỦA HIỆP SĨ ĐỎ", themeColor: "#cc0000", rareDrops: ["Trường Kiếm của Igris", "Red Knight's Helmet", "Bao tay của kẻ thống trị"], 
             stages: [
@@ -5205,7 +5197,6 @@ const SHADOW_DATA = {
                 isSpecialAttack = true;
                 
                 if (enemy.bossType === "ice_king") specialAttackLog = `<span style="color:#00ff00; font-weight:bold; text-shadow: 0 0 5px #00ff00;">✨ HƠI THỞ MÙA ĐÔNG!</span> Vua Tiên Băng hấp thụ sương giá ngàn năm, đột ngột hồi phục ${healAmount} HP!`;
-                else if (enemy.bossType === "fire_lord") specialAttackLog = `<span style="color:#ff9900; font-weight:bold; text-shadow: 0 0 5px #ff9900;">🌋 DUNG NHAM TRỖI DẬY!</span> Chúa Tể tắm trong biển lửa, đột ngột hồi phục ${healAmount} HP!`;
                 else if (enemy.bossType === "igris") specialAttackLog = `<span style="color:#cc0000; font-weight:bold; text-shadow: 0 0 5px #cc0000;">🩸 HUYẾT TẾ!</span> Igris bộc phát hào quang đỏ, hấp thụ máu và hồi phục ${healAmount} HP!`;
             } 
             else {
@@ -5223,19 +5214,6 @@ const SHADOW_DATA = {
                             isSpecialAttack = true;
                             specialAttackLog = `<span style="color:#00ffff; font-weight:bold; text-shadow: 0 0 5px #00ffff;">🧊 GIÁO BĂNG ĐOẠT MỆNH!</span> Một ngọn giáo băng đâm xuyên qua bạn, gây ${Math.floor(dmg)} sát thương chí mạng!`;
                         } 
-                        break;
-                    case "fire_lord":
-                        if (rand <= 0.15) {
-                            let rawDmg = enemyAtk * 2.5; 
-                            dmg = Math.max(20, Math.floor(rawDmg * (1 - vitDmgReduction))); 
-                            isSpecialAttack = true;
-                            specialAttackLog = `<span style="color:#ff4d4d; font-weight:bold; text-shadow: 0 0 5px #ff4d4d;">🔥 CỘT LỬA HỦY DIỆT!</span> Chúa Tể Dung Nham thiêu rụi không gian, giáng ${Math.floor(dmg)} sát thương tàn khốc!`;
-                        } else if (rand <= 0.30) {
-                            let rawDmg = enemyAtk * 2.8; 
-                            dmg = Math.max(25, Math.floor(rawDmg * (1 - vitDmgReduction))); 
-                            isSpecialAttack = true;
-                            specialAttackLog = `<span style="color:#ff4d4d; font-weight:bold; text-shadow: 0 0 5px #ff4d4d;">☄️ MƯA LƯU TINH!</span> Những tảng đá rực lửa giáng từ trên cao xuống, gây ${Math.floor(dmg)} sát thương!`;
-                        }
                         break;
                     case "igris":
                         if (rand <= 0.15) {
@@ -5594,7 +5572,7 @@ const SHADOW_DATA = {
         if (currentUser.skills["Phát Triển Cấp Tốc"] > 0) {
             enemyExp += Math.floor(enemyExp * 0.10 * currentUser.skills["Phát Triển Cấp Tốc"]);
         }
-        logBattle(`<span style="color:#00ff00">Chiến thắng! Nhận ${enemy.exp} EXP và ${rewardCash} CASH.</span>`);
+        //logBattle(`<span style="color:#00ff00">Chiến thắng! Nhận ${enemy.exp} EXP và ${rewardCash} CASH.</span>`);
         if (!currentUser.kills) currentUser.kills = {};
         currentUser.kills[enemy.name] = (currentUser.kills[enemy.name] || 0) + 1;
         checkAchievements();
@@ -5611,7 +5589,7 @@ const SHADOW_DATA = {
                 const newItem = generateItem(droppedItemName); 
                 currentUser.inventory.push(newItem); // Bỏ vào kho
                 droppedItemsForUI.push(newItem);     // === BƯỚC 4.2: Bỏ vào khay hiển thị UI ===
-                logBattle(`<span style="color:${RED_GATES[currentRedGateId].themeColor}; font-size:18px;">✨ CỔNG ĐỎ RƠI ĐỒ HIẾM: <b>${droppedItemName}</b>!</span>`);
+                //logBattle(`<span style="color:${RED_GATES[currentRedGateId].themeColor}; font-size:18px;">✨ CỔNG ĐỎ RƠI ĐỒ HIẾM: <b>${droppedItemName}</b>!</span>`);
             }
         } else if (isDungeonMode && enemy.isBoss) {
             let dropChance = 0.10 + luckBonus; // Mặc định 10% + buff
@@ -5621,7 +5599,7 @@ const SHADOW_DATA = {
                 const newItem = generateItem(droppedItemName); 
                 currentUser.inventory.push(newItem); // Bỏ vào kho
                 droppedItemsForUI.push(newItem);     // === BƯỚC 4.2: Bỏ vào khay hiển thị UI ===
-                logBattle(`<span style="color:gold; font-size:18px;">🔥 BOSS rơi đồ: <b>${droppedItemName}</b>!</span>`);
+                //logBattle(`<span style="color:gold; font-size:18px;">🔥 BOSS rơi đồ: <b>${droppedItemName}</b>!</span>`);
             }
         }
         
@@ -6072,8 +6050,6 @@ const SHADOW_DATA = {
         if (enemy.isBoss) {
             if (enemy.bossType === "ice_king") {
                 introLog += `<br><span style="color:#00ffff; font-style:italic; font-weight:bold; text-shadow: 0 0 5px #00ffff;">"Vua của tiên băng đang nhìn bạn bằng ánh mắt khinh bỉ..."</span>`;
-            } else if (enemy.bossType === "fire_lord") {
-                introLog += `<br><span style="color:#ff4d4d; font-style:italic; font-weight:bold; text-shadow: 0 0 5px #ff0000;">"Chúa Tể Dung Nham gầm rống, nhiệt độ bỗng chốc tăng lên dữ dội..."</span>`;
             } else if (enemy.bossType === "igris") {
                 introLog += `<br><span style="color:#cc0000; font-style:italic; font-weight:bold; text-shadow: 0 0 5px #cc0000;">"Thề nguyện trung thành với Quân Vương Bóng Tối. Tôi là thanh kiếm của ngài...."</span>`;
         }
