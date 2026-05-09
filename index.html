@@ -34,9 +34,10 @@
         }
 
         .wrapper {
-            width: 1450px; 
+            /* Kích thước tổng của cả cửa sổ game */
+            width: 1500px; 
             max-width: 98vw; 
-            height: 880px; 
+            height: 900px; 
             max-height: 98vh; 
             
             background: radial-gradient(circle at center, #02152d, #000814, #000);
@@ -44,27 +45,31 @@
             box-shadow: 0 0 20px rgba(0, 191, 255, 0.2); 
             position: relative;
             overflow: hidden; 
-            display: flex;
-            flex-direction: column;
-            border-radius: 12px; 
             
-            /* ĐÂY MỚI LÀ CHỖ CHUẨN ĐỂ ĐẶT ÉP XUNG GPU GIÚP GAME MƯỢT */
-            transform: translateZ(0);
+            /* PHỤC HỒI LẠI TÍNH NĂNG CHIA 2 CỘT (TRÁI/PHẢI) */
+            display: flex;
+            justify-content: space-between; 
+            align-items: stretch; /* Đảm bảo 2 bảng cao bằng nhau */
+            padding: 20px; 
+            box-sizing: border-box;
+
+            border-radius: 12px; 
+            transform: translateZ(0); /* Vẫn giữ tăng tốc GPU cho mượt */
             will-change: transform;
         }
 
         .panel {
-            width: 100%;
-            max-width: 1200px; 
-            margin: 0 auto; 
+            /* TRẢ LẠI 55% CHIỀU RỘNG CHO BẢNG BÊN TRÁI NHƯ CŨ */
+            width: 55%; 
             height: 100%;
-            border: none; 
+            border: 2px solid #00bfff; /* Trả lại viền cho panel */
             padding: 25px;
             background: rgba(0, 15, 35, 0.85); 
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             border-radius: 8px; 
+            overflow: hidden;
         }
         
         h1 {
