@@ -2720,44 +2720,7 @@
         };
         img.src = src;
     });
-    
-    
-    window.playDashEffect = function(isPlayerAttack, effectType = 'normal') {
-        const pre = getPrefix(); 
-        const attackerImg = document.getElementById(pre + (isPlayerAttack ? 'p-img' : 'e-img'));
-        const targetImg = document.getElementById(pre + (isPlayerAttack ? 'e-img' : 'p-img'));
         
-        if (!attackerImg || !targetImg) return;
-
-        const direction = isPlayerAttack ? 1 : -1;
-        
-        // Lướt lên
-        attackerImg.animate([
-            { transform: 'translateX(0) scale(1)' },
-            { transform: `translateX(${100 * direction}px) scale(1.1)`, offset: 0.5 }, 
-            { transform: 'translateX(0) scale(1)' }
-        ], { duration: 300, easing: 'ease-in-out' });
-
-        // CHỌN MÀU SẮC CHỚP SÁNG TÙY THEO KỸ NĂNG
-        let hitFilter = 'brightness(0.6) sepia(1) hue-rotate(-50deg) saturate(5)'; // Mặc định: Nổ Đỏ (Chém vật lý)
-        
-        if (effectType === 'fire') {
-            hitFilter = 'brightness(1.5) sepia(1) hue-rotate(-10deg) saturate(10)'; // Nổ Lửa: Cam/Đỏ rực
-        } else if (effectType === 'poison') {
-            hitFilter = 'brightness(1.5) sepia(1) hue-rotate(70deg) saturate(8)'; // Nổ Độc: Xanh lá chói
-        } else if (effectType === 'magic') {
-            hitFilter = 'brightness(1.5) sepia(1) hue-rotate(220deg) saturate(5)'; // Nổ Phép (Trích Xuất): Tím/Xanh dương
-        }
-
-        setTimeout(() => {
-            targetImg.animate([
-                { filter: 'brightness(1) sepia(0)' },
-                { filter: hitFilter }, 
-                { filter: 'brightness(1) sepia(0)' }
-            ], { duration: 300 });
-        }, 150);
-    };
-    
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
     import { getDatabase, ref, set, get, child } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
@@ -4569,7 +4532,6 @@ const SHADOW_DATA = {
         enemy.hp = Math.max(0, enemy.hp - hit.dmg);
         
         triggerShake();
-        window.playDashEffect(true);
         
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 BẠO KÍCH!</span> ` : "";
         logBattle(`${critLog}Chém thường gây <span style="color:#ff4d4d">${hit.dmg}</span> sát thương!`);
@@ -5402,7 +5364,6 @@ const SHADOW_DATA = {
                 dmg = Math.floor(dmg);
 
                 triggerPlayerShake();
-                window.playDashEffect(false);
 
                 // --- CHÈN LỚP KHIÊN MA THUẬT VÀO TRƯỚC KHI BỊ TRỪ MÁU ---
                 if (dmg > 0 && currentUser.shieldHP && currentUser.shieldHP > 0) {
