@@ -1910,7 +1910,39 @@
 
 <div class="wrapper hidden" id="gameWrap">
     <div class="panel" style="width: 100%;">
-        <div class="row">
+
+        <!-- ================= KHUNG GIAO DIỆN MỚI (CHỈ SỐ) ================= -->
+        
+
+        <div class="tabs-container">
+            <!-- ================= TỐI ƯU MENU TAB (GOM NHÓM DROPDOWN) ================= -->
+        <div class="tabs-header" style="overflow: visible;">
+            <!-- NHÓM 1: HOME -->
+            <div class="dropdown-group" tabindex="0">
+                <div class="tab-btn dropdown-main-btn" style="clip-path: polygon(15px 0, 100% 0, 100% 100%, 0 100%, 0 15px);">HOME ▼</div>
+                <div class="dropdown-content">
+                    <button id="defaultOpenTab" class="tab-btn sub-tab active" onclick="openTab(event, 'tab-stats')">STATS</button>
+                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-mission')">QUEST</button>
+                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-bag')">BAG</button>
+                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-shop')">SHOP</button>
+                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-skills')">SKILLS</button>
+                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-shadows')">SHADOW ARMY</button>
+                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-logs')">LOGS</button>
+                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-achievement')">ACHIEVEMENTS</button>
+                </div>
+            </div>
+            <!-- NHÓM 2: RAID -->
+            <div class="dropdown-group" tabindex="0">
+                <div class="tab-btn dropdown-main-btn" style="clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%); border-right: 1px solid rgba(255, 255, 255, 0.2) !important;">RAID ▼</div>
+                <div class="dropdown-content">
+                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-arena')">ARENA</button>
+                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-dungeon')">DUNGEON</button>
+                </div>
+            </div>
+        </div>
+            <div class="tabs-content">
+                <div id="tab-stats" class="tab-panel active">
+                    <div class="row">
             <span>NAME: <span id="playerName"></span></span>
             <span>LEVEL: <span id="level"></span></span>
         </div>
@@ -1969,38 +2001,6 @@
             </div>
             
         </div>
-
-        <!-- ================= KHUNG GIAO DIỆN MỚI (CHỈ SỐ) ================= -->
-        
-
-        <div class="tabs-container">
-            <!-- ================= TỐI ƯU MENU TAB (GOM NHÓM DROPDOWN) ================= -->
-        <div class="tabs-header" style="overflow: visible;">
-            <!-- NHÓM 1: HOME -->
-            <div class="dropdown-group" tabindex="0">
-                <div class="tab-btn dropdown-main-btn" style="clip-path: polygon(15px 0, 100% 0, 100% 100%, 0 100%, 0 15px);">HOME ▼</div>
-                <div class="dropdown-content">
-                    <button id="defaultOpenTab" class="tab-btn sub-tab active" onclick="openTab(event, 'tab-stats')">STATS</button>
-                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-mission')">QUEST</button>
-                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-bag')">BAG</button>
-                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-shop')">SHOP</button>
-                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-skills')">SKILLS</button>
-                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-shadows')">SHADOW ARMY</button>
-                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-logs')">LOGS</button>
-                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-achievement')">ACHIEVEMENTS</button>
-                </div>
-            </div>
-            <!-- NHÓM 2: RAID -->
-            <div class="dropdown-group" tabindex="0">
-                <div class="tab-btn dropdown-main-btn" style="clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%); border-right: 1px solid rgba(255, 255, 255, 0.2) !important;">RAID ▼</div>
-                <div class="dropdown-content">
-                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-arena')">ARENA</button>
-                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-dungeon')">DUNGEON</button>
-                </div>
-            </div>
-        </div>
-            <div class="tabs-content">
-                <div id="tab-stats" class="tab-panel active">
                     <h2 style="color: #00bfff; text-align: center; margin-top: 0;">CHỈ SỐ THỢ SĂN</h2>
         
                     <div class="sl-box sl-stat-grid">
