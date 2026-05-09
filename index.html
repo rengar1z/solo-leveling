@@ -1885,58 +1885,71 @@
             box-shadow: 0 0 15px #ff9900; transition: 0.2s;
         }
         .loot-btn:hover { background: #fff; color: #cc6600; box-shadow: 0 0 25px #fff; transform: scale(1.05); }
-        /* ================= THU NHỎ & ÉP KHUNG CHIẾN ĐẤU (BẢN MẠNH) ================= */
-        #tab-arena.active {
-            display: flex !important;
-            flex-direction: column;
-            flex: 1;
-            overflow-y: auto; /* Thêm thanh cuộn dọc cho riêng khu vực này nếu bị tràn */
-            padding-right: 5px;
-        }
-
-        #dungeonCombatUI:not(.hidden) {
-            display: flex !important;
-            flex-direction: column;
-            flex: 1;
-        }
-
-        /* 1. THU NHỎ KHUNG THÔNG TIN (QUÁI VÀ NHÂN VẬT) */
-        #dungeonCombatDisplay, #combatArea {
-            padding: 10px 15px !important; /* Giảm khoảng cách lề */
-            margin-bottom: 8px !important;
-            font-size: 14px !important; /* Thu nhỏ chữ */
-            min-height: auto !important;
-        }
-        #dungeonCombatDisplay h3, #combatArea h3 {
-            font-size: 18px !important; /* Thu nhỏ tên Boss */
-            margin: 5px 0 !important;
-        }
-
-        /* 2. KÉO DÀI NHẬT KÝ CHIẾN ĐẤU NHƯNG KHÔNG ĐỂ TRÀN */
-        #battleLog, #d-battleLog {
-            flex: 1 !important; /* Tự động kéo dài chiếm hết khoảng trống ở giữa */
-            max-height: 250px !important; /* Khóa chiều cao tối đa để không đè nút */
-            min-height: 120px !important;
-            font-size: 13px !important; /* Thu nhỏ chữ nhật ký */
-            margin-top: 5px !important;
-            margin-bottom: 10px !important;
-            padding: 8px !important;
-        }
-
-        /* 3. THU NHỎ HÀNG NÚT BẤM KỸ NĂNG */
-        #actionControls, #d-actionControls {
-            margin-top: auto !important; /* Luôn ép nằm ở dưới cùng */
-            padding-bottom: 10px;
+        /* ================= BỐ CỤC CHIẾN ĐẤU CHUẨN CLIENT (TỰ ĐỘNG CÂN BẰNG) ================= */
+        /* Đảm bảo khung chứa tab luôn lấp đầy không gian còn lại */
+        .tabs-content {
             display: flex;
-            flex-wrap: wrap; /* Nếu nhiều nút quá tự động rớt dòng chứ không tràn */
-            justify-content: center;
-            gap: 5px;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden; /* Chặn cuộn toàn trang, chỉ cuộn khu vực cần thiết */
+            padding: 15px;
         }
-        
+
+        /* Khi tab Arena hoặc Dungeon mở, nó phải là Flexbox */
+        .tab-panel.active {
+            display: flex !important;
+            flex-direction: column;
+            flex: 1;
+            height: 100%;
+        }
+
+        #dungeonCombatUI:not(.hidden), #arenaCombatUI:not(.hidden) {
+            display: flex !important;
+            flex-direction: column;
+            flex: 1;
+            height: 100%;
+        }
+
+        /* 1. KHÚC ĐẦU: KHU VỰC HIỂN THỊ QUÁI VÀ NHÂN VẬT (Giữ nguyên form, không bóp méo) */
+        #dungeonCombatDisplay, #combatArea {
+            flex: 0 0 auto !important; /* Không cho phép phình to hay thu nhỏ */
+            padding: 15px !important;
+            margin-bottom: 10px !important;
+            min-height: auto !important;
+            max-height: none !important;
+        }
+
+        /* 2. KHÚC GIỮA: NHẬT KÝ CHIẾN ĐẤU (Như một cái lò xo, tự giãn ra lấp chỗ trống và tự cuộn) */
+        #battleLog, #d-battleLog {
+            flex: 1 1 0 !important; /* Tự động kéo giãn lấp đầy khoảng trống ở giữa */
+            height: auto !important;
+            min-height: 100px !important; /* Chiều cao tối thiểu */
+            max-height: none !important; /* Xóa bỏ các giới hạn cũ */
+            overflow-y: auto !important; /* Thanh cuộn riêng cho log chiến đấu */
+            margin-bottom: 15px !important;
+            padding: 10px !important;
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        /* 3. KHÚC ĐUÔI: HÀNG NÚT BẤM KỸ NĂNG (Luôn giữ nguyên kích thước và bám đáy) */
+        #actionControls, #d-actionControls {
+            flex: 0 0 auto !important; /* Không cho phép thu nhỏ làm méo nút */
+            display: flex;
+            flex-wrap: wrap; 
+            justify-content: center;
+            gap: 8px;
+            padding-bottom: 5px;
+            margin-top: 0 !important; 
+        }
+
         #actionControls button, #d-actionControls button {
-            padding: 8px 15px !important; /* Làm nút mỏng và nhỏ lại */
-            font-size: 14px !important;
+            padding: 10px 15px !important;
+            font-size: 15px !important;
             margin: 0 !important;
+            flex: 1 1 auto; /* Nút tự dàn đều ra cho đẹp */
+            max-width: 150px;
         }
     </style>
 </head>
