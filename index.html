@@ -17,7 +17,6 @@
             align-items: center;
             height: 100vh;
             overflow: hidden; 
-            /* ĐÃ XÓA DÒNG ÉP XUNG GPU BỊ LỖI Ở ĐÂY */
         }
 
         #debug {
@@ -34,7 +33,7 @@
         }
 
         .wrapper {
-            /* Kích thước tổng của cả cửa sổ game */
+            /* Ép khung game phình to ra lấp đầy màn hình PC */
             width: 1500px; 
             max-width: 98vw; 
             height: 900px; 
@@ -46,23 +45,23 @@
             position: relative;
             overflow: hidden; 
             
-            /* PHỤC HỒI LẠI TÍNH NĂNG CHIA 2 CỘT (TRÁI/PHẢI) */
+            /* LỆNH CHIA 2 CỘT BẮT BUỘC (Trái 55% - Phải 40%) */
             display: flex;
             justify-content: space-between; 
-            align-items: stretch; /* Đảm bảo 2 bảng cao bằng nhau */
+            align-items: stretch; 
             padding: 20px; 
             box-sizing: border-box;
 
             border-radius: 12px; 
-            transform: translateZ(0); /* Vẫn giữ tăng tốc GPU cho mượt */
+            transform: translateZ(0); 
             will-change: transform;
         }
 
         .panel {
-            /* TRẢ LẠI 55% CHIỀU RỘNG CHO BẢNG BÊN TRÁI NHƯ CŨ */
+            /* Giữ cột Menu & Chỉ số bên trái ở mức 55% */
             width: 55%; 
             height: 100%;
-            border: 2px solid #00bfff; /* Trả lại viền cho panel */
+            border: 2px solid #00bfff; 
             padding: 25px;
             background: rgba(0, 15, 35, 0.85); 
             box-sizing: border-box;
