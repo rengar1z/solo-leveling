@@ -1687,27 +1687,22 @@
         /* Khóa cứng kích thước ảnh nhân vật bên trong để không bao giờ tràn viền */
         #visual-p-img {
             max-width: 100% !important;
-            max-height: 440px !important; /* Ảnh chỉ được cao tối đa 440px */
-            object-fit: contain; /* Tự động thu nhỏ ảnh lại cho vừa khung */
-            z-index: 1; /* Nằm ngoan ngoãn dưới các ô trang bị */
+            max-height: 440px !important; 
+            object-fit: contain; 
+            z-index: 1;
         }
 
-        /* --- SỬA LỖI PHÓNG TO MÀN HÌNH DO TOOLTIP ẨN TẠO RA --- */
-        
-        /* 1. Tối ưu cho PC: Ép các ô trang bị bên phải phải mở Tooltip sang trái */
         .slot-right .item-tooltip {
             left: auto !important;
             right: 75px !important;
         }
 
-        /* 2. Tối ưu tuyệt đối cho Mobile */
         @media (max-width: 768px) {
             .item-tooltip {
-                /* Ép ẩn hoàn toàn khỏi cấu trúc HTML khi chưa chạm vào để không bị tính chiều rộng */
-                display: none !important; 
-                width: 260px !important; /* Thu nhỏ lại cho vừa màn hình điện thoại */
+               
+                width: 260px !important; 
                 
-                /* Canh giữa và đẩy xuống dưới ô trang bị */
+               
                 left: 50% !important;
                 right: auto !important;
                 top: 115% !important;
@@ -1715,7 +1710,7 @@
                 white-space: normal !important;
             }
 
-            /* Đặc biệt: 2 ô dưới cùng (Vũ khí, Giày) thì đẩy Tooltip ngược lên trên để không bị lẹm mất chữ */
+        
             #slot-weapon .item-tooltip,
             #slot-shoes .item-tooltip {
                 top: auto !important;
@@ -1730,17 +1725,17 @@
         }
 
         .eq-slot {
-            -webkit-user-select: none; /* Tránh hiện menu hệ thống khi nhấn giữ trên Safari/iOS */
-            user-select: none;         /* Tránh hiện menu hệ thống trên Android */
+            -webkit-user-select: none; 
+            user-select: none;         
         }
-        /* --- CSS MENU BÌNH HỒI PHỤC TRONG CHIẾN ĐẤU --- */
+        
         .combat-potion-wrapper {
             position: relative;
             display: flex !important;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            margin-left: 15px; /* Nằm cách ra một chút so với dàn kỹ năng */
+            margin-left: 15px; 
         }
 
         .combat-potion-menu {
@@ -1760,21 +1755,20 @@
             box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
         }
 
-        /* Trỏ chuột vào là Menu sẽ hiện ra */
         .combat-potion-wrapper:hover .combat-potion-menu,
         .combat-potion-wrapper:active .combat-potion-menu {
             display: flex;
         }
 
-        /* === THÊM KHỐI CODE NÀY ĐỂ LẬP CÂY CẦU TÀNG HÌNH === */
+    
         .combat-potion-menu::after {
             content: "";
             position: absolute;
-            top: 100%;      /* Nằm ngay sát dưới đáy của menu */
+            top: 100%;      
             left: 0;
             width: 100%;
-            height: 25px;   /* Độ cao cây cầu lấp vừa đủ khoảng trống 15% */
-            background: transparent; /* Tàng hình 100% */
+            height: 25px;  
+            background: transparent; 
         }
 
         .potion-item-btn {
@@ -2651,7 +2645,7 @@
         
         // Quái Red Gate
         "bot/linhtienbang.png", "bot/canvetienbang.png", "bot/trinhsattienbang.png",
-        "bot/thulinhgaubang.png", "boss/bakura.png", "bot/HanSongYi.jpg", "char/HanSongYi.jpg",
+        "bot/thulinhgaubang.png", "boss/bakura.png",
         "bot/linh.png", "bot/linhtinhnhue.png", "bot/linhcanve.png", "boss/igris.png",
         
         // Consumables & Items
