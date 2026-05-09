@@ -18,9 +18,6 @@
             height: 100vh;
             overflow: hidden; 
 
-            /* KÍCH HOẠT TĂNG TỐC PHẦN CỨNG GPU (GIÚP GAME MƯỢT HƠN RẤT NHIỀU) */
-            transform: translateZ(0);
-            will-change: transform;
         }
 
         #debug {
@@ -51,6 +48,10 @@
             display: flex;
             flex-direction: column;
             border-radius: 12px; 
+
+            /* KÍCH HOẠT TĂNG TỐC PHẦN CỨNG GPU (GIÚP GAME MƯỢT HƠN RẤT NHIỀU) */
+            transform: translateZ(0);
+            will-change: transform;
         }
 
         .panel {
