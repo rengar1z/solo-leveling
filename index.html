@@ -228,9 +228,15 @@
         }
 
         .tabs-container {
-            margin-top: 30px;
+            margin-top: 20px; /* Thu nhỏ khoảng cách lề trên một chút cho cân đối */
             border: 1px solid #00bfff;
             background: rgba(0,0,30,0.8);
+            
+            /* THÊM 4 DÒNG NÀY ĐỂ ÉP KHUNG TỰ CO GIÃN VÀ KHÔNG BỊ TRÀN */
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden; 
         }
 
         /* ================= TỐI ƯU MENU TAB (CHUẨN LIỀN KHỐI ARISE V2) ================= */
