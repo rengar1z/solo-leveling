@@ -1922,12 +1922,10 @@
                 <div class="tab-btn dropdown-main-btn" style="clip-path: polygon(15px 0, 100% 0, 100% 100%, 0 100%, 0 15px);">HOME ▼</div>
                 <div class="dropdown-content">
                     <button id="defaultOpenTab" class="tab-btn sub-tab active" onclick="openTab(event, 'tab-stats')">STATS</button>
-                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-mission')">QUEST</button>
                     <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-bag')">BAG</button>
                     <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-shop')">SHOP</button>
                     <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-skills')">SKILLS</button>
                     <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-shadows')">SHADOW ARMY</button>
-                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-logs')">LOGS</button>
                     <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-achievement')">ACHIEVEMENTS</button>
                 </div>
             </div>
@@ -2064,16 +2062,6 @@
         </div>
     </div>
 </div>
-                    
-            
-                <div id="tab-mission" class="tab-panel">
-                    <h2 style="color: #ffcc00;">NHIỆM VỤ HÀNG NGÀY</h2>
-                    <p id="mission" style="font-size: 24px;"></p>
-                    <p id="reward" style="color: #00ff00;"></p>
-                    <button onclick="completeMission()">XÁC NHẬN HOÀN THÀNH</button>
-                    <p id="streak"></p>
-                </div>
-
                 <!-- ================= TAB BAG (TÚI ĐỒ) MỚI ================= -->
             <div id="tab-bag" class="tab-panel">
                 <div class="card" style="border-color: #00bfff; display: flex; flex-direction: column; height: 600px; box-sizing: border-box; position: relative; box-shadow: inset 0 0 15px rgba(0,191,255,0.1);">
@@ -2362,12 +2350,7 @@
                     <h2 style="color: #00bfff;">SKILL POINTS: <span id="skPoints">0</span></h2>
                     <div id="skillList" class="skill-list"></div>
                 </div>
-
-                <div id="tab-logs" class="tab-panel">
-                    <h2>NHẬT KÝ RÈN LUYỆN</h2>
-                    <div id="logs" style="max-height: 250px; overflow-y: auto; font-size: 18px; color: #ccc;"></div>
-                </div>
-
+            
                 <div id="tab-arena" class="tab-panel">
                     <div id="combatArea" class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 30px; background: rgba(0, 15, 30, 0.6); border: 2px solid #00bfff; border-radius: 12px; min-height: 350px; box-shadow: 0 0 30px rgba(0, 191, 255, 0.15); position: relative; overflow: hidden;">
 
@@ -3533,14 +3516,7 @@ const SHADOW_DATA = {
         document.getElementById('expBar').style.width = (currentUser.exp / currentUser.need * 100) + '%';
 
         ['str', 'vit', 'agi', 'int', 'sense', 'points'].forEach(k => document.getElementById(k).innerText = currentUser[k]);
-
-        const m = getMission();
-        document.getElementById('mission').innerText = m.text;
-        document.getElementById('reward').innerText = 'Phần thưởng: ' + m.exp + ' EXP';
-        document.getElementById('streak').innerText = 'Chuỗi rèn luyện: ' + currentUser.streak + ' ngày';
-
-        document.getElementById('logs').innerHTML = (currentUser.logs || []).slice().reverse().join('<br>');
-    
+   
         if (window.renderSkills) window.renderSkills();
         
         const addBtns = document.getElementsByClassName('add-btn');
