@@ -10,13 +10,13 @@
         body {
             margin: 0;
             font-family: 'Oswald', sans-serif;
-            background: #030811; 
+            background: #000; /* Đổi nền ngoài cùng thành đen tuyền */
             color: #8eefff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            overflow: hidden; 
+            overflow: hidden; /* Cấm cuộn toàn trang web */
         }
 
         #debug {
@@ -33,52 +33,44 @@
         }
 
         .wrapper {
-            /* Ép khung game phình to ra lấp đầy màn hình PC */
-            width: 1500px; 
-            max-width: 98vw; 
-            height: 900px; 
-            max-height: 98vh; 
-            
+            width: 1200px; /* KHÓA CỨNG CHIỀU RỘNG */
+            height: 850px; /* KHÓA CỨNG CHIỀU CAO */
             background: radial-gradient(circle at center, #02152d, #000814, #000);
             border: 2px solid #00bfff;
-            box-shadow: 0 0 20px rgba(0, 191, 255, 0.2); 
+            box-shadow: 0 0 30px #00bfff;
             position: relative;
-            overflow: hidden; 
-            
-            /* LỆNH CHIA 2 CỘT BẮT BUỘC (Trái 55% - Phải 40%) */
+            overflow: hidden; /* Không cho nội dung tràn ra khỏi khung 1200x850 */
             display: flex;
-            justify-content: space-between; 
-            align-items: stretch; 
-            padding: 20px; 
-            box-sizing: border-box;
+            flex-direction: column;
+            border-radius: 8px;
 
-            border-radius: 12px; 
             transform: translateZ(0); 
             will-change: transform;
         }
 
         .panel {
-            /* Giữ cột Menu & Chỉ số bên trái ở mức 55% */
-            width: 55%; 
+            width: 100%;
             height: 100%;
-            border: 2px solid #00bfff; 
+            border: none; /* Bỏ viền cũ vì wrapper đã có viền */
+            box-shadow: inset 0 0 20px #00bfff;
             padding: 25px;
-            background: rgba(0, 15, 35, 0.85); 
+            background: rgba(0, 20, 50, .45);
+            backdrop-filter: blur(5px);
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            border-radius: 8px; 
-            overflow: hidden;
+        }
+
+        /* Thêm thanh cuộn cho phần nội dung Tab để không bị tràn khung */
+        .tabs-content {
+            padding: 20px;
+            flex: 1; 
+            overflow-y: auto; 
         }
         
-        h1 {
-            text-align: center;
-            font-size: 64px;
-            color: #fff;
-            text-shadow: 0 0 20px #00bfff;
-            margin: 5px 0 20px;
-            letter-spacing: 5px;
-        }
+        .tabs-content::-webkit-scrollbar { width: 6px; }
+        .tabs-content::-webkit-scrollbar-track { background: rgba(0, 30, 60, 0.5); border-radius: 4px; }
+        .tabs-content::-webkit-scrollbar-thumb { background: #00bfff; border-radius: 4px; box-shadow: 0 0 5px #00bfff;}
 
         .row {
             display: flex;
@@ -1884,72 +1876,6 @@
             box-shadow: 0 0 15px #ff9900; transition: 0.2s;
         }
         .loot-btn:hover { background: #fff; color: #cc6600; box-shadow: 0 0 25px #fff; transform: scale(1.05); }
-        /* ================= BỐ CỤC CHIẾN ĐẤU CHUẨN CLIENT (TỰ ĐỘNG CÂN BẰNG) ================= */
-        /* Đảm bảo khung chứa tab luôn lấp đầy không gian còn lại */
-        .tabs-content {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            overflow: hidden; /* Chặn cuộn toàn trang, chỉ cuộn khu vực cần thiết */
-            padding: 15px;
-        }
-
-        /* Khi tab Arena hoặc Dungeon mở, nó phải là Flexbox */
-        .tab-panel.active {
-            display: flex !important;
-            flex-direction: column;
-            flex: 1;
-            height: 100%;
-        }
-
-        #dungeonCombatUI:not(.hidden), #arenaCombatUI:not(.hidden) {
-            display: flex !important;
-            flex-direction: column;
-            flex: 1;
-            height: 100%;
-        }
-
-        /* 1. KHÚC ĐẦU: KHU VỰC HIỂN THỊ QUÁI VÀ NHÂN VẬT (Giữ nguyên form, không bóp méo) */
-        #dungeonCombatDisplay, #combatArea {
-            flex: 0 0 auto !important; /* Không cho phép phình to hay thu nhỏ */
-            padding: 15px !important;
-            margin-bottom: 10px !important;
-            min-height: auto !important;
-            max-height: none !important;
-        }
-
-        /* 2. KHÚC GIỮA: NHẬT KÝ CHIẾN ĐẤU (Như một cái lò xo, tự giãn ra lấp chỗ trống và tự cuộn) */
-        #battleLog, #d-battleLog {
-            flex: 1 1 0 !important; /* Tự động kéo giãn lấp đầy khoảng trống ở giữa */
-            height: auto !important;
-            min-height: 100px !important; /* Chiều cao tối thiểu */
-            max-height: none !important; /* Xóa bỏ các giới hạn cũ */
-            overflow-y: auto !important; /* Thanh cuộn riêng cho log chiến đấu */
-            margin-bottom: 15px !important;
-            padding: 10px !important;
-            border: 1px solid rgba(0, 191, 255, 0.3);
-            border-radius: 5px;
-            background: rgba(0, 0, 0, 0.5);
-        }
-
-        /* 3. KHÚC ĐUÔI: HÀNG NÚT BẤM KỸ NĂNG (Luôn giữ nguyên kích thước và bám đáy) */
-        #actionControls, #d-actionControls {
-            flex: 0 0 auto !important; /* Không cho phép thu nhỏ làm méo nút */
-            display: flex;
-            flex-wrap: wrap; 
-            justify-content: center;
-            gap: 8px;
-            padding-bottom: 5px;
-            margin-top: 0 !important; 
-        }
-
-        #actionControls button, #d-actionControls button {
-            padding: 10px 15px !important;
-            font-size: 15px !important;
-            margin: 0 !important;
-            flex: 1 1 auto; /* Nút tự dàn đều ra cho đẹp */
-            max-width: 150px;
-        }
     </style>
 </head>
 <body>
