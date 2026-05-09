@@ -33,18 +33,21 @@
         }
 
         .wrapper {
-            width: 1200px; /* KHÓA CỨNG CHIỀU RỘNG */
-            height: 850px; /* KHÓA CỨNG CHIỀU CAO */
+            /* Tăng chiều rộng và chiều cao lên lấp gần đầy màn hình */
+            width: 95vw; /* Chiếm 95% chiều rộng màn hình */
+            max-width: 1500px; /* Nhưng tối đa chỉ đến 1500px để không bị bè ra quá mức */
+            height: 95vh; /* Chiếm 95% chiều cao màn hình */
+            max-height: 1000px; /* Tối đa chiều cao 1000px */
+            
             background: radial-gradient(circle at center, #02152d, #000814, #000);
             border: 2px solid #00bfff;
             box-shadow: 0 0 30px #00bfff;
             position: relative;
-            overflow: hidden; /* Không cho nội dung tràn ra khỏi khung 1200x850 */
+            overflow: hidden; 
             display: flex;
             flex-direction: column;
-            border-radius: 8px;
+            border-radius: 12px; /* Bo góc to ra một chút cho đẹp */
         }
-
         .panel {
             width: 100%;
             height: 100%;
