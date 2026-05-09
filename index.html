@@ -1885,15 +1885,13 @@
             box-shadow: 0 0 15px #ff9900; transition: 0.2s;
         }
         .loot-btn:hover { background: #fff; color: #cc6600; box-shadow: 0 0 25px #fff; transform: scale(1.05); }
-        /* ================= VÁ LỖI MẤT NÚT TẤN CÔNG (ÉP VỪA MÀN HÌNH) ================= */
-        .tabs-content {
-            display: flex;
-            flex-direction: column;
-        }
-
+        /* ================= THU NHỎ & ÉP KHUNG CHIẾN ĐẤU (BẢN MẠNH) ================= */
         #tab-arena.active {
             display: flex !important;
             flex-direction: column;
+            flex: 1;
+            overflow-y: auto; /* Thêm thanh cuộn dọc cho riêng khu vực này nếu bị tràn */
+            padding-right: 5px;
         }
 
         #dungeonCombatUI:not(.hidden) {
@@ -1902,27 +1900,43 @@
             flex: 1;
         }
 
-        /* Ép khung hiển thị nhân vật/quái vật tự co giãn lấp chỗ trống */
+        /* 1. THU NHỎ KHUNG THÔNG TIN (QUÁI VÀ NHÂN VẬT) */
         #dungeonCombatDisplay, #combatArea {
-            flex: 1; 
-            min-height: 150px !important; 
-            max-height: 320px;
-            padding: 15px 30px !important;
-            margin-bottom: 10px !important;
+            padding: 10px 15px !important; /* Giảm khoảng cách lề */
+            margin-bottom: 8px !important;
+            font-size: 14px !important; /* Thu nhỏ chữ */
+            min-height: auto !important;
+        }
+        #dungeonCombatDisplay h3, #combatArea h3 {
+            font-size: 18px !important; /* Thu nhỏ tên Boss */
+            margin: 5px 0 !important;
         }
 
-        /* Thu gọn Nhật ký chiến đấu để chừa chỗ cho Nút Tấn Công */
+        /* 2. KÉO DÀI NHẬT KÝ CHIẾN ĐẤU NHƯNG KHÔNG ĐỂ TRÀN */
         #battleLog, #d-battleLog {
-            height: 130px !important; 
-            min-height: 130px !important;
+            flex: 1 !important; /* Tự động kéo dài chiếm hết khoảng trống ở giữa */
+            max-height: 250px !important; /* Khóa chiều cao tối đa để không đè nút */
+            min-height: 120px !important;
+            font-size: 13px !important; /* Thu nhỏ chữ nhật ký */
             margin-top: 5px !important;
-            margin-bottom: 15px !important;
+            margin-bottom: 10px !important;
+            padding: 8px !important;
         }
 
-        /* Ép hệ thống nút bấm Tấn công / Bỏ cuộc luôn ghim chặt ở đáy màn hình */
+        /* 3. THU NHỎ HÀNG NÚT BẤM KỸ NĂNG */
         #actionControls, #d-actionControls {
-            margin-top: auto !important;
-            padding-bottom: 5px;
+            margin-top: auto !important; /* Luôn ép nằm ở dưới cùng */
+            padding-bottom: 10px;
+            display: flex;
+            flex-wrap: wrap; /* Nếu nhiều nút quá tự động rớt dòng chứ không tràn */
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        #actionControls button, #d-actionControls button {
+            padding: 8px 15px !important; /* Làm nút mỏng và nhỏ lại */
+            font-size: 14px !important;
+            margin: 0 !important;
         }
     </style>
 </head>
