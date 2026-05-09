@@ -1858,6 +1858,61 @@
             box-shadow: 0 0 15px #ff9900; transition: 0.2s;
         }
         .loot-btn:hover { background: #fff; color: #cc6600; box-shadow: 0 0 25px #fff; transform: scale(1.05); }
+
+        /* ================= GIAO DIỆN MÀN HÌNH LOADING ================= */
+        #loadingScreen {
+            position: fixed;
+            inset: 0;
+            background: #000814;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+    
+        #loadingScreen.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-title {
+            font-size: 50px;
+            color: #fff;
+            text-shadow: 0 0 20px #00bfff, 0 0 40px #00bfff;
+            letter-spacing: 5px;
+            margin-bottom: 20px;
+            animation: shadowGlow 2s infinite alternate;
+        }
+    
+        .loading-bar-container {
+            width: 60%;
+            max-width: 500px;
+            height: 12px;
+            border: 2px solid #00bfff;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.5);
+            overflow: hidden;
+            position: relative;
+        }
+
+        #loadingBar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #00bfff, #fff);
+            box-shadow: 0 0 15px #00bfff;
+            transition: width 0.1s linear;
+        }
+
+        #loadingText {
+            margin-top: 15px;
+            color: #8eefff;
+            font-size: 20px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px #00bfff;
+        }
     </style>
 </head>
 <body>
@@ -1870,7 +1925,15 @@
 </div>    
 
 <div id="debug">Hệ thống đang khởi tạo...</div>
-
+    
+<div id="loadingScreen">
+    <div class="loading-title">SYSTEM INITIALIZING</div>
+    <div class="loading-bar-container">
+        <div id="loadingBar"></div>
+    </div>
+    <div id="loadingText">Connecting... 0%</div>
+</div>
+    
 <div id="auth" style="text-align:center; padding: 50px 20px;">
     <h2 style="font-size: 40px; text-shadow: 0 0 10px #00bfff;">CỔNG DỊ GIỚI ĐANG MỞ</h2>
     <input id="username" placeholder="Tên thợ săn...">
@@ -2567,8 +2630,104 @@
         </div>
 </div>
 <script type="module">
-    // HỆ THỐNG HIỆU ỨNG CHIẾN ĐẤU BẰNG HTML GỐC
-    // HỆ THỐNG HIỆU ỨNG CHIẾN ĐẤU BẰNG HTML GỐC (ĐÃ NÂNG CẤP MÀU SẮC KỸ NĂNG)
+    const gameAssets = [
+        "char/Sungjinwoo.png", "bot/enemy.png", "char/Hwang Dongsoo.png", 
+        "char/Yoo Jinho.png", "char/Kim Sangshik.png", "char/Cha Hae-In.png", 
+        "char/Woo Jinchul.png", "char/Kang Taeshik.png",
+        
+        // Quái & Boss
+        "bot/Boss_Red_Mane_Lycan.png", "boss/Boss_Blue_Venom-fanged_Kasaka.png",
+        "bot/Boss_Goblin_Spellcaster.png", "bot/Boss_Elite_Goblin_Fighter.png",
+        "bot/Boss_Cold-blooded_Hobgoblin.png", "bot/Boss_Mad_Hobgoblin.png",
+        "boss/Boss_Hobgoblin_Leader.png", "bot/Boss_Blue_Poison_Scorpion.png",
+        "boss/Boss_Spider_Leader.png", "bot/Boss_High_Orc_Butcher.png",
+        "bot/Boss_High_Orc_Warden.png", "bot/Boss_High_Orc_Headman.png",
+        "bot/Boss_High_Orc_Spellmaster.png", "boss/Boss_Almighty_Shaman,_Kargalgan.png",
+        "boss/Boss_The_Gatekeeper_of_Hell,_Cerberus.png", "boss/Boss_Avaricious_Vulcan.png",
+        "boss/Boss_Soul_Shepherd_Metus.png", "boss/Boss_Baran_of_White_Flames.png",
+        "boss/Boss_Baran_the_Demon_King.png", "bot/Boss_1st_Gen._Fire_Ant_Leader.png",
+        "bot/Boss_Purple_Blade_Camula.png", "bot/Boss_1st_Gen._White_Ant_Leader.png",
+        "boss/Boss_Queen_Ant.png", "boss/Boss_Ant_King.png", "boss/Rage_Ant_King.png",
+        
+        // Quái Red Gate
+        "bot/linhtienbang.png", "bot/canvetienbang.png", "bot/trinhsattienbang.png",
+        "bot/thulinhgaubang.png", "boss/bakura.png", "bot/HanSongYi.jpg", "char/HanSongYi.jpg",
+        "bot/linh.png", "bot/linhtinhnhue.png", "bot/linhcanve.png", "boss/igris.png",
+        
+        // Consumables & Items
+        "cons/HP_Potion.png", "cons/Item_Hi-HP_Potion.png", "cons/Item_Heal-All.png",
+        "cons/Item_SP_Potion.png", "cons/Item_Hi-SP_Potion.png", "cons/Item_Hi-SP_Potion_+.png",
+        "cons/Item_Maxheal_Dust.png", "wp/dagger.png", "wp/shield.png", 
+        "wp/essenceofmagic.png", "wp/baruka_dagger.png", "wp/Demon_King_Longsword.png",
+        "wp/Crimson_Shadow.png", "wp/red_knight_helmet.png", "wp/knight_gautlet.png",
+        
+        // Costumes
+        "cos/Sung_Jinwoo_Black_Suit.png", "cos/Sung_Jinwoo_Mining_Work.png", 
+        "cos/Sung_Jinwoo_A_Wish_Come_True.png", "cos/Sung_Jinwoo_Light_Outing_Wear.png",
+        "cos/Sung_Jinwoo_Incapable_of_Evaluation.png", "cos/Sung_Jinwoo_Summer_Vacation_2.png",
+        "cos/Sung_Jinwoo_Night_Lord.png", "cos/Sung_Jinwoo_Monarch_of_the_Heaven-Annihilating_Dragons.png",
+        "cos/Sung_Jinwoo_God_of_Death.png", "cos/Frieren.png",
+        
+        // Effects
+        "effect/Heal_Effect.png", "effect/Burn_Effect.png", "effect/Defense_Decrease_Effect.png",
+        "effect/Stun_Effect.png", "effect/Punishment_Effect.png", "effect/Poison_Effect.png",
+        "effect/Attack_Increase_Effect.png", "effect/Sian_Halat_Scarlet_Domination_Effect.png",
+        
+        // Skills
+        "skill/amsat.jpg", "skill/tanghinh.jpg", "skill/dagger.jpg", "skill/loimathuat.png",
+        "skill/hutmaluc.png", "skill/flame_ball.png", "skill/cothethep.png", 
+        "skill/trichxuatbongtoi.png", "skill/satkhi.png", "skill/haphuyet.png",
+        "skill/thinhnoquanvuong.png", "skill/phandon.png", "skill/basic_attack.png",
+        "https://cdn-icons-png.flaticon.com/512/9483/9483031.png",
+        "https://cdn-icons-png.flaticon.com/256/1845/1845861.png",
+        "https://cdn-icons-png.flaticon.com/512/709/709612.png"
+    ];
+
+    let loadedAssetsCount = 0;
+    const totalAssetsToLoad = gameAssets.length;
+    const loadingBarUi = document.getElementById('loadingBar');
+    const loadingTextUi = document.getElementById('loadingText');
+    const loadingScreenUi = document.getElementById('loadingScreen');
+    const authUi = document.getElementById('auth');
+
+    // Hàm cập nhật khi 1 ảnh tải xong
+    function onAssetLoad() {
+        loadedAssetsCount++;
+        const percent = Math.floor((loadedAssetsCount / totalAssetsToLoad) * 100);
+        
+        loadingBarUi.style.width = percent + "%";
+        loadingTextUi.innerText = `Loading Resources... ${percent}%`;
+
+        // Khi tải xong tất cả
+        if (loadedAssetsCount === totalAssetsToLoad) {
+            loadingTextUi.innerText = "SYSTEM READY!";
+            loadingTextUi.style.color = "#00ff00";
+            
+            setTimeout(() => {
+                loadingScreenUi.classList.add('fade-out'); // Mờ dần
+                setTimeout(() => {
+                    loadingScreenUi.style.display = 'none'; // Giấu hẳn
+                    authUi.style.display = 'block'; // Hiện màn hình Đăng Nhập
+                    authUi.style.animation = 'fadeIn 1s ease'; // Thêm chút hiệu ứng mượt
+                }, 800); // Chờ hiệu ứng CSS fade-out (0.8s) chạy xong
+            }, 500); // Đứng hình ở 100% khoảng 0.5s cho đẹp
+        }
+    }
+
+    // Bắt đầu vòng lặp tải ảnh
+    if (totalAssetsToLoad === 0) onAssetLoad(); // Fallback nếu mảng trống
+    
+    gameAssets.forEach(src => {
+        const img = new Image();
+        img.onload = onAssetLoad;
+        img.onerror = () => {
+            console.warn("Không thể tải ảnh: ", src);
+            onAssetLoad(); // Lỗi vẫn cho đếm tiếp để không bị kẹt Loading mãi mãi
+        };
+        img.src = src;
+    });
+    
+    
     window.playDashEffect = function(isPlayerAttack, effectType = 'normal') {
         const pre = getPrefix(); 
         const attackerImg = document.getElementById(pre + (isPlayerAttack ? 'p-img' : 'e-img'));
