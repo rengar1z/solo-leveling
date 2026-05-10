@@ -842,6 +842,44 @@
         debug.innerText = 'Lỗi kết nối: ' + e;
     }
 
+    const DOM = {};
+
+    function initDOM() {
+        // Cache các chỉ số Status
+        DOM.playerName = document.getElementById('playerName');
+        DOM.level = document.getElementById('level');
+        DOM.job = document.getElementById('job');
+        DOM.hpDisplay = document.getElementById('hpDisplay');
+        DOM.mpDisplay = document.getElementById('mpDisplay');
+        DOM.expText = document.getElementById('expText');
+        DOM.hpBar = document.getElementById('hpBar');
+        DOM.mpBar = document.getElementById('mpBar');
+        DOM.expBar = document.getElementById('expBar');
+        DOM.str = document.getElementById('str');
+        DOM.vit = document.getElementById('vit');
+        DOM.agi = document.getElementById('agi');
+        DOM.int = document.getElementById('int');
+        DOM.sense = document.getElementById('sense');
+        DOM.points = document.getElementById('points');
+        DOM.cashText = document.getElementById('cashText');
+
+        // Cache giao diện Arena
+        DOM.p_hp_bar = document.getElementById('p-hp-bar');
+        DOM.p_hp_text = document.getElementById('p-hp-text');
+        DOM.e_hp_bar = document.getElementById('e-hp-bar');
+        DOM.e_hp_text = document.getElementById('e-hp-text');
+        DOM.e_img = document.getElementById('e-img');
+    
+        // Cache giao diện Dungeon
+        DOM.d_p_hp_bar = document.getElementById('d-p-hp-bar');
+        DOM.d_p_hp_text = document.getElementById('d-p-hp-text');
+        DOM.d_e_hp_bar = document.getElementById('d-e-hp-bar');
+        DOM.d_e_hp_text = document.getElementById('d-e-hp-text');
+        DOM.d_e_img = document.getElementById('d-e-img');
+        
+        DOM.isCached = true;
+}
+
     // --- BIẾN TOÀN CỤC CHO CHIẾN ĐẤU ---
     let enemy = null;
     let isMyTurn = true;
@@ -1680,82 +1718,86 @@ const SHADOW_DATA = {
     };
 
     function render() {
-        document.getElementById('playerName').innerText = currentUser.username;
-        document.getElementById('level').innerText = currentUser.level;
-        document.getElementById('job').innerText = getJob(currentUser.level);
-    
-        document.getElementById('hpDisplay').innerText = currentUser.hp + '/' + currentUser.maxHp;
-        document.getElementById('mpDisplay').innerText = currentUser.mp + '/' + currentUser.maxMp;
-        document.getElementById('expText').innerText = currentUser.exp + '/' + currentUser.need;
-
-        document.getElementById('hpBar').style.width = (currentUser.hp / currentUser.maxHp * 100) + '%';
-        document.getElementById('mpBar').style.width = (currentUser.mp / currentUser.maxMp * 100) + '%';
-        document.getElementById('expBar').style.width = (currentUser.exp / currentUser.need * 100) + '%';
-
-        ['str', 'vit', 'agi', 'int', 'sense', 'points'].forEach(k => document.getElementById(k).innerText = currentUser[k]);
-   
-        if (window.renderSkills) window.renderSkills();
+            if (!DOM.isCached) initDOM(); // Tự động load cache lần đầu tiên
         
-        const addBtns = document.getElementsByClassName('add-btn');
-        for (let btn of addBtns) btn.disabled = currentUser.points <= 0;
+            DOM.playerName.textContent = currentUser.username;
+            DOM.level.textContent = currentUser.level;
+            DOM.job.textContent = getJob(currentUser.level);
         
-        // Refresh UI if in battle
-        if (enemy) updateCombatUI();
-        if (document.getElementById('cashText')) document.getElementById('cashText').innerText = currentUser.cash;
-        if (window.renderBag) window.renderBag();
-        if (window.renderAchievements) window.renderAchievements();
+            DOM.hpDisplay.textContent = currentUser.hp + '/' + currentUser.maxHp;
+            DOM.mpDisplay.textContent = currentUser.mp + '/' + currentUser.maxMp;
+            DOM.expText.textContent = currentUser.exp + '/' + currentUser.need;
         
-        window.updatePlayerAvatar = function() {
-            let defaultAvatar = "char/Sungjinwoo.png"; 
-            if (currentUser.equipped && currentUser.equipped.costume) {
-                const costumeName = currentUser.equipped.costume.name;
-                if (ITEM_DATA[costumeName] && ITEM_DATA[costumeName].avatar) {
-                    defaultAvatar = ITEM_DATA[costumeName].avatar;
-                }
-            }
+            DOM.hpBar.style.width = (currentUser.hp / currentUser.maxHp * 100) + '%';
+            DOM.mpBar.style.width = (currentUser.mp / currentUser.maxMp * 100) + '%';
+            DOM.expBar.style.width = (currentUser.exp / currentUser.need * 100) + '%';
+        
+            DOM.str.textContent = currentUser.str;
+            DOM.vit.textContent = currentUser.vit;
+            DOM.agi.textContent = currentUser.agi;
+            DOM.int.textContent = currentUser.int;
+            DOM.sense.textContent = currentUser.sense;
+            DOM.points.textContent = currentUser.points;
+            if (DOM.cashText) DOM.cashText.textContent = currentUser.cash;
+        
+            if (window.renderSkills) window.renderSkills();
             
-            const pImg = document.getElementById('p-img');
-            if (pImg) pImg.src = defaultAvatar;
-
-            const dpImg = document.getElementById('d-p-img');
-            if (dpImg) dpImg.src = defaultAvatar;
-  
-            const visualPImg = document.getElementById('visual-p-img');
-            if (visualPImg) visualPImg.src = defaultAvatar;
-        };
-        updatePlayerAvatar(); // Kích hoạt ngay lập tức
-        if (!currentUser.ownedCostumes) currentUser.ownedCostumes = [];
-        
-        const costumes = ["costume_black_suit", "costume_mining", "costume_wish", "costume_light_outing", "costume_incapable", "costume_summer_2", "costume_night_lord", "costume_dragon_monarch", "costume_god_of_death", "costume_Frieren"];
-        
-        costumes.forEach(shopId => {
-            const btn = document.getElementById('btn-' + shopId);
-            if (btn) {
-                const itemId = SHOP_DATA[shopId].itemId;
-                btn.style = ""; // Reset sạch style inline cũ
-                
-                if (currentUser.equipped && currentUser.equipped.costume && currentUser.equipped.costume.name === itemId) {
-                    btn.innerText = "ĐANG SỬ DỤNG";
-                    // Style giống nút "Reset" (Màu xám/xanh lam nhạt kim loại)
-                    btn.style.background = "linear-gradient(to bottom, #8ea1b2, #5a6e84)";
-                    btn.style.color = "#111"; // Chữ đen đậm
-                } 
-                else if (currentUser.ownedCostumes.includes(itemId)) {
-                    btn.innerText = "MẶC TRANG PHỤC";
-                    // Style màu Xanh Neon đặc trưng cho hành động Trang bị
-                    btn.style.background = "linear-gradient(to bottom, #5cb8ff, #1a75ff)";
-                    btn.style.color = "#fff"; // Chữ trắng
-                    btn.style.textShadow = "0 1px 3px rgba(0,0,0,0.8)";
-                } 
-                else {
-                    btn.innerText = `MUA (${SHOP_DATA[shopId].price})`;
-                    // Style giống nút "Confirm" (Màu Vàng Gold kim loại rực rỡ)
-                    btn.style.background = "linear-gradient(to bottom, #fce068, #df9a20)";
-                    btn.style.color = "#222"; // Chữ đen đậm
-                }
+            const addBtns = document.getElementsByClassName('add-btn');
+            for (let btn of addBtns) btn.disabled = currentUser.points <= 0;
+            
+            if (enemy) updateCombatUI();
+            if (window.renderBag) window.renderBag();
+            if (window.renderAchievements) window.renderAchievements();
+            
+            window.updatePlayerAvatar = function() {
+                let defaultAvatar = "char/Sungjinwoo.png"; 
+                if (currentUser.equipped && currentUser.equipped.costume) {
+                    const costumeName = currentUser.equipped.costume.name;
+                    if (ITEM_DATA[costumeName] && ITEM_DATA[costumeName].avatar) {
+                        defaultAvatar = ITEM_DATA[costumeName].avatar;
             }
-        });
-    }
+        }
+        
+        const pImg = document.getElementById('p-img');
+        if (pImg) pImg.src = defaultAvatar;
+
+        const dpImg = document.getElementById('d-p-img');
+        if (dpImg) dpImg.src = defaultAvatar;
+
+        const visualPImg = document.getElementById('visual-p-img');
+        if (visualPImg) visualPImg.src = defaultAvatar;
+    };
+    updatePlayerAvatar(); 
+    
+    if (!currentUser.ownedCostumes) currentUser.ownedCostumes = [];
+    
+    const costumes = ["costume_black_suit", "costume_mining", "costume_wish", "costume_light_outing", "costume_incapable", "costume_summer_2", "costume_night_lord", "costume_dragon_monarch", "costume_god_of_death", "costume_Frieren"];
+    
+    costumes.forEach(shopId => {
+        const btn = document.getElementById('btn-' + shopId);
+        if (btn) {
+            const itemId = SHOP_DATA[shopId].itemId;
+            btn.style = ""; 
+            
+            if (currentUser.equipped && currentUser.equipped.costume && currentUser.equipped.costume.name === itemId) {
+                btn.textContent = "ĐANG SỬ DỤNG";
+                btn.style.background = "linear-gradient(to bottom, #8ea1b2, #5a6e84)";
+                btn.style.color = "#111"; 
+            } 
+            else if (currentUser.ownedCostumes.includes(itemId)) {
+                btn.textContent = "MẶC TRANG PHỤC";
+                btn.style.background = "linear-gradient(to bottom, #5cb8ff, #1a75ff)";
+                btn.style.color = "#fff"; 
+                btn.style.textShadow = "0 1px 3px rgba(0,0,0,0.8)";
+            } 
+            else {
+                btn.textContent = `MUA (${SHOP_DATA[shopId].price})`;
+                btn.style.background = "linear-gradient(to bottom, #fce068, #df9a20)";
+                btn.style.color = "#222"; 
+            }
+        }
+    });
+}
     
 
     // --- TAB ĐIỀU HƯỚNG ---
@@ -1849,7 +1891,7 @@ const SHADOW_DATA = {
             eHTML += `<div class="status-icon" title="Vỡ Giáp (Giảm 40% Thủ)"><img src="effect/Defense_Decrease_Effect.png" style="width: 100%; height: 100%; object-fit: contain;"><div class="status-turn">${window.enemyDefBreakTurns}</div></div>`;
         }
        
-      if (window.enemyAtkBuffTurns && window.enemyAtkBuffTurns > 0) {
+        if (window.enemyAtkBuffTurns && window.enemyAtkBuffTurns > 0) {
             eHTML += `<div class="status-icon" title="Sát thương tăng vọt (Còn ${window.enemyAtkBuffTurns} lượt)">
                         <img src="effect/Attack_Increase_Effect.png" style="width: 100%; height: 100%; object-fit: contain;">
                         <div class="status-turn">${window.enemyAtkBuffTurns}</div>
@@ -1869,25 +1911,31 @@ const SHADOW_DATA = {
     };
     
     function updateCombatUI() {
-        if (!enemy || !currentUser) return; // Thêm check an toàn
-        const pre = getPrefix();
+        if (!enemy || !currentUser) return; 
+        if (!DOM.isCached) initDOM();
+    
+        // Điều hướng biến trỏ UI dựa vào môi trường đang đứng (Đỡ phải gọi GetElement liên tục)
+        const pHpBar = isDungeonMode ? DOM.d_p_hp_bar : DOM.p_hp_bar;
+        const pHpText = isDungeonMode ? DOM.d_p_hp_text : DOM.p_hp_text;
+        const eHpBar = isDungeonMode ? DOM.d_e_hp_bar : DOM.e_hp_bar;
+        const eHpText = isDungeonMode ? DOM.d_e_hp_text : DOM.e_hp_text;
+        const eImgElement = isDungeonMode ? DOM.d_e_img : DOM.e_img;
         
-        // --- 1. CẬP NHẬT HP NGƯỜI CHƠI (ĐÃ PHỤC HỒI LẠI Ở ĐÂY) ---
+        // --- 1. CẬP NHẬT HP NGƯỜI CHƠI ---
         const pPercent = (currentUser.hp / currentUser.maxHp) * 100;
-        const pHpBar = document.getElementById(pre + 'p-hp-bar');
         if (pHpBar) pHpBar.style.width = pPercent + "%";
-        const pHpText = document.getElementById(pre + 'p-hp-text');
-        if (pHpText) pHpText.innerText = `HP: ${currentUser.hp}/${currentUser.maxHp}`;
+        if (pHpText) pHpText.textContent = `HP: ${currentUser.hp}/${currentUser.maxHp}`;
         
         // --- 2. CẬP NHẬT HP QUÁI VẬT & GIÁP ẢO ---
         const enemyMaxHp = enemy.maxHp || enemy.hp || 100;
         const ePercent = (enemy.hp / enemyMaxHp) * 100;
-        const eHpBar = document.getElementById(pre + 'e-hp-bar');
         if (eHpBar) eHpBar.style.width = ePercent + "%";
-        
-        // Tự động vẽ thanh giáp bạc
+        if (eHpText) eHpText.textContent = `HP: ${enemy.hp}/${enemyMaxHp}`;
+    
+        // Tự động quản lý thanh giáp bạc (Shield Bar) trên thanh HP quái
         if (eHpBar) {
             const eHpTrack = eHpBar.parentElement; 
+            const pre = isDungeonMode ? 'd-' : '';
             let eShieldBar = document.getElementById(pre + 'e-shield-bar');
             
             if (!eShieldBar) {
@@ -1896,7 +1944,7 @@ const SHADOW_DATA = {
                 eShieldBar.className = 'combat-shield-bar';
                 eHpTrack.appendChild(eShieldBar);
             }
-
+    
             if (enemy.shieldHP && enemy.shieldHP > 0) {
                 const shieldPercent = (enemy.shieldHP / enemyMaxHp) * 100;
                 eShieldBar.style.width = shieldPercent + "%";
@@ -1905,100 +1953,85 @@ const SHADOW_DATA = {
             } else {
                 eShieldBar.style.width = "0%";
                 eShieldBar.style.opacity = "0"; 
-            }
         }
+    }
 
-        // Cập nhật chữ HP Quái
-        const eHpText = document.getElementById(pre + 'e-hp-text');
-        if (eHpText) eHpText.innerText = `HP: ${enemy.hp}/${enemyMaxHp}`;
+    // --- 3. CƠ CHẾ NỔI ĐIÊN (ENRAGE) CHO BOSS ---
+    if (eHpBar) {
+        const eHpBarBox = eHpBar.parentElement; 
 
-        // --- 3. CƠ CHẾ NỔI ĐIÊN (ENRAGE) CHO BOSS ---
-            if (eHpBar) {
-                const eHpBarBox = eHpBar.parentElement; 
-                const eImgElement = document.getElementById(pre + 'e-img');
+        if (enemy.isBoss && ePercent <= 50 && !enemy.isEnraged) {
+            enemy.isEnraged = true; 
+            const log = document.getElementById((isDungeonMode ? 'd-' : '') + 'battleLog');
+            if(log) {
+                // Tối ưu render log: insertAdjacentHTML nhẹ hơn += innerHTML rất nhiều
+                log.insertAdjacentHTML('afterbegin', `<span style="color:red; font-size:18px; font-weight:bold; text-shadow: 0 0 10px red;">⚠️ CẢNH BÁO: ${enemy.name.toUpperCase()} ĐÃ BỘC PHÁT SÁT KHÍ! SÁT THƯƠNG TĂNG ĐỘT BIẾN!</span><br>`);
+            }
+            enemy.atk = Math.floor(enemy.atk * 1.3); 
+            
+            if(eImgElement) {
+                eImgElement.classList.add('shake'); 
+                setTimeout(() => eImgElement.classList.remove('shake'), 400);
 
-                if (enemy.isBoss && ePercent <= 50 && !enemy.isEnraged) {
-                    enemy.isEnraged = true; 
-                    const log = document.getElementById(pre + 'battleLog');
-                    if(log) log.innerHTML = `<span style="color:red; font-size:18px; font-weight:bold; text-shadow: 0 0 10px red;">⚠️ CẢNH BÁO: ${enemy.name.toUpperCase()} ĐÃ BỘC PHÁT SÁT KHÍ! SÁT THƯƠNG TĂNG ĐỘT BIẾN!</span><br>` + log.innerHTML;
-                    enemy.atk = Math.floor(enemy.atk * 1.3); 
-                    if(eImgElement) {
-                        eImgElement.classList.add('shake'); 
-                        setTimeout(() => eImgElement.classList.remove('shake'), 400);
-
-                        // ==========================================
-                        // KÍCH HOẠT ĐỔI ẢNH PHASE 2 CHO BOSS BARAN
-                        // ==========================================
-                        if (enemy.bossType === "baran") {
-                            enemy.img = "boss/Boss_Baran_the_Demon_King.png"; 
-                            eImgElement.src = enemy.img; 
-                            
-                            let uniqueKey = 'rageBoss_' + Date.now();
-                            gameScene.load.image(uniqueKey, enemy.img);
-                            gameScene.load.once('complete', () => { eSprite.setTexture(uniqueKey); eSprite.setDisplaySize(150, 200); });
-                            gameScene.load.start();
-
-                        } else if(enemy.bossType === "beru") {
-                            enemy.img = "boss/Rage_Ant_King.png";
-                            eImgElement.src = enemy.img;
-                            
-                            let uniqueKey = 'rageBoss_' + Date.now();
-                            gameScene.load.image(uniqueKey, enemy.img);
-                            gameScene.load.once('complete', () => { eSprite.setTexture(uniqueKey); eSprite.setDisplaySize(150, 200); });
-                            gameScene.load.start();
-                        }
-                        
-                        // (Sau này nếu muốn Igris hay Vulcan đổi ảnh, bạn cứ thêm else if vào đây)
-                        // else if (enemy.bossType === "igris") { ... }
-                    }
+                if (enemy.bossType === "baran") {
+                    enemy.img = "boss/Boss_Baran_the_Demon_King.png"; 
+                    eImgElement.src = enemy.img; 
+                } else if(enemy.bossType === "beru") {
+                    enemy.img = "boss/Rage_Ant_King.png";
+                    eImgElement.src = enemy.img;
                 }
-
-            if (enemy.isBoss && enemy.isEnraged) {
-                eHpBar.style.background = "linear-gradient(90deg, #660000, #cc0000)";
-                if(eHpBarBox) eHpBarBox.classList.add('enraged-glow');
-                if(eImgElement) eImgElement.classList.add('boss-enraged-img'); 
-            } else {
-                eHpBar.style.background = "#ff0000";
-                if(eHpBarBox) eHpBarBox.classList.remove('enraged-glow');
-                if(eImgElement) eImgElement.classList.remove('boss-enraged-img'); 
             }
         }
 
-        // --- 4. CƠ CHẾ KHÓA NÚT THÔNG MINH KHI THIẾU MP VÀ HỒI CHIÊU ---
-        const btnAttackOld = document.getElementById(pre + 'btnAttack');
-        if (btnAttackOld) btnAttackOld.disabled = !isMyTurn;
+        if (enemy.isBoss && enemy.isEnraged) {
+            eHpBar.style.background = "linear-gradient(90deg, #660000, #cc0000)";
+            if(eHpBarBox) eHpBarBox.classList.add('enraged-glow');
+            if(eImgElement) eImgElement.classList.add('boss-enraged-img'); 
+        } else {
+            eHpBar.style.background = "#ff0000";
+            if(eHpBarBox) eHpBarBox.classList.remove('enraged-glow');
+            if(eImgElement) eImgElement.classList.remove('boss-enraged-img'); 
+        }
+    }
 
-        const dynamicBtns = document.querySelectorAll(`#${pre === 'd-' ? 'd-skillRow' : 'skillRow'} .combat-skill-btn`);
-        dynamicBtns.forEach(btn => {
-            btn.disabled = !isMyTurn;
-            let cost = parseInt(btn.getAttribute('data-mp') || 0); 
-            
-            // === FIX LỖI ĐỒNG BỘ MP CỦA THỊNH NỘ QUÂN VƯƠNG ===
-            const isMonarchWrath = btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('useMonarchWrath');
-            if (isMonarchWrath) {
-                cost = 100 + (monarchWrathUses * 50); 
-            }
+    // --- 4. KHÓA NÚT THÔNG MINH KHI THIẾU MP/HỒI CHIÊU (GIẢM REPAINT) ---
+    const pre = isDungeonMode ? 'd-' : '';
+    const dynamicBtns = document.querySelectorAll(`#${pre === 'd-' ? 'd-skillRow' : 'skillRow'} .combat-skill-btn`);
+    
+    dynamicBtns.forEach(btn => {
+        btn.disabled = !isMyTurn;
+        let cost = parseInt(btn.getAttribute('data-mp') || 0); 
+        
+        const isMonarchWrath = btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('useMonarchWrath');
+        if (isMonarchWrath) {
+            cost = 100 + (monarchWrathUses * 50); 
+        }
 
-            const isCounterSkill = btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('useCounterAttack');
-            
-            let isLocked = false;
-            if (cost > 0 && currentUser.mp < cost) isLocked = true; // Thiếu MP -> Khóa
-            if (isCounterSkill && window.counterCooldown && window.counterCooldown > 0) isLocked = true; // Đang Cooldown -> Khóa
+        const isCounterSkill = btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('useCounterAttack');
+        let isLocked = false;
+        
+        if (cost > 0 && currentUser.mp < cost) isLocked = true; 
+        if (isCounterSkill && window.counterCooldown && window.counterCooldown > 0) isLocked = true; 
 
-            if (isLocked) {
+        // Chỉ ghi đè CSS nếu trạng thái thực sự thay đổi, tránh kích hoạt GPU vẽ lại không cần thiết
+        if (isLocked) {
+            if (btn.style.cursor !== "not-allowed") {
                 btn.style.filter = "grayscale(1) brightness(0.5)"; 
                 btn.style.cursor = "not-allowed";
-            } else {
+            }
+        } else {
+            if (btn.style.cursor !== "pointer") {
                 btn.style.filter = "none";
                 btn.style.cursor = "pointer";
             }
-        });
-        
-        // --- 5. VẼ ICON HIỆU ỨNG (BUFF/DEBUFF) ---
-        if (typeof renderStatusIcons === "function") {
-            renderStatusIcons();
         }
+    });
+    
+    // --- 5. VẼ ICON HIỆU ỨNG (BUFF/DEBUFF) ---
+    if (typeof renderStatusIcons === "function") {
+        renderStatusIcons();
     }
+}
 
     function triggerShake() {
         const eImg = document.getElementById(getPrefix() + 'e-img');
