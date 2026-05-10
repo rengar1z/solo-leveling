@@ -3835,38 +3835,47 @@ const SHADOW_DATA = {
         checkAchievements();
         currentUser.exp += enemyExp;
 
-        // Logic rớt đồ tự động lấy theo loại Cổng Đỏ hiện tại
+        // ================= LOGIC RỚT ĐỒ (LOOT SYSTEM) =================
         // KÍCH HOẠT: BÀN TAY MAY MẮN (+10% Tỷ lệ rớt đồ)
         let luckBonus = (currentUser.skills["Bàn Tay May Mắn"] > 0) ? 0.10 : 0;
-        if (currentRedGateId) {
-            let dropChance = (enemy.isBoss ? 1.0 : 0.05) + luckBonus; 
-            if (Math.random() <= dropChance) {
-                const rareItems = RED_GATES[currentRedGateId].rareDrops;
-                const droppedItemName = rareItems[Math.floor(Math.random() * rareItems.length)];
-                const newItem = generateItem(droppedItemName); 
-                currentUser.inventory.push(newItem); // Bỏ vào kho
-                droppedItemsForUI.push(newItem);     // === BƯỚC 4.2: Bỏ vào khay hiển thị UI ===
-                //logBattle(`<span style="color:${RED_GATES[currentRedGateId].themeColor}; font-size:18px;">✨ CỔNG ĐỎ RƠI ĐỒ HIẾM: <b>${droppedItemName}</b>!</span>`);
-            }
-        } else if (isDungeonMode) {
-            if (enemy.isBoss) {
-                // --- BOSS RỚT TRANG BỊ ---
-                let dropChance = 0.10 + luckBonus; // Mặc định 10% + buff
+        
+        if (enemy.isBoss) {
+            // --- NẾU LÀ BOSS: RỚT TRANG BỊ / ĐỒ HIẾM ---
+            if (currentRedGateId) {
+                // Boss Cổng Đỏ: Rớt đồ hiếm của Cổng Đỏ (Mặc định 100% rớt)
+                let dropChance = 1.0 + luckBonus; 
+                if (Math.random() <= dropChance) {
+                    const rareItems = RED_GATES[currentRedGateId].rareDrops;
+                    const droppedItemName = rareItems[Math.floor(Math.random() * rareItems.length)];
+                    const newItem = generateItem(droppedItemName); 
+                    if (newItem) {
+                        currentUser.inventory.push(newItem); 
+                        droppedItemsForUI.push(newItem);     
+                    }
+                }
+            } else if (isDungeonMode) {
+                // Boss Hầm Ngục Thường: Rớt trang bị cơ bản
+                let dropChance = 0.10 + luckBonus; // Mặc định 10%
                 if (Math.random() <= dropChance) { 
                     const items = ["Dagger", "Shield", "Essence of Magic"];
                     const droppedItemName = items[Math.floor(Math.random() * items.length)];
                     const newItem = generateItem(droppedItemName); 
-                    currentUser.inventory.push(newItem); 
-                    droppedItemsForUI.push(newItem);     
+                    if (newItem) {
+                        currentUser.inventory.push(newItem); 
+                        droppedItemsForUI.push(newItem);     
+                    }
                 }
-            } else {
-                // --- QUÁI THƯỜNG RỚT VẬT LIỆU THEO CẤU HÌNH CỦA TỪNG CON ---
+            }
+        } 
+        else {
+            // --- NẾU LÀ QUÁI THƯỜNG: CHỈ RỚT VẬT LIỆU (MATERIAL) ---
+            if (currentRedGateId || isDungeonMode) {
                 let dropChance = 0.30 + luckBonus; // Mặc định 30% tỷ lệ rớt vật liệu
                 if (Math.random() <= dropChance) {
-                    // Lấy danh sách rớt đồ của quái hiện tại. Nếu quên chưa khai báo, mặc định rớt Ma Thạch
+                    // Tự động lấy danh sách vật liệu đã cấu hình trong 'drops' của quái đó.
+                    // Nếu quái (như trong Cổng Đỏ) chưa được cấu hình 'drops', mặc định rớt Ma Thạch.
                     const possibleDrops = enemy.drops || ["Ma Thạch Cấp Thấp"];
                     
-                    // Chọn ngẫu nhiên 1 món trong danh sách đó
                     const droppedItemName = possibleDrops[Math.floor(Math.random() * possibleDrops.length)];
                     const newItem = generateItem(droppedItemName); 
                     
