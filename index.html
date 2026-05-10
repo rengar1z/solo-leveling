@@ -895,6 +895,7 @@
     let monarchWrathUses = 0;
     let playerBleedTurns = 0; // <--- THÊM BIẾN NÀY: Theo dõi số lượt bạn bị chảy máu
     let playerArmorBreakTurns = 0; // <--- THÊM BIẾN NÀY: Đếm số lượt bạn bị Boss phá giáp
+    window.combatTimer = null
     window.counterCooldown = 0;
     window.playerVulnerabilityTurns = 0;
     window.enemyBurnTurns = 0; 
@@ -2906,7 +2907,7 @@ const SHADOW_DATA = {
                 enemy.hp = Math.max(0, enemy.hp - poisonDmg);
                 enemyPoisonTurns--;
                 logBattle(`<span style="color:#00ff00; font-style:italic;">☠️ Độc tính phát tác! Kẻ địch mất ${poisonDmg} HP.</span>`);
-                if (enemy.hp <= 0) { updateCombatUI(); return setTimeout(winBattle, 1000); }
+                if (enemy.hp <= 0) { updateCombatUI(); return window.combatTimer = setTimeout(winBattle, 1000); }
             }
         }
         // --- XỬ LÝ SÁT THƯƠNG RÚT MÁU KHI BỊ THƯƠNG ---
@@ -3765,7 +3766,7 @@ const SHADOW_DATA = {
         }
 
         saveUserData(); 
-        setTimeout(resetToButtonMode, 1500);
+        window.combatTimer = setTimeout(resetToButtonMode, 1500);
 
         // XỬ LÝ ĐI TIẾP NẾU ĐANG Ở CỔNG ĐỎ
         if (currentRedGateId) {
@@ -3933,7 +3934,7 @@ const SHADOW_DATA = {
                     updateCombatUI(); // Trả lại lượt cho bạn
                 }, 1000);
             } else {
-                setTimeout(enemyTurn, 1000); // Không choáng thì đánh bình thường
+                window.combatTimer = setTimeout(enemyTurn, 1000); 
             }
         }
     }
@@ -4209,18 +4210,22 @@ const SHADOW_DATA = {
     }
 
     window.exitDungeon = function() {
+        if (window.combatTimer) {
+            clearTimeout(window.combatTimer);
+            window.combatTimer = null;
+        }
+    
         isDungeonMode = false;
         document.getElementById('dungeonCombatUI').classList.add('hidden');
         
-        // Logic trả về đúng Menu: Nếu đang ở Lâu Đài Quỷ thì về Lâu Đài Quỷ
         if (dCurrentId && dCurrentId.includes('demon_castle')) {
             document.getElementById('demonCastleArea').classList.remove('hidden');
         } else {
             document.getElementById('dungeonListArea').classList.remove('hidden');
         }
         
-        enemy = null; // Xóa dữ liệu Boss cũ
-    }
+        enemy = null; 
+}
 
     // --- HÀM LỌC VẬT PHẨM TRONG CỬA HÀNG ---
     window.filterShop = function(category, btnElement) {
