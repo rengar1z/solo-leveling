@@ -211,22 +211,14 @@
             margin-top: 20px;
             border: 1px solid #00bfff;
             background: rgba(0,0,30,0.8);
+            
+            /* THÊM 4 DÒNG NÀY ĐỂ ÉP KHUNG TỰ CO GIÃN VÀ KHÔNG BỊ TRÀN */
             display: flex;
             flex-direction: column;
-            
-            /* ========================================= */
-            /* CỐ ĐỊNH KÍCH THƯỚC KHUNG GAME Ở ĐÂY       */
-            width: 100%;
-            height: 750px; /* Khóa cứng chiều cao (bạn có thể tăng giảm tầm 700px - 850px tùy ý) */
-            
-            /* Trang trí thêm cho giống Combat UI */
-            border-radius: 8px; 
-            box-shadow: 0 0 25px rgba(0, 191, 255, 0.15);
-            /* ========================================= */
-            
+            flex: 1;
             overflow: hidden; 
+            min-height: 0; /* THÊM DÒNG NÀY ĐỂ KHẮC PHỤC TRIỆT ĐỂ LỖI TRÀN KHUNG */
         }
-
         /* ================= TỐI ƯU MENU TAB (CHUẨN LIỀN KHỐI ARISE V2) ================= */
         .tabs-header {
             display: flex !important;
