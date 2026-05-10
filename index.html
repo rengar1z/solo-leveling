@@ -4155,6 +4155,12 @@ const SHADOW_DATA = {
         updateCombatUI();
     }
 
+    
+    window.closeRedGatePopup = function() {
+        document.getElementById('redGatePopup').classList.add('hidden');
+    };
+
+    
     window.enterRedGate = function(gateId) {
         currentRedGateId = gateId;
         rgCurrentStage = 0;
@@ -4163,6 +4169,12 @@ const SHADOW_DATA = {
         document.getElementById('dDungeonTitle').innerText = gateData.name;
         document.getElementById('dDungeonTitle').style.color = gateData.themeColor;
         document.getElementById('dDungeonTitle').style.textShadow = `0 0 15px ${gateData.themeColor}`;
+        
+        document.getElementById('dungeonListArea').classList.add('hidden');
+        document.getElementById('demonCastleArea').classList.add('hidden');
+        document.getElementById('dungeonCombatUI').classList.remove('hidden');
+
+        document.getElementById('redGatePopup').classList.remove('hidden');
         
         startRedGateStage();
     }
