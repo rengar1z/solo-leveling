@@ -929,20 +929,20 @@
         "hapjeong_subway": {
             name: "Ga Tàu Điện Hapjeong",
             stages: [
-                { name: "Rắn Hang Độc nhỏ", hp: 25, atk: 4, def: 0, exp: 15, img: "bot/enemy.png" },
-                { name: "Bọ cạp nhỏ", hp: 40, atk: 6, def: 1, exp: 20, img: "bot/enemy.png" },
-                { name: "Thằn lằn hang ăn xác", hp: 60, atk: 8, def: 2, exp: 30, img: "bot/enemy.png" },
-                { name: "Lycan Đầu Đàn", hp: 100, atk: 12, def: 3, exp: 45, img: "bot/Boss_Red_Mane_Lycan.png" },
+                { name: "Rắn Hang Độc nhỏ", hp: 25, atk: 4, def: 0, exp: 15, img: "bot/enemy.png", drops: ["Túi Độc Côn Trùng", "Ma Thạch Cấp Thấp"] },
+                { name: "Bọ cạp nhỏ", hp: 40, atk: 6, def: 1, exp: 20, img: "bot/enemy.png", drops: ["Túi Độc Côn Trùng", "Ma Thạch Cấp Thấp"] },
+                { name: "Thằn lằn hang ăn xác", hp: 60, atk: 8, def: 2, exp: 30, img: "bot/enemy.png", drops: ["Ma Thạch Cấp Thấp"] },
+                { name: "Lycan Đầu Đàn", hp: 100, atk: 12, def: 3, exp: 45, img: "bot/Boss_Red_Mane_Lycan.png", drops: ["Nanh Lycan Bể", "Ma Thạch Cấp Thấp"] },
                 { name: "BOSS: Kasaka Nọc Độc Xanh", hp: 250, atk: 20, def: 5, exp: 250, img: "boss/Boss_Blue_Venom-fanged_Kasaka.png", isBoss: true, bossType: "kasaka" }
             ]
         },
         "goblin_village": {
             name: "Làng Của Goblin",
             stages: [
-                { name: "Pháp Sư Yêu Tinh", hp: 40, atk: 8, def: 0, exp: 30, img: "bot/Boss_Goblin_Spellcaster.png" }, // Giảm cực mạnh
-                { name: "Chiến Binh Yêu Tinh", hp: 80, atk: 12, def: 2, exp: 50, img: "bot/Boss_Elite_Goblin_Fighter.png" }, // Giảm cực mạnh
-                { name: "Yêu Tinh Máu Lạnh", hp: 150, atk: 25, def: 5, exp: 90, img: "bot/Boss_Cold-blooded_Hobgoblin.png" },
-                { name: "Yêu Tinh Mất Trí", hp: 300, atk: 45, def: 10, exp: 150, img: "bot/Boss_Mad_Hobgoblin.png" },
+                { name: "Pháp Sư Yêu Tinh", hp: 40, atk: 8, def: 0, exp: 30, img: "bot/Boss_Goblin_Spellcaster.png", drops: ["Mảnh Giáp Yêu Tinh", "Ma Thạch Cấp Thấp", "Băng Gạc Cũ", "Keo dán"] }, 
+                { name: "Chiến Binh Yêu Tinh", hp: 80, atk: 12, def: 2, exp: 50, img: "bot/Boss_Elite_Goblin_Fighter.png", drops: ["Mảnh Giáp Yêu Tinh", "Ma Thạch Cấp Thấp", "Băng Gạc Cũ", "Keo dán"] }, 
+                { name: "Yêu Tinh Máu Lạnh", hp: 150, atk: 25, def: 5, exp: 90, img: "bot/Boss_Cold-blooded_Hobgoblin.png", drops: ["Mảnh Giáp Yêu Tinh", "Băng Gạc Cũ"] },
+                { name: "Yêu Tinh Mất Trí", hp: 300, atk: 45, def: 10, exp: 150, img: "bot/Boss_Mad_Hobgoblin.png", drops: ["Mảnh Giáp Yêu Tinh", "Keo dán"] },
                 { name: "BOSS: Thủ Lĩnh Yêu Tinh", hp: 600, atk: 65, def: 20, exp: 500, img: "boss/Boss_Hobgoblin_Leader.png", isBoss: true, bossType: "hobgoblin_leader" }
             ]
         },
@@ -1060,6 +1060,15 @@ const SHADOW_DATA = {
         "Dagger": { rank: "D", type: "weapon", name: "Dagger", str: 15, vit: 0, mp: 0, effect: "Tăng 2% ST đòn đánh thường", img: "wp/dagger.png", sellPrice: 30 },
         "Shield": { rank: "C", type: "shield", name: "Shield", str: 0, vit: 5, mp: 0, effect: "Giảm 1.5% ST gánh chịu", img: "wp/shield.png", sellPrice: 45 },
         "Essence of Magic": { rank: "B", type: "accessory", name: "Essence of Magic", str: 0, vit: 0, mp: 50, effect: "Hồi 2% MP mỗi lượt", img: "wp/essenceofmagic.png", sellPrice: 30 },
+
+        // --- VẬT LIỆU TỪ QUÁI THƯỜNG (DÙNG ĐỂ BÁN LẤY CASH) ---
+        "Nanh Lycan Bể": { rank: "D", type: "material", name: "Nanh Lycan Bể", effect: "Vật liệu thô. Có thể bán lấy tiền.", img: "wp/dagger.png", sellPrice: 15 },
+        "Mảnh Giáp Yêu Tinh": { rank: "D", type: "material", name: "Mảnh Giáp Yêu Tinh", effect: "Mảnh giáp phế liệu. Có thể bán lấy tiền.", img: "wp/shield.png", sellPrice: 20 },
+        "Túi Độc Côn Trùng": { rank: "C", type: "material", name: "Túi Độc Côn Trùng", effect: "Chứa nọc độc nhẹ. Có thể bán lấy tiền.", img: "cons/Item_SP_Potion.png", sellPrice: 40 },
+        "Ma Thạch Cấp Thấp": { rank: "C", type: "material", name: "Ma Thạch Cấp Thấp", effect: "Chứa một lượng nhỏ ma lực. Có thể bán lấy tiền.", img: "wp/essenceofmagic.png", sellPrice: 70 },
+        "Băng Gạc Cũ": { rank: "C", type: "material", name: "Băng Gạc Cũ", effect: "Một cuộn băng gạc đã rách nát và cáu bẩn.", img: "material/Old Bandage.png", sellPrice: 70 },
+        "Keo dán": { rank: "C", type: "material", name: "Keo dán", effect: "Lọ keo dính rẻ tiền. Dùng để bán lấy tiền lẻ.", img: "material/Glue.png.png", sellPrice: 70 },
+        
         
         // Đồ hiếm Red Gate:
         "Baruka's Dagger": { rank: "A", type: "weapon", name: "Baruka's Dagger", str: 35, vit: 0, mp: 20, effect: "Vũ khí của Vua Tiên Băng. Tăng 10% ST đòn thường", img: "wp/baruka_dagger.png", sellPrice: 1500 },
@@ -3739,15 +3748,33 @@ const SHADOW_DATA = {
                 droppedItemsForUI.push(newItem);     // === BƯỚC 4.2: Bỏ vào khay hiển thị UI ===
                 //logBattle(`<span style="color:${RED_GATES[currentRedGateId].themeColor}; font-size:18px;">✨ CỔNG ĐỎ RƠI ĐỒ HIẾM: <b>${droppedItemName}</b>!</span>`);
             }
-        } else if (isDungeonMode && enemy.isBoss) {
-            let dropChance = 0.10 + luckBonus; // Mặc định 10% + buff
-            if (Math.random() <= dropChance) { 
-                const items = ["Dagger", "Shield", "Essence of Magic"];
-                const droppedItemName = items[Math.floor(Math.random() * items.length)];
-                const newItem = generateItem(droppedItemName); 
-                currentUser.inventory.push(newItem); // Bỏ vào kho
-                droppedItemsForUI.push(newItem);     // === BƯỚC 4.2: Bỏ vào khay hiển thị UI ===
-                //logBattle(`<span style="color:gold; font-size:18px;">🔥 BOSS rơi đồ: <b>${droppedItemName}</b>!</span>`);
+        } else if (isDungeonMode) {
+            if (enemy.isBoss) {
+                // --- BOSS RỚT TRANG BỊ ---
+                let dropChance = 0.10 + luckBonus; // Mặc định 10% + buff
+                if (Math.random() <= dropChance) { 
+                    const items = ["Dagger", "Shield", "Essence of Magic"];
+                    const droppedItemName = items[Math.floor(Math.random() * items.length)];
+                    const newItem = generateItem(droppedItemName); 
+                    currentUser.inventory.push(newItem); 
+                    droppedItemsForUI.push(newItem);     
+                }
+            } else {
+                // --- QUÁI THƯỜNG RỚT VẬT LIỆU THEO CẤU HÌNH CỦA TỪNG CON ---
+                let dropChance = 0.30 + luckBonus; // Mặc định 30% tỷ lệ rớt vật liệu
+                if (Math.random() <= dropChance) {
+                    // Lấy danh sách rớt đồ của quái hiện tại. Nếu quên chưa khai báo, mặc định rớt Ma Thạch
+                    const possibleDrops = enemy.drops || ["Ma Thạch Cấp Thấp"];
+                    
+                    // Chọn ngẫu nhiên 1 món trong danh sách đó
+                    const droppedItemName = possibleDrops[Math.floor(Math.random() * possibleDrops.length)];
+                    const newItem = generateItem(droppedItemName); 
+                    
+                    if (newItem) {
+                        currentUser.inventory.push(newItem); 
+                        droppedItemsForUI.push(newItem);     
+                    }
+                }
             }
         }
         
