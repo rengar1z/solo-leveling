@@ -1061,7 +1061,7 @@ const SHADOW_DATA = {
         
         "Dagger": { rank: "D", type: "weapon", name: "Dagger", str: 15, vit: 0, mp: 0, effect: "Tăng 2% ST đòn đánh thường", img: "wp/dagger.png", sellPrice: 30 },
         "Shield": { rank: "C", type: "shield", name: "Shield", str: 0, vit: 5, mp: 0, effect: "Giảm 1.5% ST gánh chịu", img: "wp/shield.png", sellPrice: 45 },
-        "Essence of Magic": { rank: "B", type: "accessory", name: "Essence of Magic", str: 0, vit: 0, mp: 50, effect: "Hồi 2% MP mỗi lượt", img: "wp/essenceofmagic.png", sellPrice: 30 },
+        "Essence of Magic": { rank: "B", type: "ring", name: "Essence of Magic", str: 0, vit: 0, mp: 50, effect: "Hồi 2% MP mỗi lượt", img: "wp/essenceofmagic.png", sellPrice: 30 },
 
         // --- VẬT LIỆU TỪ QUÁI THƯỜNG (DÙNG ĐỂ BÁN LẤY CASH) ---
         "Nanh Lycan Bể": { rank: "D", type: "material", name: "Nanh Lycan Bể", effect: "Vật liệu thô. Có thể bán lấy tiền.", img: "wp/dagger.png", sellPrice: 15 },
@@ -1075,7 +1075,7 @@ const SHADOW_DATA = {
         
         // Đồ hiếm Red Gate:
         "Baruka's Dagger": { rank: "A", type: "weapon", name: "Baruka's Dagger", str: 35, vit: 0, mp: 20, effect: "Vũ khí của Vua Tiên Băng. Tăng 10% ST đòn thường", img: "wp/baruka_dagger.png", sellPrice: 1500 },
-        "Ice Elf Cloak": { rank: "A", type: "accessory", name: "Ice Elf Cloak", str: 5, vit: 15, mp: 0, effect: "Giảm 5% sát thương gánh chịu", img: "wp/Demon_King_Longsword.png", sellPrice: 700 },
+        "Ice Elf Cloak": { rank: "A", type: "necklace", name: "Ice Elf Cloak", str: 5, vit: 15, mp: 0, effect: "Giảm 5% sát thương gánh chịu", img: "wp/Demon_King_Longsword.png", sellPrice: 700 },
         
         // Đồ hiếm của Igris:
         "Trường Kiếm của Igris": { rank: "S", type: "weapon", name: "Trường Kiếm của Igris", str: 60, vit: 0, mp: 0, effect: "Vũ khí của Igris. Tăng 15% ST đòn thường", img: "wp/Crimson_Shadow.png", sellPrice: 2000 },
@@ -1126,9 +1126,9 @@ const SHADOW_DATA = {
 
         const randomize = (val) => {
             if (!val || val === 0) return 0;
-    
-            const min = Math.floor(val * 0.95);
-            const max = Math.ceil(val * 1.15);
+            
+            const min = val > 0 ? Math.floor(val * 0.95) : Math.floor(val * 1.15);
+            const max = val > 0 ? Math.ceil(val * 1.15) : Math.ceil(val * 0.95);
             return Math.floor(Math.random() * (max - min + 1)) + min;
         };
 
@@ -2786,9 +2786,11 @@ const SHADOW_DATA = {
 
         // 4. AGI: Tính toán Bạo kích
         let critRate = (currentUser.agi * 0.25) + (config.bonusCritRate || 0);
-        //Nhẫn Quỷ Vương
-        if (currentUser.equipped && currentUser.equipped.accessory && currentUser.equipped.accessory.name === "Nhẫn của quỷ vương") {
-            critRate += 10; // Cộng thẳng 10% Tỷ lệ bạo kích
+        
+        let ring1 = currentUser.equipped.ring1?.name;
+        let ring2 = currentUser.equipped.ring2?.name;
+        if (ring1 === "Nhẫn của quỷ vương" || ring2 === "Nhẫn của quỷ vương") {
+            critRate += 10;
         }
         let critMulti = 1.5 + (currentUser.agi * 0.01);
         if (currentUser.equippedShadow === "igris") critMulti += 0.15;
@@ -2812,11 +2814,11 @@ const SHADOW_DATA = {
             if (currentUser.skills["Lõi Ma Thuật"] > 0) finalDmg *= 1.25; 
             if (currentUser.equippedShadow === "kargalgan") finalDmg *= 1.20;
             
-            if (currentUser.equipped && currentUser.equipped.accessory) {
-                let accName = currentUser.equipped.accessory.name;
-                if (accName === "Quả Cầu Tham Lam") finalDmg *= 2.0; 
-                if (accName === "Vòng cổ người gác cổng") finalDmg *= 1.10; // Tăng 10% ST phép
-            }
+            // KIỂM TRA KHUYÊN TAI VÀ VÒNG CỔ
+            let earring = currentUser.equipped.earring?.name;
+            let necklace = currentUser.equipped.necklace?.name;
+            if (earring === "Quả Cầu Tham Lam") finalDmg *= 2.0; 
+            if (necklace === "Vòng cổ người gác cổng") finalDmg *= 1.10; 
         }
 
         // 7. CƠ CHẾ CHẶN SÁT THƯƠNG CỦA LỚP GIÁP ẢO (SHIELD BARRIER BÊN QUÁI)
@@ -3656,7 +3658,7 @@ const SHADOW_DATA = {
                 if (currentUser.skills["Cơ Thể Thép"] > 0) dmg *= 0.80; 
                 
                 if (currentUser.equipped && currentUser.equipped.shield && currentUser.equipped.shield.name === "Shield") dmg *= 0.985;
-                if (currentUser.equipped && currentUser.equipped.accessory && currentUser.equipped.accessory.name === "Ice Elf Cloak") dmg *= 0.95;
+                if (currentUser.equipped && currentUser.equipped.necklace && currentUser.equipped.necklace.name === "Ice Elf Cloak") dmg *= 0.95;
                 if (currentUser.equipped && currentUser.equipped.helmet && currentUser.equipped.helmet.name === "Mũ bảo hộ của hiệp sĩ đỏ") dmg *= 0.92;
                 if (currentUser.equipped && currentUser.equipped.gloves && currentUser.equipped.gloves.name === "Bao tay của kẻ thống trị") dmg *= 0.97;
                 if (currentUser.equipped && currentUser.equipped.shield && currentUser.equipped.shield.name === "Áo giáp của hiệp sĩ tối cao") dmg *= 0.90;
@@ -3698,15 +3700,19 @@ const SHADOW_DATA = {
         }
 
 
-        if (currentUser.hp > 0 && currentUser.equipped && currentUser.equipped.accessory) {
-            let accName = currentUser.equipped.accessory.name;
-            if (accName === "Essence of Magic") {
+        // KIỂM TRA HỒI MP TỪ NHẪN VÀ KHUYÊN TAI
+        if (currentUser.hp > 0) {
+            let r1 = currentUser.equipped.ring1?.name;
+            let r2 = currentUser.equipped.ring2?.name;
+            let ear = currentUser.equipped.earring?.name;
+
+            if (r1 === "Essence of Magic" || r2 === "Essence of Magic") {
                 let manaRegen = Math.max(1, Math.floor(currentUser.maxMp * 0.02));
                 currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + manaRegen);
                 logBattle(`<span style="color:#00bfff">🔮 Essence of Magic hồi phục ${manaRegen} MP.</span>`);
             } 
-            else if (accName === "Khuyên tai của ma vương") {
-                let manaRegen = Math.max(1, Math.floor(currentUser.maxMp * 0.05)); // Hồi 5% MP
+            if (ear === "Khuyên tai của ma vương") {
+                let manaRegen = Math.max(1, Math.floor(currentUser.maxMp * 0.05)); 
                 currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + manaRegen);
                 logBattle(`<span style="color:#00bfff">🔮 Khuyên tai ma vương phát sáng, hồi phục ${manaRegen} MP.</span>`);
             }
