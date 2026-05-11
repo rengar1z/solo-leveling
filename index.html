@@ -1186,6 +1186,31 @@ const SHADOW_DATA = {
         };
     }
 
+    // --- HỆ THỐNG THÊM VẬT PHẨM (TỐI ƯU HÓA QUANTITY) ---
+    window.giveItem = function(itemName) {
+        const itemData = ITEM_DATA[itemName];
+        if (!itemData) return null;
+        
+        // Nếu là đồ Tiêu hao / Vật liệu / Cổ vật -> Kiểm tra và cộng Quantity
+        if (['consumable', 'material', 'rare'].includes(itemData.type)) {
+            let existingItem = currentUser.inventory.find(i => i.name === itemName);
+            if (existingItem) {
+                existingItem.quantity = (existingItem.quantity || 1) + 1;
+                return existingItem;
+            } else {
+                let newItem = generateItem(itemName);
+                newItem.quantity = 1; // Bắt đầu đếm từ 1
+                currentUser.inventory.push(newItem);
+                return newItem;
+            }
+        } 
+        // Nếu là Trang bị (Vũ khí, Giáp...) -> Thêm mới hoàn toàn (do có random chỉ số)
+        else {
+            let newItem = generateItem(itemName);
+            currentUser.inventory.push(newItem);
+            return newItem;
+        }
+    };
     // --- DỮ LIỆU CỬA HÀNG ---
     const SHOP_DATA = {
         "hp_potion": { name: "HP Potion (Nhỏ)", price: 50, type: "item", itemId: "HP Potion (Nhỏ)" },
@@ -1264,7 +1289,11 @@ const SHADOW_DATA = {
         }
 
         // 2. Trừ vé & Khóa nút quay để tránh Spam click
-        currentUser.inventory.splice(cubeIndex, 1);
+        if (currentUser.inventory[cubeIndex].quantity > 1) {
+            currentUser.inventory[cubeIndex].quantity--;
+        } else {
+            currentUser.inventory.splice(cubeIndex, 1);
+        }
         updateCubeDisplay(); 
         
         // Tìm nút quay (có thể lấy thông qua event hoặc querySelector)
@@ -1309,7 +1338,7 @@ const SHADOW_DATA = {
                 const rank = itemData.rank || 'S';
 
                 // Nhét vào kho đồ
-                currentUser.inventory.push(newItem);
+                window.giveItem(rewardName);
                 
                 // Hiển thị vật phẩm rớt ra với hiệu ứng Nổ Pop
                 let color = rank === 'S' ? '#ff3333' : (rank === 'A' ? '#ff8c00' : '#00bfff');
@@ -1342,14 +1371,10 @@ const SHADOW_DATA = {
     // Hàm cập nhật số lượng Cube hiển thị trên UI
     window.updateCubeDisplay = function() {
         const display = document.getElementById('cubeCountDisplay');
-        if (!display) return;
-        if (!currentUser || !currentUser.inventory) {
-            display.innerText = "0";
-            return;
-        }
+        if (!display || !currentUser || !currentUser.inventory) return;
         let count = 0;
         currentUser.inventory.forEach(item => {
-            if (item.name === "Sandstorm Cube") count++;
+            if (item.name === "Sandstorm Cube") count += (item.quantity || 1); 
         });
         display.innerText = count;
     };
@@ -1365,8 +1390,7 @@ const SHADOW_DATA = {
         currentUser.cash -= item.price;
         
         if (item.type === "item") {
-            const newItem = generateItem(item.itemId); 
-            if (newItem) currentUser.inventory.push(newItem);
+            window.giveItem(item.itemId); 
             alert(`🛒 Mua thành công! [${item.name}] đã được cất vào Túi đồ của bạn.`);
         }
 
@@ -2312,7 +2336,7 @@ const SHADOW_DATA = {
     let hasPotion = false;
     currentUser.inventory.forEach(item => {
         if (ITEM_DATA[item.name] && (ITEM_DATA[item.name].effectType === "heal_hp" || ITEM_DATA[item.name].effectType === "heal_mp")) {
-            potionCounts[item.name] = (potionCounts[item.name] || 0) + 1;
+            potionCounts[item.name] = (potionCounts[item.name] || 0) + (item.quantity || 1); // <--- Lấy quantity
             hasPotion = true;
         }
     });
@@ -2423,15 +2447,33 @@ const SHADOW_DATA = {
     const invArea = document.getElementById('inventoryArea');
     if (!invArea) return; 
     
-    // 1. TỰ ĐỘNG CHUYỂN ĐỔI DATA CŨ VÀ DỌN RÁC
-    currentUser.inventory = currentUser.inventory.map(item => {
-        if (typeof item === 'string') {
-            const base = ITEM_DATA[item];
-            if (!base) return null;
-            return { uid: Date.now().toString(36) + Math.random().toString(36).substring(2), name: item, str: base.str, vit: base.vit, mp: base.mp };
+    // 1. TỰ ĐỘNG CHUYỂN ĐỔI DATA CŨ VÀ NÉN GỌN RÁC
+    let compressedInventory = [];
+    let stackMap = {};
+
+    currentUser.inventory.forEach(itemObj => {
+        if (typeof itemObj === 'string') {
+            const base = ITEM_DATA[itemObj];
+            if (!base) return;
+            itemObj = { uid: Date.now().toString(36) + Math.random().toString(36).substring(2), name: itemObj, str: base.str, vit: base.vit, mp: base.mp };
         }
-        return item;
-    }).filter(item => item !== null && ITEM_DATA[item.name]);
+        if (!itemObj || !ITEM_DATA[itemObj.name]) return;
+
+        const type = ITEM_DATA[itemObj.name].type;
+        if (['consumable', 'material', 'rare'].includes(type)) {
+            // Nén đồ: Nếu đã có thì cộng quantity, không tạo object rác
+            if (stackMap[itemObj.name]) {
+                stackMap[itemObj.name].quantity += (itemObj.quantity || 1);
+            } else {
+                itemObj.quantity = itemObj.quantity || 1;
+                stackMap[itemObj.name] = itemObj;
+                compressedInventory.push(itemObj);
+            }
+        } else {
+            compressedInventory.push(itemObj); // Đồ trang bị thì giữ nguyên
+        }
+    });
+    currentUser.inventory = compressedInventory; // Cập nhật lại kho đồ đã dọn sạch
 
     // Khởi tạo Item Data cho các khe đang mặc
     ['weapon', 'shield', 'helmet', 'gloves', 'necklace', 'earring', 'ring1', 'ring2'].forEach(slot => {
@@ -2506,12 +2548,12 @@ const SHADOW_DATA = {
 
         if (isMatch) {
             hasItem = true;
-            // Kiểm tra xem item có thuộc loại cho phép gộp không
             if (['consumable', 'material', 'rare'].includes(type)) {
+                let qty = itemObj.quantity || 1; // <--- Sửa dòng này
                 if (!groupedItems[itemObj.name]) {
-                    groupedItems[itemObj.name] = { count: 1, data: itemData, obj: itemObj };
+                    groupedItems[itemObj.name] = { count: qty, data: itemData, obj: itemObj }; // Sửa số 1 thành qty
                 } else {
-                    groupedItems[itemObj.name].count++;
+                    groupedItems[itemObj.name].count += qty; // Sửa ++ thành += qty
                 }
             } else {
                 // Đồ không gộp được (Trang bị)
@@ -2725,14 +2767,18 @@ const SHADOW_DATA = {
 
     // --- HÀM BÁN CHO ĐỒ GỘP (CHỈ BÁN 1 CÁI MỖI LẦN BẤM) ---
     window.sellStackedItem = async function(itemName, price) {
-        // Tìm vị trí của vật phẩm đầu tiên có tên trùng khớp trong túi
         const index = currentUser.inventory.findIndex(item => item.name === itemName);
         if (index !== -1) {
-            currentUser.inventory.splice(index, 1); // Xóa 1 cái
-            currentUser.cash += price; // Cộng tiền
+            // Kiểm tra quantity để trừ hoặc xóa
+            if (currentUser.inventory[index].quantity > 1) {
+                currentUser.inventory[index].quantity--;
+            } else {
+                currentUser.inventory.splice(index, 1);
+            }
             
+            currentUser.cash += price;
             await set(ref(db, 'users/' + currentUser.username), currentUser);
-            renderBag(); // Tải lại túi đồ (nếu còn sẽ tụt số x3 -> x2)
+            renderBag();
             render(); 
         }
     }
@@ -2761,7 +2807,11 @@ const SHADOW_DATA = {
         }
         
         // Xóa 1 bình thuốc khỏi túi sau khi dùng
-        currentUser.inventory.splice(index, 1);
+        if (currentUser.inventory[index].quantity > 1) {
+            currentUser.inventory[index].quantity--;
+        } else {
+            currentUser.inventory.splice(index, 1);
+        }
         
         await saveUserData();
         renderBag();
@@ -3964,7 +4014,11 @@ const SHADOW_DATA = {
         }
 
         // Xóa 1 bình thuốc khỏi túi
-        currentUser.inventory.splice(index, 1);
+        if (currentUser.inventory[index].quantity > 1) {
+            currentUser.inventory[index].quantity--;
+        } else {
+            currentUser.inventory.splice(index, 1);
+        }
         
         // KÍCH HOẠT DELAY 2 LƯỢT SAU KHI UỐNG
         window.potionCooldown = 3;
@@ -4104,11 +4158,12 @@ const SHADOW_DATA = {
                 let dropChance = 0.10 + luckBonus; // Mặc định 10%
                 if (Math.random() <= dropChance) { 
                     const items = enemy.rareDrops || ["Dagger", "Shield", "Essence of Magic"];
-                    const droppedItemName = items[Math.floor(Math.random() * items.length)];
-                    const newItem = generateItem(droppedItemName); 
+                    const droppedItemName = possibleDrops[Math.floor(Math.random() * possibleDrops.length)];
+        
+                    const newItem = window.giveItem(droppedItemName); 
+                    
                     if (newItem) {
-                        currentUser.inventory.push(newItem); 
-                        droppedItemsForUI.push(newItem);     
+                        droppedItemsForUI.push(newItem); 
                     }
                 }
             }
