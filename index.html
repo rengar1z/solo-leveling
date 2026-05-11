@@ -1358,7 +1358,7 @@ const SHADOW_DATA = {
 
         currentUser.cash = currentUser.cash || 0;
         currentUser.inventory = currentUser.inventory || [];
-        currentUser.equipped = currentUser.equipped || { weapon: null, shield: null, accessory: null };
+        currentUser.equipped = currentUser.equipped || { weapon: null, shield: null, helmet: null, gloves: null, necklace: null, earring: null, ring1: null, ring2: null, costume: null };
         
         document.getElementById('auth').classList.add('hidden');
         document.getElementById('gameWrap').classList.remove('hidden');
@@ -2475,11 +2475,12 @@ const SHADOW_DATA = {
         currentUser.int += (itemObj.int || 0);
         
         currentUser.maxMp += (itemObj.mp || 0);
-        if (itemObj.vit !== 0) {
-            currentUser.maxHp += itemObj.vit * 10;
+        
+        let vitVal = itemObj.vit || 0; 
+        if (vitVal !== 0) {
+            currentUser.maxHp += vitVal * 10;
             currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
         }
-
         await saveUserData();
         renderBag();
     }
@@ -2492,16 +2493,18 @@ const SHADOW_DATA = {
         if (!itemObj) return;
         
         // Trừ chỉ số random của món đồ
-        currentUser.str -= itemObj.str;
-        currentUser.vit -= itemObj.vit;
-        currentUser.maxMp -= itemObj.mp;
+        currentUser.str -= (itemObj.str || 0);
+        currentUser.vit -= (itemObj.vit || 0);
+        currentUser.maxMp -= (itemObj.mp || 0);
         currentUser.agi -= (itemObj.agi || 0);
         currentUser.int -= (itemObj.int || 0);
         
         currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
-        if (itemObj.vit !== 0) { // Sửa ở đây
-        currentUser.maxHp -= itemObj.vit * 10;
-        currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
+        
+        let vitVal = itemObj.vit || 0; 
+        if (vitVal !== 0) { 
+            currentUser.maxHp -= vitVal * 10;
+            currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
         }
 
         // Đẩy lại nguyên Object vào túi
@@ -3659,7 +3662,7 @@ const SHADOW_DATA = {
                 
                 if (currentUser.equipped && currentUser.equipped.shield && currentUser.equipped.shield.name === "Shield") dmg *= 0.985;
                 if (currentUser.equipped && currentUser.equipped.necklace && currentUser.equipped.necklace.name === "Ice Elf Cloak") dmg *= 0.95;
-                if (currentUser.equipped && currentUser.equipped.helmet && currentUser.equipped.helmet.name === "Mũ bảo hộ của hiệp sĩ đỏ") dmg *= 0.92;
+                if (currentUser.equipped && currentUser.equipped.helmet && currentUser.equipped.helmet.name === "Red Knight's Helmet") dmg *= 0.92;
                 if (currentUser.equipped && currentUser.equipped.gloves && currentUser.equipped.gloves.name === "Bao tay của kẻ thống trị") dmg *= 0.97;
                 if (currentUser.equipped && currentUser.equipped.shield && currentUser.equipped.shield.name === "Áo giáp của hiệp sĩ tối cao") dmg *= 0.90;
                 if (window.playerVulnerabilityTurns && window.playerVulnerabilityTurns > 0) { dmg *= 1.05 }
