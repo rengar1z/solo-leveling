@@ -206,27 +206,25 @@
             
         </div>
 
-        <!-- GIAO DIỆN 1: MÔ HÌNH NHÂN VẬT (NƠI CHỨA ĐỒ ĐANG MẶC) -->
-        <div id="characterVisualArea" style="flex: 1; display: block; background: rgba(0,20,40,0.4); border-radius: 8px; padding: 10px;">
+            <!-- GIAO DIỆN 1: MÔ HÌNH NHÂN VẬT (NƠI CHỨA ĐỒ ĐANG MẶC) -->
+            <div id="characterVisualArea" style="flex: 1; display: block; background: rgba(0,20,40,0.4); border-radius: 8px; padding: 10px;">
             <div class="char-equip-grid">
-                <!-- Cột trái (Tooltip bay sang phải) -->
                 <div class="eq-slot slot-left" id="slot-helmet" title="Mũ">HELMET</div>
                 
                 <div class="char-model-placeholder" style="grid-row: span 4;">
                     <img id="visual-p-img" src="char/Sungjinwoo.png" style="max-width: 100%; max-height: 440px; object-fit: contain; filter: drop-shadow(0 0 15px rgba(0, 191, 255, 0.4)); z-index: 1;">
                 </div>
                 
-                <!-- Cột phải (Tooltip bay sang trái) -->
-                <div class="eq-slot slot-right" id="slot-accessory" title="Trang sức">ACCESSORY</div>
+                <div class="eq-slot slot-right" id="slot-necklace" title="Vòng cổ">NECKLACE</div>
                 
                 <div class="eq-slot slot-left" id="slot-shield" title="Phòng cụ">SHIELD</div>
                 <div class="eq-slot slot-right" id="slot-ring1" title="Nhẫn 1">RING 1</div>
                 
                 <div class="eq-slot slot-left" id="slot-gloves" title="Găng tay">GLOVES</div>
                 <div class="eq-slot slot-right" id="slot-ring2" title="Nhẫn 2">RING 2</div>
-
+        
                 <div class="eq-slot slot-left" id="slot-weapon" title="Vũ khí">WEAPON</div>
-                <div class="eq-slot slot-right" id="slot-shoes" title="Giày">SHOES</div>
+                <div class="eq-slot slot-right" id="slot-earring" title="Khuyên tai">EARRING</div>
             </div>
         </div>
 
@@ -1086,16 +1084,16 @@ const SHADOW_DATA = {
         "Áo giáp của hiệp sĩ tối cao": { rank: "A", type: "shield", name: "Áo giáp của hiệp sĩ tối cao", str: 10, vit: 35, mp: 0, effect: "Giảm 10% sát thương gánh chịu", img: "wp/Knight_Armor.png", sellPrice: 800 },
         "Dao găm kẻ giết hiệp sĩ": { rank: "B", type: "weapon", name: "Dao găm kẻ giết hiệp sĩ", str: 45, vit: 0, mp: 0, effect: "Xuyên 10% giáp của kẻ địch mặc giáp", img: "wp/Knight_Killer.png", sellPrice: 300 },
 
-        //Đồ của Kargalgan
-        "Vòng cổ người gác cổng": { rank: "A", type: "accessory", name: "Vòng cổ người gác cổng", str: 15, vit: 15, mp: 60, effect: "Tăng 10% ST Phép thuật", img: "wp/Warden_Necklace.png", sellPrice: 1200 },
-        "Quả Cầu Tham Lam": { rank: "A", type: "accessory", name: "Quả Cầu Tham Lam", str: 0, vit: 30, mp: 300, effect: "'Khao Khát Hủy Diệt': Nhân đôi (x2) Sát thương Phép thuật", img: "wp/Orb_of_Avarice.png", sellPrice: 10000 },
+        // TRANG SỨC DROP TỪ BOSS
+        "Vòng cổ người gác cổng": { rank: "A", type: "necklace", name: "Vòng cổ người gác cổng", str: 15, vit: 15, mp: 60, effect: "Tăng 10% ST Phép thuật", img: "wp/essenceofmagic.png", sellPrice: 1200 },
+        "Khuyên tai của ma vương": { rank: "S", type: "earring", name: "Khuyên tai của ma vương", str: 20, vit: 20, mp: 100, effect: "Hồi 5% MP mỗi lượt", img: "wp/essenceofmagic.png", sellPrice: 4000 },
+        "Dây chuyền của ma vương": { rank: "S", type: "necklace", name: "Dây chuyền của ma vương", str: 30, vit: 30, mp: 50, effect: "Tăng mạnh toàn bộ chỉ số", img: "wp/essenceofmagic.png", sellPrice: 4500 },
+        "Nhẫn của quỷ vương": { rank: "S", type: "ring", name: "Nhẫn của quỷ vương", str: 25, vit: 25, mp: 50, effect: "Tăng 10% Tỷ lệ bạo kích", img: "wp/essenceofmagic.png", sellPrice: 4200 },
+        "Quả Cầu Tham Lam": { rank: "A", type: "earring", name: "Quả Cầu Tham Lam", str: 0, vit: 30, mp: 300, effect: "'Khao Khát Hủy Diệt': Nhân đôi (x2) ST Phép thuật", img: "wp/essenceofmagic.png", sellPrice: 10000 },
 
         // Đồ hiếm của Baran:
         "Dao găm của ma vương": { rank: "S", type: "weapon", name: "Dao găm của ma vương", str: 85, vit: 0, mp: 40, effect: "Bỏ qua 20% giáp của kẻ địch", img: "wp/Demon_King_Daggers.png", sellPrice: 4500 },
         "Đại kiếm ma vương": { rank: "S", type: "weapon", name: "Đại kiếm ma vương", str: 120, vit: -10, mp: 0, effect: "Tăng 25% sát thương vật lý nhưng giảm sinh lực", img: "wp/Demon_King_Longsword.png", sellPrice: 5000 },
-        "Khuyên tai của ma vương": { rank: "S", type: "accessory", name: "Khuyên tai của ma vương", str: 20, vit: 20, mp: 100, effect: "Hồi 5% MP mỗi lượt", img: "wp/Baran_Earring.png", sellPrice: 4000 },
-        "Dây chuyền của ma vương": { rank: "S", type: "accessory", name: "Dây chuyền của ma vương", str: 30, vit: 30, mp: 50, effect: "Tăng mạnh toàn bộ chỉ số", img: "wp/Baran_Necklace.png", sellPrice: 4500 },
-        "Nhẫn của quỷ vương": { rank: "S", type: "accessory", name: "Nhẫn của quỷ vương", str: 25, vit: 25, mp: 50, effect: "Tăng 10% Tỷ lệ bạo kích", img: "wp/Baran_Ring.png", sellPrice: 4200 },
         
         // Costume:
         "Bộ Vest Đen Ám Sát": { rank: "B", type: "costume", name: "Bộ Vest Đen Ám Sát", str: 50, vit: 20, mp: 0, effect: "Đổi Avatar thành Vest Đen", img: "cos/Sung_Jinwoo_Black_Suit.png", avatar: "cos/Sung_Jinwoo_Black_Suit.png", sellPrice: 2500 },
@@ -1139,7 +1137,9 @@ const SHADOW_DATA = {
             name: itemName,
             str: randomize(base.str),
             vit: randomize(base.vit),
-            mp: randomize(base.mp)
+            mp: randomize(base.mp),
+            agi: randomize(base.agi), 
+            int: randomize(base.int)  
         };
     }
 
@@ -1237,10 +1237,10 @@ const SHADOW_DATA = {
             currentUser.str -= (itemData.str || 0);
             currentUser.vit -= (itemData.vit || 0);
             currentUser.int -= (itemData.int || 0); 
-            //currentUser.maxMp -= (itemData.mp || 0);
+            currentUser.maxMp -= (itemData.mp || 0); 
             currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
             if (itemData.vit > 0) {
-                //currentUser.maxHp -= itemData.vit * 10;
+                currentUser.maxHp -= itemData.vit * 10; 
                 currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
             }
             currentUser.equipped.costume = null;
@@ -2253,7 +2253,7 @@ const SHADOW_DATA = {
     //Trang bi item
     window.renderBag = function() {
     if (!currentUser.inventory) currentUser.inventory = [];
-    if (!currentUser.equipped) currentUser.equipped = { weapon: null, shield: null, accessory: null, helmet: null, gloves: null, costume: null };
+    if (!currentUser.equipped) currentUser.equipped = { weapon: null, shield: null, helmet: null, gloves: null, necklace: null, earring: null, ring1: null, ring2: null, costume: null };
     if (currentUser.cash === undefined) currentUser.cash = 0;
 
     const invArea = document.getElementById('inventoryArea');
@@ -2269,22 +2269,23 @@ const SHADOW_DATA = {
         return item;
     }).filter(item => item !== null && ITEM_DATA[item.name]);
 
-    ['weapon', 'shield', 'accessory', 'helmet', 'gloves'].forEach(slot => {
+    // Khởi tạo Item Data cho các khe đang mặc
+    ['weapon', 'shield', 'helmet', 'gloves', 'necklace', 'earring', 'ring1', 'ring2'].forEach(slot => {
         const eq = currentUser.equipped[slot];
         if (eq && eq.str === undefined && ITEM_DATA[eq.name]) {
             const base = ITEM_DATA[eq.name];
-            currentUser.equipped[slot] = { uid: Date.now().toString(36) + Math.random().toString(36).substring(2), name: eq.name, str: base.str, vit: base.vit, mp: base.mp };
+            currentUser.equipped[slot] = { uid: Date.now().toString(36) + Math.random().toString(36).substring(2), name: eq.name, str: base.str, vit: base.vit, mp: base.mp, agi: base.agi, int: base.int };
         }
     });
 
-    ['weapon', 'shield', 'accessory', 'helmet', 'gloves', 'costume'].forEach(slot => {
+    ['weapon', 'shield', 'helmet', 'gloves', 'necklace', 'earring', 'ring1', 'ring2', 'costume'].forEach(slot => {
         if (currentUser.equipped[slot] && !ITEM_DATA[currentUser.equipped[slot].name]) {
             currentUser.equipped[slot] = null;
         }
     });
 
     // 2. HIỂN THỊ ĐỒ ĐANG TRANG BỊ (EQUIPPED SLOTS)
-    const allSlots = ['weapon', 'shield', 'helmet', 'gloves', 'accessory']; 
+    const allSlots = ['weapon', 'shield', 'helmet', 'gloves', 'necklace', 'earring', 'ring1', 'ring2']; 
     allSlots.forEach(slot => {
         const slotEl = document.getElementById('slot-' + slot);
         if (!slotEl) return;
@@ -2444,7 +2445,19 @@ const SHADOW_DATA = {
         
         const itemObj = currentUser.inventory[index];
         const itemData = ITEM_DATA[itemObj.name];
-        const slot = itemData.type;
+        let slot = itemData.type; // Lấy type từ ITEM_DATA (ring, necklace, earring...)
+
+        // --- TỰ ĐỘNG DÒ TÌM KHE NHẪN TRỐNG ---
+        if (slot === 'ring') {
+            if (!currentUser.equipped.ring1) {
+                slot = 'ring1';
+            } else if (!currentUser.equipped.ring2) {
+                slot = 'ring2';
+            } else {
+                // Nếu cả 2 ngón đều đeo nhẫn, mặc định tháo Nhẫn 1 ra để thay cái mới vào
+                slot = 'ring1';
+            }
+        }
 
         // Nếu ô đã có đồ -> Tự động tháo đồ cũ ra trước
         if (currentUser.equipped[slot]) {
@@ -2455,13 +2468,16 @@ const SHADOW_DATA = {
         currentUser.inventory.splice(index, 1);
         currentUser.equipped[slot] = itemObj;
         
-        // Cộng chỉ số random của món đồ
-        currentUser.str += itemObj.str;
-        currentUser.vit += itemObj.vit;
+        // Cộng chỉ số random của món đồ (Đã vá lỗi thiếu INT/AGI)
+        currentUser.str += (itemObj.str || 0);
+        currentUser.vit += (itemObj.vit || 0);
+        currentUser.agi += (itemObj.agi || 0);
+        currentUser.int += (itemObj.int || 0);
         
-        currentUser.maxMp += itemObj.mp;
-        if (itemObj.vit > 0) {
+        currentUser.maxMp += (itemObj.mp || 0);
+        if (itemObj.vit !== 0) {
             currentUser.maxHp += itemObj.vit * 10;
+            currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
         }
 
         await saveUserData();
@@ -2479,10 +2495,13 @@ const SHADOW_DATA = {
         currentUser.str -= itemObj.str;
         currentUser.vit -= itemObj.vit;
         currentUser.maxMp -= itemObj.mp;
+        currentUser.agi -= (itemObj.agi || 0);
+        currentUser.int -= (itemObj.int || 0);
+        
         currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
-        if (itemObj.vit > 0) {
-            currentUser.maxHp -= itemObj.vit * 10;
-            currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
+        if (itemObj.vit !== 0) { // Sửa ở đây
+        currentUser.maxHp -= itemObj.vit * 10;
+        currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
         }
 
         // Đẩy lại nguyên Object vào túi
