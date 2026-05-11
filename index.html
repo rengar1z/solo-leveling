@@ -1245,7 +1245,7 @@ const SHADOW_DATA = {
         "Vòng cổ người gác cổng"
     ];
 
-    window.spinGacha = async function() {
+    window.spinGacha = async function(btnElement) {
         if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
             return alert("⚠️ HỆ THỐNG: Không thể sử dụng Vòng Quay khi đang chiến đấu!");
         }
@@ -1256,45 +1256,82 @@ const SHADOW_DATA = {
             return alert("Bạn không có Sandstorm Cube! Hãy tiến vào Hầm ngục Đảo Jeju và đánh bại Vua Kiến Beru để tìm kiếm.");
         }
 
-        // 2. Trừ vé
+        // 2. Trừ vé & Khóa nút quay để tránh Spam click
         currentUser.inventory.splice(cubeIndex, 1);
-        updateCubeDisplay(); // Tụt số trên màn hình ngay lập tức
-
-        // 3. Hiệu ứng đang quay
-        const box = document.getElementById('gachaBox');
-        box.style.borderColor = "#fff";
-        box.style.boxShadow = "0 0 20px #fff";
-        box.innerHTML = `<span style="font-size: 50px; animation: gachaSpin 0.3s linear infinite;">🌀</span>`;
+        updateCubeDisplay(); 
         
-        // 4. Random kết quả và xử lý sau 1.5 giây
-        setTimeout(async () => {
-            const rewardName = GACHA_POOL[Math.floor(Math.random() * GACHA_POOL.length)];
-            const newItem = generateItem(rewardName);
-            const itemData = ITEM_DATA[rewardName];
-            const rank = itemData.rank || 'S';
+        // Tìm nút quay (có thể lấy thông qua event hoặc querySelector)
+        const spinBtn = document.querySelector("#tab-gacha button");
+        if (spinBtn) {
+            spinBtn.disabled = true;
+            spinBtn.innerText = "ĐANG TỤ LỰC...";
+            spinBtn.style.opacity = "0.5";
+            spinBtn.style.cursor = "not-allowed";
+        }
 
-            // Nhét vào kho đồ
-            currentUser.inventory.push(newItem);
+        // 3. HIỆU ỨNG VÒNG QUAY ĐẢO ITEM LIÊN TỤC (ROULETTE)
+        const box = document.getElementById('gachaBox');
+        let spinCount = 0;
+        const maxSpins = 20; // Số lần nhấp nháy chuyển đồ (20 lần)
+        const spinSpeed = 80; // Tốc độ nhấp nháy (80 mili-giây/lần)
+
+        const spinInterval = setInterval(() => {
+            // Lấy ngẫu nhiên 1 hình ảnh làm hiệu ứng "ảo"
+            const randomFakeName = GACHA_POOL[Math.floor(Math.random() * GACHA_POOL.length)];
+            const fakeData = ITEM_DATA[randomFakeName];
             
-            // Hiển thị vật phẩm rớt ra
-            let color = rank === 'S' ? '#ff3333' : (rank === 'A' ? '#ff8c00' : '#00bfff');
-            box.style.borderColor = color;
-            box.style.boxShadow = `0 0 30px ${color}, inset 0 0 15px ${color}`;
+            box.style.borderColor = "#fff";
+            box.style.boxShadow = `0 0 ${10 + (spinCount % 5) * 5}px #fff`; // Làm viền đập nhịp nhàng
+            
             box.innerHTML = `
-                <div style="animation: itemPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-align: center;">
-                    <img src="${itemData.img}" style="width: 70px; height: 70px; object-fit: contain; filter: drop-shadow(0 0 10px ${color});">
-                    <div style="color: ${color}; font-weight: bold; font-size: 14px; margin-top: 8px; text-shadow: 0 0 5px #000; line-height: 1.2;">${rewardName}</div>
+                <div style="text-align: center; opacity: 0.8; transform: scale(0.9);">
+                    <img src="${fakeData.img}" style="width: 70px; height: 70px; object-fit: contain; filter: drop-shadow(0 0 5px #fff);">
                 </div>
             `;
             
-            // Hiện thông báo Log
-            alert(`🎉 ÁNH SÁNG CHÓI LÓA! Bạn đã triệu hồi thành công [${rewardName}] (Hạng ${rank})!`);
+            spinCount++;
             
-            await saveUserData();
-            if (window.renderBag) window.renderBag();
-        }, 1500); // Đợi 1.5 giây để tạo cảm giác hồi hộp
-    };
+            // 4. KẾT THÚC VÒNG QUAY: Chốt kết quả thực sự
+            if (spinCount >= maxSpins) {
+                clearInterval(spinInterval); // Dừng nhấp nháy
+                
+                // Random ra món đồ thật sẽ nhận được
+                const rewardName = GACHA_POOL[Math.floor(Math.random() * GACHA_POOL.length)];
+                const newItem = generateItem(rewardName);
+                const itemData = ITEM_DATA[rewardName];
+                const rank = itemData.rank || 'S';
 
+                // Nhét vào kho đồ
+                currentUser.inventory.push(newItem);
+                
+                // Hiển thị vật phẩm rớt ra với hiệu ứng Nổ Pop
+                let color = rank === 'S' ? '#ff3333' : (rank === 'A' ? '#ff8c00' : '#00bfff');
+                box.style.borderColor = color;
+                box.style.boxShadow = `0 0 40px ${color}, inset 0 0 20px ${color}`;
+                box.innerHTML = `
+                    <div style="animation: itemPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-align: center;">
+                        <img src="${itemData.img}" style="width: 80px; height: 80px; object-fit: contain; filter: drop-shadow(0 0 15px ${color});">
+                        <div style="color: ${color}; font-weight: bold; font-size: 16px; margin-top: 8px; text-shadow: 0 0 5px #000; line-height: 1.2;">${rewardName}</div>
+                    </div>
+                `;
+                
+                // Mở khóa lại nút quay
+                if (spinBtn) {
+                    spinBtn.disabled = false;
+                    spinBtn.innerText = "QUAY 1 LẦN (1 CUBE)";
+                    spinBtn.style.opacity = "1";
+                    spinBtn.style.cursor = "pointer";
+                }
+
+                // Hiện thông báo Log và lưu dữ liệu (delay 100ms để kịp vẽ giao diện)
+                setTimeout(async () => {
+                    alert(`🎉 ÁNH SÁNG CHÓI LÓA! Bạn đã triệu hồi thành công [${rewardName}] (Hạng ${rank})!`);
+                    await saveUserData();
+                    if (window.renderBag) window.renderBag();
+                }, 100);
+            }
+        }, spinSpeed);
+    };
     // Hàm cập nhật số lượng Cube hiển thị trên UI
     window.updateCubeDisplay = function() {
         const display = document.getElementById('cubeCountDisplay');
