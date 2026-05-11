@@ -1339,7 +1339,13 @@ const SHADOW_DATA = {
         const data = s.val();
         if (data.password !== p) return alert('Mật mã sai');
     
-        currentUser = data; 
+        currentUser = data;
+        
+        if (currentUser.equipped && currentUser.equipped.accessory) {
+            currentUser.inventory = currentUser.inventory || [];
+            currentUser.inventory.push(currentUser.equipped.accessory); 
+            delete currentUser.equipped.accessory; 
+        }
         
         if (!currentUser.skills) {
             currentUser.skills = { "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Siêu Giác Quan": 0, "Thợ Săn Tiền Thưởng": 0, "Bàn Tay May Mắn": 0 };
