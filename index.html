@@ -4142,26 +4142,28 @@ const SHADOW_DATA = {
         if (enemy.isBoss) {
             // --- NẾU LÀ BOSS: RỚT TRANG BỊ / ĐỒ HIẾM ---
             if (currentRedGateId) {
-                // Boss Cổng Đỏ: Rớt đồ hiếm của Cổng Đỏ (Mặc định 100% rớt)
+                // 1. Boss Cổng Đỏ: Rớt đồ hiếm của Cổng Đỏ
                 let dropChance = 1.0 + luckBonus; 
                 if (Math.random() <= dropChance) {
                     const rareItems = RED_GATES[currentRedGateId].rareDrops;
                     const droppedItemName = rareItems[Math.floor(Math.random() * rareItems.length)];
-                    const newItem = generateItem(droppedItemName); 
+                    
+                    // SỬ DỤNG giveItem ĐỂ TỐI ƯU
+                    const newItem = window.giveItem(droppedItemName); 
                     if (newItem) {
-                        currentUser.inventory.push(newItem); 
                         droppedItemsForUI.push(newItem);     
                     }
                 }
             } else if (isDungeonMode) {
-                // Boss Hầm Ngục Thường: Rớt trang bị cơ bản
+                // 2. Boss Hầm Ngục Thường: Rớt trang bị cơ bản hoặc Item Boss
                 let dropChance = 0.10 + luckBonus; // Mặc định 10%
                 if (Math.random() <= dropChance) { 
                     const items = enemy.rareDrops || ["Dagger", "Shield", "Essence of Magic"];
-                    const droppedItemName = possibleDrops[Math.floor(Math.random() * possibleDrops.length)];
+                    
+                    // ĐÃ FIX LỖI CRASH GAME Ở ĐÂY (Sửa possibleDrops thành items)
+                    const droppedItemName = items[Math.floor(Math.random() * items.length)]; 
         
                     const newItem = window.giveItem(droppedItemName); 
-                    
                     if (newItem) {
                         droppedItemsForUI.push(newItem); 
                     }
@@ -4173,15 +4175,12 @@ const SHADOW_DATA = {
             if (currentRedGateId || isDungeonMode) {
                 let dropChance = 0.30 + luckBonus; // Mặc định 30% tỷ lệ rớt vật liệu
                 if (Math.random() <= dropChance) {
-                    // Tự động lấy danh sách vật liệu đã cấu hình trong 'drops' của quái đó.
-                    // Nếu quái (như trong Cổng Đỏ) chưa được cấu hình 'drops', mặc định rớt Ma Thạch.
                     const possibleDrops = enemy.drops || ["Ma Thạch Cấp Thấp"];
-                    
                     const droppedItemName = possibleDrops[Math.floor(Math.random() * possibleDrops.length)];
-                    const newItem = generateItem(droppedItemName); 
                     
+                    // SỬ DỤNG giveItem CHO QUÁI THƯỜNG ĐỂ VẬT LIỆU CỘNG DỒN VÀO NHAU
+                    const newItem = window.giveItem(droppedItemName); 
                     if (newItem) {
-                        currentUser.inventory.push(newItem); 
                         droppedItemsForUI.push(newItem);     
                     }
                 }
