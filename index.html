@@ -2609,43 +2609,73 @@ const SHADOW_DATA = {
         </div>`;
     }
 
-    // 5. VẼ GIAO DIỆN VẬT PHẨM LẺ (TRANG BỊ)
+    // 5. VẼ GIAO DIỆN VẬT PHẨM LẺ (TRANG BỊ) + TOOLTIP SO SÁNH SONG SONG
     unstackableItems.forEach(item => {
         const rank = item.data.rank || 'D';
         const sellPrice = item.data.sellPrice || 10;
+        const type = item.data.type;
+
+        // Xác định ô đang mặc để lấy đồ so sánh (Mặc định lấy ring1 nếu là nhẫn)
+        let slot = type === 'ring' ? 'ring1' : type; 
+        const eqItem = currentUser.equipped[slot];
+        
+        // Hàm tạo nội dung chi tiết cho 1 khối Item (Dùng chung cho cả đồ trong túi và đồ đang mặc)
+        const getItemDetailHTML = (obj, data, label) => {
+            if (!obj || !data) return "";
+            const iRank = data.rank || 'D';
+            return `
+                <div style="min-width: 220px; flex: 1; padding: 5px;">
+                    <div style="color: #aaa; font-size: 11px; margin-bottom: 5px; text-transform: uppercase; border-bottom: 1px solid #444;">${label}</div>
+                    <div class="sl-tt-top">
+                        <div class="sl-tt-img-box"><img src="${data.img}"></div>
+                        <div class="sl-tt-info">
+                            <div class="sl-tt-title text-rank-${iRank}" style="font-size: 14px;">[${obj.name}]</div>
+                            <div class="sl-tt-line" style="font-size: 11px;">RANK: <span class="text-rank-${iRank}">${iRank}</span></div>
+                        </div>
+                    </div>
+                    <div class="sl-tt-bottom" style="font-size: 12px; margin-top: 8px;">
+                        ${data.effect ? '<span style="color: #00ff00;">' + data.effect + '</span><br>' : ''}
+                        ${[
+                            obj.str > 0 ? `+${obj.str} STR` : '',
+                            obj.vit > 0 ? `+${obj.vit} VIT` : '',
+                            obj.mp > 0 ? `+${obj.mp} MP` : '',
+                            obj.agi > 0 ? `+${obj.agi} AGI` : '',
+                            obj.int > 0 ? `+${obj.int} INT` : ''
+                        ].filter(Boolean).join(' | ')}
+                    </div>
+                </div>
+            `;
+        };
+
+        // Tạo Tooltip tổng (Gồm đồ hiện tại và đồ đang mặc nếu có)
+        let fullTooltipHTML = `
+            <div class="item-tooltip compare-tooltip" style="gap: 15px; padding: 15px; flex-direction: row; align-items: stretch; pointer-events: none;">
+                ${getItemDetailHTML(item.obj, item.data, "Vật phẩm đang chọn")}
+                ${eqItem ? `
+                    <div style="width: 1px; background: rgba(255,255,255,0.1); margin: 0 5px;"></div>
+                    ${getItemDetailHTML(eqItem, ITEM_DATA[eqItem.name], "Đang trang bị")}
+                ` : ''}
+            </div>
+        `;
+
         bagHTML += `
-        <div class="stat-item rank-${rank}" style="padding: 12px; border-left: 4px solid;">
+        <div class="stat-item rank-${rank}" style="padding: 12px; border-left: 4px solid; margin-bottom: 8px;">
             <div style="display: flex; gap: 15px; align-items: center; flex: 1;">
                 <div class="item-icon-wrapper rank-${rank}">
                     <img src="${item.data.img}" class="item-img-premium">
-                    <div class="item-tooltip">
-                        <div class="sl-tt-top">
-                            <div class="sl-tt-img-box"><img src="${item.data.img}"></div>
-                            <div class="sl-tt-info">
-                                <div class="sl-tt-title text-rank-${rank}">[ITEM: ${item.obj.name}]</div>
-                                <div class="sl-tt-line">ITEM CLASS: <span class="text-rank-${rank}" style="font-weight:bold;">${rank}</span></div>
-                                <div class="sl-tt-line">TYPE: ${item.data.type.toUpperCase()}</div>
-                            </div>
-                        </div>
-                        <div class="sl-tt-bottom">
-                            ${item.data.effect ? item.data.effect + '<br>' : ''}
-                            ${[item.obj.vit > 0 ? `+${item.obj.vit} VIT` : '', item.obj.str > 0 ? `+${item.obj.str} STR` : '', item.obj.mp > 0 ? `+${item.obj.mp} MP` : ''].filter(Boolean).join(', ')}
-                            <div class="sl-tt-price">Giá bán: ${sellPrice} Cash</div>
-                        </div>
-                    </div>
-                </div>
-                <div style="display: flex; flex-direction: column;">
-                    <b class="text-rank-${rank}" style="font-size: 20px;">${item.obj.name}</b>
-                    <small style="color:#aaa; font-size:16px;">Hạng: ${rank}</small>
+                    ${fullTooltipHTML} </div>
+                <div style="display: flex; flex-direction: column; flex: 1;">
+                    <b class="text-rank-${rank}" style="font-size: 18px;">${item.obj.name}</b>
+                    <small style="color:#aaa;">Hạng: ${rank} | Loại: ${type.toUpperCase()}</small>
                 </div>
             </div>
             <div style="display: flex; flex-direction: column; gap: 8px; justify-content: center;">
                 <button class="sl-shop-price-btn bag-action-btn btn-equip" onclick="equipItem(${item.originalIndex})">MẶC</button>
-                <button class="sl-shop-price-btn bag-action-btn btn-sell" onclick="sellItem(${item.originalIndex}, ${sellPrice})">BÁN (${sellPrice})</button>
+                <button class="sl-shop-price-btn bag-action-btn btn-sell" onclick="sellItem(${item.originalIndex}, ${sellPrice})">BÁN</button>
             </div>
         </div>`;
     });
-
+        
     if (!hasItem) {
         invArea.innerHTML = '<p style="color: #aaa; text-align: center; font-size: 20px; padding: 20px;">Ngăn chứa này đang trống</p>';
     } else {
