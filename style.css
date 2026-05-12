@@ -680,29 +680,27 @@
             border-radius: 2px;
         }
 
-        /* --- HIỆU ỨNG ITEM KHO ĐỒ --- */
         .item-icon-wrapper {
-            width: 55px; /* Mở rộng chiều ngang một chút */
-            min-height: 55px; /* Đảm bảo tối thiểu là hình vuông */
-            height: auto; /* BÍ QUYẾT: Cho phép khung tự động kéo dài theo chiều dọc */
-            padding: 4px; /* Tạo độ bám khít vừa vặn với viền */
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid #555;
-            border-radius: 8px;
+            width: 65px; 
+            height: 65px;
+            padding: 0 !important; /* QUAN TRỌNG NHẤT: Bỏ khoảng đệm để ảnh tràn sát mép */
+            background: #0f0f1a; /* Nền tối phòng hờ nếu bạn dùng ảnh trong suốt */
+            border: 1px solid rgba(255, 255, 255, 0.15); /* Viền cực mỏng để không tranh giành với viền của ảnh */
+            border-radius: 4px; /* Bo góc cực nhẹ cho chuẩn SLA */
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            box-shadow: inset 0 0 10px rgba(255,255,255,0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden; /* Cắt gọn gàng nếu ảnh bị dư viền */
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+            transition: transform 0.2s;
         }
-          
+
         .item-img-premium {
-            width: 100%; /* Tràn đều chiều ngang */
-            height: auto; /* Giữ đúng tỷ lệ ảnh */
-            max-height: 90px; /* Giới hạn độ dài để không bị lố so với các item khác */
-            object-fit: contain;
-            filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
+            width: 100%;
+            height: 100%; /* Ép ảnh phủ kín 100% diện tích khung */
+            object-fit: cover; 
+            filter: none !important; /* Bỏ hiệu ứng sáng cũ vì ảnh SLA đã tự sáng rồi */
         }
 
         /* Khi rê chuột hoặc chạm vào ảnh */
@@ -743,28 +741,28 @@
         }
 
         .sl-tt-img-box {
-            width: 65px;
-            min-height: 65px;
-            height: auto; /* Tự động giãn khung */
-            padding: 4px;
-            background: rgba(0,0,0,0.5);
-            border: 1px solid #555;
-            border-radius: 5px;
+            width: 75px;
+            height: 75px;
+            padding: 0 !important;
+            background: #0f0f1a;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
             display: flex;
-            align-items: flex-start; /* Cho ảnh bám lên mép trên cho đẹp */
+            align-items: center;
             justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
 
         .sl-tt-img-box img {
-            width: 100%; 
-            height: auto;
-            max-height: 120px; /* Trong bảng chi tiết thì cho phép ảnh dài thoải mái hơn */
-            object-fit: contain;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .sl-tt-info { display: flex; flex-direction: column; justify-content: center; gap: 4px; }
 
-        /* Xóa bỏ màu vàng chanh mặc định của Tiêu đề Item trong tooltip */
+        
         .sl-tt-title { font-size: 18px; font-weight: bold; }
         .sl-tt-line { font-size: 15px; color: #ffffff !important; }
 
