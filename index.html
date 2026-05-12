@@ -3249,7 +3249,7 @@
         if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return; }
         currentUser.mp -= reqMp; 
         
-        let hit = calcPlayerDamage({ multi: 2.5, stat: 'str' }); 
+        let hit = calcPlayerDamage({ multi: 3.0, stat: 'str' }); 
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         
         let healAmount = Math.floor(hit.dmg * 0.3) + (currentUser.vit * 2);
@@ -3287,7 +3287,7 @@
         if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return; }
         currentUser.mp -= reqMp; 
         
-        let hit = calcPlayerDamage({ multi: 2.2, stat: 'str' }); 
+        let hit = calcPlayerDamage({ multi: 2.8, stat: 'str' }); 
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         window.enemyDefBreakTurns = 2; 
         
