@@ -1898,3 +1898,16 @@
             letter-spacing: 2px;
             text-shadow: 0 0 5px #00bfff;
         }
+
+        /* ================= TOOLTIP SO SÁNH SONG SONG ================= */
+        .item-tooltip.compare-tooltip {
+            display: none !important; /* Bắt buộc ẩn khi không rê chuột */
+            width: max-content !important; /* Ép khung tự mở rộng theo 2 bảng */
+            max-width: 550px !important;
+            white-space: normal !important;
+        }
+        
+        /* Khi rê chuột vào thì hiện ra dưới dạng nằm ngang (flex) */
+        .item-icon-wrapper:hover .item-tooltip.compare-tooltip {
+            display: flex !important; 
+        }
