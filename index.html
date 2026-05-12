@@ -1047,7 +1047,7 @@
             ]
         },
         "red_knight_tomb": {
-            name: "CỔNG ĐỎ: NƠI AN NGHỈ CỦA HIỆP SĨ ĐỎ", themeColor: "#cc0000", rareDrops: ["Trường Kiếm của Igris", "Red Knight's Helmet", "Bao tay của kẻ thống trị"], 
+            name: "CỔNG ĐỎ: NƠI AN NGHỈ CỦA HIỆP SĨ ĐỎ", themeColor: "#cc0000", rareDrops: ["Crimson Shadow", "Red Knight's Helmet", "Crimson Knight's Gloves", "Crimson Knight's Body Armor", "Crimson Knight's Boots"], 
             stages: [
                 { name: "Hiệp Sĩ Gác Cổng", hp: 5000, atk: 350, def: 150, exp: 500, img: "bot/linh.png", drops: ["Dao găm kẻ giết hiệp sĩ", "Áo giáp của hiệp sĩ tối cao", "Ma Thạch Cấp Thấp"] },
                 { name: "Hiệp Sĩ Gác Cổng", hp: 6000, atk: 400, def: 180, exp: 600, img: "bot/linh.png", drops: ["Dao găm kẻ giết hiệp sĩ", "Áo giáp của hiệp sĩ tối cao", "Ma Thạch Cấp Thấp"] },
@@ -1103,11 +1103,13 @@ const SHADOW_DATA = {
         "Ice Elf Cloak": { rank: "A", type: "necklace", name: "Ice Elf Cloak", str: 5, vit: 15, mp: 0, effect: "Giảm 5% sát thương gánh chịu", img: "wp/Demon_King_Longsword.png", sellPrice: 700 },
         
         // Đồ hiếm của Igris:
-        "Trường Kiếm của Igris": { rank: "S", type: "weapon", name: "Trường Kiếm của Igris", str: 60, vit: 0, mp: 0, effect: "Vũ khí của Igris. Tăng 15% ST đòn thường", img: "wp/Crimson_Shadow.png", sellPrice: 2000 },
+        "Crimson Shadow": { rank: "S", type: "weapon", name: "Crimson Shadow", str: 60, vit: 0, mp: 0, effect: "Vũ khí của Igris. Tăng 15% ST đòn thường", img: "wp/Crimson_Shadow.png", sellPrice: 3000 },
         "Red Knight's Helmet": { rank: "A", type: "helmet", name: "Red Knight's Helmet", str: 10, vit: 25, mp: 0, effect: "Giảm 8% sát thương gánh chịu", img: "wp/Crimson Knight's Helmet.png", sellPrice: 1200 },
-        "Bao tay của kẻ thống trị": { rank: "A", type: "gloves", name: "Bao tay của kẻ thống trị", str: 20, vit: 10, mp: 0, effect: "Giảm 3% sát thương gánh chịu", img: "wp/knight_gautlet.png", sellPrice: 1500 },
+        "Crimson Knight's Gloves": { rank: "A", type: "gloves", name: "Crimson Knight's Gloves", str: 20, vit: 10, mp: 0, effect: "Giảm 3% sát thương gánh chịu", img: "wp/Crimson Knight's Gloves.png", sellPrice: 1500 },
         "Áo giáp của hiệp sĩ tối cao": { rank: "A", type: "armor", name: "Áo giáp của hiệp sĩ tối cao", str: 10, vit: 35, mp: 0, effect: "Giảm 10% sát thương gánh chịu", img: "wp/Knight_Armor.png", sellPrice: 800 },
         "Dao găm kẻ giết hiệp sĩ": { rank: "B", type: "weapon", name: "Dao găm kẻ giết hiệp sĩ", str: 45, vit: 0, mp: 0, effect: "Xuyên 10% giáp của kẻ địch mặc giáp", img: "wp/Knight_Killer.png", sellPrice: 300 },
+        "Crimson Knight's Body Armor": { rank: "S", type: "armor", name: "Crimson Knight's Body Armor", str: 15, vit: 45, agi: 0, mp: 0, effect: "Giảm 12% sát thương gánh chịu", img: "wp/Crimson Knight's Body Armor.png", sellPrice: 2500 },
+        "Crimson Knight's Boots": { rank: "A", type: "shoes", name: "Crimson Knight's Boots", str: 10, vit: 20, agi: 15, mp: 0, effect: "Tăng 5% Tỷ lệ né tránh", img: "wp/Crimson Knight's Boots.png", sellPrice: 1500 },
 
         // TRANG SỨC DROP TỪ BOSS
         "Vòng cổ người gác cổng": { rank: "A", type: "necklace", name: "Vòng cổ người gác cổng", str: 15, vit: 15, mp: 60, effect: "Tăng 10% ST Phép thuật", img: "wp/Warden_Necklace.png", sellPrice: 1200 },
@@ -1251,7 +1253,7 @@ const SHADOW_DATA = {
     const GACHA_POOL = [
         "Kiếm Sét Rực Rỡ", 
         "Nhẫn Hư Không", 
-        "Trường Kiếm của Igris", 
+        "Crimson Shadow", 
         "Dao găm của ma vương", 
         "Đại kiếm ma vương", 
         "Khuyên tai của ma vương",
@@ -3009,7 +3011,7 @@ const SHADOW_DATA = {
             let wpName = currentUser.equipped.weapon.name;
             if (wpName === "Dagger") finalDmg *= 1.02;
             if (wpName === "Baruka's Dagger") finalDmg *= 1.10;
-            if (wpName === "Trường Kiếm của Igris") finalDmg *= 1.15;
+            if (wpName === "Crimson Shadow") finalDmg *= 1.15;
             if (wpName === "Đại kiếm ma vương") finalDmg *= 1.25; // Tăng 25% sát thương
             
             // Độc nhẹ từ Nanh Kasaka
@@ -3811,6 +3813,10 @@ const SHADOW_DATA = {
         if (currentUser.skills["Bước Chân Bóng Tối"] > 0) dodgeChance += 0.10;
         if (currentUser.skills["Siêu Giác Quan"] > 0) dodgeChance += (0.03 * currentUser.skills["Siêu Giác Quan"]);
 
+        if (currentUser.equipped && currentUser.equipped.shoes && currentUser.equipped.shoes.name === "Crimson Knight's Boots") {
+            dodgeChance += 0.05; 
+        }
+
         // --- ÁP DỤNG BUFF TÀN SÁT (100% NÉ TRÁNH) ---
         if (window.stealthDodge) {
             dodgeChance = 1.0; // Ép tỷ lệ né lên 100%
@@ -3899,8 +3905,9 @@ const SHADOW_DATA = {
                 if (currentUser.equipped && currentUser.equipped.armor && currentUser.equipped.armor.name === "Shield") dmg *= 0.985;
                 if (currentUser.equipped && currentUser.equipped.necklace && currentUser.equipped.necklace.name === "Ice Elf Cloak") dmg *= 0.95;
                 if (currentUser.equipped && currentUser.equipped.helmet && currentUser.equipped.helmet.name === "Red Knight's Helmet") dmg *= 0.92;
-                if (currentUser.equipped && currentUser.equipped.gloves && currentUser.equipped.gloves.name === "Bao tay của kẻ thống trị") dmg *= 0.97;
+                if (currentUser.equipped && currentUser.equipped.gloves && currentUser.equipped.gloves.name === "Crimson Knight's Gloves") dmg *= 0.97;
                 if (currentUser.equipped && currentUser.equipped.armor && currentUser.equipped.armor.name === "Áo giáp của hiệp sĩ tối cao") dmg *= 0.90;
+                if (currentUser.equipped && currentUser.equipped.armor && currentUser.equipped.armor.name === "Crimson Knight's Body Armor") dmg *= 0.88;
                 if (window.playerVulnerabilityTurns && window.playerVulnerabilityTurns > 0) { dmg *= 1.05 }
                 
                 dmg = Math.floor(dmg);
