@@ -2550,7 +2550,7 @@ const SHADOW_DATA = {
         if (window.currentInvTab === 'all') isMatch = true;
         else if (window.currentInvTab === 'weapon' && type === 'weapon') isMatch = true;
         else if (window.currentInvTab === 'armor' && ['shield', 'helmet', 'gloves', 'costume'].includes(type)) isMatch = true;
-        else if (window.currentInvTab === 'accessory' && type === 'accessory') isMatch = true;
+        else if (window.currentInvTab === 'accessory' && ['ring', 'necklace', 'earring'].includes(type)) isMatch = true;
         else if (window.currentInvTab === 'consum' && type === 'consumable') isMatch = true;
         else if (window.currentInvTab === 'material' && ['material', 'rare'].includes(type)) isMatch = true;
 
