@@ -1497,7 +1497,7 @@ const SHADOW_DATA = {
             claimedDate: '', streak: 0, logs: [],
             title: "Weakest Hunter of All Time", skillPoints: 0,
             inventory: [], // Thêm mảng chứa đồ
-            equipped: { weapon: null, armor: null, accessory: null }, // Thêm các ô trang bị
+            equipped: { weapon: null, armor: null, helmet: null, gloves: null, necklace: null, earring: null, ring: null, shoes: null, costume: null },
             skills: { "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Siêu Giác Quan": 0, "Thợ Săn Tiền Thưởng": 0, "Bàn Tay May Mắn": 0 },
             ownedShadows: [], 
             equippedShadow: null,
@@ -2445,7 +2445,7 @@ const SHADOW_DATA = {
     //Trang bi item
     window.renderBag = function() {
     if (!currentUser.inventory) currentUser.inventory = [];
-    if (!currentUser.equipped) currentUser.equipped = { weapon: null, shield: null, helmet: null, gloves: null, necklace: null, earring: null, ring1: null, ring2: null, costume: null };
+    if (!currentUser.equipped) currentUser.equipped = { weapon: null, armor: null, helmet: null, gloves: null, necklace: null, earring: null, ring: null, shoes: null, costume: null };
     if (currentUser.cash === undefined) currentUser.cash = 0;
 
     const invArea = document.getElementById('inventoryArea');
