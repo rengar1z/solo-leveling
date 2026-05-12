@@ -680,29 +680,26 @@
             border-radius: 2px;
         }
 
+        /* --- HIỆU ỨNG ITEM KHO ĐỒ --- */
         .item-icon-wrapper {
-            width: 65px; 
-            height: 65px;
-            padding: 0 !important;
-            background: transparent !important; /* Tàng hình nền CSS */
-            border: none !important; /* Xóa viền CSS để lộ viền kim loại của ảnh */
-            border-radius: 0 !important; /* Bỏ bo góc để giữ nguyên góc vuông của ảnh */
-            display: flex;
-            align-items: center;
-            justify-content: center;
             position: relative;
-            box-shadow: 2px 2px 8px rgba(0,0,0,0.8); /* Chỉ giữ lại đổ bóng phía sau ảnh */
-            transition: transform 0.2s;
+            display: inline-block;
+            cursor: pointer;
         }
-
+          
         .item-img-premium {
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* Đảm bảo ảnh hiện đủ 100% không bị cắt mép */
-            display: block; /* Sửa lỗi viền trắng mờ dưới đáy ảnh */
-            filter: none !important;
-        }
-
+            width: 60px;
+            height: 60px;
+            object-fit: contain; 
+            padding: 6px; 
+            box-sizing: border-box; 
+            border: 2px solid #00bfff;
+            border-radius: 8px;
+            background: radial-gradient(circle, #003366, #000);
+            box-shadow: 0 0 10px rgba(0, 191, 255, 0.4);
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+            vertical-align: middle;
+}
         /* Khi rê chuột hoặc chạm vào ảnh */
         .item-icon-wrapper:hover .item-img-premium,
         .item-icon-wrapper:active .item-img-premium {
@@ -741,28 +738,19 @@
         }
 
         .sl-tt-img-box {
-            width: 75px;
-            height: 75px;
-            padding: 0 !important;
-            background: transparent !important; /* Tàng hình nền CSS */
-            border: none !important; /* Xóa viền CSS */
-            border-radius: 0 !important; /* Bỏ bo góc */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.8);
+            width: 75px; height: 75px;
+            background: #040e08; 
+            border-radius: 4px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+            flex-shrink: 0;
         }
 
-        .sl-tt-img-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-        }
+        .sl-tt-img-box img { width: 85%; height: 85%; object-fit: contain; }
 
         .sl-tt-info { display: flex; flex-direction: column; justify-content: center; gap: 4px; }
 
-        
+        /* Xóa bỏ màu vàng chanh mặc định của Tiêu đề Item trong tooltip */
         .sl-tt-title { font-size: 18px; font-weight: bold; }
         .sl-tt-line { font-size: 15px; color: #ffffff !important; }
 
