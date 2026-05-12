@@ -801,7 +801,7 @@
         // Effects
         "effect/Heal_Effect.png", "effect/Burn_Effect.png", "effect/Defense_Decrease_Effect.png",
         "effect/Stun_Effect.png", "effect/Punishment_Effect.png", "effect/Poison_Effect.png",
-        "effect/Attack_Increase_Effect.png", "effect/Sian_Halat_Scarlet_Domination_Effect.png",
+        "effect/Attack_Increase_Effect.png", "effect/Sian_Halat_Scarlet_Domination_Effect.png", "effect/Kasaka_Deadly_Poison_Effect.png",
         
         // Skills
         "skill/amsat.jpg", "skill/tanghinh.jpg", "skill/dagger.jpg", "skill/loimathuat.png",
@@ -1060,12 +1060,24 @@
     };
 
     // --- DỮ LIỆU SHADOW ARMY ---
-const SHADOW_DATA = {
+    const SHADOW_DATA = {
+        // --- BOSS TÂN THỦ & TẦM TRUNG ---
+        "kasaka": { rank: "Quái Thú", name: "Kasaka Nọc Xanh", str: 10, vit: 15, agi: 20, int: 0, skillName: "Vảy Thép Xanh", skillDesc: "Tăng 5% Tỷ lệ né tránh mọi đòn đánh.", img: "boss/Boss_Blue_Venom-fanged_Kasaka.png", bio: "Con rắn khổng lồ cai trị ga Hapjeong. Lớp vảy màu xanh của nó cứng như thép." },
         "hobgoblin_leader": { rank: "Hạng C", name: "Thủ Lĩnh Yêu Tinh", str: 50, vit: 40, agi: 10, int: 0, skillName: "Bản Năng Lỳ Lợm", skillDesc: "Giảm 8% mọi sát thương gánh chịu.", img: "boss/Boss_Hobgoblin_Leader.png", bio: "Từng là thủ lĩnh của một bộ tộc Goblin trong hầm ngục. Dù chậm chạp nhưng có sức chịu đựng vô cùng đáng gờm." },
+        "giant_spider": { rank: "Hạng C+", name: "Nhện Khổng Lồ", str: 25, vit: 30, agi: 15, int: 0, skillName: "Lớp Vỏ Lưu Huỳnh", skillDesc: "Giảm 5% mọi sát thương gánh chịu.", img: "boss/Boss_Spider_Leader.png", bio: "Kẻ săn mồi tàn độc trong bóng tối. Lớp vỏ của nó mang lại khả năng phòng ngự rất tốt." },
+        
+        // --- BOSS CAO CẤP (HẠNG A & S) ---
+        "ice_king": { rank: "Tinh Anh", name: "Baruka (Vua Băng)", str: 70, vit: 40, agi: 80, int: 40, skillName: "Vũ Điệu Mùa Đông", skillDesc: "Tăng 10% Tỷ lệ Né tránh và 10% Tỷ lệ Bạo kích.", img: "boss/bakura.png", bio: "Vua của loài Tiên Băng. Lối đánh của hắn hòa quyện giữa sự uyển chuyển của sương giá và sự sắc bén của cái chết." },
         "igris": { rank: "Hiệp Sĩ", name: "Igris Chóp Đỏ", str: 100, vit: 50, agi: 50, int: 0, skillName: "Hiệp Sĩ Tiên Phong", skillDesc: "Tăng 15% sát thương Bạo Kích.", img: "boss/igris.png", bio: "Chỉ huy quân đoàn Hiệp sĩ đỏ bảo vệ ngai vàng vô trống. Là một kiếm sư điêu luyện, mang lòng trung thành tuyệt đối với quân vương." },
-        "beru": { rank: "Tướng Quân", name: "Vua Kiến Beru", str: 150, vit: 30, agi: 100, int: 0, skillName: "Kẻ Săn Mồi", skillDesc: "Hồi 3% HP tối đa ở cuối mỗi lượt.", img: "boss/Boss_Ant_King.png", bio: "Vị vua sinh ra để tiêu diệt nhân loại trên Đảo Jeju. Mang trong mình sức mạnh tuyệt đối, tốc độ kinh hoàng và khả năng tự chữa lành." },
         "kargalgan": { rank: "Tinh Anh", name: "Tusk (Kargalgan)", str: 0, vit: 50, agi: 0, int: 150, skillName: "Khúc Ca Của Orc", skillDesc: "Tăng 20% sát thương Phép (INT).", img: "boss/Boss_Almighty_Shaman,_Kargalgan.png", bio: "Đại pháp sư của loài High Orc. Sở hữu ma lực khổng lồ và khả năng sử dụng các nguyền chú hắc ám." },
-        "cerberus": { rank: "Tinh Anh", name: "Cerberus", str: 80, vit: 80, agi: 20, int: 0, skillName: "Nanh Vuốt Địa Ngục", skillDesc: "Các đòn tấn công vật lý bỏ qua 10% Giáp địch.", img: "boss/Boss_The_Gatekeeper_of_Hell,_Cerberus.png", bio: "Chó gác cổng địa ngục trong Hầm ngục Demon Castle. Sở hữu ba chiếc đầu với hàm răng sắc nhọn có thể nghiền nát mọi thứ." }
+        "cerberus": { rank: "Tinh Anh", name: "Cerberus", str: 80, vit: 80, agi: 20, int: 0, skillName: "Nanh Vuốt Địa Ngục", skillDesc: "Các đòn tấn công vật lý bỏ qua 10% Giáp địch.", img: "boss/Boss_The_Gatekeeper_of_Hell,_Cerberus.png", bio: "Chó gác cổng địa ngục trong Hầm ngục Demon Castle. Sở hữu ba chiếc đầu với hàm răng sắc nhọn có thể nghiền nát mọi thứ." },
+        "vulcan": { rank: "Tinh Anh", name: "Vulcan Tham Lam", str: 120, vit: 100, agi: 10, int: 0, skillName: "Áp Đảo Thể Chất", skillDesc: "Giảm 12% sát thương gánh chịu.", img: "boss/Boss_Avaricious_Vulcan.png", bio: "Ác quỷ khổng lồ cai quản Vực Thẳm Dung Nham. Khối lượng cơ bắp của hắn tạo ra sự phòng ngự tuyệt đối." },
+        "metus": { rank: "Tinh Anh", name: "Metus", str: 0, vit: 50, agi: 20, int: 150, skillName: "Cội Nguồn Hắc Ám", skillDesc: "Phục hồi 4% MP tối đa ở cuối mỗi lượt.", img: "boss/Boss_Soul_Shepherd_Metus.png", bio: "Kẻ dẫn dắt linh hồn. Nguồn ma lực của hắn dồi dào đến mức có thể chia sẻ cho Lãnh chúa." },
+        "ant_queen": { rank: "Tinh Anh", name: "Nữ Hoàng Kiến", str: 30, vit: 120, agi: 30, int: 60, skillName: "Mẫu Tâm", skillDesc: "Phục hồi 2% HP và 2% MP mỗi lượt.", img: "boss/Boss_Queen_Ant.png", bio: "Trái tim của Đảo Jeju. Khả năng sinh tồn và tái tạo sinh học của bà ta là vô song." },
+
+        // --- BOSS THẢM HỌA (HẠNG S+) ---
+        "beru": { rank: "Tướng Quân", name: "Vua Kiến Beru", str: 150, vit: 30, agi: 100, int: 0, skillName: "Kẻ Săn Mồi", skillDesc: "Hồi 3% HP tối đa ở cuối mỗi lượt.", img: "boss/Boss_Ant_King.png", bio: "Vị vua sinh ra để tiêu diệt nhân loại trên Đảo Jeju. Mang trong mình sức mạnh tuyệt đối, tốc độ kinh hoàng và khả năng tự chữa lành." },
+        "baran": { rank: "Phó Vương", name: "Vua Quỷ Baran", str: 150, vit: 100, agi: 80, int: 120, skillName: "Uy Áp Của Vua", skillDesc: "Tăng 15% TẤT CẢ sát thương gây ra (Cả Vật Lý và Phép).", img: "boss/Boss_Baran_of_White_Flames.png", bio: "Một trong 9 vị Quân Vương nguyên thủy. Kẻ cai trị Bạch Cốt với sức mạnh áp đảo cả ma thuật lẫn thể chất." }
     };
     // --- DỮ LIỆU ITEM (ĐÃ THÊM RANK S, A, B, C, D) ---
     const ITEM_DATA = {
@@ -2153,6 +2165,11 @@ const SHADOW_DATA = {
                             <img src="effect/Sian_Halat_Scarlet_Domination_Effect.png" style="width: 100%; height: 100%; object-fit: contain;" alt="Rage">
                           </div>`;
             }
+            else if (enemy.bossType === "kasaka") {
+                eHTML += `<div class="status-icon" title="Cơn Điên Của Vua Rắn (ATK +30%)">
+                            <img src="effect/kasaka_rage.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px; box-shadow: 0 0 5px red;" alt="Rage">
+                          </div>`;
+            }
         }
         
         eBoard.innerHTML = eHTML;
@@ -3035,7 +3052,10 @@ const SHADOW_DATA = {
 
         // 4. AGI: Tính toán Bạo kích
         let critRate = (currentUser.agi * 0.25) + (config.bonusCritRate || 0);
-
+        if (currentUser.equippedShadow === "ice_king") {
+            critRate += 10; // Nội tại Vua Tiên Băng
+        }
+        
         if (currentUser.equipped && currentUser.equipped.gloves && currentUser.equipped.gloves.name === "High-ranking Demon's Gloves") {
             critRate += 10;
         }
@@ -3067,11 +3087,15 @@ const SHADOW_DATA = {
             if (currentUser.skills["Lõi Ma Thuật"] > 0) finalDmg *= 1.25; 
             if (currentUser.equippedShadow === "kargalgan") finalDmg *= 1.20;
             
-            // KIỂM TRA KHUYÊN TAI VÀ VÒNG CỔ
             let earring = currentUser.equipped.earring?.name;
             let necklace = currentUser.equipped.necklace?.name;
             if (earring === "Quả Cầu Tham Lam") finalDmg *= 2.0; 
             if (necklace === "Vòng cổ người gác cổng") finalDmg *= 1.10; 
+        }
+
+        // CHÈN THÊM BUFF CỦA VUA QUỶ BARAN VÀO ĐÂY (Áp dụng cho mọi loại sát thương)
+        if (currentUser.equippedShadow === "baran") {
+            finalDmg *= 1.15; // Tăng 15% Sát thương tổng
         }
 
         // 7. CƠ CHẾ CHẶN SÁT THƯƠNG CỦA LỚP GIÁP ẢO (SHIELD BARRIER BÊN QUÁI)
@@ -3844,6 +3868,8 @@ const SHADOW_DATA = {
         if (currentUser.equipped && currentUser.equipped.shoes && currentUser.equipped.shoes.name === "High-ranking Demon's Boots") {
             dodgeChance += 0.08; 
         }
+        if (currentUser.equippedShadow === "kasaka") dodgeChance += 0.05;
+        if (currentUser.equippedShadow === "ice_king") dodgeChance += 0.10;
 
         // --- ÁP DỤNG BUFF TÀN SÁT (100% NÉ TRÁNH) ---
         if (window.stealthDodge) {
@@ -3939,7 +3965,10 @@ const SHADOW_DATA = {
                 if (currentUser.equipped && currentUser.equipped.helmet && currentUser.equipped.helmet.name === "High-ranking Demon's Helmet") dmg *= 0.90;
                 if (currentUser.equipped && currentUser.equipped.armor && currentUser.equipped.armor.name === "High-ranking Demon's Body Armor") dmg *= 0.85;
                 if (window.playerVulnerabilityTurns && window.playerVulnerabilityTurns > 0) { dmg *= 1.05 }
-                
+             
+                if (currentUser.equippedShadow === "hobgoblin_leader") dmg *= 0.92; 
+                if (currentUser.equippedShadow === "giant_spider") dmg *= 0.95; 
+                if (currentUser.equippedShadow === "vulcan") dmg *= 0.88; 
                 dmg = Math.floor(dmg);
 
                 triggerPlayerShake();
@@ -3993,13 +4022,25 @@ const SHADOW_DATA = {
                 logBattle(`<span style="color:#00bfff">🔮 Khuyên tai ma vương phát sáng, hồi phục ${manaRegen} MP.</span>`);
             }
         }
-
-        if (currentUser.hp > 0 && currentUser.equippedShadow === "beru") {
-        let beruHeal = Math.floor(currentUser.maxHp * 0.03);
-        currentUser.hp = Math.min(currentUser.maxHp, currentUser.hp + beruHeal);
-        logBattle(`<span style="color:#00ff00; font-weight:bold; font-style:italic;">🦇 Bóng ma Beru đang chữa lành cho bạn: Hồi phục ${beruHeal} HP.</span>`);
+    
+        if (currentUser.equippedShadow === "beru") {
+                let beruHeal = Math.floor(currentUser.maxHp * 0.03);
+                currentUser.hp = Math.min(currentUser.maxHp, currentUser.hp + beruHeal);
+                logBattle(`<span style="color:#00ff00; font-weight:bold; font-style:italic;">🦇 Bóng ma Beru đang chữa lành cho bạn: Hồi phục ${beruHeal} HP.</span>`);
+            }
+            if (currentUser.equippedShadow === "metus") {
+                let metusMp = Math.max(1, Math.floor(currentUser.maxMp * 0.04));
+                currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + metusMp);
+                logBattle(`<span style="color:#00bfff; font-style:italic;">👻 Bóng ma Metus chia sẻ ma lực: Phục hồi ${metusMp} MP.</span>`);
+            }
+            if (currentUser.equippedShadow === "ant_queen") {
+                let aqHp = Math.max(1, Math.floor(currentUser.maxHp * 0.02));
+                let aqMp = Math.max(1, Math.floor(currentUser.maxMp * 0.02));
+                currentUser.hp = Math.min(currentUser.maxHp, currentUser.hp + aqHp);
+                currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + aqMp);
+                logBattle(`<span style="color:#00ff00; font-style:italic;">💚 Bóng ma Nữ Hoàng Kiến tái tạo sinh học: Hồi ${aqHp} HP và ${aqMp} MP.</span>`);
+            }
         }
-
         updateCombatUI();
         if (typeof render === "function") render(); 
 
