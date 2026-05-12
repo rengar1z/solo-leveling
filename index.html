@@ -4020,15 +4020,15 @@
         }
 
 
-        // KIỂM TRA HỒI MP TỪ NHẪN VÀ KHUYÊN TAI
+        // KIỂM TRA HỒI MP TỪ NHẪN, KHUYÊN TAI VÀ BÓNG MA
         if (currentUser.hp > 0) {
             let r1 = currentUser.equipped.ring?.name;
             let ear = currentUser.equipped.earring?.name;
 
             if (r1 === "Essence of Magic") {
-                    let manaRegen = Math.max(1, Math.floor(currentUser.maxMp * 0.02));
-                    currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + manaRegen);
-                    logBattle(`<span style="color:#00bfff">🔮 Essence of Magic hồi phục ${manaRegen} MP.</span>`);
+                let manaRegen = Math.max(1, Math.floor(currentUser.maxMp * 0.02));
+                currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + manaRegen);
+                logBattle(`<span style="color:#00bfff">🔮 Essence of Magic hồi phục ${manaRegen} MP.</span>`);
             }
             
             if (ear === "Khuyên tai của ma vương") {
@@ -4036,9 +4036,9 @@
                 currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + manaRegen);
                 logBattle(`<span style="color:#00bfff">🔮 Khuyên tai ma vương phát sáng, hồi phục ${manaRegen} MP.</span>`);
             }
-        }
-    
-        if (currentUser.equippedShadow === "beru") {
+            
+            // --- HỒI PHỤC TỪ BÓNG MA ---
+            if (currentUser.equippedShadow === "beru") {
                 let beruHeal = Math.floor(currentUser.maxHp * 0.03);
                 currentUser.hp = Math.min(currentUser.maxHp, currentUser.hp + beruHeal);
                 logBattle(`<span style="color:#00ff00; font-weight:bold; font-style:italic;">🦇 Bóng ma Beru đang chữa lành cho bạn: Hồi phục ${beruHeal} HP.</span>`);
@@ -4055,7 +4055,8 @@
                 currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + aqMp);
                 logBattle(`<span style="color:#00ff00; font-style:italic;">💚 Bóng ma Nữ Hoàng Kiến tái tạo sinh học: Hồi ${aqHp} HP và ${aqMp} MP.</span>`);
             }
-        }
+        } // <--- CHỈ CÓ ĐÚNG 1 DẤU NGOẶC ĐÓNG CỦA LỆNH IF (currentUser.hp > 0) Ở ĐÂY
+
         updateCombatUI();
         if (typeof render === "function") render(); 
 
