@@ -3131,10 +3131,11 @@ const SHADOW_DATA = {
         updateCombatUI(); checkBattleEnd(); 
     };
 
-    // --- SKILL SÁT THỦ: TÀN SÁT (NÂNG CẤP TÀNG HÌNH) ---
+    // --- SKILL SÁT THỦ: TÀN SÁT ---
     window.useTanSat = function() {
-        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 50) { if(currentUser.mp < 50) logBattle("<span style='color:orange'>Thiếu 50 MP!</span>"); return; }
-        currentUser.mp -= 50; 
+        let reqMp = getActualMpCost(50);
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return; }
+        currentUser.mp -= reqMp; 
         
         window.stealthDodge = true; 
         window.stealthCrit = true;  
@@ -3145,9 +3146,10 @@ const SHADOW_DATA = {
 
     // --- BỘ KỸ NĂNG MỚI: PHÁP SƯ (INT) ---
     window.useShadowStrike = function() {
-        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 60) { if(currentUser.mp < 60) logBattle("<span style='color:orange'>Thiếu 60 MP!</span>"); return; }
-        currentUser.mp -= 60; 
-        // Trích xuất: Tính ST bằng INT, bỏ qua 50% Giáp địch
+        let reqMp = getActualMpCost(60);
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return; }
+        currentUser.mp -= reqMp; 
+        
         let hit = calcPlayerDamage({ multi: 3.5, stat: 'int', ignoreDef: 0.5 }); 
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 XUYÊN THẤU!</span> ` : "";
@@ -3155,14 +3157,15 @@ const SHADOW_DATA = {
         updateCombatUI(); checkBattleEnd();
     };
     
-    // --- SKILL PHÁP SƯ: NGỌN LỬA HẮC ÁM (ĐỐT & DEBUFF) ---
+    // --- SKILL PHÁP SƯ: NGỌN LỬA HẮC ÁM ---
     window.useDarkFlame = function() {
-        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 40) { if(currentUser.mp < 40) logBattle("<span style='color:orange'>Thiếu 40 MP!</span>"); return; }
-        currentUser.mp -= 40; 
+        let reqMp = getActualMpCost(40);
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return; }
+        currentUser.mp -= reqMp; 
         
         let hit = calcPlayerDamage({ multi: 1.5, stat: 'int' }); 
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
-        window.enemyBurnTurns = 3; // Kích hoạt Đốt 3 lượt
+        window.enemyBurnTurns = 3; 
         
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 BẠO KÍCH!</span> ` : "";
         logBattle(`${critLog}<span style="color:#ff3300; text-shadow: 0 0 5px #ff3300;">🔥 NGỌN LỬA HẮC ÁM!</span> Gây ${hit.dmg} ST Phép và khiến địch <span style="color:#ff3300; font-weight:bold;">[Thiêu Đốt]</span> (Mất HP và giảm Sức mạnh)!`);
@@ -3170,10 +3173,11 @@ const SHADOW_DATA = {
         updateCombatUI(); checkBattleEnd();
     };
 
-    // --- SKILL PHÁP SƯ: KHIÊN MA THUẬT (BUFF SINH TỒN) ---
+    // --- SKILL PHÁP SƯ: KHIÊN MA THUẬT ---
     window.useManaShield = function() {
-        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 20) { if(currentUser.mp < 20) logBattle("<span style='color:orange'>Thiếu 20 MP!</span>"); return; }
-        currentUser.mp -= 20; 
+        let reqMp = getActualMpCost(20);
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return; }
+        currentUser.mp -= reqMp; 
         
         let shieldAmount = Math.floor(currentUser.maxMp * 0.30);
         currentUser.shieldHP = shieldAmount;
@@ -3184,13 +3188,13 @@ const SHADOW_DATA = {
 
     // --- BỔ SUNG CHIÊU PHÁP SƯ: HÚT MA LỰC ---
     window.useManaDrain = function() {
-        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 10) { if(currentUser.mp < 10) logBattle("<span style='color:orange'>Thiếu 10 MP!</span>"); return; }
-        currentUser.mp -= 10; 
+        let reqMp = getActualMpCost(10);
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return; }
+        currentUser.mp -= reqMp; 
         
         let hit = calcPlayerDamage({ multi: 1.8, stat: 'int' }); 
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         
-        // Hồi lại MP bằng 50% Sát thương gây ra
         let manaHeal = Math.floor(hit.dmg * 0.5);
         currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + manaHeal);
 
@@ -3202,13 +3206,13 @@ const SHADOW_DATA = {
 
     // --- BỘ KỸ NĂNG MỚI: ĐẤU SĨ (STR + VIT) ---
     window.useBloodThirst = function() {
-        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 40) { if(currentUser.mp < 40) logBattle("<span style='color:orange'>Thiếu 40 MP!</span>"); return; }
-        currentUser.mp -= 40; 
-        // Hấp Huyết: ST vật lý mức trung bình khá
+        let reqMp = getActualMpCost(40);
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return; }
+        currentUser.mp -= reqMp; 
+        
         let hit = calcPlayerDamage({ multi: 2.5, stat: 'str' }); 
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         
-        // Hồi máu = 30% Sát thương gây ra + Scale theo VIT
         let healAmount = Math.floor(hit.dmg * 0.3) + (currentUser.vit * 2);
         currentUser.hp = Math.min(currentUser.maxHp, currentUser.hp + healAmount);
 
@@ -3219,36 +3223,34 @@ const SHADOW_DATA = {
 
    // --- SKILL: PHẢN ĐÒN ---
     window.useCounterAttack = function() {
-        // Khởi tạo biến đếm nếu chưa có
         window.counterCooldown = window.counterCooldown || 0; 
-        
-        // CHẶN NẾU ĐANG TRONG THỜI GIAN HỒI CHIÊU
         if (window.counterCooldown > 0) {
             return logBattle(`<span style='color:orange'>⏳ Phản Đòn đang hồi chiêu! (Cần chờ thêm ${window.counterCooldown} lượt)</span>`);
         }
 
-        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 30) { 
-            if(currentUser.mp < 30) logBattle("<span style='color:orange'>Thiếu 30 MP!</span>"); 
+        let reqMp = getActualMpCost(30);
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { 
+            if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); 
             return; 
         }
         
-        currentUser.mp -= 30; 
-        isPlayerCountering = true; // Bật cờ phản đòn
-        
+        currentUser.mp -= reqMp; 
+        isPlayerCountering = true; 
         window.counterCooldown = 2; 
         
         logBattle(`<span style="color:gold; font-weight:bold;">🛡️ Bạn nắm chặt vũ khí, vào thế phòng thủ sẵn sàng phản công!</span>`);
-        updateCombatUI(); checkBattleEnd(); // Chuyển lượt cho quái đánh
+        updateCombatUI(); checkBattleEnd(); 
     };
 
-    // --- SKILL ĐẤU SĨ: CÚ NỆN PHÁ ĐỊA (DEBUFF GIÁP ĐỊCH) ---
+    // --- SKILL ĐẤU SĨ: CÚ NỆN PHÁ ĐỊA ---
     window.useEarthShatter = function() {
-        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 45) { if(currentUser.mp < 45) logBattle("<span style='color:orange'>Thiếu 45 MP!</span>"); return; }
-        currentUser.mp -= 45; 
+        let reqMp = getActualMpCost(45);
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return; }
+        currentUser.mp -= reqMp; 
         
         let hit = calcPlayerDamage({ multi: 2.2, stat: 'str' }); 
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
-        window.enemyDefBreakTurns = 2; // Kích hoạt Vỡ Giáp 2 lượt
+        window.enemyDefBreakTurns = 2; 
         
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 ĐẠI CHẤN!</span> ` : "";
         logBattle(`${critLog}<span style="color:#ff9900; font-weight:bold; font-size:18px;">🌋 CÚ NỆN PHÁ ĐỊA!</span> Gây ${hit.dmg} ST và khiến địch <span style="color:orange; font-weight:bold;">[VỠ GIÁP]</span> giảm 40% Phòng thủ!`);
@@ -3258,14 +3260,14 @@ const SHADOW_DATA = {
     
     // --- KỸ NĂNG KHỐNG CHẾ (NÉM DAO) ---
     window.useDaggerThrow = function() {
-        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 20) { if(currentUser.mp < 20) logBattle("<span style='color:orange'>Thiếu 20 MP!</span>"); return; }
-        currentUser.mp -= 20; 
+        let reqMp = getActualMpCost(20);
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return; }
+        currentUser.mp -= reqMp; 
         
         let hit = calcPlayerDamage({ multi: 1.5, stat: 'str' }); 
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         
         let effectLog = "";
-        // 30% cơ hội làm choáng
         if (Math.random() <= 0.30) {
             isEnemyStunned = true;
             effectLog = `<span style="color:yellow; font-weight:bold;">✨ Kẻ địch bị điểm huyệt và CHOÁNG!</span>`;
@@ -3277,10 +3279,10 @@ const SHADOW_DATA = {
 
     // --- BỔ SUNG CHIÊU THỨC BỊ THIẾU: BÃO CẦU LỬA ---
     window.useFireStorm = function() {
-        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 30) { if(currentUser.mp < 30) logBattle("<span style='color:orange'>Thiếu 30 MP!</span>"); return; }
-        currentUser.mp -= 30; 
+        let reqMp = getActualMpCost(30);
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return; }
+        currentUser.mp -= reqMp; 
         
-        // Cầu lửa: Sát thương Phép hệ số 2.0 (INT) và xuyên 20% Giáp
         let hit = calcPlayerDamage({ multi: 2.0, stat: 'int', ignoreDef: 0.2 }); 
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         
@@ -3292,9 +3294,10 @@ const SHADOW_DATA = {
 
     // --- SKILL: DAO ĐỘC (POISON DAGGER) ---
     window.usePoisonDagger = function() {
-        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 35) { if(currentUser.mp < 35) logBattle("<span style='color:orange'>Thiếu 35 MP!</span>"); return; }
-        currentUser.mp -= 35;     
-        let hit = calcPlayerDamage({ multi: 1.0, stat: 'str' }); // Dame gốc đánh vào
+        let reqMp = getActualMpCost(35);
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return; }
+        currentUser.mp -= reqMp;     
+        let hit = calcPlayerDamage({ multi: 1.0, stat: 'str' }); 
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
        if (enemyPoisonTurns === 0) {
             window.enemyNewlyPoisoned = true; 
