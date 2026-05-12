@@ -218,11 +218,11 @@
                 
                 <div class="eq-slot slot-right" id="slot-necklace" title="Vòng cổ">NECKLACE</div>
                 
-                <div class="eq-slot slot-left" id="slot-shield" title="Phòng cụ">SHIELD</div>
-                <div class="eq-slot slot-right" id="slot-ring1" title="Nhẫn 1">RING 1</div>
+                <div class="eq-slot slot-left" id="slot-armor" title="Áo giáp">ARMOR</div>
+                <div class="eq-slot slot-right" id="slot-ring" title="Nhẫn">RING</div>
                 
                 <div class="eq-slot slot-left" id="slot-gloves" title="Găng tay">GLOVES</div>
-                <div class="eq-slot slot-right" id="slot-ring2" title="Nhẫn 2">RING 2</div>
+                <div class="eq-slot slot-right" id="slot-shoes" title="Giày">SHOES</div>
         
                 <div class="eq-slot slot-left" id="slot-weapon" title="Vũ khí">WEAPON</div>
                 <div class="eq-slot slot-right" id="slot-earring" title="Khuyên tai">EARRING</div>
@@ -1085,7 +1085,7 @@ const SHADOW_DATA = {
         "MP Potion (Lớn)": { rank: "A", type: "consumable", effectType: "heal_mp", amount: 1000, name: "MP Potion (Lớn)", effect: "Hồi phục 1000 MP.", img: "cons/Item_Hi-SP_Potion_+.png", sellPrice: 250 },
         
         "Dagger": { rank: "D", type: "weapon", name: "Dagger", str: 15, vit: 0, mp: 0, effect: "Tăng 2% ST đòn đánh thường", img: "wp/dagger.png", sellPrice: 30 },
-        "Shield": { rank: "C", type: "shield", name: "Shield", str: 0, vit: 5, mp: 0, effect: "Giảm 1.5% ST gánh chịu", img: "wp/shield.png", sellPrice: 45 },
+        "Shield": { rank: "C", type: "armor", name: "Shield", str: 0, vit: 5, mp: 0, effect: "Giảm 1.5% ST gánh chịu", img: "wp/shield.png", sellPrice: 45 },
         "Essence of Magic": { rank: "B", type: "ring", name: "Essence of Magic", str: 0, vit: 0, mp: 50, effect: "Hồi 2% MP mỗi lượt", img: "wp/essenceofmagic.png", sellPrice: 30 },
 
         // --- VẬT LIỆU TỪ QUÁI THƯỜNG (DÙNG ĐỂ BÁN LẤY CASH) ---
@@ -1106,7 +1106,7 @@ const SHADOW_DATA = {
         "Trường Kiếm của Igris": { rank: "S", type: "weapon", name: "Trường Kiếm của Igris", str: 60, vit: 0, mp: 0, effect: "Vũ khí của Igris. Tăng 15% ST đòn thường", img: "wp/Crimson_Shadow.png", sellPrice: 2000 },
         "Red Knight's Helmet": { rank: "A", type: "helmet", name: "Red Knight's Helmet", str: 10, vit: 25, mp: 0, effect: "Giảm 8% sát thương gánh chịu", img: "wp/Crimson Knight's Helmet.png", sellPrice: 1200 },
         "Bao tay của kẻ thống trị": { rank: "A", type: "gloves", name: "Bao tay của kẻ thống trị", str: 20, vit: 10, mp: 0, effect: "Giảm 3% sát thương gánh chịu", img: "wp/knight_gautlet.png", sellPrice: 1500 },
-        "Áo giáp của hiệp sĩ tối cao": { rank: "A", type: "shield", name: "Áo giáp của hiệp sĩ tối cao", str: 10, vit: 35, mp: 0, effect: "Giảm 10% sát thương gánh chịu", img: "wp/Knight_Armor.png", sellPrice: 800 },
+        "Áo giáp của hiệp sĩ tối cao": { rank: "A", type: "armor", name: "Áo giáp của hiệp sĩ tối cao", str: 10, vit: 35, mp: 0, effect: "Giảm 10% sát thương gánh chịu", img: "wp/Knight_Armor.png", sellPrice: 800 },
         "Dao găm kẻ giết hiệp sĩ": { rank: "B", type: "weapon", name: "Dao găm kẻ giết hiệp sĩ", str: 45, vit: 0, mp: 0, effect: "Xuyên 10% giáp của kẻ địch mặc giáp", img: "wp/Knight_Killer.png", sellPrice: 300 },
 
         // TRANG SỨC DROP TỪ BOSS
@@ -1497,7 +1497,7 @@ const SHADOW_DATA = {
             claimedDate: '', streak: 0, logs: [],
             title: "Weakest Hunter of All Time", skillPoints: 0,
             inventory: [], // Thêm mảng chứa đồ
-            equipped: { weapon: null, shield: null, accessory: null }, // Thêm các ô trang bị
+            equipped: { weapon: null, armor: null, accessory: null }, // Thêm các ô trang bị
             skills: { "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Siêu Giác Quan": 0, "Thợ Săn Tiền Thưởng": 0, "Bàn Tay May Mắn": 0 },
             ownedShadows: [], 
             equippedShadow: null,
@@ -1514,13 +1514,25 @@ const SHADOW_DATA = {
         const data = s.val();
         if (data.password !== p) return alert('Mật mã sai');
     
-        currentUser = data;
-        
-        if (currentUser.equipped && currentUser.equipped.accessory) {
-            currentUser.inventory = currentUser.inventory || [];
-            currentUser.inventory.push(currentUser.equipped.accessory); 
-            delete currentUser.equipped.accessory; 
+        currentUser = data; // Dữ liệu thợ săn được nạp vào đây
+
+        // === CHÈN ĐOẠN BACKUP VÀO ĐÂY ===
+        if (!currentUser.inventory) currentUser.inventory = [];
+        if (!currentUser.equipped) currentUser.equipped = {};
+
+        // Tháo Ring2 và Shield cũ trả về kho đồ để họ không mất đồ
+        if (currentUser.equipped.ring1) { 
+            currentUser.equipped.ring = currentUser.equipped.ring1; 
+            delete currentUser.equipped.ring1; 
         }
+        if (currentUser.equipped.ring2) { 
+            currentUser.inventory.push(currentUser.equipped.ring2); 
+            delete currentUser.equipped.ring2; 
+        }
+        if (currentUser.equipped.shield) { 
+            currentUser.equipped.armor = currentUser.equipped.shield; 
+            delete currentUser.equipped.shield; 
+        }    
         
         if (!currentUser.skills) {
             currentUser.skills = { "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Siêu Giác Quan": 0, "Thợ Săn Tiền Thưởng": 0, "Bàn Tay May Mắn": 0 };
@@ -1539,7 +1551,7 @@ const SHADOW_DATA = {
 
         currentUser.cash = currentUser.cash || 0;
         currentUser.inventory = currentUser.inventory || [];
-        currentUser.equipped = currentUser.equipped || { weapon: null, shield: null, helmet: null, gloves: null, necklace: null, earring: null, ring1: null, ring2: null, costume: null };
+        currentUser.equipped = currentUser.equipped || { weapon: null, armor: null, helmet: null, gloves: null, necklace: null, earring: null, ring: null, shoes: null, costume: null };
         
         document.getElementById('auth').classList.add('hidden');
         document.getElementById('gameWrap').classList.remove('hidden');
@@ -2468,7 +2480,7 @@ const SHADOW_DATA = {
     currentUser.inventory = compressedInventory; // Cập nhật lại kho đồ đã dọn sạch
 
     // Khởi tạo Item Data cho các khe đang mặc
-    ['weapon', 'shield', 'helmet', 'gloves', 'necklace', 'earring', 'ring1', 'ring2'].forEach(slot => {
+    ['weapon', 'armor', 'helmet', 'gloves', 'necklace', 'earring', 'ring', 'shoes'].forEach(slot => {
         const eq = currentUser.equipped[slot];
         if (eq && eq.str === undefined && ITEM_DATA[eq.name]) {
             const base = ITEM_DATA[eq.name];
@@ -2476,14 +2488,14 @@ const SHADOW_DATA = {
         }
     });
 
-    ['weapon', 'shield', 'helmet', 'gloves', 'necklace', 'earring', 'ring1', 'ring2', 'costume'].forEach(slot => {
+    ['weapon', 'armor', 'helmet', 'gloves', 'necklace', 'earring', 'ring', 'shoes'].forEach(slot => {
         if (currentUser.equipped[slot] && !ITEM_DATA[currentUser.equipped[slot].name]) {
             currentUser.equipped[slot] = null;
         }
     });
 
     // 2. HIỂN THỊ ĐỒ ĐANG TRANG BỊ (EQUIPPED SLOTS)
-    const allSlots = ['weapon', 'shield', 'helmet', 'gloves', 'necklace', 'earring', 'ring1', 'ring2']; 
+    const allSlots = ['weapon', 'armor', 'helmet', 'gloves', 'necklace', 'earring', 'ring', 'shoes'];
     allSlots.forEach(slot => {
         const slotEl = document.getElementById('slot-' + slot);
         if (!slotEl) return;
@@ -2533,7 +2545,7 @@ const SHADOW_DATA = {
         // Logic lọc theo Tab
         if (window.currentInvTab === 'all') isMatch = true;
         else if (window.currentInvTab === 'weapon' && type === 'weapon') isMatch = true;
-        else if (window.currentInvTab === 'armor' && ['shield', 'helmet', 'gloves', 'costume'].includes(type)) isMatch = true;
+        else if (window.currentInvTab === 'armor' && ['armor', 'helmet', 'gloves', 'shoes', 'costume'].includes(type)) isMatch = true;
         else if (window.currentInvTab === 'accessory' && ['ring', 'necklace', 'earring'].includes(type)) isMatch = true;
         else if (window.currentInvTab === 'consum' && type === 'consumable') isMatch = true;
         else if (window.currentInvTab === 'material' && ['material', 'rare'].includes(type)) isMatch = true;
@@ -2600,7 +2612,7 @@ const SHADOW_DATA = {
         const type = item.data.type;
 
         // Xác định ô đang mặc để lấy đồ so sánh (Mặc định lấy ring1 nếu là nhẫn)
-        let slot = type === 'ring' ? 'ring1' : type; 
+        let slot = type; 
         const eqItem = currentUser.equipped[slot];
         
         // Hàm tạo nội dung chi tiết cho 1 khối Item (Dùng chung cho cả đồ trong túi và đồ đang mặc)
@@ -2673,19 +2685,7 @@ const SHADOW_DATA = {
         
         const itemObj = currentUser.inventory[index];
         const itemData = ITEM_DATA[itemObj.name];
-        let slot = itemData.type; // Lấy type từ ITEM_DATA (ring, necklace, earring...)
-
-        // --- TỰ ĐỘNG DÒ TÌM KHE NHẪN TRỐNG ---
-        if (slot === 'ring') {
-            if (!currentUser.equipped.ring1) {
-                slot = 'ring1';
-            } else if (!currentUser.equipped.ring2) {
-                slot = 'ring2';
-            } else {
-                // Nếu cả 2 ngón đều đeo nhẫn, mặc định tháo Nhẫn 1 ra để thay cái mới vào
-                slot = 'ring1';
-            }
-        }
+        let slot = itemData.type; // Lấy type từ ITEM_DATA (ring, necklace, armor, shoes...)
 
         // Nếu ô đã có đồ -> Tự động tháo đồ cũ ra trước
         if (currentUser.equipped[slot]) {
@@ -2696,7 +2696,7 @@ const SHADOW_DATA = {
         currentUser.inventory.splice(index, 1);
         currentUser.equipped[slot] = itemObj;
         
-        // Cộng chỉ số random của món đồ (Đã vá lỗi thiếu INT/AGI)
+        // Cộng chỉ số random của món đồ
         currentUser.str += (itemObj.str || 0);
         currentUser.vit += (itemObj.vit || 0);
         currentUser.agi += (itemObj.agi || 0);
@@ -2712,7 +2712,7 @@ const SHADOW_DATA = {
         await saveUserData();
         renderBag();
     }
-
+    
     window.unequipItem = async function(slot, doSave = true) {
         if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
             return alert("⚠️ HỆ THỐNG: Không thể tháo trang bị khi đang trong trạng thái chiến đấu!");
@@ -3026,11 +3026,11 @@ const SHADOW_DATA = {
         // 4. AGI: Tính toán Bạo kích
         let critRate = (currentUser.agi * 0.25) + (config.bonusCritRate || 0);
         
-        let ring1 = currentUser.equipped.ring1?.name;
-        let ring2 = currentUser.equipped.ring2?.name;
-        if (ring1 === "Nhẫn của quỷ vương" || ring2 === "Nhẫn của quỷ vương") {
+        let ring = currentUser.equipped.ring?.name;
+        if (ring === "Nhẫn của quỷ vương") {
             critRate += 10;
         }
+        
         let critMulti = 1.5 + (currentUser.agi * 0.01);
         if (currentUser.equippedShadow === "igris") critMulti += 0.15;
         if (currentUser.skills["Nhát Chém Tử Thần"] > 0) critMulti += 0.30;
@@ -3895,11 +3895,12 @@ const SHADOW_DATA = {
                 
                 if (currentUser.skills["Cơ Thể Thép"] > 0) dmg *= 0.80; 
                 
-                if (currentUser.equipped && currentUser.equipped.shield && currentUser.equipped.shield.name === "Shield") dmg *= 0.985;
+                // Trong enemyTurn (Đoạn tính dmg) thay thế 'shield' bằng 'armor'
+                if (currentUser.equipped && currentUser.equipped.armor && currentUser.equipped.armor.name === "Shield") dmg *= 0.985;
                 if (currentUser.equipped && currentUser.equipped.necklace && currentUser.equipped.necklace.name === "Ice Elf Cloak") dmg *= 0.95;
                 if (currentUser.equipped && currentUser.equipped.helmet && currentUser.equipped.helmet.name === "Red Knight's Helmet") dmg *= 0.92;
                 if (currentUser.equipped && currentUser.equipped.gloves && currentUser.equipped.gloves.name === "Bao tay của kẻ thống trị") dmg *= 0.97;
-                if (currentUser.equipped && currentUser.equipped.shield && currentUser.equipped.shield.name === "Áo giáp của hiệp sĩ tối cao") dmg *= 0.90;
+                if (currentUser.equipped && currentUser.equipped.armor && currentUser.equipped.armor.name === "Áo giáp của hiệp sĩ tối cao") dmg *= 0.90;
                 if (window.playerVulnerabilityTurns && window.playerVulnerabilityTurns > 0) { dmg *= 1.05 }
                 
                 dmg = Math.floor(dmg);
@@ -3940,15 +3941,15 @@ const SHADOW_DATA = {
 
         // KIỂM TRA HỒI MP TỪ NHẪN VÀ KHUYÊN TAI
         if (currentUser.hp > 0) {
-            let r1 = currentUser.equipped.ring1?.name;
-            let r2 = currentUser.equipped.ring2?.name;
+            let r1 = currentUser.equipped.ring?.name;
             let ear = currentUser.equipped.earring?.name;
 
-            if (r1 === "Essence of Magic" || r2 === "Essence of Magic") {
-                let manaRegen = Math.max(1, Math.floor(currentUser.maxMp * 0.02));
-                currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + manaRegen);
-                logBattle(`<span style="color:#00bfff">🔮 Essence of Magic hồi phục ${manaRegen} MP.</span>`);
-            } 
+            if (r1 === "Essence of Magic") {
+                    let manaRegen = Math.max(1, Math.floor(currentUser.maxMp * 0.02));
+                    currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + manaRegen);
+                    logBattle(`<span style="color:#00bfff">🔮 Essence of Magic hồi phục ${manaRegen} MP.</span>`);
+            }
+            
             if (ear === "Khuyên tai của ma vương") {
                 let manaRegen = Math.max(1, Math.floor(currentUser.maxMp * 0.05)); 
                 currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + manaRegen);
