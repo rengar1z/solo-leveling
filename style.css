@@ -94,11 +94,18 @@
         }
 
         .card {
-            margin-top: 20px;
+            background: rgba(0, 8, 20, 0.9);
             border: 1px solid #00bfff;
             padding: 15px;
-            background: rgba(0,0,30,.6);
-            box-shadow: 0 0 10px #00bfff;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px #00bfff;
+            position: relative;
+            overflow: visible !important; 
+        }
+        
+       
+        #inventoryArea, .sl-shop-list {
+            padding: 60px 5px !important; 
         }
         
         input, button {
