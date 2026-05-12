@@ -683,24 +683,24 @@
         .item-icon-wrapper {
             width: 65px; 
             height: 65px;
-            padding: 0 !important; /* QUAN TRỌNG NHẤT: Bỏ khoảng đệm để ảnh tràn sát mép */
-            background: #0f0f1a; /* Nền tối phòng hờ nếu bạn dùng ảnh trong suốt */
-            border: 1px solid rgba(255, 255, 255, 0.15); /* Viền cực mỏng để không tranh giành với viền của ảnh */
-            border-radius: 4px; /* Bo góc cực nhẹ cho chuẩn SLA */
+            padding: 0 !important;
+            background: transparent !important; /* Tàng hình nền CSS */
+            border: none !important; /* Xóa viền CSS để lộ viền kim loại của ảnh */
+            border-radius: 0 !important; /* Bỏ bo góc để giữ nguyên góc vuông của ảnh */
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            overflow: hidden; /* Cắt gọn gàng nếu ảnh bị dư viền */
-            box-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.8); /* Chỉ giữ lại đổ bóng phía sau ảnh */
             transition: transform 0.2s;
         }
 
         .item-img-premium {
             width: 100%;
-            height: 100%; /* Ép ảnh phủ kín 100% diện tích khung */
-            object-fit: cover; 
-            filter: none !important; /* Bỏ hiệu ứng sáng cũ vì ảnh SLA đã tự sáng rồi */
+            height: 100%;
+            object-fit: contain; /* Đảm bảo ảnh hiện đủ 100% không bị cắt mép */
+            display: block; /* Sửa lỗi viền trắng mờ dưới đáy ảnh */
+            filter: none !important;
         }
 
         /* Khi rê chuột hoặc chạm vào ảnh */
@@ -744,20 +744,20 @@
             width: 75px;
             height: 75px;
             padding: 0 !important;
-            background: #0f0f1a;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 4px;
+            background: transparent !important; /* Tàng hình nền CSS */
+            border: none !important; /* Xóa viền CSS */
+            border-radius: 0 !important; /* Bỏ bo góc */
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.8);
         }
 
         .sl-tt-img-box img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
+            display: block;
         }
 
         .sl-tt-info { display: flex; flex-direction: column; justify-content: center; gap: 4px; }
