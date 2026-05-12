@@ -4122,8 +4122,25 @@ const SHADOW_DATA = {
         if (droppedItemsForUI.length > 0) {
             droppedItemsForUI.forEach(item => {
                 let itemData = ITEM_DATA[item.name];
-                let rank = itemData ? itemData.rank : 'D';
-                let rankColor = rank === 'S' ? '#ff3333' : (rank === 'A' ? '#ff8c00' : '#00bfff');
+                let rank = itemData ? (itemData.rank || 'D') : 'D';
+                
+                // Phân loại màu sắc chi tiết theo từng Hạng (Rank)
+                let rankColor = '#ffffff'; // Mặc định D: Màu trắng
+                
+                if (rank === 'C') {
+                    rankColor = '#00ff00'; // C: Xanh lá cây
+                } else if (rank === 'B') {
+                    rankColor = '#00bfff'; // B: Xanh lơ (Cyan)
+                } else if (rank === 'A') {
+                    rankColor = '#ff8c00'; // A: Cam
+                } else if (rank === 'A+') {
+                    rankColor = '#ff8c00'; // A+: Cam
+                } else if (rank === 'S') {
+                    rankColor = '#ff3333'; // S: Đỏ
+                } else if (rank === 'S+') {
+                    rankColor = '#dc143c'; // S+: Đỏ Huyết Sắc (Crimson)
+                }
+
                 logBattle(`<span style="color:${rankColor}; font-weight:bold;">🎁 VẬT PHẨM: [${item.name}] (Hạng ${rank})</span>`);
             });
         }
