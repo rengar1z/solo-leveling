@@ -1331,7 +1331,7 @@ const SHADOW_DATA = {
                 
                 // Random ra món đồ thật sẽ nhận được
                 const rewardName = GACHA_POOL[Math.floor(Math.random() * GACHA_POOL.length)];
-                const newItem = generateItem(rewardName);
+                
                 const itemData = ITEM_DATA[rewardName];
                 const rank = itemData.rank || 'S';
 
@@ -1415,43 +1415,56 @@ const SHADOW_DATA = {
             currentUser.str -= (itemData.str || 0);
             currentUser.vit -= (itemData.vit || 0);
             currentUser.int -= (itemData.int || 0); 
+            
             currentUser.maxMp -= (itemData.mp || 0); 
-            currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
+            // FIX BUG: Tháo đồ thì phải trừ MP (không để rớt dưới 0)
+            currentUser.mp = Math.max(0, currentUser.mp - (itemData.mp || 0)); 
+            
             if (itemData.vit > 0) {
                 currentUser.maxHp -= itemData.vit * 10; 
-                currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
+                // FIX BUG: Tháo đồ thì phải trừ HP (không để rớt dưới 1)
+                currentUser.hp = Math.max(1, currentUser.hp - (itemData.vit * 10));
             }
             currentUser.equipped.costume = null;
         }
     
+        // TRƯỜNG HỢP 2: BẤM ĐỂ MẶC VÀO (HOẶC ĐỔI TỪ BỘ KHÁC SANG BỘ NÀY)
         else if (currentUser.ownedCostumes.includes(itemId)) {
+            
             if (currentUser.equipped.costume) {
                 const oldData = ITEM_DATA[currentUser.equipped.costume.name];
-                
                 if (oldData) { 
                     currentUser.str -= (oldData.str || 0); 
                     currentUser.vit -= (oldData.vit || 0);
-                    currentUser.int -= (oldData.int || 0); // Đã bổ sung INT
+                    currentUser.int -= (oldData.int || 0);
+                    
                     currentUser.maxMp -= (oldData.mp || 0); 
-                    currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
+                    
+                    currentUser.mp = Math.max(0, currentUser.mp - (oldData.mp || 0)); 
+                    
                     if (oldData.vit > 0) { 
                         currentUser.maxHp -= oldData.vit * 10; 
-                        currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp); 
+                        
+                        currentUser.hp = Math.max(1, currentUser.hp - (oldData.vit * 10)); 
                     }
                 }
             }
+            
             
             currentUser.equipped.costume = { name: itemId };
             currentUser.str += (itemData.str || 0); 
             currentUser.vit += (itemData.vit || 0);
             currentUser.int += (itemData.int || 0); 
+            
             currentUser.maxMp += (itemData.mp || 0); 
-            currentUser.mp += (itemData.mp || 0);
+            currentUser.mp += (itemData.mp || 0); 
+            
             if (itemData.vit > 0) { 
                 currentUser.maxHp += itemData.vit * 10; 
-                currentUser.hp += itemData.vit * 10; 
+                currentUser.hp += itemData.vit * 10; // Vẫn được cộng máu nhé
             }
         }
+        
         else {
             if (currentUser.cash < shopItem.price) return alert(`Không đủ Cash! Cần ${shopItem.price} Cash.`);
             currentUser.cash -= shopItem.price;
