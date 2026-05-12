@@ -3223,8 +3223,7 @@ const SHADOW_DATA = {
         currentUser.mp -= 30; 
         isPlayerCountering = true; // Bật cờ phản đòn
         
-        // GẮN COOLDOWN: Đặt 3 để sau khi kết thúc lượt này, nó tụt xuống 2 lượt chờ!
-        window.counterCooldown = 3; 
+        window.counterCooldown = 2; 
         
         logBattle(`<span style="color:gold; font-weight:bold;">🛡️ Bạn nắm chặt vũ khí, vào thế phòng thủ sẵn sàng phản công!</span>`);
         updateCombatUI(); checkBattleEnd(); // Chuyển lượt cho quái đánh
