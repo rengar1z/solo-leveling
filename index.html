@@ -2609,54 +2609,39 @@ const SHADOW_DATA = {
         </div>`;
     }
 
-    // 5. VẼ GIAO DIỆN VẬT PHẨM LẺ (TRANG BỊ) + SO SÁNH STATS
+    // 5. VẼ GIAO DIỆN VẬT PHẨM LẺ (TRANG BỊ)
     unstackableItems.forEach(item => {
-        const rank = item.data.type.rank || 'D';
+        const rank = item.data.rank || 'D';
         const sellPrice = item.data.sellPrice || 10;
-        const type = item.data.type;
-
-        // Tự động tìm món đồ đang mặc ở ô tương ứng để so sánh
-        let slot = type === 'ring' ? 'ring1' : type; 
-        const eq = currentUser.equipped[slot];
-        
-        let compareHTML = "";
-        if (eq) {
-            // Hàm so sánh chỉ số để đổi màu xanh (tăng) hoặc đỏ (giảm)
-            const getDiff = (newVal, oldVal) => {
-                let diff = (newVal || 0) - (oldVal || 0);
-                if (diff > 0) return `<span style="color: #00ff00;">(+${diff})</span>`;
-                if (diff < 0) return `<span style="color: #ff4d4d;">(${diff})</span>`;
-                return "";
-            };
-
-            compareHTML = `
-                <div style="margin-top: 8px; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); font-size: 13px;">
-                    <div style="color: #aaa; font-weight: bold; font-size: 11px; margin-bottom: 4px; text-transform: uppercase;">So sánh với đồ đang mặc:</div>
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        ${item.obj.str > 0 || eq.str > 0 ? `<div style="color:#888;">STR: ${eq.str || 0} ${getDiff(item.obj.str, eq.str)}</div>` : ''}
-                        ${item.obj.vit > 0 || eq.vit > 0 ? `<div style="color:#888;">VIT: ${eq.vit || 0} ${getDiff(item.obj.vit, eq.vit)}</div>` : ''}
-                        ${item.obj.mp > 0 || eq.mp > 0 ? `<div style="color:#888;">MP: ${eq.mp || 0} ${getDiff(item.obj.mp, eq.mp)}</div>` : ''}
-                    </div>
-                </div>
-            `;
-        }
-
         bagHTML += `
-        <div class="stat-item rank-${rank}" style="padding: 12px; border-left: 4px solid; margin-bottom: 10px;">
-            <div style="display: flex; gap: 15px; align-items: flex-start; flex: 1;">
+        <div class="stat-item rank-${rank}" style="padding: 12px; border-left: 4px solid;">
+            <div style="display: flex; gap: 15px; align-items: center; flex: 1;">
                 <div class="item-icon-wrapper rank-${rank}">
                     <img src="${item.data.img}" class="item-img-premium">
-                </div>
-                <div style="display: flex; flex-direction: column; flex: 1;">
-                    <b class="text-rank-${rank}" style="font-size: 18px;">${item.obj.name}</b>
-                    <div style="font-size: 14px; color: #fff; margin: 4px 0;">
-                        ${[item.obj.vit > 0 ? `+${item.obj.vit} VIT` : '', item.obj.str > 0 ? `+${item.obj.str} STR` : '', item.obj.mp > 0 ? `+${item.obj.mp} MP` : ''].filter(Boolean).join(' | ')}
+                    <div class="item-tooltip">
+                        <div class="sl-tt-top">
+                            <div class="sl-tt-img-box"><img src="${item.data.img}"></div>
+                            <div class="sl-tt-info">
+                                <div class="sl-tt-title text-rank-${rank}">[ITEM: ${item.obj.name}]</div>
+                                <div class="sl-tt-line">ITEM CLASS: <span class="text-rank-${rank}" style="font-weight:bold;">${rank}</span></div>
+                                <div class="sl-tt-line">TYPE: ${item.data.type.toUpperCase()}</div>
+                            </div>
+                        </div>
+                        <div class="sl-tt-bottom">
+                            ${item.data.effect ? item.data.effect + '<br>' : ''}
+                            ${[item.obj.vit > 0 ? `+${item.obj.vit} VIT` : '', item.obj.str > 0 ? `+${item.obj.str} STR` : '', item.obj.mp > 0 ? `+${item.obj.mp} MP` : ''].filter(Boolean).join(', ')}
+                            <div class="sl-tt-price">Giá bán: ${sellPrice} Cash</div>
+                        </div>
                     </div>
-                    ${compareHTML} </div>
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                    <b class="text-rank-${rank}" style="font-size: 20px;">${item.obj.name}</b>
+                    <small style="color:#aaa; font-size:16px;">Hạng: ${rank}</small>
+                </div>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 8px; justify-content: center; margin-left: 10px;">
+            <div style="display: flex; flex-direction: column; gap: 8px; justify-content: center;">
                 <button class="sl-shop-price-btn bag-action-btn btn-equip" onclick="equipItem(${item.originalIndex})">MẶC</button>
-                <button class="sl-shop-price-btn bag-action-btn btn-sell" style="font-size: 11px;" onclick="sellItem(${item.originalIndex}, ${sellPrice})">BÁN (${sellPrice})</button>
+                <button class="sl-shop-price-btn bag-action-btn btn-sell" onclick="sellItem(${item.originalIndex}, ${sellPrice})">BÁN (${sellPrice})</button>
             </div>
         </div>`;
     });
