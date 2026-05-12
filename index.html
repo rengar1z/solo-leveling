@@ -1527,10 +1527,7 @@ const SHADOW_DATA = {
             currentUser.equipped.ring = currentUser.equipped.ring1; 
             delete currentUser.equipped.ring1; 
         }
-        if (currentUser.equipped.ring2) { 
-            currentUser.inventory.push(currentUser.equipped.ring2); 
-            delete currentUser.equipped.ring2; 
-        }
+        
         if (currentUser.equipped.shield) { 
             currentUser.equipped.armor = currentUser.equipped.shield; 
             delete currentUser.equipped.shield; 
