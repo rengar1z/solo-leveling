@@ -526,11 +526,10 @@
             border-radius: 0 !important;
         }
         
-        /* 1. Chặn hiệu ứng phát sáng hình tròn và giữ nguyên nền đen của nút */
         .icon-mode:hover, .icon-mode:active {
-            background: rgba(0, 0, 0, 0.8) !important;
+            background: transparent !important; 
             box-shadow: none !important;
-            border-color: #00bfff !important;
+            border-color: transparent !important;
         }
 
         /* 2. Chỉ làm phát sáng bản thân tấm ảnh icon bên trong */
