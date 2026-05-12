@@ -729,22 +729,6 @@
         </div>
     </div>
 </div>
-    
-<div id="lootModal">
-        <div class="loot-box">
-            <h1 style="color: #ffcc00; text-shadow: 0 0 15px #ffcc00; margin-top: 0; font-size: 32px;">LOOT</h1>
-            <hr style="border-color: #444; margin-bottom: 15px;">
-            
-            <div id="lootBasicInfo" style="font-size: 20px; margin-bottom: 20px; font-weight: bold;">
-                </div>
-            
-            <h3 style="color: #fff; text-align: left; margin: 0 0 10px 10px;">Vật phẩm thu được:</h3>
-            <div id="lootItemsArea">
-                </div>
-            
-            <button onclick="collectLoot()" class="loot-btn">NHẬN TẤT CẢ</button>
-        </div>
-</div>
 
 <div id="redGatePopup" class="welcome-overlay hidden" style="z-index: 10000; background: rgba(50, 0, 0, 0.85); backdrop-filter: blur(5px);">
     <div class="welcome-box" style="border-color: #ff0000; box-shadow: 0 0 50px rgba(255, 0, 0, 0.8); background: linear-gradient(to bottom, #330000, #000000); max-width: 500px;">
@@ -4067,90 +4051,7 @@ const SHADOW_DATA = {
         checkBattleEnd(); 
     };
 
-    // === HÀM HIỂN THỊ GIAO DIỆN LOOT ĐỒ (CÓ TOOLTIP XỊN) ===
-    window.showLootUI = function(exp, gold, itemsArray) {
-        const modal = document.getElementById('lootModal');
-        const info = document.getElementById('lootBasicInfo');
-        const area = document.getElementById('lootItemsArea');
-        
-        // Mở khóa thanh cuộn để Tooltip bay lên không bị cắt viền
-        area.style.overflow = 'visible'; 
-
-        info.innerHTML = `<span style="color:#00ff00;">+${exp} EXP</span> &nbsp;&nbsp;|&nbsp;&nbsp; <span style="color:gold;">+${gold} Vàng</span>`;
-        
-        let html = '';
-        if (itemsArray.length === 0) {
-            html = `<div style="color:#666; font-style:italic; margin-top: 30px;">Không có vật phẩm nào rớt ra...</div>`;
-        } else {
-            itemsArray.forEach(itemObj => {
-                let itemData = ITEM_DATA[itemObj.name];
-                if (!itemData) return;
-
-                let rank = itemData.rank || 'D';
-                let rankClass = `loot-rank-${rank}`;
-
-                // === DỰNG KHUNG TOOLTIP Y HỆT TRONG TÚI ĐỒ ===
-                let tooltipHTML = `
-                    <div class="item-tooltip" style="left: 50%; top: auto; bottom: 110%; transform: translateX(-50%); width: 320px !important;">
-                        <div class="sl-tt-top">
-                            <div class="sl-tt-img-box"><img src="${itemData.img}"></div>
-                            <div class="sl-tt-info">
-                                <div class="sl-tt-title text-rank-${rank}">[ITEM: ${itemObj.name}]</div>
-                                <div class="sl-tt-line">ITEM CLASS: <span class="text-rank-${rank}" style="font-weight:bold;">${rank}</span></div>
-                                <div class="sl-tt-line">TYPE: ${itemData.type.toUpperCase()}</div>
-                            </div>
-                        </div>
-                        <div class="sl-tt-bottom">
-                            ${itemData.effect ? itemData.effect + '<br>' : ''}
-                            ${!['consumable', 'material'].includes(itemData.type) ? 
-                                [
-                                    itemObj.vit > 0 ? '+' + itemObj.vit + ' VITALITY' : '',
-                                    itemObj.str > 0 ? '+' + itemObj.str + ' STRENGTH' : '',
-                                    itemObj.mp > 0 ? '+' + itemObj.mp + ' MANA' : ''
-                                ].filter(Boolean).join(', ')
-                            : ''}
-                            <div class="sl-tt-price">Giá bán: ${itemData.sellPrice || 10} Cash</div>
-                        </div>
-                    </div>
-                `;
-                
-                // === GHÉP VÀO THẺ CARD VÀ BẬT CLASS HOVER ===
-                // Thêm class 'item-icon-wrapper' để tự động bắt CSS hover mà bạn đã làm sẵn
-                html += `
-                    <div class="loot-item-card ${rankClass} item-icon-wrapper" style="overflow: visible;">
-                        <img src="${itemData.img}" onerror="this.src='https://via.placeholder.com/50?text=Item'">
-                        <div class="loot-name">${itemObj.name}</div>
-                        ${tooltipHTML}
-                    </div>
-                `;
-            });
-        }
-        
-        area.innerHTML = html;
-        modal.style.display = 'flex'; // Bật Pop-up
-    };
-
-    window.pendingPopups = { extraction: null, levelUp: null }; 
-
-    window.collectLoot = function() {
-        document.getElementById('lootModal').style.display = 'none'; 
-        
-        
-        if (window.pendingPopups && window.pendingPopups.extraction) {
-            document.getElementById('extractTargetName').innerText = window.pendingPopups.extraction.targetName;
-            window.currentExtractTarget = window.pendingPopups.extraction.bossType;
-            document.getElementById('extractionPopup').classList.remove('hidden');
-            window.pendingPopups.extraction = null; // Xóa khỏi hàng đợi
-        } 
-       
-        else if (window.pendingPopups && window.pendingPopups.levelUp) {
-            showPopup(window.pendingPopups.levelUp.oldJob, window.pendingPopups.levelUp.newJob);
-            window.pendingPopups.levelUp = null; // Xóa khỏi hàng đợi
-        }
-    };
-
     function winBattle() {
-        // === BƯỚC 4.1: TẠO MẢNG HỨNG ĐỒ RỚT RA ĐỂ ĐƯA LÊN GIAO DIỆN ===
         let droppedItemsForUI = [];
 
         let rewardCash = currentRedGateId ? Math.floor(enemy.exp * 2.5) : Math.floor(enemy.exp * 1.5);
@@ -4166,7 +4067,7 @@ const SHADOW_DATA = {
         if (currentUser.skills["Phát Triển Cấp Tốc"] > 0) {
             enemyExp += Math.floor(enemyExp * 0.10 * currentUser.skills["Phát Triển Cấp Tốc"]);
         }
-        //logBattle(`<span style="color:#00ff00">Chiến thắng! Nhận ${enemy.exp} EXP và ${rewardCash} CASH.</span>`);
+        
         if (!currentUser.kills) currentUser.kills = {};
         currentUser.kills[enemy.name] = (currentUser.kills[enemy.name] || 0) + 1;
         checkAchievements();
@@ -4185,25 +4086,18 @@ const SHADOW_DATA = {
                     const rareItems = RED_GATES[currentRedGateId].rareDrops;
                     const droppedItemName = rareItems[Math.floor(Math.random() * rareItems.length)];
                     
-                    // SỬ DỤNG giveItem ĐỂ TỐI ƯU
                     const newItem = window.giveItem(droppedItemName); 
-                    if (newItem) {
-                        droppedItemsForUI.push(newItem);     
-                    }
+                    if (newItem) droppedItemsForUI.push(newItem);     
                 }
             } else if (isDungeonMode) {
                 // 2. Boss Hầm Ngục Thường: Rớt trang bị cơ bản hoặc Item Boss
                 let dropChance = 0.10 + luckBonus; // Mặc định 10%
                 if (Math.random() <= dropChance) { 
                     const items = enemy.rareDrops || ["Dagger", "Shield", "Essence of Magic"];
-                    
-                    // ĐÃ FIX LỖI CRASH GAME Ở ĐÂY (Sửa possibleDrops thành items)
                     const droppedItemName = items[Math.floor(Math.random() * items.length)]; 
         
                     const newItem = window.giveItem(droppedItemName); 
-                    if (newItem) {
-                        droppedItemsForUI.push(newItem); 
-                    }
+                    if (newItem) droppedItemsForUI.push(newItem); 
                 }
             }
         } 
@@ -4215,29 +4109,26 @@ const SHADOW_DATA = {
                     const possibleDrops = enemy.drops || ["Ma Thạch Cấp Thấp"];
                     const droppedItemName = possibleDrops[Math.floor(Math.random() * possibleDrops.length)];
                     
-                    // SỬ DỤNG giveItem CHO QUÁI THƯỜNG ĐỂ VẬT LIỆU CỘNG DỒN VÀO NHAU
                     const newItem = window.giveItem(droppedItemName); 
-                    if (newItem) {
-                        droppedItemsForUI.push(newItem);     
-                    }
+                    if (newItem) droppedItemsForUI.push(newItem);     
                 }
             }
         }
-        
-        // === ĐƯA POPUP VÀO HÀNG ĐỢI ĐỂ TRÁNH XUNG ĐỘT GÂY MẤT NÚT ===
-        window.pendingPopups = { extraction: null, levelUp: null }; 
-        
-        window.showLootUI(enemyExp, rewardCash, droppedItemsForUI);
 
-        if (!currentUser.ownedShadows) currentUser.ownedShadows = [];
-        if (enemy.isBoss && enemy.bossType && SHADOW_DATA[enemy.bossType]) {
-            if (!currentUser.ownedShadows.includes(enemy.bossType)) {
-                // Đưa Trích xuất vào Hàng đợi thay vì hiện ngay lập tức
-                window.pendingPopups.extraction = { targetName: enemy.name, bossType: enemy.bossType };
-            }
+        // ================= HIỂN THỊ THÔNG BÁO VÀO LOG (THAY THẾ LOOT UI CŨ) =================
+        logBattle(`<span style="color:#00ff00; font-weight:bold; font-size:18px;">✨ CHIẾN THẮNG!</span>`);
+        logBattle(`<span style="color:#fff;">Nhận được: <span style="color:#00ff00;">+${enemyExp} EXP</span> | <span style="color:gold;">+${rewardCash} Cash</span></span>`);
+        
+        if (droppedItemsForUI.length > 0) {
+            droppedItemsForUI.forEach(item => {
+                let itemData = ITEM_DATA[item.name];
+                let rank = itemData ? itemData.rank : 'D';
+                let rankColor = rank === 'S' ? '#ff3333' : (rank === 'A' ? '#ff8c00' : '#00bfff');
+                logBattle(`<span style="color:${rankColor}; font-weight:bold;">🎁 VẬT PHẨM: [${item.name}] (Hạng ${rank})</span>`);
+            });
         }
 
-        // Thay thế checkLevelUp() bằng logic đưa bảng Lên cấp vào Hàng đợi
+        // ================= XỬ LÝ LÊN CẤP VÀ TRÍCH XUẤT (LOẠI BỎ PENDING POPUPS CŨ) =================
         let leveledUp = false; 
         let oldJob = getJob(currentUser.level); 
         while (currentUser.exp >= currentUser.need) {
@@ -4252,14 +4143,29 @@ const SHADOW_DATA = {
             currentUser.mp = currentUser.maxMp;
             leveledUp = true; 
         }
-        if (leveledUp) {
-            window.pendingPopups.levelUp = { oldJob: oldJob, newJob: getJob(currentUser.level) };
+
+        let hasExtraction = false;
+        if (!currentUser.ownedShadows) currentUser.ownedShadows = [];
+        if (enemy.isBoss && enemy.bossType && SHADOW_DATA[enemy.bossType]) {
+            if (!currentUser.ownedShadows.includes(enemy.bossType)) {
+                hasExtraction = true;
+                window.currentExtractTarget = enemy.bossType;
+                document.getElementById('extractTargetName').innerText = enemy.name;
+                document.getElementById('extractionPopup').classList.remove('hidden');
+            }
+        }
+
+        // Logic Hàng đợi thông minh: Trích xuất hiện trước, Level Up chờ phía sau
+        if (hasExtraction && leveledUp) {
+            window.pendingLevelUp = { oldJob: oldJob, newJob: getJob(currentUser.level) };
+        } else if (leveledUp) {
+            showPopup(oldJob, getJob(currentUser.level));
         }
 
         saveUserData(); 
         window.combatTimer = setTimeout(resetToButtonMode, 1500);
 
-        // XỬ LÝ ĐI TIẾP NẾU ĐANG Ở CỔNG ĐỎ
+        // ================= XỬ LÝ TIẾN TRÌNH HẦM NGỤC / CỔNG ĐỎ =================
         if (currentRedGateId) {
             const gateData = RED_GATES[currentRedGateId];
             if (rgCurrentStage < gateData.stages.length - 1) {
@@ -4278,9 +4184,8 @@ const SHADOW_DATA = {
                 document.getElementById('dDungeonTitle').style.color = "#ffcc00"; 
                 document.getElementById('dDungeonTitle').style.textShadow = "none";
             }
-            return; // Dừng tiến trình Làng Goblin
+            return; // Dừng tiến trình Hầm ngục bên dưới
         }
-
         
         // --- CƠ CHẾ XUẤT HIỆN CỔNG ĐỎ ĐỘC QUYỀN THEO TỪNG HẦM NGỤC ---
         if (isDungeonMode && !currentRedGateId) {
@@ -4288,7 +4193,8 @@ const SHADOW_DATA = {
 
             // Hầm Ngục Côn Trùng -> 10% mở Cổng Đỏ (Ngẫu nhiên ra Vua Băng hoặc Igris)
             if (dCurrentId === 'insect_dungeon') {
-                if (Math.random() <= 0.9) { // Fixed lại tỷ lệ 10% cho bạn
+                
+                if (Math.random() <= 0.9) { 
                     if (Math.random() <= 0.5) { spawnedRedGate = "ice_world"; } 
                     else { spawnedRedGate = "red_knight_tomb"; }
                 }
@@ -4356,9 +4262,9 @@ const SHADOW_DATA = {
         window.currentExtractTarget = null;
         
         // Bỏ qua trích xuất thì cũng gọi bảng Lên cấp (nếu có)
-        if (window.pendingPopups && window.pendingPopups.levelUp) {
-            showPopup(window.pendingPopups.levelUp.oldJob, window.pendingPopups.levelUp.newJob);
-            window.pendingPopups.levelUp = null;
+        if (window.pendingLevelUp) {
+            showPopup(window.pendingLevelUp.oldJob, window.pendingLevelUp.newJob);
+            window.pendingLevelUp = null; 
         }
     };
 
