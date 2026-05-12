@@ -1117,7 +1117,7 @@ const SHADOW_DATA = {
         "Khuyên tai của ma vương": { rank: "S", type: "earring", name: "Khuyên tai của ma vương", str: 20, vit: 20, mp: 100, effect: "Hồi 5% MP mỗi lượt", img: "wp/Baran_Earring.png", sellPrice: 4000 },
         "Dây chuyền của ma vương": { rank: "S", type: "necklace", name: "Dây chuyền của ma vương", str: 30, vit: 30, mp: 50, effect: "Tăng mạnh toàn bộ chỉ số", img: "wp/Baran_Necklace.png", sellPrice: 4500 },
         "Nhẫn của quỷ vương": { rank: "S", type: "ring", name: "Nhẫn của quỷ vương", str: 25, vit: 25, mp: 50, effect: "Tăng 10% Tỷ lệ bạo kích", img: "wp/Baran_Ring.png", sellPrice: 4200 },
-        "Quả Cầu Tham Lam": { rank: "A", type: "earring", name: "Quả Cầu Tham Lam", str: 0, vit: 30, mp: 300, effect: "'Khao Khát Hủy Diệt': Nhân đôi (x2) ST Phép thuật", img: "wp/Orb_of_Avarice.png", sellPrice: 10000 },
+        "Quả Cầu Tham Lam": { rank: "A", type: "earring", name: "Quả Cầu Tham Lam", str: 0, vit: 30, mp: 300, effect: "'Khao Khát Hủy Diệt': x2 ST Phép. Tác dụng phụ: Tiêu hao MP +20%", img: "wp/Orb_of_Avarice.png", sellPrice: 10000 },
 
         // Đồ hiếm của Baran:
         "Dao găm của ma vương": { rank: "S", type: "weapon", name: "Dao găm của ma vương", str: 85, vit: 0, mp: 40, effect: "Bỏ qua 20% giáp của kẻ địch", img: "wp/Demon_King_Daggers.png", sellPrice: 4500 },
@@ -1860,7 +1860,8 @@ const SHADOW_DATA = {
                 const lv = currentUser.skills[s];
                 const isMax = lv >= data.maxLv;
                 let canUpgrade = currentUser.skillPoints >= data.cost && !isMax && !isBranchLocked;
-                
+
+                let actualMp = data.mp ? getActualMpCost(data.mp) : 0;
                 let dynamicText = "";
                 if (lv > 0 && data.maxLv > 1) {
                     if (s === "Phát Triển Cấp Tốc") dynamicText = `<br><span style="color:#00ff00; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 10}% EXP</span>`;
@@ -1874,7 +1875,7 @@ const SHADOW_DATA = {
                         <div class="skill-list-tooltip" style="border: 1px solid ${displayColor}; box-shadow: 0 0 15px ${displayColor};">
                             <h4 style="color: ${displayColor}; margin: 0 0 5px 0; font-size: 20px; text-transform: uppercase;">${s}</h4>
                             <span style="color: #ccc; font-size: 15px;">${data.desc}</span>
-                            ${data.mp ? `<br><hr style="border-color: #444; margin: 8px 0;"><span style="color: #00bfff; font-size: 14px; font-weight:bold;">Tiêu hao: ${data.mp} MP</span>` : ''}
+                            ${data.mp ? `<br><hr style="border-color: #444; margin: 8px 0;"><span style="color: #00bfff; font-size: 14px; font-weight:bold;">Tiêu hao: ${actualMp} MP</span>` : ''}
                         </div>
                         <div style="display: flex; align-items: center;">
                             <img src="${data.icon}" style="width: 60px; height: 75x; object-fit: contain; margin-right: 15px; filter: ${isBranchLocked ? 'grayscale(1)' : 'none'};">
@@ -2251,10 +2252,12 @@ const SHADOW_DATA = {
     dynamicBtns.forEach(btn => {
         btn.disabled = !isMyTurn;
         let cost = parseInt(btn.getAttribute('data-mp') || 0); 
+        cost = getActualMpCost(cost); 
         
         const isMonarchWrath = btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('useMonarchWrath');
         if (isMonarchWrath) {
-            cost = 100 + (monarchWrathUses * 50); 
+            let baseWrath = 100 + (monarchWrathUses * 50); 
+            cost = getActualMpCost(baseWrath); 
         }
 
         const isCounterSkill = btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('useCounterAttack');
@@ -2262,8 +2265,7 @@ const SHADOW_DATA = {
         
         if (cost > 0 && currentUser.mp < cost) isLocked = true; 
         if (isCounterSkill && window.counterCooldown && window.counterCooldown > 0) isLocked = true; 
-
-        // Chỉ ghi đè CSS nếu trạng thái thực sự thay đổi, tránh kích hoạt GPU vẽ lại không cần thiết
+        
         if (isLocked) {
             if (btn.style.cursor !== "not-allowed") {
                 btn.style.filter = "grayscale(1) brightness(0.5)"; 
@@ -2330,12 +2332,14 @@ const SHADOW_DATA = {
                 cdBadgeSkill = `<div class="potion-cd-badge" style="background:#cc6600; border-color:#fff;">${window.counterCooldown}</div>`;
             }
 
+            let actualMp = getActualMpCost(data.mp); // <--- Lấy MP sau khi bị tác dụng phụ
+
             iconHTML += `
                 <button class="icon-mode combat-skill-btn" data-mp="${data.mp}" onclick="${data.func}()" style="border-color: ${color}; position: relative;">
                     <img src="${data.icon}">
                     ${cdBadgeSkill} <div class="skill-tooltip" style="border-color: ${color}; box-shadow: 0 0 15px ${color};">
                         <h4 style="color: ${color}; margin: 0 0 5px 0; font-size: 18px;">${s.toUpperCase()}</h4>
-                        <span style="color: #00ff00; font-size: 14px;">Tiêu hao: ${data.mp} MP</span><br>
+                        <span style="color: #00ff00; font-size: 14px;">Tiêu hao: ${actualMp} MP</span><br>
                         <hr style="border-color: #444; margin: 5px 0;">
                         <span style="color: #ccc; font-size: 14px;">${data.desc}</span>
                     </div>
@@ -3103,9 +3107,23 @@ const SHADOW_DATA = {
         updateCombatUI(); checkBattleEnd(); 
     };
 
+    // --- HÀM TÍNH TOÁN TIÊU HAO MP THỰC TẾ (KÍCH HOẠT TÁC DỤNG PHỤ) ---
+    window.getActualMpCost = function(baseCost) {
+        if (!baseCost) return 0;
+        let cost = baseCost;
+        if (currentUser && currentUser.equipped && currentUser.equipped.earring && currentUser.equipped.earring.name === "Quả Cầu Tham Lam") {
+            cost = Math.floor(cost * 1.20); 
+        }
+        return cost;
+    };
+    
     window.useDaggerRush = function() {
-        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < 35) { if(currentUser.mp < 35) logBattle("<span style='color:orange'>Thiếu 35 MP!</span>"); return; }
-        currentUser.mp -= 35; 
+        let reqMp = getActualMpCost(35);
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { 
+            if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); 
+            return; 
+        }
+        currentUser.mp -= reqMp;
         let hit = calcPlayerDamage({ multi: 2.8, stat: 'str' }); 
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 BẠO KÍCH KÉP!</span> ` : "";
@@ -3288,27 +3306,23 @@ const SHADOW_DATA = {
     
     // --- KỸ NĂNG TỐI THƯỢNG (THỊNH NỘ QUÂN VƯƠNG) - TĂNG 50 MP MỖI LẦN ---
     window.useMonarchWrath = function() {
-        // Tính toán MP cần thiết: Lần đầu 100, các lần sau cộng thêm 50 (100 -> 150 -> 200...)
-        let baseMpCost = 100;
-        let actualMpCost = baseMpCost + (monarchWrathUses * 50); 
-        let hpCost = Math.floor(currentUser.maxHp * 0.10); // Phải cống hiến 10% Max HP
+        let baseMpCost = 100 + (monarchWrathUses * 50); 
+        let actualMpCost = getActualMpCost(baseMpCost); // Tính tác dụng phụ +20%
+        let hpCost = Math.floor(currentUser.maxHp * 0.10); 
 
         if (!enemy || !isMyTurn || enemy.hp <= 0) return;
         
-        // Kiểm tra xem có đủ MP không
         if (currentUser.mp < actualMpCost) { 
             return logBattle(`<span style='color:orange'>Quá tải năng lượng! Lần kích hoạt này đòi hỏi tới ${actualMpCost} MP!</span>`); 
         }
 
-        // Kiểm tra xem có đủ HP để hiến tế không
         if (currentUser.hp <= hpCost) { 
             return logBattle("<span style='color:red'>Không đủ máu để hiến tế! Nguy cơ tử vong!</span>"); 
         }
 
-        // Trừ HP và MP
         currentUser.mp -= actualMpCost;
         currentUser.hp -= hpCost; 
-        monarchWrathUses++; // Tăng số đếm xài chiêu lên 1
+        monarchWrathUses++;
 
         // Gây sát thương x6 STR và bỏ qua 80% Giáp
         let hit = calcPlayerDamage({ multi: 6.0, stat: 'str', ignoreDef: 0.8 }); 
