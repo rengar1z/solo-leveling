@@ -682,24 +682,29 @@
 
         /* --- HIỆU ỨNG ITEM KHO ĐỒ --- */
         .item-icon-wrapper {
+            width: 55px; /* Mở rộng chiều ngang một chút */
+            min-height: 55px; /* Đảm bảo tối thiểu là hình vuông */
+            height: auto; /* BÍ QUYẾT: Cho phép khung tự động kéo dài theo chiều dọc */
+            padding: 4px; /* Tạo độ bám khít vừa vặn với viền */
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #555;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             position: relative;
-            display: inline-block;
-            cursor: pointer;
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
           
         .item-img-premium {
-            width: 60px;
-            height: 60px;
-            object-fit: contain; 
-            padding: 6px; 
-            box-sizing: border-box; 
-            border: 2px solid #00bfff;
-            border-radius: 8px;
-            background: radial-gradient(circle, #003366, #000);
-            box-shadow: 0 0 10px rgba(0, 191, 255, 0.4);
-            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
-            vertical-align: middle;
-}
+            width: 100%; /* Tràn đều chiều ngang */
+            height: auto; /* Giữ đúng tỷ lệ ảnh */
+            max-height: 90px; /* Giới hạn độ dài để không bị lố so với các item khác */
+            object-fit: contain;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
+        }
+
         /* Khi rê chuột hoặc chạm vào ảnh */
         .item-icon-wrapper:hover .item-img-premium,
         .item-icon-wrapper:active .item-img-premium {
@@ -738,15 +743,24 @@
         }
 
         .sl-tt-img-box {
-            width: 75px; height: 75px;
-            background: #040e08; 
-            border-radius: 4px;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
-            flex-shrink: 0;
+            width: 65px;
+            min-height: 65px;
+            height: auto; /* Tự động giãn khung */
+            padding: 4px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #555;
+            border-radius: 5px;
+            display: flex;
+            align-items: flex-start; /* Cho ảnh bám lên mép trên cho đẹp */
+            justify-content: center;
         }
 
-        .sl-tt-img-box img { width: 85%; height: 85%; object-fit: contain; }
+        .sl-tt-img-box img {
+            width: 100%; 
+            height: auto;
+            max-height: 120px; /* Trong bảng chi tiết thì cho phép ảnh dài thoải mái hơn */
+            object-fit: contain;
+        }
 
         .sl-tt-info { display: flex; flex-direction: column; justify-content: center; gap: 4px; }
 
