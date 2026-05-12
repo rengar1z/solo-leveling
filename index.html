@@ -1084,6 +1084,9 @@
         // --- VẬT LIỆU QUAY GACHA ---
         "Sandstorm Cube": { rank: "S", type: "material", name: "Sandstorm Cube", effect: "Khối lập phương chứa sức mạnh bão cát. Dùng để quay Lucky Wheel Royale.", img: "wp/Sandstorm_Cube.png", sellPrice: 50000 },
 
+        // --- TRANG BỊ HUYỀN THOẠI TỪ VÒNG QUAY ---
+        "Truth: Kasaka's Venom Fang": { rank: "S", type: "weapon", name: "Truth: Kasaka's Venom Fang", str: 170, vit: 0, agi: 60, mp: 0, effect: "Tăng 20% ST Vật lý. 50% cơ hội gây Kịch Độc (rút 5% Max HP địch) trong 3 lượt.", img: "wp/Kasaka_Venom_Fang.png", sellPrice: 25000 },
+
         // --- TRANG BỊ HUYỀN THOẠI TỪ VÒNG QUAY (BẠN CÓ THỂ TỰ TẠO THÊM) ---
         "Kiếm Sét Rực Rỡ": { rank: "S", type: "weapon", name: "Kiếm Sét Rực Rỡ", str: 180, vit: 0, mp: 0, effect: "Vũ khí huyền thoại từ Vòng Quay.", img: "wp/Demon_King_Longsword.png", sellPrice: 20000 },
         "Nhẫn Hư Không": { rank: "S", type: "ring", name: "Nhẫn Hư Không", str: 40, vit: 40, mp: 200, effect: "Tăng 15% Tỷ lệ bạo kích", img: "wp/essenceofmagic.png", sellPrice: 20000 },
@@ -1277,7 +1280,8 @@
         "Đại kiếm ma vương", 
         "Khuyên tai của ma vương",
         "Dây chuyền của ma vương",
-        "Vòng cổ người gác cổng"
+        "Vòng cổ người gác cổng",
+        "Truth: Kasaka's Venom Fang"
     ];
 
     window.spinGacha = async function(btnElement) {
@@ -3039,13 +3043,24 @@
             if (wpName === "Crimson Shadow") finalDmg *= 1.15;
             if (wpName === "Đại kiếm ma vương") finalDmg *= 1.25; // Tăng 25% sát thương
             
-            // Độc nhẹ từ Nanh Kasaka
+            //  Kasaka Fang
             if (wpName === "Dao găm nanh Kasaka") {
                 finalDmg *= 1.05; 
             
                 if (Math.random() <= 0.30 && typeof enemyPoisonTurns !== 'undefined') {
                     if (enemyPoisonTurns === 0) window.enemyNewlyPoisoned = true;
                     enemyPoisonTurns = Math.max(enemyPoisonTurns, 2); 
+                }
+            }
+
+            // === TRUTH: KASAKA'S VENOM FANG ===
+            if (wpName === "Truth: Kasaka's Venom Fang") {
+                finalDmg *= 1.20; 
+            
+        
+                if (Math.random() <= 0.50 && typeof enemyPoisonTurns !== 'undefined') {
+                    if (enemyPoisonTurns === 0) window.enemyNewlyPoisoned = true;
+                    enemyPoisonTurns = Math.max(enemyPoisonTurns, 3); 
                 }
             }
         }
