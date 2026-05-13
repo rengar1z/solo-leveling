@@ -1888,7 +1888,7 @@
         if(branch === 'Pháp Sư') branchColor = '#9933ff';
         if(branch === 'Đấu Sĩ') branchColor = '#ff4d4d';
         if(branch === 'Đặc biệt') branchColor = '#ffcc00';
-        let isBranchLocked = (currentClass !== null && branch !== currentClass && branch !== "Chung" && branch !== "Đặc biệt");
+        let isBranchLocked = (currentClass !== null && currentClass !== branch && branch !== "Chung" && branch !== "Đặc biệt");
         let displayColor = isBranchLocked ? '#555' : branchColor; 
         let isOpen = window.branchToggleState[branch];
         
@@ -1906,7 +1906,7 @@
                 const data = skillData[s];
                 const lv = currentUser.skills[s];
                 const isMax = lv >= data.maxLv;
-                let canUpgrade = currentUser.skillPoints >= data.cost && !isMax && !isBranchLocked;
+                let canUpgrade = currentUser.skillPoints >= data.cost && !isMax && !isBranchLocked && data.branch !== "Đặc biệt";
 
                 let actualMp = data.mp ? getActualMpCost(data.mp) : 0;
                 let dynamicText = "";
@@ -1955,7 +1955,7 @@
                 break;
             }
         }
-        if (currentClass !== null && currentClass !== data.branch && data.branch !== "Chung") {
+        if (currentClass !== null && currentClass !== data.branch && data.branch !== "Chung" && data.branch !== "Đặc biệt") {
             return alert(`Bạn đang theo nhánh [${currentClass}]! Hãy dùng Tẩy Điểm nếu muốn chơi nhánh [${data.branch}].`);
         }
 
@@ -4039,10 +4039,8 @@
 
         // --- ÁP DỤNG BUFF TÀN SÁT (100% NÉ TRÁNH) ---
         if (window.stealthDodge) {
-            dodgeChance = 1.0; // Ép tỷ lệ né lên 100%
-            window.stealthDodge = false; // Địch vung đòn xong thì mất tàng hình
+            dodgeChance = 1.0; 
         }
-
         // Lọc bỏ đoạn "gây X sát thương..."
         let skillNameOnly = isSpecialAttack ? specialAttackLog.split(/, gây|, giáng|, nhận/)[0] + "..." : "";
 
@@ -4050,6 +4048,7 @@
         if (dodgeChance > 0 && Math.random() <= dodgeChance && dmg > 0 && !isPlayerCountering) {
             isDodged = true;
             dmg = 0; 
+            window.stealthDodge = false;
             isPlayerStunned = false; 
             applyBleedToPlayer = false; 
             effectArmorBreak = 0; // Hủy debuff
