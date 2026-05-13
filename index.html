@@ -249,7 +249,7 @@
     <!-- THÊM ĐOẠN KHAY NÚT LỌC NÀY VÀO ĐÂY -->
     <div class="sl-shop-filter-row" style="justify-content: center; margin-bottom: 15px; flex-wrap: wrap;">
         <div class="sl-shop-filter-btn active" title="Tất cả" onclick="filterShop('all', this)">🛒</div>
-        <div class="sl-shop-filter-btn" title="Vũ Khí" onclick="filterShop('weapon', this)">⚔️</div>
+        <div class="sl-shop-filter-btn" title="Kỹ năng" onclick="filterShop('skill', this)">📜</div>
         <div class="sl-shop-filter-btn" title="Tiêu Hao" onclick="filterShop('potion', this)">🧪</div>
         <div class="sl-shop-filter-btn" title="Trang Phục" onclick="filterShop('costume', this)">👔</div>
     </div>
@@ -465,6 +465,45 @@
             </div>
             <div class="sl-shop-action">
                 <button id="btn-costume_Frieren" class="sl-shop-price-btn">100000 CASH</button>
+            </div>
+        </div>
+
+        <div class="sl-shop-item shop-item-row" data-category="skill" onclick="buyShopItem('skill_execute')">
+            <div class="sl-shop-icon-box" style="border-color: gold;">
+                <img src="skill/amsat.jpg">
+            </div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name">Bí Kỹ: Đoạt Mệnh Lưỡi Dao</p>
+                <p class="sl-shop-item-desc">[Sát Thủ] Kích nổ độc tính, xuyên Khiên Boss.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button class="sl-shop-price-btn">80.000 CASH</button>
+            </div>
+        </div>
+        
+        <div class="sl-shop-item shop-item-row" data-category="skill" onclick="buyShopItem('skill_hellfire')">
+            <div class="sl-shop-icon-box" style="border-color: gold;">
+                <img src="skill/flame_ball.png">
+            </div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name">Bí Kỹ: Hỏa Ngục Bộc Phá</p>
+                <p class="sl-shop-item-desc">[Pháp Sư] Sát thương diện rộng & gây Choáng.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button class="sl-shop-price-btn">120.000 CASH</button>
+            </div>
+        </div>
+        
+        <div class="sl-shop-item shop-item-row" data-category="skill" onclick="buyShopItem('skill_shatter')">
+            <div class="sl-shop-icon-box" style="border-color: gold;">
+                <img src="skill/cothethep.png">
+            </div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name">Bí Kỹ: Toái Giáp Trảm</p>
+                <p class="sl-shop-item-desc">[Đấu Sĩ] Phá Khiên và hồi 15% Max HP.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button class="sl-shop-price-btn">150.000 CASH</button>
             </div>
         </div>
 
@@ -1280,12 +1319,12 @@
             icon: "skill/amsat.jpg" 
         },
         "Hỏa Ngục Bộc Phá": { 
-            branch: "Pháp Sư", type: "active", maxLv: 1, cost: 0, mp: 60, func: "useHellfireBlast", 
+            branch: "Đặc biệt", type: "active", maxLv: 1, cost: 0, mp: 60, func: "useHellfireBlast", 
             desc: "[Bí Kỹ] Gây ST Phép. Nếu địch bị [Thiêu Đốt], sát thương x1.5 và gây [Choáng]. (Giá: 500.000 CASH)", 
             icon: "skill/flame_ball.png" 
         },
         "Toái Giáp Trảm": { 
-            branch: "Đấu Sĩ", type: "active", maxLv: 1, cost: 0, mp: 50, func: "useArmorShatter", 
+            branch: "Đặc biệt", type: "active", maxLv: 1, cost: 0, mp: 50, func: "useArmorShatter", 
             desc: "[Bí Kỹ] ST Vật lý bỏ qua 30% Giáp. Đập tan Shield của địch và hồi 15% Max HP. (Giá: 500.000 CASH)", 
             icon: "skill/cothethep.png" 
         },
