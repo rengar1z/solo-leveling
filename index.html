@@ -90,32 +90,30 @@
             
             <!-- HP -->
             <div class="sl-status-block">
-                <div class="sl-icon-col">
-                    <div class="hp-cross"></div> <!-- Icon HP vẽ bằng CSS -->
-                    <span style="font-size:16px; font-weight:bold; letter-spacing: 1px;">HP</span>
-                </div>
-                <div class="sl-bar-col">
-                    <div class="sl-bar-outer">
-                        <div id="hpBar"></div>
-                    </div>
-                    <div class="sl-bar-text" id="hpDisplay">100/100</div>
-                </div>
+        <div class="sl-icon-col">
+            <img src="effect/HP.png" style="width: 28px; height: 28px; margin-bottom: 2px; filter: drop-shadow(0 0 5px rgba(255, 77, 77, 0.8)); object-fit: contain;"> 
+            <span style="font-size:16px; font-weight:bold; letter-spacing: 1px;">HP</span>
+        </div>
+        <div class="sl-bar-col">
+            <div class="sl-bar-outer">
+                <div id="hpBar"></div>
             </div>
+            <div class="sl-bar-text" id="hpDisplay">100/100</div>
+        </div>
+    </div>
             
-            <!-- MP -->
-            <div class="sl-status-block">
-                <div class="sl-icon-col">
-                    <!-- Icon Bình MP (Dùng Emoji có filter để đổi sang viền xanh cho đồng bộ) -->
-                    <span style="font-size:26px; line-height: 1; margin-bottom: 2px; filter: drop-shadow(0 0 8px #8eefff) hue-rotate(160deg);">🧪</span>
-                    <span style="font-size:16px; font-weight:bold; letter-spacing: 1px;">MP</span>
-                </div>
-                <div class="sl-bar-col">
-                    <div class="sl-bar-outer">
-                        <div id="mpBar"></div>
-                    </div>
-                    <div class="sl-bar-text" id="mpDisplay">10/10</div>
-                </div>
+    <div class="sl-status-block">
+        <div class="sl-icon-col">
+            <img src="effect/mana.png" style="width: 28px; height: 28px; margin-bottom: 2px; filter: drop-shadow(0 0 5px rgba(0, 191, 255, 0.8)); object-fit: contain;">
+            <span style="font-size:16px; font-weight:bold; letter-spacing: 1px;">MP</span>
+        </div>
+        <div class="sl-bar-col">
+            <div class="sl-bar-outer">
+                <div id="mpBar"></div>
             </div>
+            <div class="sl-bar-text" id="mpDisplay">10/10</div>
+        </div>
+    </div>
 
             <!-- CASH -->
             <div class="sl-status-block" style="flex-direction: column; gap: 5px;">
