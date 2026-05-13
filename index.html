@@ -2431,15 +2431,22 @@
             if (data.branch === "Đặc biệt") {
                 hasSpecialSkill = true;
                 specialSkillsHTML += `
-                    <div class="potion-item-btn combat-skill-btn" data-mp="${data.mp}" style="border-color: gold;" onclick="${data.func}()">
+                    <div class="potion-item-btn combat-skill-btn" data-mp="${data.mp}" style="border-color: gold; position: relative;" onclick="${data.func}()">
                         <img src="${data.icon}" style="width:30px; height:30px; object-fit:contain; border-radius: 4px;">
                         <div>
                             <div style="color:gold; font-weight:bold; font-size:14px; text-transform: uppercase;">${s}</div>
                             <div style="color:#00ffff; font-size:12px;">Tiêu hao: ${actualMp} MP</div>
                         </div>
+                        
+                        <div class="skill-tooltip" style="border-color: gold; box-shadow: 0 0 15px rgba(255,215,0,0.6); top: -10px; left: 105%; bottom: auto; min-width: 220px; z-index: 999;">
+                            <h4 style="color: gold; margin: 0 0 5px 0; font-size: 16px;">${s.toUpperCase()}</h4>
+                            <span style="color: #00ff00; font-size: 13px;">Tiêu hao: ${actualMp} MP</span><br>
+                            <hr style="border-color: #444; margin: 5px 0;">
+                            <span style="color: #ccc; font-size: 13px;">${data.desc}</span>
+                        </div>
                     </div>
                 `;
-            } 
+            }
             // 2. NẾU LÀ KỸ NĂNG THƯỜNG -> Dàn ngang ra ngoài
             else {
                 let color = data.branch === "Sát Thủ" ? "#4a90e2" : data.branch === "Pháp Sư" ? "#9933ff" : data.branch === "Đấu Sĩ" ? "#ff4d4d" : "#00bfff";
