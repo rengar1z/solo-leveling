@@ -1778,7 +1778,6 @@
         currentUser.maxMp += newT.int * 5;
         
         // === 2. XÓA BỎ DÒNG CỘNG MÁU/MANA HIỆN TẠI TẠI ĐÂY ===
-        // (Đã xóa dòng: currentUser.hp += newT.vit * 10; currentUser.mp += newT.int * 5;)
 
         alert(`Đã trang bị danh hiệu [${newT.name}]! Lực chiến tăng mạnh!`);
         await saveUserData();
@@ -1795,7 +1794,7 @@
                 if (currentKills >= t.req) {
                     currentUser.unlockedTitles.push(key);
                     unlockedNew = true;
-                    // Phóng to thông báo lên Log chiến đấu
+                    
                     logBattle(`<span style="color:#00ff00; font-size:20px; font-weight:bold; text-shadow: 0 0 10px #00ff00;">🏆 ĐẠT THÀNH TỰU MỚI: [ ${t.name} ]! Hãy vào mục Danh Hiệu để kiểm tra.</span>`);
                 }
             }
@@ -1814,17 +1813,18 @@
         for (let s in currentUser.skills) {
             let lv = currentUser.skills[s];
             if (lv > 0 && skillData[s]) {
+                if (skillData[s].branch === "Đặc biệt") continue;
+                
                 refundedPoints += skillData[s].cost * lv;
                 
-                // VÁ LỖ HỔNG: Thu hồi lại các chỉ số cộng thẳng nếu người chơi từng học "Thể Chất Siêu Phàm"
                 if (s === "Thể Chất Siêu Phàm") {
                     currentUser.str -= (5 * lv);
                     currentUser.vit -= (5 * lv);
                     currentUser.maxHp -= (50 * lv);
-                    currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp); // Ép máu không bị lố thanh Max
+                    currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp); 
                 }
                 
-                currentUser.skills[s] = 0; // Reset level
+                currentUser.skills[s] = 0; 
                 hasSkillsToReset = true;
             }
         }
