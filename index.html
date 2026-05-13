@@ -2241,7 +2241,7 @@
         }
 
         //ICON RAGE CHO BOSS
-        if (typeof enemy !== 'undefined' && enemy && enemy.isEnraged) {
+        if (typeof enemy !== 'undefined' && enemy && enemy.isEnraged && (isDungeonMode || currentRedGateId)) {
             if (enemy.bossType === "igris") {
                 eHTML += `<div class="status-icon" title="Huyết Kỵ Sĩ (ATK +30%)">
                             <img src="effect/Sian_Halat_Scarlet_Domination_Effect.png" style="width: 100%; height: 100%; object-fit: contain;" alt="Rage">
@@ -2304,13 +2304,15 @@
     
             if (enemy.shieldHP && enemy.shieldHP > 0) {
                 const shieldPercent = (enemy.shieldHP / enemyMaxHp) * 100;
+                eShieldBar.style.display = "block"; 
                 eShieldBar.style.width = shieldPercent + "%";
                 eShieldBar.style.left = ePercent + "%"; 
                 eShieldBar.style.opacity = "1"; 
             } else {
                 eShieldBar.style.width = "0%";
                 eShieldBar.style.opacity = "0"; 
-        }
+                eShieldBar.style.display = "none"; 
+            }
     }
 
     // --- 3. CƠ CHẾ NỔI ĐIÊN (ENRAGE) CHO BOSS ---
@@ -4704,7 +4706,11 @@
         else {
             isMyTurn = false;
             updateCombatUI(); 
-            
+
+            if (isPlayerCountering) {
+                    isPlayerCountering = false;
+                    logBattle(`<span style="color:#aaa; font-style:italic;">Kẻ địch không tấn công. Thế Phản Đòn của bạn đã bị hủy bỏ!</span>`);
+            }
             // Xử lý cơ chế Quái vật bị choáng
             if (isEnemyStunned) {
                 isEnemyStunned = false; 
