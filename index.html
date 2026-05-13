@@ -3265,7 +3265,7 @@
 
         // 7. CƠ CHẾ CHẶN SÁT THƯƠNG CỦA LỚP GIÁP ẢO (SHIELD BARRIER BÊN QUÁI)
         let actualDmg = Math.floor(finalDmg);
-        if (enemy.shieldHP && enemy.shieldHP > 0) {
+        if (!config.ignoreShield && enemy.shieldHP && enemy.shieldHP > 0) {
             if (actualDmg >= enemy.shieldHP) {
                 actualDmg -= enemy.shieldHP;
                 enemy.shieldHP = 0;
@@ -3539,19 +3539,18 @@
         }
         currentUser.mp -= reqMp;
         
-        let hit = calcPlayerDamage({ multi: 2.0, stat: 'str' });
+        // KIỂM TRA ĐỘC VÀ BẬT CỜ XUYÊN KHIÊN
+        let isPoisoned = (typeof enemyPoisonTurns !== 'undefined' && enemyPoisonTurns > 0);
+        let hit = calcPlayerDamage({ multi: 2.0, stat: 'str', ignoreShield: isPoisoned });
         let bonusLog = "";
 
-        // calcPlayerDamage đã tính toán giáp và khiên ảo xong xuôi
-        if (typeof enemyPoisonTurns !== 'undefined' && enemyPoisonTurns > 0) {
+        if (isPoisoned) {
             hit.dmg = Math.floor(hit.dmg * 2.0); 
             enemyPoisonTurns = 0; 
-            bonusLog += ` <br><span style="color:#00ff00; font-weight:bold;">[KÍCH NỔ ĐỘC TÍNH] Sát thương nhân đôi!</span>`;
+            bonusLog += ` <br><span style="color:#00ff00; font-weight:bold;">[KÍCH NỔ ĐỘC TÍNH] Xuyên thủng Lớp Giáp Ma Thuật, Sát thương nhân đôi!</span>`;
         } 
         
-        // Trừ thẳng vào HP (không cần check Shield ở đây nữa)
         enemy.hp = Math.max(0, enemy.hp - hit.dmg);
-        
         window.specialCooldown = 2;
         triggerShake();
     
@@ -3601,15 +3600,19 @@
         }
         currentUser.mp -= reqMp;
 
-        let hit = calcPlayerDamage({ multi: 2.5, stat: 'str', ignoreDef: 0.3 }); 
         let bonusLog = "";
 
+        // 1. PHÁ NÁT KHIÊN TRƯỚC
         if (enemy.shieldHP && enemy.shieldHP > 0) {
             enemy.shieldHP = 0; 
             let healAmount = Math.floor(currentUser.maxHp * 0.15);
             currentUser.hp = Math.min(currentUser.maxHp, currentUser.hp + healAmount);
             bonusLog += `<br><span style="color:#00ffff; font-weight:bold; font-size:16px;">[PHÁ VỠ KHIÊN] Đập nát phòng ngự, hấp thụ <span style="color:#00ff00">+${healAmount} HP</span>!</span>`;
         }
+
+        // 2. TÍNH SÁT THƯƠNG ĐÁNH VÀO MÁU THẬT
+        let hit = calcPlayerDamage({ multi: 2.5, stat: 'str', ignoreDef: 0.3 }); 
+        
         enemy.hp = Math.max(0, enemy.hp - hit.dmg);
         window.specialCooldown = 2;
         triggerShake();
