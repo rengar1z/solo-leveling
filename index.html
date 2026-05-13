@@ -964,15 +964,16 @@
     let isDungeonMode = false;
     let dCurrentId = null;
     let dCurrentStage = 0;
-    let currentRedGateId = null; // Trạng thái lưu ID của cổng đỏ hiện tại
+    let currentRedGateId = null; 
     let rgCurrentStage = 0;
     let isPlayerStunned = false;
     let isEnemyStunned = false;
-    let isPlayerCountering = false; // Nhớ trạng thái Phản đòn
+    let isPlayerCountering = false; 
     let enemyPoisonTurns = 0;
     let monarchWrathUses = 0;
-    let playerBleedTurns = 0; // <--- THÊM BIẾN NÀY: Theo dõi số lượt bạn bị chảy máu
-    let playerArmorBreakTurns = 0; // <--- THÊM BIẾN NÀY: Đếm số lượt bạn bị Boss phá giáp
+    let playerBleedTurns = 0; // 
+    let playerArmorBreakTurns = 0; 
+    window.specialCooldown = 0;
     window.combatTimer = null
     window.counterCooldown = 0;
     window.playerVulnerabilityTurns = 0;
@@ -981,10 +982,9 @@
     window.stealthDodge = false; 
     window.stealthCrit = false; 
     if (currentUser) {
-        currentUser.shieldHP = 0; // Tránh việc khiên từ trận trước mang sang trận sau
-    }
+        currentUser.shieldHP = 0; 
 
-    // --- DỮ LIỆU HẦM NGỤC (MỨC ĐỘ: TÂN THỦ & CÀY CUỐC) ---
+    // --- DỮ LIỆU HẦM NGỤC  ---
     const dungeonData = {
         "hapjeong_subway": {
             name: "Ga Tàu Điện Hapjeong",
@@ -2430,24 +2430,29 @@
             // 1. NẾU LÀ NHÁNH ĐẶC BIỆT -> Đưa vào Menu Hover (Dropdown)
             if (data.branch === "Đặc biệt") {
                 hasSpecialSkill = true;
+                
+                // Giao diện làm mờ nút nếu đang Cooldown
+                let isCd = window.specialCooldown > 0;
+                let cdFilter = isCd ? "filter: grayscale(1); opacity: 0.5; pointer-events: none;" : "";
+
                 specialSkillsHTML += `
-                    <div class="potion-item-btn combat-skill-btn" data-mp="${data.mp}" style="border-color: gold; position: relative; cursor: pointer;" 
+                    <div class="potion-item-btn combat-skill-btn" data-mp="${data.mp}" 
+                         style="border-color: gold; position: relative; cursor: pointer; ${cdFilter}" 
                          onclick="${data.func}()" 
-                         onmouseenter="let tt = this.querySelector('.special-tooltip'); if(tt) tt.style.display='block';" 
-                         onmouseleave="let tt = this.querySelector('.special-tooltip'); if(tt) tt.style.display='none';">
+                         onmouseenter="this.querySelector('.special-tt').style.display='block'" 
+                         onmouseleave="this.querySelector('.special-tt').style.display='none'">
                         
                         <img src="${data.icon}" style="width:30px; height:30px; object-fit:contain; border-radius: 4px;">
-                        
                         <div>
                             <div style="color:gold; font-weight:bold; font-size:14px; text-transform: uppercase;">${s}</div>
                             <div style="color:#00ffff; font-size:12px;">Tiêu hao: ${actualMp} MP</div>
                         </div>
                         
-                        <div class="special-tooltip" style="display: none; position: absolute; left: 105%; top: -5px; min-width: 220px; z-index: 9999; background: #050505; border: 1px solid gold; box-shadow: 0 0 15px rgba(255,215,0,0.5); padding: 10px; border-radius: 5px; text-align: left; cursor: default;">
+                        <div class="special-tt" style="display: none; position: absolute; left: 105%; top: 0; min-width: 220px; z-index: 10000; background: rgba(5, 5, 5, 0.95); border: 1px solid gold; box-shadow: 0 0 15px rgba(255,215,0,0.8); padding: 10px; border-radius: 5px; cursor: default; text-align: left;">
                             <h4 style="color: gold; margin: 0 0 5px 0; font-size: 16px;">${s.toUpperCase()}</h4>
                             <span style="color: #00ff00; font-size: 13px;">Tiêu hao: ${actualMp} MP</span><br>
                             <hr style="border-color: #444; margin: 5px 0;">
-                            <span style="color: #ccc; font-size: 13px; white-space: normal; line-height: 1.4; display: block;">${data.desc}</span>
+                            <span style="color: #ccc; font-size: 13px; display: block; white-space: normal; line-height: 1.4;">${data.desc}</span>
                         </div>
                     </div>
                 `;
@@ -2476,11 +2481,17 @@
         }
     }
 
-    // --- RENDER MENU SPECIAL SKILLS (NẾU CÓ) ---
+    // --- RENDER MENU SPECIAL SKILLS  ---
     if (hasSpecialSkill) {
+       
+        let cdBadge = (window.specialCooldown && window.specialCooldown > 0) ? `<div class="potion-cd-badge" style="background:#cc6600; border-color:#fff; z-index:10;">${window.specialCooldown}</div>` : ``;
+        let wrapperFilter = (window.specialCooldown && window.specialCooldown > 0) ? `filter: grayscale(1); opacity: 0.8;` : ``;
+
         iconHTML += `
             <div class="combat-potion-wrapper icon-mode" style="border-color: gold;">
-                <img src="skill/special_skill_icon.png"> <div class="combat-potion-menu" style="border-color: gold; box-shadow: 0 0 15px rgba(255,215,0,0.4);">
+                <img src="skill/thinhnoquanvuong.png" style="${wrapperFilter}">
+                ${cdBadge}
+                <div class="combat-potion-menu" style="border-color: gold; box-shadow: 0 0 15px rgba(255,215,0,0.4);">
                     <div style="color: gold; font-size: 16px; font-weight:bold; margin-bottom:5px; border-bottom:1px dashed gold; padding-bottom:5px; text-align:center;">✨ BÍ KỸ TỐI THƯỢNG</div>
                     ${specialSkillsHTML}
                 </div>
@@ -3496,11 +3507,17 @@
 
     // --- SKILL ĐẶC BIỆT ---
     window.useExecuteBlade = function() {
+        if (window.specialCooldown > 0) {
+            logBattle(`<span style='color:orange; font-weight:bold;'>Bí Kỹ đang hồi chiêu! Cần chờ ${window.specialCooldown} lượt nữa.</span>`);
+            return;
+        }
+    
         let reqMp = getActualMpCost(45);
         if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) {
             if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return;
         }
         currentUser.mp -= reqMp;
+        
 
         let hit = calcPlayerDamage({ multi: 2.0, stat: 'str' });
         let bonusLog = "";
@@ -3518,14 +3535,19 @@
             }
             enemy.hp = Math.max(0, enemy.hp - actualDmg);
         }
-
+        window.specialCooldown = 2;
         triggerShake();
+    
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 ĐOẠT MỆNH!</span> ` : "";
         logBattle(`${critLog}<span style="color:#ffcc00; font-weight:bold;">✨ ĐOẠT MỆNH LƯỠI DAO</span> chém lướt qua, gây <span style="color:#ff4d4d">${hit.dmg}</span> ST!${bonusLog}`);
         updateCombatUI(); checkBattleEnd();
     };
 
     window.useHellfireBlast = function() {
+        if (window.specialCooldown > 0) {
+            logBattle(`<span style='color:orange; font-weight:bold;'>Bí Kỹ đang hồi chiêu! Cần chờ ${window.specialCooldown} lượt nữa.</span>`);
+            return;
+        }
         let reqMp = getActualMpCost(60);
         if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) {
             if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return;
@@ -3547,7 +3569,7 @@
             else { enemy.shieldHP -= actualDmg; actualDmg = 0; }
         }
         enemy.hp = Math.max(0, enemy.hp - actualDmg);
-
+        window.specialCooldown = 2;
         triggerShake();
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 VỤ NỔ CHÍ MẠNG!</span> ` : "";
         logBattle(`${critLog}<span style="color:#ffcc00; font-weight:bold;">✨ HỎA NGỤC BỘC PHÁ</span> giáng xuống, gây <span style="color:#ff4d4d">${hit.dmg}</span> ST Phép!${bonusLog}`);
@@ -3555,6 +3577,10 @@
     };
 
     window.useArmorShatter = function() {
+        if (window.specialCooldown > 0) {
+            logBattle(`<span style='color:orange; font-weight:bold;'>Bí Kỹ đang hồi chiêu! Cần chờ ${window.specialCooldown} lượt nữa.</span>`);
+            return;
+        }
         let reqMp = getActualMpCost(50);
         if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) {
             if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return;
@@ -3571,7 +3597,7 @@
             bonusLog += `<br><span style="color:#00ffff; font-weight:bold; font-size:16px;">[PHÁ VỠ KHIÊN] Đập nát phòng ngự, hấp thụ <span style="color:#00ff00">+${healAmount} HP</span>!</span>`;
         }
         enemy.hp = Math.max(0, enemy.hp - hit.dmg);
-
+        window.specialCooldown = 2;
         triggerShake();
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 ĐẠI CHẤN!</span> ` : "";
         logBattle(`${critLog}<span style="color:#ffcc00; font-weight:bold;">✨ TOÁI GIÁP TRẢM</span> nện xuống, gây <span style="color:#ff4d4d">${hit.dmg}</span> ST!${bonusLog}`);
@@ -3581,6 +3607,10 @@
     function enemyTurn() {
         if (!enemy || enemy.hp <= 0 || !currentUser) return;
 
+        if (window.specialCooldown > 0) {
+        window.specialCooldown--; // Giảm 1 lượt hồi chiêu Bí Kỹ khi qua lượt
+        }
+        
         // --- CƠ CHẾ ĐỐT CỦA PHÁP SƯ ---
         if (window.enemyBurnTurns && window.enemyBurnTurns > 0) {
             let burnDmg = Math.floor(enemy.maxHp * 0.03); // Đốt 3% máu tối đa
