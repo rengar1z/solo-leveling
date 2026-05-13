@@ -1234,7 +1234,10 @@
         "costume_night_lord": { name: "Chúa Tể Màn Đêm", price: 20000, type: "item", itemId: "Chúa Tể Màn Đêm" },
         "costume_dragon_monarch": { name: "Vua Của Loài Rồng Hủy Diệt Bầu Trời", price: 100000, type: "item", itemId: "Vua Của Loài Rồng Hủy Diệt Bầu Trời" },
         "costume_god_of_death": { name: "Tử Thần", price: 100000, type: "item", itemId: "Tử Thần" },
-        "costume_Frieren": { name: "Frieren", price: 100000, type: "item", itemId: "Frieren" }
+        "costume_Frieren": { name: "Frieren", price: 100000, type: "item", itemId: "Frieren" },
+        "skill_execute": { name: "Bí Kỹ: Đoạt Mệnh", price: 80000, type: "skill", skillName: "Đoạt Mệnh Lưỡi Dao" },
+        "skill_hellfire": { name: "Bí Kỹ: Hỏa Ngục", price: 120000, type: "skill", skillName: "Hỏa Ngục Bộc Phá" },
+        "skill_shatter": { name: "Bí Kỹ: Toái Giáp", price: 150000, type: "skill", skillName: "Toái Giáp Trảm" }
     };
 
     // --- CƠ SỞ DỮ LIỆU KỸ NĂNG ĐA NHÁNH (MULTI-CLASS) ---
@@ -1269,6 +1272,23 @@
         "Cú Nện Phá Địa": { branch: "Đấu Sĩ", type: "active", maxLv: 1, cost: 15, mp: 45, func: "useEarthShatter", desc: "Gây sát thương Vật lý. Khiến địch [Vỡ Giáp] giảm 40% Phòng thủ trong 2 lượt.", icon: "skill/amsat.jpg" },
         "Thịnh Nộ Quân Vương": { branch: "Đấu Sĩ", type: "active", maxLv: 1, cost: 20, mp: 100, func: "useMonarchWrath", desc: "Tế 10% HP hiện tại. Xuyên 80% Giáp.", icon: "skill/thinhnoquanvuong.png" },
         "Phản Đòn": { branch: "Đấu Sĩ", type: "active", maxLv: 1, cost: 10, mp: 30, func: "useCounterAttack", desc: "Thủ thế. Chặn 100% sát thương đòn tiếp theo và phản lại 150% ST đó lên kẻ địch.", icon: "skill/phandon.png" },
+
+        // --- NHÁNH ĐẶC BIỆT (CHỈ SỞ HỮU QUA CỬA HÀNG) ---
+        "Đoạt Mệnh Lưỡi Dao": { 
+            branch: "Đặc biệt", type: "active", maxLv: 1, cost: 0, mp: 45, func: "useExecuteBlade", 
+            desc: "[Bí Kỹ] Gây ST Vật lý. Nếu địch [Trúng Độc], xuyên qua Shield và kích nổ độc tính x2 ST. (Giá: 500.000 CASH)", 
+            icon: "skill/amsat.jpg" 
+        },
+        "Hỏa Ngục Bộc Phá": { 
+            branch: "Pháp Sư", type: "active", maxLv: 1, cost: 0, mp: 60, func: "useHellfireBlast", 
+            desc: "[Bí Kỹ] Gây ST Phép. Nếu địch bị [Thiêu Đốt], sát thương x1.5 và gây [Choáng]. (Giá: 500.000 CASH)", 
+            icon: "skill/flame_ball.png" 
+        },
+        "Toái Giáp Trảm": { 
+            branch: "Đấu Sĩ", type: "active", maxLv: 1, cost: 0, mp: 50, func: "useArmorShatter", 
+            desc: "[Bí Kỹ] ST Vật lý bỏ qua 30% Giáp. Đập tan Shield của địch và hồi 15% Max HP. (Giá: 500.000 CASH)", 
+            icon: "skill/cothethep.png" 
+        },
     };
 
     // --- DANH SÁCH ĐỒ BẠN TỰ BỎ VÀO VÒNG QUAY ---
@@ -1389,22 +1409,29 @@
     window.buyShopItem = async function(itemId) {
         const item = SHOP_DATA[itemId];
         if (!item) return;
-
+    
         if (currentUser.cash < item.price) {
-            return alert(`Bạn không đủ Cash để mua ${item.name}! Cần ${item.price} Cash.`);
+            return alert(`Hệ thống: Bạn không đủ Cash! Cần ${item.price} để sở hữu Bí Kỹ này.`);
         }
-
-        currentUser.cash -= item.price;
-        
-        if (item.type === "item") {
-            window.giveItem(item.itemId); 
-            alert(`🛒 Mua thành công! [${item.name}] đã được cất vào Túi đồ của bạn.`);
+    
+        if (item.type === "skill") {
+            if (currentUser.skills[item.skillName] > 0) {
+                return alert("Hệ thống: Bạn đã lĩnh ngộ kỹ năng này rồi!");
+            }
+            
+            currentUser.cash -= item.price;
+            currentUser.skills[item.skillName] = 1; // Kích hoạt kỹ năng ngay lập tức
+            alert(`✨ Chúc mừng! Bạn đã lĩnh ngộ được [${item.skillName}]!`);
+        } else {
+            // Logic mua vật phẩm thông thường
+            currentUser.cash -= item.price;
+            window.giveItem(item.itemId);
+            alert(`🛒 Mua thành công [${item.name}]!`);
         }
-
+    
         await set(ref(db, 'users/' + currentUser.username), currentUser);
         render();
-        if (window.renderBag) window.renderBag();
-    };
+};
 
     // --- HỆ THỐNG TỦ ĐỒ (COSTUME) - ĐÃ FIX LỖI KẸT DATA ---
     window.handleCostume = async function(shopId) {
@@ -1845,7 +1872,7 @@
 
     let html = `<div style="text-align: right; margin-bottom: 15px;"><button onclick="resetSkills()" style="background: #ff4d4d; border-color: #cc0000; color: #fff; font-size: 16px;">🔄 TẨY ĐIỂM ĐỔI NHÁNH (1000 CASH)</button></div>`;
 
-    const branches = ["Sát Thủ", "Pháp Sư", "Đấu Sĩ", "Chung"];
+    const branches = ["Sát Thủ", "Pháp Sư", "Đấu Sĩ", "Đặc biệt", "Chung"];
     
     // Tối ưu thuật toán: Gom nhóm dữ liệu skill trước khi lặp thay vì lặp mù quáng
     const skillsByBranch = {};
@@ -1856,8 +1883,12 @@
     });
 
     branches.forEach(branch => {
-        let branchColor = branch === 'Sát Thủ' ? '#4a90e2' : branch === 'Pháp Sư' ? '#9933ff' : branch === 'Đấu Sĩ' ? '#ff4d4d' : '#8eefff';
-        let isBranchLocked = (currentClass !== null && currentClass !== branch && branch !== "Chung");
+        let branchColor = "#8eefff";
+        if(branch === 'Sát Thủ') branchColor = '#4a90e2';
+        if(branch === 'Pháp Sư') branchColor = '#9933ff';
+        if(branch === 'Đấu Sĩ') branchColor = '#ff4d4d';
+        if(branch === 'Đặc biệt') branchColor = '#ffcc00';
+        let isBranchLocked = (currentClass !== null && branch !== currentClass && branch !== "Chung" && branch !== "Đặc biệt");
         let displayColor = isBranchLocked ? '#555' : branchColor; 
         let isOpen = window.branchToggleState[branch];
         
@@ -2338,7 +2369,6 @@
     const pre = getPrefix();
     const skillRow = document.getElementById(pre === 'd-' ? 'd-skillRow' : 'skillRow');
     
-    // Dùng biến gom HTML thay vì += trực tiếp vào skillRow
     let iconHTML = `
         <button id="${pre}btnAttack" class="icon-mode combat-skill-btn" onclick="playerAttack()" style="border-color: #00bfff;">
             <img src="skill/basic_attack.png">
@@ -2349,37 +2379,70 @@
         </button>
     `;
     
+    let specialSkillsHTML = ""; // Chứa danh sách bí kỹ
+    let hasSpecialSkill = false;
+
+    // QUÉT TẤT CẢ SKILL ĐÃ HỌC
     for (let s in currentUser.skills) {
         const data = skillData[s];
         if (currentUser.skills[s] > 0 && data && data.type === 'active') {
-            let color = data.branch === "Sát Thủ" ? "#4a90e2" : data.branch === "Pháp Sư" ? "#9933ff" : data.branch === "Đấu Sĩ" ? "#ff4d4d" : "#00bfff";
-            let cdBadgeSkill = '';
-            if (s === 'Phản Đòn' && window.counterCooldown && window.counterCooldown > 0) {
-                cdBadgeSkill = `<div class="potion-cd-badge" style="background:#cc6600; border-color:#fff;">${window.counterCooldown}</div>`;
-            }
+            let actualMp = getActualMpCost(data.mp);
 
-            let actualMp = getActualMpCost(data.mp); // <--- Lấy MP sau khi bị tác dụng phụ
-
-            iconHTML += `
-                <button class="icon-mode combat-skill-btn" data-mp="${data.mp}" onclick="${data.func}()" style="border-color: ${color}; position: relative;">
-                    <img src="${data.icon}">
-                    ${cdBadgeSkill} <div class="skill-tooltip" style="border-color: ${color}; box-shadow: 0 0 15px ${color};">
-                        <h4 style="color: ${color}; margin: 0 0 5px 0; font-size: 18px;">${s.toUpperCase()}</h4>
-                        <span style="color: #00ff00; font-size: 14px;">Tiêu hao: ${actualMp} MP</span><br>
-                        <hr style="border-color: #444; margin: 5px 0;">
-                        <span style="color: #ccc; font-size: 14px;">${data.desc}</span>
+            // 1. NẾU LÀ NHÁNH ĐẶC BIỆT -> Đưa vào Menu Hover (Dropdown)
+            if (data.branch === "Đặc biệt") {
+                hasSpecialSkill = true;
+                specialSkillsHTML += `
+                    <div class="potion-item-btn combat-skill-btn" data-mp="${data.mp}" style="border-color: gold;" onclick="${data.func}()">
+                        <img src="${data.icon}" style="width:30px; height:30px; object-fit:contain; border-radius: 4px;">
+                        <div>
+                            <div style="color:gold; font-weight:bold; font-size:14px; text-transform: uppercase;">${s}</div>
+                            <div style="color:#00ffff; font-size:12px;">Tiêu hao: ${actualMp} MP</div>
+                        </div>
                     </div>
-                </button>
-            `;
+                `;
+            } 
+            // 2. NẾU LÀ KỸ NĂNG THƯỜNG -> Dàn ngang ra ngoài
+            else {
+                let color = data.branch === "Sát Thủ" ? "#4a90e2" : data.branch === "Pháp Sư" ? "#9933ff" : data.branch === "Đấu Sĩ" ? "#ff4d4d" : "#00bfff";
+                let cdBadgeSkill = '';
+                if (s === 'Phản Đòn' && window.counterCooldown && window.counterCooldown > 0) {
+                    cdBadgeSkill = `<div class="potion-cd-badge" style="background:#cc6600; border-color:#fff;">${window.counterCooldown}</div>`;
+                }
+
+                iconHTML += `
+                    <button class="icon-mode combat-skill-btn" data-mp="${data.mp}" onclick="${data.func}()" style="border-color: ${color}; position: relative;">
+                        <img src="${data.icon}">
+                        ${cdBadgeSkill} 
+                        <div class="skill-tooltip" style="border-color: ${color}; box-shadow: 0 0 15px ${color};">
+                            <h4 style="color: ${color}; margin: 0 0 5px 0; font-size: 18px;">${s.toUpperCase()}</h4>
+                            <span style="color: #00ff00; font-size: 14px;">Tiêu hao: ${actualMp} MP</span><br>
+                            <hr style="border-color: #444; margin: 5px 0;">
+                            <span style="color: #ccc; font-size: 14px;">${data.desc}</span>
+                        </div>
+                    </button>
+                `;
+            }
         }
     }
 
-    // MENU BÌNH HỒI PHỤC
+    // --- RENDER MENU SPECIAL SKILLS (NẾU CÓ) ---
+    if (hasSpecialSkill) {
+        iconHTML += `
+            <div class="combat-potion-wrapper icon-mode" style="border-color: gold;">
+                <img src="skill/thinhnoquanvuong.png"> <div class="combat-potion-menu" style="border-color: gold; box-shadow: 0 0 15px rgba(255,215,0,0.4);">
+                    <div style="color: gold; font-size: 16px; font-weight:bold; margin-bottom:5px; border-bottom:1px dashed gold; padding-bottom:5px; text-align:center;">✨ BÍ KỸ TỐI THƯỢNG</div>
+                    ${specialSkillsHTML}
+                </div>
+            </div>
+        `;
+    }
+
+    // --- MENU TÚI VẬT PHẨM BÌNH THƯỜNG ---
     let potionCounts = {};
     let hasPotion = false;
     currentUser.inventory.forEach(item => {
         if (ITEM_DATA[item.name] && (ITEM_DATA[item.name].effectType === "heal_hp" || ITEM_DATA[item.name].effectType === "heal_mp")) {
-            potionCounts[item.name] = (potionCounts[item.name] || 0) + (item.quantity || 1); // <--- Lấy quantity
+            potionCounts[item.name] = (potionCounts[item.name] || 0) + (item.quantity || 1);
             hasPotion = true;
         }
     });
@@ -2407,7 +2470,7 @@
     let imgFilter = (window.potionCooldown && window.potionCooldown > 0) ? `filter: grayscale(1); opacity: 0.5;` : ``;
 
     iconHTML += `
-        <div class="combat-potion-wrapper icon-mode combat-skill-btn" style="border-color: #00ff00;">
+        <div class="combat-potion-wrapper icon-mode" style="border-color: #00ff00;">
             <img src="cons/Item_Maxheal_Dust.png" style="${imgFilter}">
             ${cdBadge}
             <div class="combat-potion-menu">
@@ -2417,7 +2480,6 @@
         </div>
     `;
     
-    // Cập nhật DOM 1 lần
     skillRow.innerHTML = iconHTML;
 
     if (isDungeonMode) {
@@ -2428,7 +2490,7 @@
         if (btnFind) { btnFind.disabled = true; btnFind.style.opacity = "0.4"; btnFind.innerText = "ĐANG CHIẾN ĐẤU..."; }
     }    
     updateCombatUI(); 
-}
+};
     
     function resetToButtonMode() {
         const pre = getPrefix();
@@ -3378,6 +3440,90 @@
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 HỦY DIỆT!</span> ` : "";
         logBattle(`<span style="color:#cc0000; font-size:18px; font-weight:bold;">👑 THỊNH NỘ QUÂN VƯƠNG!</span> ${critLog}Đổi ${hpCost} HP và ${actualMpCost} MP lấy đòn sấm sét gây <span style="color:#ff0000; font-size:22px; text-shadow: 0 0 5px red;">${hit.dmg}</span> sát thương!`);
         
+        updateCombatUI(); checkBattleEnd();
+    };
+
+    // --- SKILL ĐẶC BIỆT ---
+    window.useExecuteBlade = function() {
+        let reqMp = getActualMpCost(45);
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) {
+            if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return;
+        }
+        currentUser.mp -= reqMp;
+
+        let hit = calcPlayerDamage({ multi: 2.0, stat: 'str' });
+        let bonusLog = "";
+
+        if (typeof enemyPoisonTurns !== 'undefined' && enemyPoisonTurns > 0) {
+            hit.dmg = Math.floor(hit.dmg * 2.0); 
+            enemyPoisonTurns = 0; 
+            bonusLog += ` <br><span style="color:#00ff00; font-weight:bold;">[KÍCH NỔ ĐỘC TÍNH] Xuyên thủng Lớp Giáp Ma Thuật, Sát thương nhân đôi!</span>`;
+            enemy.hp = Math.max(0, enemy.hp - hit.dmg);
+        } else {
+            let actualDmg = hit.dmg;
+            if (enemy.shieldHP && enemy.shieldHP > 0) {
+                if (actualDmg >= enemy.shieldHP) { actualDmg -= enemy.shieldHP; enemy.shieldHP = 0; } 
+                else { enemy.shieldHP -= actualDmg; actualDmg = 0; }
+            }
+            enemy.hp = Math.max(0, enemy.hp - actualDmg);
+        }
+
+        triggerShake();
+        let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 ĐOẠT MỆNH!</span> ` : "";
+        logBattle(`${critLog}<span style="color:#ffcc00; font-weight:bold;">✨ ĐOẠT MỆNH LƯỠI DAO</span> chém lướt qua, gây <span style="color:#ff4d4d">${hit.dmg}</span> ST!${bonusLog}`);
+        updateCombatUI(); checkBattleEnd();
+    };
+
+    window.useHellfireBlast = function() {
+        let reqMp = getActualMpCost(60);
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) {
+            if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return;
+        }
+        currentUser.mp -= reqMp;
+
+        let hit = calcPlayerDamage({ multi: 2.5, stat: 'int' });
+        let bonusLog = "";
+
+        if (window.enemyBurnTurns && window.enemyBurnTurns > 0) {
+            hit.dmg = Math.floor(hit.dmg * 1.5); 
+            isEnemyStunned = true; 
+            bonusLog = `<br>🔥 <span style="color:#ff3300; font-weight:bold; font-size:16px;">[HỎA NGỤC KÍCH ỨNG] Kẻ địch đã bị CHOÁNG VÁNG!</span>`;
+        } 
+
+        let actualDmg = hit.dmg;
+        if (enemy.shieldHP && enemy.shieldHP > 0) {
+            if (actualDmg >= enemy.shieldHP) { actualDmg -= enemy.shieldHP; enemy.shieldHP = 0; } 
+            else { enemy.shieldHP -= actualDmg; actualDmg = 0; }
+        }
+        enemy.hp = Math.max(0, enemy.hp - actualDmg);
+
+        triggerShake();
+        let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 VỤ NỔ CHÍ MẠNG!</span> ` : "";
+        logBattle(`${critLog}<span style="color:#ffcc00; font-weight:bold;">✨ HỎA NGỤC BỘC PHÁ</span> giáng xuống, gây <span style="color:#ff4d4d">${hit.dmg}</span> ST Phép!${bonusLog}`);
+        updateCombatUI(); checkBattleEnd();
+    };
+
+    window.useArmorShatter = function() {
+        let reqMp = getActualMpCost(50);
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) {
+            if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return;
+        }
+        currentUser.mp -= reqMp;
+
+        let hit = calcPlayerDamage({ multi: 2.5, stat: 'str', ignoreDef: 0.3 }); 
+        let bonusLog = "";
+
+        if (enemy.shieldHP && enemy.shieldHP > 0) {
+            enemy.shieldHP = 0; 
+            let healAmount = Math.floor(currentUser.maxHp * 0.15);
+            currentUser.hp = Math.min(currentUser.maxHp, currentUser.hp + healAmount);
+            bonusLog += `<br><span style="color:#00ffff; font-weight:bold; font-size:16px;">[PHÁ VỠ KHIÊN] Đập nát phòng ngự, hấp thụ <span style="color:#00ff00">+${healAmount} HP</span>!</span>`;
+        }
+        enemy.hp = Math.max(0, enemy.hp - hit.dmg);
+
+        triggerShake();
+        let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 ĐẠI CHẤN!</span> ` : "";
+        logBattle(`${critLog}<span style="color:#ffcc00; font-weight:bold;">✨ TOÁI GIÁP TRẢM</span> nện xuống, gây <span style="color:#ff4d4d">${hit.dmg}</span> ST!${bonusLog}`);
         updateCombatUI(); checkBattleEnd();
     };
     
