@@ -3174,6 +3174,9 @@
         
         // Áp dụng Xuyên Giáp (Trừ thẳng vào % Giáp còn lại của địch)
         if (totalIgnoreDef > 0) {
+
+            totalIgnoreDef = Math.min(1.0, totalIgnoreDef);
+            
             enemyDef = Math.floor(enemyDef * (1 - totalIgnoreDef)); 
         }
         
@@ -3534,23 +3537,19 @@
         }
         currentUser.mp -= reqMp;
         
-
         let hit = calcPlayerDamage({ multi: 2.0, stat: 'str' });
         let bonusLog = "";
 
+        // calcPlayerDamage đã tính toán giáp và khiên ảo xong xuôi
         if (typeof enemyPoisonTurns !== 'undefined' && enemyPoisonTurns > 0) {
             hit.dmg = Math.floor(hit.dmg * 2.0); 
             enemyPoisonTurns = 0; 
-            bonusLog += ` <br><span style="color:#00ff00; font-weight:bold;">[KÍCH NỔ ĐỘC TÍNH] Xuyên thủng Lớp Giáp Ma Thuật, Sát thương nhân đôi!</span>`;
-            enemy.hp = Math.max(0, enemy.hp - hit.dmg);
-        } else {
-            let actualDmg = hit.dmg;
-            if (enemy.shieldHP && enemy.shieldHP > 0) {
-                if (actualDmg >= enemy.shieldHP) { actualDmg -= enemy.shieldHP; enemy.shieldHP = 0; } 
-                else { enemy.shieldHP -= actualDmg; actualDmg = 0; }
-            }
-            enemy.hp = Math.max(0, enemy.hp - actualDmg);
-        }
+            bonusLog += ` <br><span style="color:#00ff00; font-weight:bold;">[KÍCH NỔ ĐỘC TÍNH] Sát thương nhân đôi!</span>`;
+        } 
+        
+        // Trừ thẳng vào HP (không cần check Shield ở đây nữa)
+        enemy.hp = Math.max(0, enemy.hp - hit.dmg);
+        
         window.specialCooldown = 2;
         triggerShake();
     
@@ -3579,12 +3578,9 @@
             bonusLog = `<br>🔥 <span style="color:#ff3300; font-weight:bold; font-size:16px;">[HỎA NGỤC KÍCH ỨNG] Kẻ địch đã bị CHOÁNG VÁNG!</span>`;
         } 
 
-        let actualDmg = hit.dmg;
-        if (enemy.shieldHP && enemy.shieldHP > 0) {
-            if (actualDmg >= enemy.shieldHP) { actualDmg -= enemy.shieldHP; enemy.shieldHP = 0; } 
-            else { enemy.shieldHP -= actualDmg; actualDmg = 0; }
-        }
-        enemy.hp = Math.max(0, enemy.hp - actualDmg);
+        // Trừ thẳng vào HP (bỏ check Shield ở đây)
+        enemy.hp = Math.max(0, enemy.hp - hit.dmg);
+        
         window.specialCooldown = 2;
         triggerShake();
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 VỤ NỔ CHÍ MẠNG!</span> ` : "";
