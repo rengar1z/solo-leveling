@@ -716,20 +716,25 @@
             top: 50%;
             transform: translateY(-50%);
             width: 360px !important;
-            background: #0a2013 !important;
-            border: 2px solid #1dbf48 !important;
-            box-shadow: 0 0 15px rgba(29, 191, 72, 0.4) !important;
+            
+            /* Đổi nền rêu tối thành dải màu Gradient xanh System sang trọng */
+            background: linear-gradient(135deg, rgba(0, 15, 35, 0.95), rgba(0, 5, 10, 0.98)) !important;
+            backdrop-filter: blur(5px); /* Thêm hiệu ứng kính mờ */
+            
+            /* Đổi viền mặc định sang xanh dương nhạt */
+            border: 2px solid #00bfff !important; 
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.3) !important;
+            
             color: #fff;
             padding: 15px !important;
-            border-radius: 4px;
-            z-index: 999;
+            border-radius: 6px; /* Bo góc mềm mại hơn một chút */
+            z-index: 9999 !important; /* Đảm bảo luôn đè lên mọi thứ */
             transition: 0.3s;
             pointer-events: none;
             text-transform: uppercase;
             font-family: 'Oswald', sans-serif;
             text-align: left !important;
         }
-
         .sl-tt-top { 
             display: flex; 
             gap: 15px; 
