@@ -2431,18 +2431,23 @@
             if (data.branch === "Đặc biệt") {
                 hasSpecialSkill = true;
                 specialSkillsHTML += `
-                    <div class="potion-item-btn combat-skill-btn" data-mp="${data.mp}" style="border-color: gold; position: relative;" onclick="${data.func}()">
+                    <div class="potion-item-btn combat-skill-btn" data-mp="${data.mp}" style="border-color: gold; position: relative; cursor: pointer;" 
+                         onclick="${data.func}()" 
+                         onmouseenter="let tt = this.querySelector('.special-tooltip'); if(tt) tt.style.display='block';" 
+                         onmouseleave="let tt = this.querySelector('.special-tooltip'); if(tt) tt.style.display='none';">
+                        
                         <img src="${data.icon}" style="width:30px; height:30px; object-fit:contain; border-radius: 4px;">
+                        
                         <div>
                             <div style="color:gold; font-weight:bold; font-size:14px; text-transform: uppercase;">${s}</div>
                             <div style="color:#00ffff; font-size:12px;">Tiêu hao: ${actualMp} MP</div>
                         </div>
                         
-                        <div class="skill-tooltip" style="border-color: gold; box-shadow: 0 0 15px rgba(255,215,0,0.6); top: -10px; left: 105%; bottom: auto; min-width: 220px; z-index: 999;">
+                        <div class="special-tooltip" style="display: none; position: absolute; left: 105%; top: -5px; min-width: 220px; z-index: 9999; background: #050505; border: 1px solid gold; box-shadow: 0 0 15px rgba(255,215,0,0.5); padding: 10px; border-radius: 5px; text-align: left; cursor: default;">
                             <h4 style="color: gold; margin: 0 0 5px 0; font-size: 16px;">${s.toUpperCase()}</h4>
                             <span style="color: #00ff00; font-size: 13px;">Tiêu hao: ${actualMp} MP</span><br>
                             <hr style="border-color: #444; margin: 5px 0;">
-                            <span style="color: #ccc; font-size: 13px;">${data.desc}</span>
+                            <span style="color: #ccc; font-size: 13px; white-space: normal; line-height: 1.4; display: block;">${data.desc}</span>
                         </div>
                     </div>
                 `;
