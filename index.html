@@ -3570,16 +3570,19 @@
         }
         currentUser.mp -= reqMp;
 
-        let hit = calcPlayerDamage({ multi: 2.5, stat: 'int' });
+        // 1. KIỂM TRA THIÊU ĐỐT TRƯỚC ĐỂ KHUẾCH ĐẠI HỆ SỐ TỪ GỐC
+        let isBurning = (window.enemyBurnTurns && window.enemyBurnTurns > 0);
+        let multiplier = isBurning ? (2.5 * 1.5) : 2.5; 
+
+        // 2. TÍNH TOÁN SÁT THƯƠNG
+        let hit = calcPlayerDamage({ multi: multiplier, stat: 'int' });
         let bonusLog = "";
 
-        if (window.enemyBurnTurns && window.enemyBurnTurns > 0) {
-            hit.dmg = Math.floor(hit.dmg * 1.5); 
+        if (isBurning) {
             isEnemyStunned = true; 
-            bonusLog = `<br>🔥 <span style="color:#ff3300; font-weight:bold; font-size:16px;">[HỎA NGỤC KÍCH ỨNG] Kẻ địch đã bị CHOÁNG VÁNG!</span>`;
+            bonusLog = `<br>🔥 <span style="color:#ff3300; font-weight:bold; font-size:16px;">[HỎA NGỤC KÍCH ỨNG] Sát thương khuếch đại! Kẻ địch đã bị CHOÁNG VÁNG!</span>`;
         } 
 
-        // Trừ thẳng vào HP (bỏ check Shield ở đây)
         enemy.hp = Math.max(0, enemy.hp - hit.dmg);
         
         window.specialCooldown = 2;
