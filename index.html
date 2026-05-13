@@ -619,6 +619,12 @@
                             <p style="font-size: 20px; color: #ccc;">Số ải: 5 | Độ khó: <span style="color: #cc33ff; font-weight: bold; text-shadow: 0 0 8px #9900ff;">HẠNG S+ (THẢM HỌA)</span></p>
                             <button class="tab-btn btn-system" style="border-color: #9900ff; color: #cc33ff !important; font-size: 24px; box-shadow: inset 0 0 10px rgba(153, 0, 255, 0.4);">TIẾN VÀO HẦM NGỤC</button>
                         </div>
+
+                        <div class="dungeon-card" onclick="enterDungeon('scavenger_usa')" style="background: rgba(30, 20, 0, 0.8); border-color: #ffcc00; margin-top: 20px; box-shadow: 0 0 25px rgba(255, 204, 0, 0.5);">
+                            <h3 style="color: #ffcc00; text-shadow: 0 0 15px #ffcc00; letter-spacing: 2px;">TRỤ SỞ SCAVENGER (MỸ)</h3>
+                            <p style="font-size: 20px; color: #ccc;">Số ải: 5 | Độ khó: <span style="color: #ffcc00; font-weight: bold;">HẠNG SS+</span></p>
+                            <button class="tab-btn btn-system" style="border-color: #ffcc00; color: #ffcc00 !important;">TIẾN VÀO HẦM NGỤC</button>
+                        </div>
                     </div> <!-- ĐÓNG THẺ QUAN TRỌNG: Kết thúc dungeonListArea -->
 
                     <!-- ================= MENU CON: LÂU ĐÀI QUỶ (ẨN MẶC ĐỊNH) ================= -->
@@ -798,7 +804,7 @@
         "boss/Boss_The_Gatekeeper_of_Hell,_Cerberus.png", "boss/Boss_Avaricious_Vulcan.png",
         "boss/Boss_Soul_Shepherd_Metus.png", "boss/Boss_Baran_of_White_Flames.png",
         "boss/Boss_Baran_the_Demon_King.png", "bot/Boss_1st_Gen._Fire_Ant_Leader.png",
-        "bot/Boss_Purple_Blade_Camula.png", "bot/Boss_1st_Gen._White_Ant_Leader.png",
+        "bot/Boss_Purple_Blade_Camula.png", "bot/Boss_1st_Gen._White_Ant_Leader.png", "boss/Thomas_Andre.png", "boss/Rage_Thomas.png",
         "boss/Boss_Queen_Ant.png", "boss/Boss_Ant_King.png", "boss/Rage_Ant_King.png", "boss/Rage_Igris.png",
         
         // Quái Red Gate
@@ -1066,6 +1072,12 @@
                 { name: "Kiến Cận Vệ Hoàng Gia", hp: 120000, atk: 2000, def: 500, exp: 18000, img: "bot/Boss_1st_Gen._White_Ant_Leader.png" },
                 { name: "Nữ Hoàng Kiến", hp: 200000, atk: 2500, def: 600, exp: 35000, img: "boss/Boss_Queen_Ant.png", isBoss: true, bossType: "ant_queen" },
                 { name: "BOSS: Vua Kiến", hp: 300000, atk: 3500, def: 800, exp: 100000, img: "boss/Boss_Ant_King.png", isBoss: true, bossType: "beru", rareDrops: ["Sandstorm Cube"] }
+            ]
+        },
+        "scavenger_usa": {
+            name: "Trụ sở Scavenger",
+            stages: [
+                { name: "BOSS: Kẻ Thống Trị Thomas Andre", hp: 1000000, atk: 5500, def: 1500, exp: 200000, img: "boss/Thomas_Andre.png", isBoss: true, bossType: "thomas_andre", rareDrops: ["Sandstorm Cube"] }
             ]
         }
     };
@@ -2245,6 +2257,11 @@
                             <img src="effect/rage_beru.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px; box-shadow: 0 0 5px red;" alt="Rage">
                           </div>`;
             }
+            else if (enemy.bossType === "thomas_andre") {
+                eHTML += `<div class="status-icon" title="Cơn Điên Của Bạo Chúa (ATK +30%)">
+                            <img src="effect/Steel.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px; box-shadow: 0 0 5px red;" alt="Rage">
+                          </div>`;
+            }
         }
         
         eBoard.innerHTML = eHTML;
@@ -2322,7 +2339,10 @@
                 } else if(enemy.bossType === "igris") {
                     enemy.img = "boss/Rage_Igris.png";
                     eImgElement.src = enemy.img;
-                } 
+                } else if(enemy.bossType === "thomas_andre") {
+                    enemy.img = "boss/Rage_Thomas.png";
+                    eImgElement.src = enemy.img;
+                }
             }
         }
 
@@ -3836,18 +3856,26 @@
             
             // --- GIAI ĐOẠN 2: CƠN THỊNH NỘ & ĐỘ BỀN VƯỢT TRỘI (Dưới 50% Máu) ---
             if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasFrenzy) {
-                enemy.hasFrenzy = true; 
-                let shieldAmount = Math.floor(enemy.maxHp * 0.30); // Độ bền đáng kinh ngạc: Tạo khiên 30% máu
+                enemy.hasFrenzy = true;
+                
+                if (!enemy.isEnraged) {
+                    enemy.isEnraged = true;
+                    enemy.atk = Math.floor(enemy.atk * 1.43); 
+                } else {
+                    enemy.atk = Math.floor(enemy.atk * 1.10); 
+                }
+
+                let shieldAmount = Math.floor(enemy.maxHp * 0.30); 
                 enemy.shieldHP = shieldAmount; 
-                enemy.atk = Math.floor(enemy.atk * 1.10); // Cơn thịnh nộ: Tăng vĩnh viễn 10% ATK
+                
                 dmg = 0; 
                 isSpecialAttack = true;
-                specialAttackLog = `<span style="color:#ff0000; font-weight:bold; text-shadow: 0 0 10px #ff0000;">💢 CƠN THỊNH NỘ!</span> Vulcan gầm thét điên cuồng! Hắn kích hoạt <span style="color:#ff9900;">Độ Bền Vượt Trội</span> và <span style="color:#ff3333;">tăng Sát thương gây ra</span>!`;
+                specialAttackLog = `<span style="color:#ff0000; font-weight:bold; text-shadow: 0 0 10px #ff0000;">💢 CƠN THỊNH NỘ!</span> Vulcan gầm thét điên cuồng! Hắn kích hoạt <span style="color:#ff9900;">Độ Bền Vượt Trội (Nhận ${shieldAmount} Khiên Ảo)</span> và <span style="color:#ff3333;">tăng vọt Sát thương</span>!`;
             } 
             
             // --- CÁC ĐÒN TẤN CÔNG NGẪU NHIÊN ---
             else if (rand <= 0.25) {
-                // Tốc độ vượt trội: Nhanh đến mức không kịp phản ứng (Gây Choáng)
+                
                 let rawDmg = enemyAtk * 1.5; 
                 dmg = Math.max(30, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                 isSpecialAttack = true;
@@ -3855,14 +3883,14 @@
                 specialAttackLog = `<span style="color:#ff9900; font-weight:bold;">⚡ TỐC ĐỘ VƯỢT TRỘI!</span> Bất chấp thân hình đồ sộ, Vulcan lao đến với tốc độ kinh hoàng giáng ${Math.floor(dmg)} ST, khiến bạn không kịp né tránh và bị <span style="color:yellow;">[CHOÁNG]</span>!`;
             } 
             else if (rand <= 0.55) {
-                // Địa chấn tầng sâu: Sát thương diện rộng bạo kích thuần túy (Đã bỏ Chảy Máu)
+                
                 let rawDmg = enemyAtk * 2.5; 
                 dmg = Math.max(50, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                 isSpecialAttack = true;
                 specialAttackLog = `<span style="color:#ff0000; font-weight:bold;">🌋 ĐỊA CHẤN TẦNG SÂU!</span> Vulcan dậm mạnh đôi chân khổng lồ xuống đất tạo ra một cơn địa chấn kinh hoàng, giáng <span style="color:red; font-size: 18px;">${Math.floor(dmg)}</span> sát thương!`;
             }
             else if (rand <= 0.80) {
-                // Sức mạnh phi thường: Áp đảo thể chất, đập nát phòng thủ (Phá Giáp)
+                
                 let rawDmg = enemyAtk * 2.2; 
                 dmg = Math.max(40, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                 isSpecialAttack = true;
@@ -4024,6 +4052,74 @@
                 dmg = Math.max(200, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                 isSpecialAttack = true;
                 specialAttackLog = `<span style="color:#ff0000; font-weight:bold; text-shadow: 0 0 10px #ff0000;">💥 SỨC MẠNH PHI THƯỜNG!</span> Tốc độ vượt xa nhận thức! Vua Kiến xuất hiện ngay trước mặt và đấm bay bạn với sức công phá kinh hoàng, giáng <span style="color:red; font-size:24px;">${Math.floor(dmg)}</span> sát thương!`;
+            }
+        }
+
+        // 10. KỸ NĂNG CỦA THOMAS ANDRE (GOLIATH - MỸ)
+        if (isDungeonMode && enemy.bossType === "thomas_andre") {
+            let rand = Math.random(); 
+            
+            // --- GIAI ĐOẠN 2: HÓA THÂN GOLIATH (Dưới 50% Máu) ---
+            if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasReinforced) {
+                enemy.hasReinforced = true;
+                
+                // 1. Xử lý ATK (Tránh buff đè với hệ thống UI)
+                if (!enemy.isEnraged) {
+                    enemy.isEnraged = true;
+                    enemy.atk = Math.floor(enemy.atk * 1.3); // Nếu UI chưa kịp buff thì tự buff 30%
+                }
+                       
+                enemy.def = Math.floor(enemy.def * 1.5);          
+        
+                let shieldAmount = Math.floor(enemy.maxHp * 0.50); 
+                enemy.shieldHP = shieldAmount; 
+                dmg = 0;
+                isSpecialAttack = true;
+                specialAttackLog = `<span style="color:gold; font-weight:bold; text-shadow: 0 0 10px gold;">🛡️ HÓA THÂN GOLIATH!</span> Thomas gầm thét, cơ thể phình to và bọc trong Lớp Giáp Vàng rực! Hắn nhận <span style="color:#00ffff">${shieldAmount} Khiên Ảo</span>, ATK và DEF tăng đột biến!`;
+                
+                // Hiệu ứng rung màn hình mạnh
+                const eImgElement = document.getElementById(getPrefix() + 'e-img');
+                if (eImgElement) {
+                    eImgElement.classList.add('shake');
+                    setTimeout(() => eImgElement.classList.remove('shake'), 500);
+                }
+            }
+            
+            else if (rand <= 0.25) { 
+                // Tối thượng: Hố Đen Hủy Diệt (Black Hole Crash)
+                let damageMultiplier = (enemy.shieldHP && enemy.shieldHP > 0) ? 3.5 : 1.5;
+                let rawDmg = enemyAtk * damageMultiplier; 
+                dmg = Math.max(80, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                
+                isSpecialAttack = true;
+                isPlayerStunned = true;
+                if (window.stealthDodge) window.stealthDodge = false; // Trọng lực phá vỡ Tàng Hình
+                
+                let shieldBonusLog = (enemy.shieldHP && enemy.shieldHP > 0) ? ` <span style="color:#ff0000; font-size:14px;">(Sát thương khuếch đại cực đại nhờ Giáp Vàng!)</span>` : "";
+                specialAttackLog = `<span style="color:#9933ff; font-weight:bold; text-shadow: 0 0 5px #9933ff;">🌌 HỐ ĐEN HỦY DIỆT (BLACK HOLE CRASH)!</span> Lực hút tuyệt đối kéo giật bạn vào tâm chấn và nghiền nát! Nhận ${Math.floor(dmg)} ST${shieldBonusLog} và bị <span style="color:yellow;">[CHOÁNG]</span>!`;
+            } 
+            else if (rand <= 0.50) { 
+                // Chiêu 1: Cú Nện Tuyệt Đối (Absolute Demolition)
+                let rawDmg = enemyAtk * 2.0; 
+                dmg = Math.max(100, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true;
+                effectArmorBreak = 3; 
+                specialAttackLog = `<span style="color:#ff3300; font-weight:bold;">💥 CÚ NỆN TUYỆT ĐỐI (ABSOLUTE DEMOLITION)!</span> Thomas giáng hai tay xuống đất tạo ra cơn địa chấn kinh hoàng, gây ${Math.floor(dmg)} ST và <span style="color:orange;">[PHÁ GIÁP]</span> 3 lượt!`;
+            } 
+            else if (rand <= 0.75) { 
+                // Chiêu 2: Cú Đấm Khổng Lồ (Colossal Crush)
+                let rawDmg = enemyAtk * 2.5; 
+                dmg = Math.max(150, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true;
+                specialAttackLog = `<span style="color:#ffcc00; font-weight:bold;">👊 CÚ ĐẤM KHỔNG LỒ (COLOSSAL CRUSH)!</span> Thomas lao đến tung một cú đấm thẳng với uy lực có thể thổi bay tòa nhà, gây ${Math.floor(dmg)} ST!`;
+            }
+            else {
+                // Đánh thường cộng hưởng phòng thủ (Defense Scaling)
+                // Bắt chước nội tại Arise: Thomas lấy Thủ bù Công
+                let rawDmg = (enemyAtk * 1.0) + (enemy.def * 1.5); 
+                dmg = Math.max(50, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true;
+                specialAttackLog = `<span style="color:#ccc; font-weight:bold;">🛡️ SỨC ÉP THỂ CHẤT!</span> Lấy phòng ngự làm vũ khí, khối cơ bắp bọc giáp của Thomas tông thẳng vào bạn gây ${Math.floor(dmg)} ST!`;
             }
         }
         
@@ -4849,6 +4945,10 @@
                 case "beru":
                     bossWarning = `<span style="color:#ffcc00; font-weight:bold; text-shadow: 0 0 5px gold;">[CẢNH BÁO S+] VUA KIẾN BERU XUẤT HIỆN! Một áp lực kinh hoàng bao trùm lấy bạn...</span>`;
                     bossDialog = `<span style="color:#cc33ff; font-style:italic; font-size: 22px; text-shadow: 0 0 5px #cc33ff;">Beru: 'Ngươi... là... Vua của... con người?'</span>`;
+                    break;
+                case "thomas_andre":
+                    bossWarning = `<span style="color:#ffcc00; font-weight:bold; text-shadow: 0 0 10px gold;">[CẢNH BÁO SS+] KẺ THỐNG TRỊ THOMAS ANDRE XUẤT HIỆN! Không gian như bị nghiền nát bởi áp lực vật lý!</span>`;
+                    bossDialog = `<span style="color:gold; font-style:italic; font-size: 22px; text-shadow: 0 0 5px #ffcc00;">Thomas Andre: 'Mày dám đụng vào người của Scavenger sao? Tao sẽ nghiền nát mày thành cám!'</span>`;
                     break;
             }
 
