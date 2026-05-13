@@ -1889,8 +1889,9 @@
 
     // --- GHI NHỚ TRẠNG THÁI ĐÓNG/MỞ CỦA TỪNG NHÁNH ---
     window.branchToggleState = window.branchToggleState || {
-        "Chung": true,      // Mặc định cho nhánh Chung mở sẵn
-        "Sát Thủ": false,   // Các nhánh còn lại mặc định thu gọn
+        "Chung": true,
+        "Đặc biệt": true,
+        "Sát Thủ": false, 
         "Pháp Sư": false,
         "Đấu Sĩ": false
     };
@@ -2443,9 +2444,13 @@
     for (let s in currentUser.skills) {
         const data = skillData[s];
         if (currentUser.skills[s] > 0 && data && data.type === 'active') {
-            let actualMp = getActualMpCost(data.mp);
+            
+            let baseMp = data.mp;
+            if (s === "Thịnh Nộ Quân Vương") {
+                baseMp = 100 + ((window.monarchWrathUses || 0) * 50);
+            }
+            let actualMp = getActualMpCost(baseMp);
 
-            // 1. NẾU LÀ NHÁNH ĐẶC BIỆT -> Đưa vào Menu Hover (Dropdown)
             if (data.branch === "Đặc biệt") {
                 hasSpecialSkill = true;
                 
