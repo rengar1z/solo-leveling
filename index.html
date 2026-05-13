@@ -2174,6 +2174,11 @@
                             <img src="effect/kasaka_rage.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px; box-shadow: 0 0 5px red;" alt="Rage">
                           </div>`;
             }
+            else if (enemy.bossType === "beru") {
+                eHTML += `<div class="status-icon" title="Cơn Điên Của Vua Kiến (ATK +30%)">
+                            <img src="effect/rage_beru.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px; box-shadow: 0 0 5px red;" alt="Rage">
+                          </div>`;
+            }
         }
         
         eBoard.innerHTML = eHTML;
