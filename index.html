@@ -1500,18 +1500,16 @@
             currentUser.int -= (itemData.int || 0); 
             
             currentUser.maxMp -= (itemData.mp || 0); 
-            currentUser.maxMp -= (itemObj.int || 0) * 5;
-            currentUser.mp = Math.max(0, currentUser.mp - (itemData.mp || 0)); 
+            currentUser.maxMp -= (itemData.int || 0) * 5; // FIX BUG: Sửa itemObj thành itemData
+            currentUser.mp = Math.max(0, currentUser.mp - (itemData.mp || 0) - ((itemData.int || 0) * 5)); 
             
             if (itemData.vit > 0) {
                 currentUser.maxHp -= itemData.vit * 10; 
-                
                 currentUser.hp = Math.max(1, currentUser.hp - (itemData.vit * 10));
             }
             currentUser.equipped.costume = null;
         }
     
-        // TRƯỜNG HỢP 2: BẤM ĐỂ MẶC VÀO (HOẶC ĐỔI TỪ BỘ KHÁC SANG BỘ NÀY)
         else if (currentUser.ownedCostumes.includes(itemId)) {
             
             if (currentUser.equipped.costume) {
@@ -1522,17 +1520,15 @@
                     currentUser.int -= (oldData.int || 0);
                     
                     currentUser.maxMp -= (oldData.mp || 0); 
-                    
-                    currentUser.mp = Math.max(0, currentUser.mp - (oldData.mp || 0)); 
+                    currentUser.maxMp -= (oldData.int || 0) * 5; // FIX BUG: Bổ sung trừ MP từ INT bộ cũ
+                    currentUser.mp = Math.max(0, currentUser.mp - (oldData.mp || 0) - ((oldData.int || 0) * 5)); 
                     
                     if (oldData.vit > 0) { 
                         currentUser.maxHp -= oldData.vit * 10; 
-                        
                         currentUser.hp = Math.max(1, currentUser.hp - (oldData.vit * 10)); 
                     }
                 }
             }
-            
             
             currentUser.equipped.costume = { name: itemId };
             currentUser.str += (itemData.str || 0); 
@@ -1540,11 +1536,12 @@
             currentUser.int += (itemData.int || 0); 
             
             currentUser.maxMp += (itemData.mp || 0); 
-            currentUser.mp += (itemData.mp || 0); 
+            currentUser.maxMp += (itemData.int || 0) * 5; // FIX BUG: Bổ sung cộng MP từ INT bộ mới
+            currentUser.mp += (itemData.mp || 0) + ((itemData.int || 0) * 5); 
             
             if (itemData.vit > 0) { 
                 currentUser.maxHp += itemData.vit * 10; 
-                currentUser.hp += itemData.vit * 10; // Vẫn được cộng máu nhé
+                currentUser.hp += itemData.vit * 10; // Vẫn được cộng máu
             }
         }
         
