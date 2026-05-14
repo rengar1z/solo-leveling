@@ -1607,60 +1607,60 @@
     }
 
     window.login = async function() {
-        const u = username.value.trim(), p = password.value.trim();
-        const s = await get(child(ref(db), 'users/' + u));
-        if (!s.exists()) return alert('Thợ săn chưa thức tỉnh');
-        const data = s.val();
-        if (data.password !== p) return alert('Mật mã sai');
-    
-        currentUser = data;
-        recalculateStats();
-        // === CHÈN ĐOẠN BACKUP VÀO ĐÂY ===
-        if (!currentUser.inventory) currentUser.inventory = [];
-        if (!currentUser.equipped) currentUser.equipped = {};
+    const u = username.value.trim(), p = password.value.trim();
+    const s = await get(child(ref(db), 'users/' + u));
+    if (!s.exists()) return alert('Thợ săn chưa thức tỉnh');
+    const data = s.val();
+    if (data.password !== p) return alert('Mật mã sai');
 
-        // Tháo Ring2 và Shield cũ trả về kho đồ để họ không mất đồ
-        if (currentUser.equipped.ring1) { 
-            currentUser.equipped.ring = currentUser.equipped.ring1; 
-            delete currentUser.equipped.ring1; 
-        }
-        
-        if (currentUser.equipped.shield) { 
-            currentUser.equipped.armor = currentUser.equipped.shield; 
-            delete currentUser.equipped.shield; 
-        }    
-        
-        if (!currentUser.skills) {
-            currentUser.skills = { "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Siêu Giác Quan": 0, "Thợ Săn Tiền Thưởng": 0, "Bàn Tay May Mắn": 0 };
-            currentUser.skillPoints = currentUser.skillPoints || 0;
-        }
+    currentUser = data;
 
-        if (currentUser.isNew) {
-            const welcome = document.getElementById('welcomeAlert');
-            welcome.classList.remove('hidden');
-            setTimeout(async () => {
-                welcome.classList.add('hidden');
-                currentUser.isNew = false;
-                await set(ref(db, 'users/' + currentUser.username), currentUser);
-            }, 3000);
-        }
+    // === 1. KÉO ĐOẠN BACKUP LÊN TRƯỚC ĐỂ KHÔI PHỤC OBJECT BỊ FIREBASE XÓA ===
+    if (!currentUser.inventory) currentUser.inventory = [];
+    if (!currentUser.equipped) currentUser.equipped = { weapon: null, armor: null, helmet: null, gloves: null, necklace: null, earring: null, ring: null, shoes: null, costume: null };
 
-        currentUser.cash = currentUser.cash || 0;
-        currentUser.inventory = currentUser.inventory || [];
-        currentUser.equipped = currentUser.equipped || { weapon: null, armor: null, helmet: null, gloves: null, necklace: null, earring: null, ring: null, shoes: null, costume: null };
-        
-        document.getElementById('auth').classList.add('hidden');
-        document.getElementById('gameWrap').classList.remove('hidden');
-        const statsBtn = document.getElementById('defaultOpenTab'); 
-        if (statsBtn) {
-        // Lệnh này giả lập việc bạn click chuột vào nút Stats
-        openTab({ currentTarget: statsBtn }, 'tab-stats');
-        }
-        
-        render();
-        window.renderSkills(); 
-        if(window.renderShadowArmy) window.renderShadowArmy();
+    // Tháo Ring2 và Shield cũ trả về kho đồ để họ không mất đồ
+    if (currentUser.equipped.ring1) { 
+        currentUser.equipped.ring = currentUser.equipped.ring1; 
+        delete currentUser.equipped.ring1; 
     }
+    
+    if (currentUser.equipped.shield) { 
+        currentUser.equipped.armor = currentUser.equipped.shield; 
+        delete currentUser.equipped.shield; 
+    }    
+    
+    if (!currentUser.skills) {
+        currentUser.skills = { "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Siêu Giác Quan": 0, "Thợ Săn Tiền Thưởng": 0, "Bàn Tay May Mắn": 0 };
+        currentUser.skillPoints = currentUser.skillPoints || 0;
+    }
+
+    // === 2. BÂY GIỜ GỌI TÍNH TOÁN CHỈ SỐ MỚI AN TOÀN ===
+    recalculateStats();
+
+    if (currentUser.isNew) {
+        const welcome = document.getElementById('welcomeAlert');
+        welcome.classList.remove('hidden');
+        setTimeout(async () => {
+            welcome.classList.add('hidden');
+            currentUser.isNew = false;
+            await set(ref(db, 'users/' + currentUser.username), currentUser);
+        }, 3000);
+    }
+
+    currentUser.cash = currentUser.cash || 0;
+    
+    document.getElementById('auth').classList.add('hidden');
+    document.getElementById('gameWrap').classList.remove('hidden');
+    const statsBtn = document.getElementById('defaultOpenTab'); 
+    if (statsBtn) {
+        openTab({ currentTarget: statsBtn }, 'tab-stats');
+    }
+    
+    render();
+    window.renderSkills(); 
+    if(window.renderShadowArmy) window.renderShadowArmy();
+}
 
     window.completeMission = async function() {
         const today = new Date().toLocaleDateString();
