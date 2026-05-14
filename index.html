@@ -1584,27 +1584,38 @@
     }
 
     window.register = async function() {
-        const u = username.value.trim(), p = password.value.trim();
-        if(!u || !p) return alert('Vui lòng nhập đầy đủ');
-        const s = await get(child(ref(db), 'users/' + u));
-        if (s.exists()) return alert('Tên thợ săn đã được sử dụng');
+    const u = username.value.trim(), p = password.value.trim();
+    if (!u || !p) return alert('Nhập đủ thông tin!');
+    
+    // Kiểm tra xem tài khoản đã tồn tại chưa
+    const s = await get(child(ref(db), 'users/' + u));
+    if (s.exists()) return alert('Thợ săn này đã đăng ký trước đó!');
 
-        const userData = {
-            username: u, password: p, level: 1, exp: 0, need: 100, cash: 500, // Đã thêm cash: 500
-            hp: 100, maxHp: 100, mp: 50, maxMp: 50,
-            str: 5, agi: 5, int: 5, vit: 5, sense: 5, points: 0,
-            claimedDate: '', streak: 0, logs: [],
-            title: "Weakest Hunter of All Time", skillPoints: 0,
-            inventory: [], // Thêm mảng chứa đồ
-            equipped: { weapon: null, armor: null, helmet: null, gloves: null, necklace: null, earring: null, ring: null, shoes: null, costume: null },
-            skills: { "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Siêu Giác Quan": 0, "Thợ Săn Tiền Thưởng": 0, "Bàn Tay May Mắn": 0 },
-            ownedShadows: [], 
-            equippedShadow: null,
-            isNew: true
+    // KHỞI TẠO TÀI KHOẢN MỚI VỚI ĐẦY ĐỦ CHỈ SỐ MẶC ĐỊNH
+    const newUser = {
+        username: u,
+        password: p,
+        isNew: true,
+        level: 1,        
+        exp: 0,         
+        hp: 100,         
+        mp: 50,          
+        str: 0,          
+        vit: 0,        
+        agi: 0,         
+        int: 0,         
+        sen: 0,        
+        point: 0,        
+        cash: 500,        
+        inventory: [],
+        equipped: { weapon: null, armor: null, helmet: null, gloves: null, necklace: null, earring: null, ring: null, shoes: null, costume: null },
+        skills: { "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Siêu Giác Quan": 0, "Thợ Săn Tiền Thưởng": 0, "Bàn Tay May Mắn": 0 },
+        skillPoints: 0
+    };
+
+    await set(ref(db, 'users/' + u), newUser);
+    alert('Đăng ký thành công! Hãy Đăng nhập.');
 };
-        await set(ref(db, 'users/' + u), userData);
-        alert('Thức tỉnh thành công! Hãy đăng nhập.');
-    }
 
     window.login = async function() {
     const u = username.value.trim(), p = password.value.trim();
