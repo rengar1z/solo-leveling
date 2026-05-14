@@ -1500,12 +1500,12 @@
             currentUser.int -= (itemData.int || 0); 
             
             currentUser.maxMp -= (itemData.mp || 0); 
-            // FIX BUG: Tháo đồ thì phải trừ MP (không để rớt dưới 0)
+            currentUser.maxMp -= (itemObj.int || 0) * 5;
             currentUser.mp = Math.max(0, currentUser.mp - (itemData.mp || 0)); 
             
             if (itemData.vit > 0) {
                 currentUser.maxHp -= itemData.vit * 10; 
-                // FIX BUG: Tháo đồ thì phải trừ HP (không để rớt dưới 1)
+                
                 currentUser.hp = Math.max(1, currentUser.hp - (itemData.vit * 10));
             }
             currentUser.equipped.costume = null;
@@ -2886,6 +2886,7 @@
         currentUser.int += (itemObj.int || 0);
         
         currentUser.maxMp += (itemObj.mp || 0);
+        currentUser.maxMp += (itemObj.int || 0) * 5;
         
         let vitVal = itemObj.vit || 0; 
         if (vitVal !== 0) {
@@ -2909,12 +2910,18 @@
         currentUser.maxMp -= (itemObj.mp || 0);
         currentUser.agi -= (itemObj.agi || 0);
         currentUser.int -= (itemObj.int || 0);
+
+        currentUser.maxMp -= (itemObj.int || 0) * 5;
         
         currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
         
         let vitVal = itemObj.vit || 0; 
         if (vitVal !== 0) { 
             currentUser.maxHp -= vitVal * 10;
+           
+            if (vitVal < 0) {
+                currentUser.hp += Math.abs(vitVal * 10);
+            }
             currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
         }
 
