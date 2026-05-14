@@ -2279,10 +2279,43 @@
         const eHpText = isDungeonMode ? DOM.d_e_hp_text : DOM.e_hp_text;
         const eImgElement = isDungeonMode ? DOM.d_e_img : DOM.e_img;
         
-        // --- 1. CẬP NHẬT HP NGƯỜI CHƠI ---
+        // --- 1. CẬP NHẬT HP NGƯỜI CHƠI & GIÁP ẢO ---
         const pPercent = (currentUser.hp / currentUser.maxHp) * 100;
-        if (pHpBar) pHpBar.style.width = pPercent + "%";
-        if (pHpText) pHpText.textContent = `HP: ${currentUser.hp}/${currentUser.maxHp}`;
+        if (pHpBar) {
+            pHpBar.style.width = pPercent + "%";
+            
+            // Xử lý thanh giáp ảo (Shield Bar) cho người chơi
+            const pHpTrack = pHpBar.parentElement; 
+            const pre = isDungeonMode ? 'd-' : '';
+            let pShieldBar = document.getElementById(pre + 'p-shield-bar');
+            
+            if (!pShieldBar) {
+                pShieldBar = document.createElement('div');
+                pShieldBar.id = pre + 'p-shield-bar';
+                pShieldBar.className = 'combat-shield-bar'; // Dùng chung class CSS với boss
+                pHpTrack.appendChild(pShieldBar);
+            }
+
+            if (currentUser.shieldHP && currentUser.shieldHP > 0) {
+                const shieldPercent = (currentUser.shieldHP / currentUser.maxHp) * 100;
+                pShieldBar.style.display = "block"; 
+                pShieldBar.style.width = shieldPercent + "%";
+                pShieldBar.style.left = pPercent + "%"; 
+                pShieldBar.style.opacity = "1"; 
+            } else {
+                pShieldBar.style.width = "0%";
+                pShieldBar.style.display = "none"; 
+            }
+        }
+
+        if (pHpText) {
+            // Hiển thị số lượng giáp ảo bên cạnh HP để người chơi dễ theo dõi
+            if (currentUser.shieldHP && currentUser.shieldHP > 0) {
+                pHpText.innerHTML = `HP: ${currentUser.hp}/${currentUser.maxHp} <span style="color: #00ffff; font-size: 14px;">(+${currentUser.shieldHP})</span>`;
+            } else {
+                pHpText.textContent = `HP: ${currentUser.hp}/${currentUser.maxHp}`;
+            }
+        }
         
         // --- 2. CẬP NHẬT HP QUÁI VẬT & GIÁP ẢO ---
         const enemyMaxHp = enemy.maxHp || enemy.hp || 100;
