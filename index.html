@@ -2307,15 +2307,6 @@
                 pShieldBar.style.display = "none"; 
             }
         }
-
-        if (pHpText) {
-            // Hiển thị số lượng giáp ảo bên cạnh HP để người chơi dễ theo dõi
-            if (currentUser.shieldHP && currentUser.shieldHP > 0) {
-                pHpText.innerHTML = `HP: ${currentUser.hp}/${currentUser.maxHp} <span style="color: #00ffff; font-size: 14px;">(+${currentUser.shieldHP})</span>`;
-            } else {
-                pHpText.textContent = `HP: ${currentUser.hp}/${currentUser.maxHp}`;
-            }
-        }
         
         // --- 2. CẬP NHẬT HP QUÁI VẬT & GIÁP ẢO ---
         const enemyMaxHp = enemy.maxHp || enemy.hp || 100;
@@ -3413,7 +3404,7 @@
         if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return; }
         currentUser.mp -= reqMp; 
         
-        let shieldAmount = Math.floor(currentUser.maxMp * 0.30);
+        let shieldAmount = Math.floor((currentUser.maxMp * 0.30) + (currentUser.int * 3.5));
         currentUser.shieldHP = shieldAmount;
         
         logBattle(`<span style="color:#00ffff; font-weight:bold; font-size:18px;">🛡️ KHIÊN MA THUẬT!</span> Chướng ngại vật ma lực được dựng lên, hấp thụ <span style="color:#00ffff">${shieldAmount}</span> sát thương!`);
