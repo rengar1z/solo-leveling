@@ -840,7 +840,7 @@
         
         // Effects
         "effect/Heal_Effect.png", "effect/Burn_Effect.png", "effect/Defense_Decrease_Effect.png", "effect/rage_beru.png", "effect/HP.png", "effect/mana.png", "effect/Cash.png",
-        "effect/Stun_Effect.png", "effect/Punishment_Effect.png", "effect/Poison_Effect.png",
+        "effect/Stun_Effect.png", "effect/Punishment_Effect.png", "effect/Poison_Effect.png", "effect/Defense_Magic_Effect.png",
         "effect/Attack_Increase_Effect.png", "effect/Sian_Halat_Scarlet_Domination_Effect.png", "effect/Kasaka_Deadly_Poison_Effect.png",
         
         // Skills
@@ -2194,7 +2194,7 @@
             pHTML += `<div class="status-icon" title="Tàng Hình (Né 100% & Chí Mạng 100%)"><span style="font-size:24px;">🌫️</span></div>`;
         }
         if (currentUser.shieldHP && currentUser.shieldHP > 0) {
-            pHTML += `<div class="status-icon" title="Khiên Ma Thuật (Độ bền: ${currentUser.shieldHP})"><img src="effect/Heal_Effect.png" style="width: 100%; height: 100%; object-fit: contain;"></div>`;
+            pHTML += `<div class="status-icon" title="Khiên Ma Thuật (Độ bền: ${currentUser.shieldHP})"><img src="effect/Defense_Magic_Effect.png" style="width: 100%; height: 100%; object-fit: contain;"></div>`;
         }
         if (typeof playerBleedTurns !== 'undefined' && playerBleedTurns > 0) {
             pHTML += `<div class="status-icon" title="Chảy máu (Mất 5% HP mỗi lượt)"><img src="effect/Burn_Effect.png" style="width: 100%; height: 100%; object-fit: contain;"><div class="status-turn">${playerBleedTurns}</div></div>`;
