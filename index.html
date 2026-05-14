@@ -4561,7 +4561,7 @@
                 }
             } else if (isDungeonMode) {
                 // 2. Boss Hầm Ngục Thường: Rớt trang bị cơ bản hoặc Item Boss
-                let dropChance = 0.10 + luckBonus; // Mặc định 10%
+                let dropChance = 0.9 + luckBonus; // Mặc định 10%
                 if (Math.random() <= dropChance) { 
                     const items = enemy.rareDrops || ["Dagger", "Shield", "Essence of Magic"];
                     const droppedItemName = items[Math.floor(Math.random() * items.length)]; 
