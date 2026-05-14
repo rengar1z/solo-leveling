@@ -3761,12 +3761,28 @@
                 if (enemy.hp <= 0) { return window.combatTimer = setTimeout(winBattle, 1000); }
             }
         }
-        // --- XỬ LÝ SÁT THƯƠNG RÚT MÁU KHI BỊ THƯƠNG ---
-        if (playerBleedTurns > 0 && currentUser.hp > 0) { 
-            let bleedDmg = Math.floor(currentUser.maxHp * 0.05); 
-            currentUser.hp = Math.max(0, currentUser.hp - bleedDmg);
-            playerBleedTurns--;
-            logBattle(`<span style="color:red; font-style:italic;">🩸 Vết thương rỉ máu! Bạn mất thêm ${bleedDmg} HP (Còn ${playerBleedTurns} lượt).</span>`);
+        
+        // --- CƠ CHẾ NGƯỜI CHƠI BỊ CHẢY MÁU ---
+        if (window.playerBleedTurns && window.playerBleedTurns > 0) {
+            let bleedDmg = Math.floor(currentUser.maxHp * 0.05); // Hoặc mức sát thương tùy bạn set
+            
+            // KHIÊN CỦA NGƯỜI CHƠI ĐỠ CHẢY MÁU
+            if (currentUser.shieldHP && currentUser.shieldHP > 0) {
+                if (currentUser.shieldHP >= bleedDmg) {
+                    currentUser.shieldHP -= bleedDmg; 
+                } else {
+                    let leftOver = bleedDmg - currentUser.shieldHP; 
+                    currentUser.shieldHP = 0;
+                    currentUser.hp = Math.max(0, currentUser.hp - leftOver);
+                }
+            } else {
+                currentUser.hp = Math.max(0, currentUser.hp - bleedDmg); 
+            }
+
+            window.playerBleedTurns--;
+            logBattle(`<span style="color:#ff0000; font-style:italic;">🩸 Bạn bị mất máu liên tục! Trừ ${bleedDmg} Máu/Khiên.</span>`);
+            updateCombatUI(); 
+            if (currentUser.hp <= 0) { return setTimeout(loseBattle, 1000); }
         }
 
         // --- XỬ LÝ LƯỢT PHÁ GIÁP ---
