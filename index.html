@@ -1613,7 +1613,8 @@
         const data = s.val();
         if (data.password !== p) return alert('Mật mã sai');
     
-        currentUser = data; 
+        currentUser = data;
+        recalculateStats();
         // === CHÈN ĐOẠN BACKUP VÀO ĐÂY ===
         if (!currentUser.inventory) currentUser.inventory = [];
         if (!currentUser.equipped) currentUser.equipped = {};
@@ -2057,7 +2058,45 @@
         }
     };
 
+        window.recalculateStats = function() {
+        if (!currentUser) return;
+    
+        // 1. Tính HP/MP từ chỉ số gốc (1 VIT = 10 HP, 1 INT = 5 MP)
+        currentUser.maxHp = 100 + (currentUser.vit * 10);
+        currentUser.maxMp = 50 + (currentUser.int * 5);
+    
+        // 2. Cộng chỉ số từ Danh hiệu đang mặc
+        if (currentUser.equippedTitle && TITLE_DATA[currentUser.equippedTitle]) {
+            const t = TITLE_DATA[currentUser.equippedTitle];
+            currentUser.maxHp += (t.vit || 0) * 10;
+            currentUser.maxMp += (t.int || 0) * 5;
+        }
+    
+        // 3. Cộng chỉ số từ Trang phục (Costume)
+        if (currentUser.equipped.costume) {
+            const cosData = ITEM_DATA[currentUser.equipped.costume.name];
+            if (cosData) {
+                currentUser.maxHp += (cosData.vit || 0) * 10;
+                currentUser.maxMp += (cosData.mp || 0); // Costume thường cộng thẳng MP
+            }
+        }
+    
+        // 4. Cộng từ toàn bộ trang bị đang mặc (Giáp, Vũ khí, Trang sức)
+        const slots = ['weapon', 'armor', 'helmet', 'gloves', 'necklace', 'earring', 'ring', 'shoes'];
+        slots.forEach(slot => {
+            const item = currentUser.equipped[slot];
+            if (item) {
+                currentUser.maxHp += (item.vit || 0) * 10;
+                currentUser.maxMp += (item.mp || 0);
+            }
+        });
+    
+        // 5. Đảm bảo máu hiện tại không vượt quá giới hạn mới tính
+        if (currentUser.hp > currentUser.maxHp) currentUser.hp = currentUser.maxHp;
+        if (currentUser.mp > currentUser.maxMp) currentUser.mp = currentUser.maxMp;
+    };
     function render() {
+            recalculateStats();
             if (!DOM.isCached) initDOM(); // Tự động load cache lần đầu tiên
         
             DOM.playerName.textContent = currentUser.username;
