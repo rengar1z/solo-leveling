@@ -3702,26 +3702,31 @@
             enemy.hp = Math.max(0, enemy.hp - burnDmg);
             window.enemyBurnTurns--;
             logBattle(`<span style="color:#ff3300; font-style:italic;">🔥 Lửa Hắc Ám thiêu đốt! Kẻ địch mất ${burnDmg} HP.</span>`);
-            if (enemy.hp <= 0) { updateCombatUI(); return setTimeout(winBattle, 1000); }
+            
+            updateCombatUI(); // <--- THÊM DÒNG NÀY ĐỂ KỊP THỜI ĐỔI ICON
+            if (enemy.hp <= 0) { return setTimeout(winBattle, 1000); }
         }
+        
         // --- (THÊM MỚI VÀO ĐÂY) CƠ CHẾ VỠ GIÁP ĐẾM LÙI ---
         if (window.enemyDefBreakTurns && window.enemyDefBreakTurns > 0) {
             window.enemyDefBreakTurns--;
             if (window.enemyDefBreakTurns === 0) {
-            logBattle(`<span style="color:#aaa; font-style:italic;">🛡️ Lớp giáp của kẻ địch đã khôi phục!</span>`);
+                logBattle(`<span style="color:#aaa; font-style:italic;">🛡️ Lớp giáp của kẻ địch đã khôi phục!</span>`);
+            }
         }
-    }
+
         // --- CƠ CHẾ ĐỘC CỦA BOSS ---
         if (enemyPoisonTurns > 0) {
-            // Kiểm tra xem có phải vừa mới dính độc ở lượt này không
             if (window.enemyNewlyPoisoned) {
-                window.enemyNewlyPoisoned = false; // Hạ cờ xuống, bỏ qua không rút máu
+                window.enemyNewlyPoisoned = false; 
             } else {
-                let poisonDmg = Math.floor(enemy.maxHp * 0.05); // Rút 5% HP tối đa của Boss
+                let poisonDmg = Math.floor(enemy.maxHp * 0.05); 
                 enemy.hp = Math.max(0, enemy.hp - poisonDmg);
                 enemyPoisonTurns--;
                 logBattle(`<span style="color:#00ff00; font-style:italic;">☠️ Độc tính phát tác! Kẻ địch mất ${poisonDmg} HP.</span>`);
-                if (enemy.hp <= 0) { updateCombatUI(); return window.combatTimer = setTimeout(winBattle, 1000); }
+                
+                updateCombatUI(); // <--- THÊM DÒNG NÀY NỮA
+                if (enemy.hp <= 0) { return window.combatTimer = setTimeout(winBattle, 1000); }
             }
         }
         // --- XỬ LÝ SÁT THƯƠNG RÚT MÁU KHI BỊ THƯƠNG ---
