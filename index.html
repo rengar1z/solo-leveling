@@ -1614,42 +1614,6 @@
         if (data.password !== p) return alert('Mật mã sai');
     
         currentUser = data; 
-
-        // === BẮT ĐẦU CHÈN: HỆ THỐNG TỰ ĐỘNG CHUẨN HÓA HP/MP ===
-        let realMaxHp = 100 + ((currentUser.level - 1) * 20) + ((currentUser.vit - 5) * 10);
-        let realMaxMp = 50 + ((currentUser.level - 1) * 10) + ((currentUser.int - 5) * 5);
-
-        // Cộng từ trang bị
-        let allEqSlots = ['weapon', 'armor', 'helmet', 'gloves', 'necklace', 'earring', 'ring', 'shoes', 'costume'];
-        allEqSlots.forEach(slot => {
-            if (currentUser.equipped && currentUser.equipped[slot]) {
-                let itemData = ITEM_DATA[currentUser.equipped[slot].name];
-                if (itemData) {
-                    if (itemData.vit) realMaxHp += (itemData.vit * 10);
-                    if (itemData.mp) realMaxMp += itemData.mp;
-                    if (itemData.int) realMaxMp += (itemData.int * 5); // Bù MP từ đồ cộng thẳng INT
-                }
-            }
-        });
-
-        // Cộng từ Danh hiệu
-        if (currentUser.equippedTitle && TITLE_DATA[currentUser.equippedTitle]) {
-            realMaxHp += (TITLE_DATA[currentUser.equippedTitle].vit || 0) * 10;
-            realMaxMp += (TITLE_DATA[currentUser.equippedTitle].int || 0) * 5;
-        }
-
-        // Cộng từ Bóng ma
-        if (currentUser.equippedShadow && SHADOW_DATA[currentUser.equippedShadow]) {
-            realMaxHp += (SHADOW_DATA[currentUser.equippedShadow].vit || 0) * 10;
-            realMaxMp += (SHADOW_DATA[currentUser.equippedShadow].int || 0) * 5;
-        }
-
-        // Cập nhật lại giới hạn và bơm đầy máu/mana để bạn test
-        currentUser.maxHp = realMaxHp;
-        currentUser.maxMp = realMaxMp;
-        currentUser.hp = realMaxHp; 
-        currentUser.mp = realMaxMp;
-
         // === CHÈN ĐOẠN BACKUP VÀO ĐÂY ===
         if (!currentUser.inventory) currentUser.inventory = [];
         if (!currentUser.equipped) currentUser.equipped = {};
