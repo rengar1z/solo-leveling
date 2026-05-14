@@ -2423,24 +2423,32 @@
         }
 
         const isCounterSkill = btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('useCounterAttack');
+        
+        const isSpecialSkill = btn.getAttribute('onclick') && (btn.getAttribute('onclick').includes('useExecuteBlade') || btn.getAttribute('onclick').includes('useHellfireBlast') || btn.getAttribute('onclick').includes('useArmorShatter'));
+
         let isLocked = false;
         
         if (cost > 0 && currentUser.mp < cost) isLocked = true; 
         if (isCounterSkill && window.counterCooldown && window.counterCooldown > 0) isLocked = true; 
         
+       
+        if (isSpecialSkill && window.specialCooldown && window.specialCooldown > 0) isLocked = true;
+        
         if (isLocked) {
             if (btn.style.cursor !== "not-allowed") {
                 btn.style.filter = "grayscale(1) brightness(0.5)"; 
                 btn.style.cursor = "not-allowed";
+                btn.style.pointerEvents = "none"; 
             }
         } else {
             if (btn.style.cursor !== "pointer") {
                 btn.style.filter = "none";
                 btn.style.cursor = "pointer";
+                btn.style.pointerEvents = "auto"; 
             }
         }
     });
-    
+        
     // --- 5. VẼ ICON HIỆU ỨNG (BUFF/DEBUFF) ---
     if (typeof renderStatusIcons === "function") {
         renderStatusIcons();
