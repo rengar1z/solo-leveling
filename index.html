@@ -1306,7 +1306,7 @@
 
         // --- NHÁNH PHÁP SƯ (XUYÊN GIÁP) ---
         "Lõi Ma Thuật": { branch: "Pháp Sư", type: "passive", maxLv: 1, cost: 5, desc: "[Bị động] Kích hoạt lõi ma lực. Tăng 25% sát thương cho mọi kỹ năng Phép Thuật (INT).", icon: "skill/loimathuat.png" },
-        "Hút Ma Lực": { branch: "Pháp Sư", type: "active", maxLv: 1, cost: 10, mp: 10, func: "useManaDrain", desc: "Gây ST Phép. Hồi MP bằng 50% ST gây ra.", icon: "skill/hutmaluc.png" },
+        "Hút Sinh Lực": { branch: "Pháp Sư", type: "active", maxLv: 1, cost: 10, mp: 10, func: "useLifeDrain", desc: "Triệu hồi thực thể hắc ám hút máu mục tiêu. Gây sát thương phép và hồi HP cho bản thân.", icon: "skill/hutmaluc.png" },
         "Ngọn Lửa Hắc Ám": { branch: "Pháp Sư", type: "active", maxLv: 1, cost: 10, mp: 40, func: "useDarkFlame", desc: "Gây ST Phép. Khiến địch [Thiêu Đốt] mất 3% Máu Tối Đa và giảm 15% Sức mạnh trong 3 lượt.", icon: "skill/ngonluahacam.png" },
         "Bão Cầu Lửa": { branch: "Pháp Sư", type: "active", maxLv: 1, cost: 10, mp: 30, func: "useFireStorm", desc: "Cầu lửa thiêu rụi. ST tính bằng INT.", icon: "skill/flame_ball.png" },
         "Khiên Ma Thuật": { branch: "Pháp Sư", type: "active", maxLv: 1, cost: 10, mp: 20, func: "useManaShield", desc: "Tiêu hao ma lực tạo lớp khiên bảo vệ hấp thụ sát thương bằng 30% MP Tối đa.", icon: "skill/khienmathuat.png" },
@@ -3394,12 +3394,12 @@
         if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return; }
         currentUser.mp -= reqMp; 
         
-        let hit = calcPlayerDamage({ multi: 1.5, stat: 'int' }); 
+        let hit = calcPlayerDamage({ multi: 1.8, stat: 'int', ignoreDef: 0.2 }); 
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         window.enemyBurnTurns = 3; 
         
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 BẠO KÍCH!</span> ` : "";
-        logBattle(`${critLog}<span style="color:#ff3300; text-shadow: 0 0 5px #ff3300;">🔥 NGỌN LỬA HẮC ÁM!</span> Gây ${hit.dmg} ST Phép và khiến địch <span style="color:#ff3300; font-weight:bold;">[Thiêu Đốt]</span> (Mất HP và giảm Sức mạnh)!`);
+        logBattle(`${critLog}<span style="color:#ff3300; text-shadow: 0 0 5px #ff3300;">🔥 NGỌN LỬA HẮC ÁM!</span> Gây ${hit.dmg} ST Phép và khiến địch <span style="color:#ff3300; font-weight:bold;">[Thiêu Đốt]</span>!`);
         
         updateCombatUI(); checkBattleEnd();
     };
@@ -3418,19 +3418,24 @@
     };
 
     // --- BỔ SUNG CHIÊU PHÁP SƯ: HÚT MA LỰC ---
-    window.useManaDrain = function() {
-        let reqMp = getActualMpCost(10);
-        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return; }
+   window.useLifeDrain = function() {
+        let reqMp = getActualMpCost(25); // Tăng MP tiêu hao một chút vì hiệu ứng hồi HP mạnh hơn MP
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { 
+            if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); 
+            return; 
+        }
         currentUser.mp -= reqMp; 
         
-        let hit = calcPlayerDamage({ multi: 1.8, stat: 'int' }); 
+        // BUFF: Hệ số 2.2x INT và Xuyên 10% Giáp
+        let hit = calcPlayerDamage({ multi: 2.2, stat: 'int', ignoreDef: 0.1 }); 
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         
-        let manaHeal = Math.floor(hit.dmg * 0.5);
-        currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + manaHeal);
+        // Logic hồi phục: Hồi HP dựa trên 30% sát thương phép gây ra
+        let healAmount = Math.floor(hit.dmg * 0.3);
+        currentUser.hp = Math.min(currentUser.maxHp, currentUser.hp + healAmount);
 
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 BẠO KÍCH!</span> ` : "";
-        logBattle(`${critLog}<span style="color:#00bfff;">HÚT MA LỰC!</span> Gây ${hit.dmg} ST Phép, đoạt lại <span style="color:#00bfff">${manaHeal} MP</span>!`);
+        logBattle(`${critLog}<span style="color:#ff3399; text-shadow: 0 0 5px #ff3399;">HÚT SINH LỰC!</span> Gây ${hit.dmg} ST Phép, đoạt lại <span style="color:#00ff00">${healAmount} HP</span>!`);
         
         updateCombatUI(); checkBattleEnd();
     };
@@ -3508,16 +3513,17 @@
         updateCombatUI(); checkBattleEnd(); 
     };
 
-    // --- BỔ SUNG CHIÊU THỨC BỊ THIẾU: BÃO CẦU LỬA ---
+    // --- BÃO CẦU LỬA ---
     window.useFireStorm = function() {
         let reqMp = getActualMpCost(30);
         if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return; }
         currentUser.mp -= reqMp; 
         
-        let hit = calcPlayerDamage({ multi: 2.0, stat: 'int', ignoreDef: 0.2 }); 
+        // BUFF: Tăng multi từ 2.0 lên 2.5 và Xuyên 30% Giáp
+        let hit = calcPlayerDamage({ multi: 2.5, stat: 'int', ignoreDef: 0.3 }); 
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         
-        let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 BẠO KÍCH!</span> ` : "";
+        let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 BẠO KÍCH TÀN PHÁ!</span> ` : "";
         logBattle(`${critLog}Ném <span style="color:#ff9900; text-shadow: 0 0 5px #ff9900;">Bão Cầu Lửa</span> bùng nổ, gây <span style="color:#ff9900">${hit.dmg}</span> ST Phép!`);
         
         updateCombatUI(); checkBattleEnd();
