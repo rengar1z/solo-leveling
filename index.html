@@ -2323,15 +2323,10 @@
         const eImgElement = isDungeonMode ? DOM.d_e_img : DOM.e_img;
         
         // --- 1. CẬP NHẬT HP NGƯỜI CHƠI & GIÁP ẢO ---
-        const pPercent = Math.min(100, Math.max(0, (currentUser.hp / currentUser.maxHp) * 100)); 
-
+        const pPercent = Math.min(100, Math.max(0, (currentUser.hp / currentUser.maxHp) * 100));
+        
         if (pHpBar) {
             pHpBar.style.width = pPercent + "%";
-        }
-        
-        if (pHpText) {
-            pHpText.textContent = `HP: ${currentUser.hp}/${currentUser.maxHp}`;
-        }
             
             // Xử lý thanh giáp ảo (Shield Bar) cho người chơi
             const pHpTrack = pHpBar.parentElement; 
@@ -2341,7 +2336,7 @@
             if (!pShieldBar) {
                 pShieldBar = document.createElement('div');
                 pShieldBar.id = pre + 'p-shield-bar';
-                pShieldBar.className = 'combat-shield-bar'; // Dùng chung class CSS với boss
+                pShieldBar.className = 'combat-shield-bar'; 
                 pHpTrack.appendChild(pShieldBar);
             }
 
@@ -2355,6 +2350,11 @@
                 pShieldBar.style.width = "0%";
                 pShieldBar.style.display = "none"; 
             }
+        }
+        
+        
+        if (pHpText) {
+            pHpText.textContent = `HP: ${currentUser.hp}/${currentUser.maxHp}`;
         }
         
         // --- 2. CẬP NHẬT HP QUÁI VẬT & GIÁP ẢO ---
