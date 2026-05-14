@@ -1649,21 +1649,6 @@
         currentUser.inventory = currentUser.inventory || [];
         currentUser.equipped = currentUser.equipped || { weapon: null, armor: null, helmet: null, gloves: null, necklace: null, earring: null, ring: null, shoes: null, costume: null };
         
-        let flatMp = 0;
-        let allEqSlots = ['weapon', 'armor', 'helmet', 'gloves', 'necklace', 'earring', 'ring', 'shoes'];
-        allEqSlots.forEach(slot => {
-            if (currentUser.equipped[slot] && currentUser.equipped[slot].mp) {
-                flatMp += currentUser.equipped[slot].mp;
-            }
-        });
-        if (currentUser.equipped.costume && ITEM_DATA[currentUser.equipped.costume.name]) {
-            flatMp += (ITEM_DATA[currentUser.equipped.costume.name].mp || 0);
-        }
-
-        currentUser.maxHp = 100 + ((currentUser.level - 1) * 20) + ((currentUser.vit - 5) * 10);
-        currentUser.maxMp = 50 + ((currentUser.level - 1) * 10) + ((currentUser.int - 5) * 5) + flatMp;
-        currentUser.hp = Math.min(currentUser.hp || currentUser.maxHp, currentUser.maxHp);
-        currentUser.mp = Math.min(currentUser.mp || currentUser.maxMp, currentUser.maxMp);
         document.getElementById('auth').classList.add('hidden');
         document.getElementById('gameWrap').classList.remove('hidden');
         const statsBtn = document.getElementById('defaultOpenTab'); 
