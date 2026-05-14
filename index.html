@@ -2103,11 +2103,16 @@
             DOM.level.textContent = currentUser.level;
             DOM.job.textContent = getJob(currentUser.level);
         
-            DOM.hpDisplay.textContent = currentUser.hp + '/' + currentUser.maxHp;
+            if (DOM.hpDisplay) {
+                DOM.hpDisplay.textContent = currentUser.hp + '/' + currentUser.maxHp;
+            }
             DOM.mpDisplay.textContent = currentUser.mp + '/' + currentUser.maxMp;
             DOM.expText.textContent = currentUser.exp + '/' + currentUser.need;
         
-            DOM.hpBar.style.width = (currentUser.hp / currentUser.maxHp * 100) + '%';
+            if (DOM.hpBar) {
+                let hpPercent = (currentUser.hp / currentUser.maxHp) * 100;
+                DOM.hpBar.style.width = hpPercent + '%';
+            }
             DOM.mpBar.style.width = (currentUser.mp / currentUser.maxMp * 100) + '%';
             DOM.expBar.style.width = (currentUser.exp / currentUser.need * 100) + '%';
         
