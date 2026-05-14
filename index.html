@@ -2299,9 +2299,15 @@
 
             if (currentUser.shieldHP && currentUser.shieldHP > 0) {
                 const shieldPercent = (currentUser.shieldHP / currentUser.maxHp) * 100;
+                let sLeft = pPercent;
+                
+                if (pPercent + shieldPercent > 100) {
+                    sLeft = 100 - shieldPercent;
+                }
+                
                 pShieldBar.style.display = "block"; 
                 pShieldBar.style.width = shieldPercent + "%";
-                pShieldBar.style.left = pPercent + "%"; 
+                pShieldBar.style.left = sLeft + "%"; 
                 pShieldBar.style.opacity = "1"; 
             } else {
                 pShieldBar.style.width = "0%";
