@@ -1912,7 +1912,7 @@
     
     let currentClass = null;
     for (let s in currentUser.skills) {
-        if (currentUser.skills[s] > 0 && skillData[s] && skillData[s].branch !== "Chung") {
+        if (currentUser.skills[s] > 0 && skillData[s] && skillData[s].branch !== "Chung" && skillData[s].branch !== "Đặc biệt") {
             currentClass = skillData[s].branch; 
             break;
         }
@@ -1998,7 +1998,7 @@
 
         let currentClass = null;
         for (let s in currentUser.skills) {
-            if (currentUser.skills[s] > 0 && skillData[s] && skillData[s].branch !== "Chung") {
+            if (currentUser.skills[s] > 0 && skillData[s] && skillData[s].branch !== "Chung" && skillData[s].branch !== "Đặc biệt") {
                 currentClass = skillData[s].branch;
                 break;
             }
