@@ -1584,94 +1584,83 @@
     }
 
     window.register = async function() {
-    const u = username.value.trim(), p = password.value.trim();
-    if (!u || !p) return alert('Nhập đủ thông tin!');
-    
-    // Kiểm tra xem tài khoản đã tồn tại chưa
-    const s = await get(child(ref(db), 'users/' + u));
-    if (s.exists()) return alert('Thợ săn này đã đăng ký trước đó!');
+        const u = username.value.trim(), p = password.value.trim();
+        if(!u || !p) return alert('Vui lòng nhập đầy đủ');
+        const s = await get(child(ref(db), 'users/' + u));
+        if (s.exists()) return alert('Tên thợ săn đã được sử dụng');
 
-    // KHỞI TẠO TÀI KHOẢN MỚI VỚI ĐẦY ĐỦ CHỈ SỐ MẶC ĐỊNH
-    const newUser = {
-        username: u,
-        password: p,
-        isNew: true,
-        level: 1,        
-        exp: 0,         
-        hp: 100,         
-        mp: 50,          
-        str: 0,          
-        vit: 0,        
-        agi: 0,         
-        int: 0,         
-        sen: 0,        
-        point: 0,        
-        cash: 500,        
-        inventory: [],
-        equipped: { weapon: null, armor: null, helmet: null, gloves: null, necklace: null, earring: null, ring: null, shoes: null, costume: null },
-        skills: { "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Siêu Giác Quan": 0, "Thợ Săn Tiền Thưởng": 0, "Bàn Tay May Mắn": 0 },
-        skillPoints: 0
-    };
-
-    await set(ref(db, 'users/' + u), newUser);
-    alert('Đăng ký thành công! Hãy Đăng nhập.');
+        const userData = {
+            username: u, password: p, level: 1, exp: 0, need: 100, cash: 500, // Đã thêm cash: 500
+            hp: 100, maxHp: 100, mp: 50, maxMp: 50,
+            str: 5, agi: 5, int: 5, vit: 5, sense: 5, points: 0,
+            claimedDate: '', streak: 0, logs: [],
+            title: "Weakest Hunter of All Time", skillPoints: 0,
+            inventory: [], // Thêm mảng chứa đồ
+            equipped: { weapon: null, armor: null, helmet: null, gloves: null, necklace: null, earring: null, ring: null, shoes: null, costume: null },
+            skills: { "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Siêu Giác Quan": 0, "Thợ Săn Tiền Thưởng": 0, "Bàn Tay May Mắn": 0 },
+            ownedShadows: [], 
+            equippedShadow: null,
+            isNew: true
 };
+        await set(ref(db, 'users/' + u), userData);
+        alert('Thức tỉnh thành công! Hãy đăng nhập.');
+    }
 
     window.login = async function() {
-    const u = username.value.trim(), p = password.value.trim();
-    const s = await get(child(ref(db), 'users/' + u));
-    if (!s.exists()) return alert('Thợ săn chưa thức tỉnh');
-    const data = s.val();
-    if (data.password !== p) return alert('Mật mã sai');
-
-    currentUser = data;
-
-    // === 1. KÉO ĐOẠN BACKUP LÊN TRƯỚC ĐỂ KHÔI PHỤC OBJECT BỊ FIREBASE XÓA ===
-    if (!currentUser.inventory) currentUser.inventory = [];
-    if (!currentUser.equipped) currentUser.equipped = { weapon: null, armor: null, helmet: null, gloves: null, necklace: null, earring: null, ring: null, shoes: null, costume: null };
-
-    // Tháo Ring2 và Shield cũ trả về kho đồ để họ không mất đồ
-    if (currentUser.equipped.ring1) { 
-        currentUser.equipped.ring = currentUser.equipped.ring1; 
-        delete currentUser.equipped.ring1; 
-    }
+        const u = username.value.trim(), p = password.value.trim();
+        const s = await get(child(ref(db), 'users/' + u));
+        if (!s.exists()) return alert('Thợ săn chưa thức tỉnh');
+        const data = s.val();
+        if (data.password !== p) return alert('Mật mã sai');
     
-    if (currentUser.equipped.shield) { 
-        currentUser.equipped.armor = currentUser.equipped.shield; 
-        delete currentUser.equipped.shield; 
-    }    
-    
-    if (!currentUser.skills) {
-        currentUser.skills = { "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Siêu Giác Quan": 0, "Thợ Săn Tiền Thưởng": 0, "Bàn Tay May Mắn": 0 };
-        currentUser.skillPoints = currentUser.skillPoints || 0;
-    }
+        currentUser = data; // Dữ liệu thợ săn được nạp vào đây
 
-    // === 2. BÂY GIỜ GỌI TÍNH TOÁN CHỈ SỐ MỚI AN TOÀN ===
-    recalculateStats();
+        // === CHÈN ĐOẠN BACKUP VÀO ĐÂY ===
+        if (!currentUser.inventory) currentUser.inventory = [];
+        if (!currentUser.equipped) currentUser.equipped = {};
 
-    if (currentUser.isNew) {
-        const welcome = document.getElementById('welcomeAlert');
-        welcome.classList.remove('hidden');
-        setTimeout(async () => {
-            welcome.classList.add('hidden');
-            currentUser.isNew = false;
-            await set(ref(db, 'users/' + currentUser.username), currentUser);
-        }, 3000);
-    }
+        // Tháo Ring2 và Shield cũ trả về kho đồ để họ không mất đồ
+        if (currentUser.equipped.ring1) { 
+            currentUser.equipped.ring = currentUser.equipped.ring1; 
+            delete currentUser.equipped.ring1; 
+        }
+        
+        if (currentUser.equipped.shield) { 
+            currentUser.equipped.armor = currentUser.equipped.shield; 
+            delete currentUser.equipped.shield; 
+        }    
+        
+        if (!currentUser.skills) {
+            currentUser.skills = { "Phát Triển Cấp Tốc": 0, "Thể Chất Siêu Phàm": 0, "Siêu Giác Quan": 0, "Thợ Săn Tiền Thưởng": 0, "Bàn Tay May Mắn": 0 };
+            currentUser.skillPoints = currentUser.skillPoints || 0;
+        }
 
-    currentUser.cash = currentUser.cash || 0;
-    
-    document.getElementById('auth').classList.add('hidden');
-    document.getElementById('gameWrap').classList.remove('hidden');
-    const statsBtn = document.getElementById('defaultOpenTab'); 
-    if (statsBtn) {
+        if (currentUser.isNew) {
+            const welcome = document.getElementById('welcomeAlert');
+            welcome.classList.remove('hidden');
+            setTimeout(async () => {
+                welcome.classList.add('hidden');
+                currentUser.isNew = false;
+                await set(ref(db, 'users/' + currentUser.username), currentUser);
+            }, 3000);
+        }
+
+        currentUser.cash = currentUser.cash || 0;
+        currentUser.inventory = currentUser.inventory || [];
+        currentUser.equipped = currentUser.equipped || { weapon: null, armor: null, helmet: null, gloves: null, necklace: null, earring: null, ring: null, shoes: null, costume: null };
+        
+        document.getElementById('auth').classList.add('hidden');
+        document.getElementById('gameWrap').classList.remove('hidden');
+        const statsBtn = document.getElementById('defaultOpenTab'); 
+        if (statsBtn) {
+        // Lệnh này giả lập việc bạn click chuột vào nút Stats
         openTab({ currentTarget: statsBtn }, 'tab-stats');
+        }
+        
+        render();
+        window.renderSkills(); 
+        if(window.renderShadowArmy) window.renderShadowArmy();
     }
-    
-    render();
-    window.renderSkills(); 
-    if(window.renderShadowArmy) window.renderShadowArmy();
-}
 
     window.completeMission = async function() {
         const today = new Date().toLocaleDateString();
@@ -2069,61 +2058,18 @@
         }
     };
 
-        window.recalculateStats = function() {
-        if (!currentUser) return;
-    
-        // 1. Tính HP/MP từ chỉ số gốc (1 VIT = 10 HP, 1 INT = 5 MP)
-        currentUser.maxHp = 100 + (currentUser.vit * 10);
-        currentUser.maxMp = 50 + (currentUser.int * 5);
-    
-        // 2. Cộng chỉ số từ Danh hiệu đang mặc
-        if (currentUser.equippedTitle && TITLE_DATA[currentUser.equippedTitle]) {
-            const t = TITLE_DATA[currentUser.equippedTitle];
-            currentUser.maxHp += (t.vit || 0) * 10;
-            currentUser.maxMp += (t.int || 0) * 5;
-        }
-    
-        // 3. Cộng chỉ số từ Trang phục (Costume)
-        if (currentUser.equipped.costume) {
-            const cosData = ITEM_DATA[currentUser.equipped.costume.name];
-            if (cosData) {
-                currentUser.maxHp += (cosData.vit || 0) * 10;
-                currentUser.maxMp += (cosData.mp || 0); // Costume thường cộng thẳng MP
-            }
-        }
-    
-        // 4. Cộng từ toàn bộ trang bị đang mặc (Giáp, Vũ khí, Trang sức)
-        const slots = ['weapon', 'armor', 'helmet', 'gloves', 'necklace', 'earring', 'ring', 'shoes'];
-        slots.forEach(slot => {
-            const item = currentUser.equipped[slot];
-            if (item) {
-                currentUser.maxHp += (item.vit || 0) * 10;
-                currentUser.maxMp += (item.mp || 0);
-            }
-        });
-    
-        // 5. Đảm bảo máu hiện tại không vượt quá giới hạn mới tính
-        if (currentUser.hp > currentUser.maxHp) currentUser.hp = currentUser.maxHp;
-        if (currentUser.mp > currentUser.maxMp) currentUser.mp = currentUser.maxMp;
-    };
     function render() {
-            recalculateStats();
             if (!DOM.isCached) initDOM(); // Tự động load cache lần đầu tiên
         
             DOM.playerName.textContent = currentUser.username;
             DOM.level.textContent = currentUser.level;
             DOM.job.textContent = getJob(currentUser.level);
         
-            if (DOM.hpDisplay) {
-                DOM.hpDisplay.textContent = currentUser.hp + '/' + currentUser.maxHp;
-            }
+            DOM.hpDisplay.textContent = currentUser.hp + '/' + currentUser.maxHp;
             DOM.mpDisplay.textContent = currentUser.mp + '/' + currentUser.maxMp;
             DOM.expText.textContent = currentUser.exp + '/' + currentUser.need;
         
-            if (DOM.hpBar) {
-                let hpPercent = (currentUser.hp / currentUser.maxHp) * 100;
-                DOM.hpBar.style.width = hpPercent + '%';
-            }
+            DOM.hpBar.style.width = (currentUser.hp / currentUser.maxHp * 100) + '%';
             DOM.mpBar.style.width = (currentUser.mp / currentUser.maxMp * 100) + '%';
             DOM.expBar.style.width = (currentUser.exp / currentUser.need * 100) + '%';
         
@@ -2334,8 +2280,7 @@
         const eImgElement = isDungeonMode ? DOM.d_e_img : DOM.e_img;
         
         // --- 1. CẬP NHẬT HP NGƯỜI CHƠI & GIÁP ẢO ---
-        const pPercent = Math.min(100, Math.max(0, (currentUser.hp / currentUser.maxHp) * 100));
-        
+        const pPercent = (currentUser.hp / currentUser.maxHp) * 100;
         if (pHpBar) {
             pHpBar.style.width = pPercent + "%";
             
@@ -2347,7 +2292,7 @@
             if (!pShieldBar) {
                 pShieldBar = document.createElement('div');
                 pShieldBar.id = pre + 'p-shield-bar';
-                pShieldBar.className = 'combat-shield-bar'; 
+                pShieldBar.className = 'combat-shield-bar'; // Dùng chung class CSS với boss
                 pHpTrack.appendChild(pShieldBar);
             }
 
@@ -2361,11 +2306,6 @@
                 pShieldBar.style.width = "0%";
                 pShieldBar.style.display = "none"; 
             }
-        }
-        
-        
-        if (pHpText) {
-            pHpText.textContent = `HP: ${currentUser.hp}/${currentUser.maxHp}`;
         }
         
         // --- 2. CẬP NHẬT HP QUÁI VẬT & GIÁP ẢO ---
