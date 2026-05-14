@@ -2341,9 +2341,15 @@
     
             if (enemy.shieldHP && enemy.shieldHP > 0) {
                 const shieldPercent = (enemy.shieldHP / enemyMaxHp) * 100;
+                let sLeft = ePercent;
+                
+                if (ePercent + shieldPercent > 100) {
+                    sLeft = 100 - shieldPercent;
+                }
+                
                 eShieldBar.style.display = "block"; 
                 eShieldBar.style.width = shieldPercent + "%";
-                eShieldBar.style.left = ePercent + "%"; 
+                eShieldBar.style.left = sLeft + "%"; 
                 eShieldBar.style.opacity = "1"; 
             } else {
                 eShieldBar.style.width = "0%";
