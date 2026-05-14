@@ -3706,16 +3706,28 @@
         
         // --- CƠ CHẾ ĐỐT CỦA PHÁP SƯ ---
         if (window.enemyBurnTurns && window.enemyBurnTurns > 0) {
-            let burnDmg = Math.floor(enemy.maxHp * 0.03); // Đốt 3% máu tối đa
-            enemy.hp = Math.max(0, enemy.hp - burnDmg);
-            window.enemyBurnTurns--;
-            logBattle(`<span style="color:#ff3300; font-style:italic;">🔥 Lửa Hắc Ám thiêu đốt! Kẻ địch mất ${burnDmg} HP.</span>`);
+            let burnDmg = Math.floor(enemy.maxHp * 0.03); 
             
-            updateCombatUI(); // <--- THÊM DÒNG NÀY ĐỂ KỊP THỜI ĐỔI ICON
+            // KHIÊN ĐỠ SÁT THƯƠNG ĐỐT
+            if (enemy.shieldHP && enemy.shieldHP > 0) {
+                if (enemy.shieldHP >= burnDmg) {
+                    enemy.shieldHP -= burnDmg; 
+                } else {
+                    let leftOver = burnDmg - enemy.shieldHP; 
+                    enemy.shieldHP = 0;
+                    enemy.hp = Math.max(0, enemy.hp - leftOver);
+                }
+            } else {
+                enemy.hp = Math.max(0, enemy.hp - burnDmg); 
+            }
+
+            window.enemyBurnTurns--;
+            logBattle(`<span style="color:#ff3300; font-style:italic;">🔥 Lửa Hắc Ám thiêu đốt! Kẻ địch mất ${burnDmg} Máu/Khiên.</span>`);
+            updateCombatUI(); 
             if (enemy.hp <= 0) { return setTimeout(winBattle, 1000); }
         }
         
-        // --- (THÊM MỚI VÀO ĐÂY) CƠ CHẾ VỠ GIÁP ĐẾM LÙI ---
+        // --- CƠ CHẾ VỠ GIÁP ĐẾM LÙI ---
         if (window.enemyDefBreakTurns && window.enemyDefBreakTurns > 0) {
             window.enemyDefBreakTurns--;
             if (window.enemyDefBreakTurns === 0) {
@@ -3723,17 +3735,29 @@
             }
         }
 
-        // --- CƠ CHẾ ĐỘC CỦA BOSS ---
+        // --- CƠ CHẾ ĐỘC CỦA BOSS (DO SÁT THỦ/KASAKA GÂY RA) ---
         if (enemyPoisonTurns > 0) {
             if (window.enemyNewlyPoisoned) {
                 window.enemyNewlyPoisoned = false; 
             } else {
                 let poisonDmg = Math.floor(enemy.maxHp * 0.05); 
-                enemy.hp = Math.max(0, enemy.hp - poisonDmg);
-                enemyPoisonTurns--;
-                logBattle(`<span style="color:#00ff00; font-style:italic;">☠️ Độc tính phát tác! Kẻ địch mất ${poisonDmg} HP.</span>`);
                 
-                updateCombatUI(); // <--- THÊM DÒNG NÀY NỮA
+                // KHIÊN ĐỠ SÁT THƯƠNG ĐỘC
+                if (enemy.shieldHP && enemy.shieldHP > 0) {
+                    if (enemy.shieldHP >= poisonDmg) {
+                        enemy.shieldHP -= poisonDmg; 
+                    } else {
+                        let leftOver = poisonDmg - enemy.shieldHP; 
+                        enemy.shieldHP = 0;
+                        enemy.hp = Math.max(0, enemy.hp - leftOver);
+                    }
+                } else {
+                    enemy.hp = Math.max(0, enemy.hp - poisonDmg); 
+                }
+
+                enemyPoisonTurns--;
+                logBattle(`<span style="color:#00ff00; font-style:italic;">☠️ Độc tính phát tác! Kẻ địch mất ${poisonDmg} Máu/Khiên.</span>`);
+                updateCombatUI(); 
                 if (enemy.hp <= 0) { return window.combatTimer = setTimeout(winBattle, 1000); }
             }
         }
