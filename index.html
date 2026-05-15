@@ -3797,7 +3797,7 @@
             updateCombatUI(); 
             logBattle(`<span style="color:red; font-size: 20px;">BẠN ĐÃ THẤT BẠI DO VẾT THƯƠNG QUÁ NẶNG!</span>`);
             resetToButtonMode(); 
-            
+            saveUserData();
             if (currentRedGateId) {
                 currentRedGateId = null; 
                 document.getElementById('dDungeonTitle').style.color = "#ffcc00"; 
@@ -4508,7 +4508,7 @@
         if (currentUser.hp <= 0) {
             logBattle(`<span style="color:red; font-size: 20px;">BẠN ĐÃ THẤT BẠI! Bị thương nặng...</span>`);
             resetToButtonMode(); 
-            
+            saveUserData();
             if (currentRedGateId) {
                 currentRedGateId = null; 
                 document.getElementById('dDungeonTitle').style.color = "#ffcc00"; 
@@ -4532,7 +4532,7 @@
             if (window.potionCooldown && window.potionCooldown > 0) {
                 window.potionCooldown--;
             }
-
+            saveUserData();
             if (isPlayerStunned) {
                 isPlayerStunned = false; 
                 isMyTurn = false; 
@@ -4830,7 +4830,7 @@
         else {
             isMyTurn = false;
             updateCombatUI(); 
-
+            saveUserData();
             if (isPlayerCountering) {
                     isPlayerCountering = false;
                     logBattle(`<span style="color:#aaa; font-style:italic;">Kẻ địch không tấn công. Thế Phản Đòn của bạn đã bị hủy bỏ!</span>`);
