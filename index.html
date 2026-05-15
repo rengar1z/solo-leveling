@@ -62,6 +62,7 @@
                 <div class="dropdown-content">
                     <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-arena')">ARENA</button>
                     <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-dungeon')">DUNGEON</button>
+                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-guild-raid')">GUILD RAID</button>
                 </div>
             </div>
         </div>
@@ -575,6 +576,31 @@
                         <button id="btnFindEnemy" class="tab-btn btn-system" onclick="startNewBattle()" style="width: 100%;">TÌM ĐỐI THỦ MỚI</button>
                     </div>
                 </div>
+
+                <div id="tab-guild-raid" class="tab-panel">
+                <div id="guildRaidListArea" style="display: flex; flex-direction: column; gap: 20px; padding: 20px;">
+        
+                <div class="dungeon-card" onclick="enterGuildRaid('white_tiger_guild')" style="border-color: #ffffff; box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);">
+                    <h3 style="color: #ffffff; text-shadow: 0 0 10px #ffffff; letter-spacing: 2px;">GUILD BẠCH HỔ</h3>
+                    <p style="font-size: 20px; color: #ccc;">Độ khó: Thường | Boss: Baek Yoonho</p>
+                    <button class="tab-btn btn-system" style="border-color: #ffffff; color: #ffffff !important;">KHIÊU CHIẾN GUILD</button>
+                </div>
+        
+                <div class="dungeon-card" onclick="enterGuildRaid('hunters_guild')" style="border-color: #ff9900; box-shadow: 0 0 15px rgba(255, 153, 0, 0.4);">
+                    <h3 style="color: #ff9900; text-shadow: 0 0 10px #ff9900; letter-spacing: 2px;">GUILD THỢ SĂN</h3>
+                    <p style="font-size: 20px; color: #ccc;">Độ khó: Khó | Boss: Choi Jong-In</p>
+                    <button class="tab-btn btn-system" style="border-color: #ff9900; color: #ff9900 !important;">KHIÊU CHIẾN GUILD</button>
+                </div>
+        
+                <div class="dungeon-card" onclick="enterGuildRaid('draw_sword_guild')" style="border-color: #ff3333; box-shadow: 0 0 15px rgba(255, 51, 51, 0.4);">
+                    <h3 style="color: #ff3333; text-shadow: 0 0 10px #ff3333; letter-spacing: 2px;">GUILD RÚT KIẾM (NHẬT BẢN)</h3>
+                    <p style="font-size: 20px; color: #ccc;">Độ khó: Địa Ngục | Boss: Goto Ryuji</p>
+                    <button class="tab-btn btn-system" style="border-color: #ff3333; color: #ff3333 !important;">KHIÊU CHIẾN GUILD</button>
+                </div>
+        
+                </div>
+                
+                </div>
                 
                 <div id="tab-dungeon" class="tab-panel">             
                     <div id="dungeonListArea">
@@ -976,7 +1002,9 @@
     let enemyPoisonTurns = 0;
     let monarchWrathUses = 0;
     let playerBleedTurns = 0; // 
-    let playerArmorBreakTurns = 0; 
+    let playerArmorBreakTurns = 0;
+    let isGuildRaidMode = false;
+    
     window.specialCooldown = 0;
     window.combatTimer = null
     window.counterCooldown = 0;
@@ -988,6 +1016,33 @@
     if (currentUser) {
         currentUser.shieldHP = 0; 
     }
+
+    const guildRaidData = {
+        "white_tiger_guild": {
+            name: "Trụ Sở Guild Bạch Hổ",
+            stages: [
+                { name: "Thành viên Guild Bạch Hổ", hp: 120000, atk: 2500, def: 800, exp: 15000, img: "char/Kim Sangshik.png", drops: ["Guild Raid Chest I"] },
+                { name: "Phó Hội Trưởng Ahn Sang-Min", hp: 200000, atk: 3500, def: 1200, exp: 25000, img: "char/Woo Jinchul.png", drops: ["Guild Raid Chest I", "Guild Raid Chest II"] },
+                { name: "BOSS: Hội Trưởng Baek Yoonho", hp: 800000, atk: 6500, def: 2500, exp: 80000, img: "char/Hwang Dongsoo.png", isBoss: true, bossType: "baek_yoonho", rareDrops: ["Guild Raid Chest II", "Guild Raid Chest III"] }
+            ]
+        },
+        "hunters_guild": {
+            name: "Trụ Sở Guild Thợ Săn",
+            stages: [
+                { name: "Đội Trưởng Thợ Săn Nhóm A", hp: 250000, atk: 4000, def: 1500, exp: 30000, img: "bot/enemy.png", drops: ["Guild Raid Chest II"] },
+                { name: "Phó Hội Trưởng Cha Hae-In", hp: 500000, atk: 7000, def: 2000, exp: 60000, img: "char/Cha Hae-In.png", drops: ["Guild Raid Chest II", "Guild Raid Chest III"] },
+                { name: "BOSS: Vũ Khí Tối Thượng Choi Jong-In", hp: 1500000, atk: 12000, def: 1800, exp: 150000, img: "char/Yoo Jinho.png", isBoss: true, bossType: "choi_jong_in", rareDrops: ["Guild Raid Chest III", "Guild Raid Chest IV"] }
+            ]
+        },
+        "draw_sword_guild": {
+            name: "Guild Rút Kiếm (Nhật Bản)",
+            stages: [
+                { name: "Kiếm Sư Tinh Nhuệ Nhất Đẳng", hp: 400000, atk: 6000, def: 2000, exp: 50000, img: "bot/enemy.png", drops: ["Guild Raid Chest II"] },
+                { name: "Át Chủ Bài Kanae Tawata", hp: 800000, atk: 8500, def: 2500, exp: 90000, img: "char/Cha Hae-In.png", drops: ["Guild Raid Chest III"] },
+                { name: "BOSS: Hội Trưởng Goto Ryuji", hp: 3000000, atk: 18000, def: 3500, exp: 300000, img: "char/Woo Jinchul.png", isBoss: true, bossType: "goto_ryuji", rareDrops: ["Guild Raid Chest IV", "Guild Raid Chest IV"] }
+            ]
+        }
+    };
 
     // --- DỮ LIỆU HẦM NGỤC  ---
     const dungeonData = {
@@ -1131,6 +1186,28 @@
     };
     // --- DỮ LIỆU ITEM (ĐÃ THÊM RANK S, A, B, C, D) ---
     const ITEM_DATA = {
+        // Thêm vào ITEM_DATA
+        "Guild Raid Chest I": { 
+            rank: "B", type: "consumable", effectType: "permanent_stat", 
+            str: 2, int: 2, vit: 2, name: "Guild Raid Chest I", 
+            effect: "Tăng vĩnh viễn 2 điểm STR, INT, VIT.", img: "wp/Sandstorm_Cube.png", sellPrice: 1000 
+        },
+        "Guild Raid Chest II": { 
+            rank: "A", type: "consumable", effectType: "permanent_stat", 
+            str: 5, int: 5, vit: 5, name: "Guild Raid Chest II", 
+            effect: "Tăng vĩnh viễn 5 điểm STR, INT, VIT.", img: "wp/Sandstorm_Cube.png", sellPrice: 5000 
+        },
+        "Guild Raid Chest III": { 
+            rank: "S", type: "consumable", effectType: "permanent_stat", 
+            str: 10, int: 10, vit: 10, name: "Guild Raid Chest III", 
+            effect: "Tăng vĩnh viễn 10 điểm STR, INT, VIT.", img: "wp/Sandstorm_Cube.png", sellPrice: 20000 
+        },
+        "Guild Raid Chest IV": { 
+            rank: "S+", type: "consumable", effectType: "permanent_stat", 
+            str: 25, int: 25, vit: 25, name: "Guild Raid Chest IV", 
+            effect: "Tăng vĩnh viễn 25 điểm STR, INT, VIT.", img: "wp/Sandstorm_Cube.png", sellPrice: 50000 
+        },
+        
         // --- VẬT LIỆU QUAY GACHA ---
         "Sandstorm Cube": { rank: "S", type: "material", name: "Sandstorm Cube", effect: "Khối lập phương chứa sức mạnh bão cát. Dùng để quay Lucky Wheel Royale.", img: "wp/Sandstorm_Cube.png", sellPrice: 50000 },
 
@@ -2180,8 +2257,11 @@
     }
 
     // --- CƠ CHẾ DÙNG CHUNG (MINIGAME VÀ DUNGEON) ---
-    function getPrefix() { return isDungeonMode ? 'd-' : ''; }
-
+    function getPrefix() { 
+    if (isDungeonMode) return 'd-'; 
+    if (isGuildRaidMode) return 'gr-'; 
+    return ''; 
+    }
     window.renderStatusIcons = function() {
         const pre = getPrefix(); 
         const pBoard = document.getElementById(pre + 'p-status-board');
@@ -3050,8 +3130,9 @@
         }
     }
 
-    // --- HÀM DÙNG CHO ĐỒ GỘP (CHỈ DÙNG 1 CÁI MỖI LẦN BẤM) ---
+    // --- HÀM DÙNG CHO ĐỒ GỘP  ---
     window.useStackedItem = async function(itemName) {
+        // Chặn mở đồ khi đang đánh quái
         if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
             return alert("⚠️ HỆ THỐNG: Không thể lôi đồ trong túi ra dùng khi đang đối mặt với quái vật! Hãy sử dụng Túi Thuốc Nhanh ở khay Kỹ năng.");
         }
@@ -3062,26 +3143,49 @@
         const itemObj = currentUser.inventory[index];
         const itemData = ITEM_DATA[itemObj.name];
         
+        // CƠ CHẾ 1: DÙNG BÌNH HỒI MÁU
         if (itemData.effectType === "heal_hp") {
             if (currentUser.hp >= currentUser.maxHp) return alert("HP của bạn đã đầy, không cần sử dụng!");
             currentUser.hp = Math.min(currentUser.maxHp, currentUser.hp + itemData.amount);
             alert(`✨ Bạn đã uống [${itemObj.name}] và hồi phục ${itemData.amount} HP!`);
         } 
+        // CƠ CHẾ 2: DÙNG BÌNH HỒI MANA
         else if (itemData.effectType === "heal_mp") {
             if (currentUser.mp >= currentUser.maxMp) return alert("MP của bạn đã đầy, không cần sử dụng!");
             currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + itemData.amount);
             alert(`✨ Bạn đã uống [${itemObj.name}] và hồi phục ${itemData.amount} MP!`);
         }
+        // CƠ CHẾ 3: MỞ RƯƠNG GUILD RAID (TĂNG CHỈ SỐ VĨNH VIỄN)
+        else if (itemData.effectType === "permanent_stat") {
+            // Cộng điểm tiềm năng
+            currentUser.str += (itemData.str || 0);
+            currentUser.int += (itemData.int || 0);
+            currentUser.vit += (itemData.vit || 0);
+            
+            // Cập nhật giới hạn máu/mana theo lượng điểm VIT/INT vừa được cộng
+            if (itemData.vit > 0) {
+                currentUser.maxHp += itemData.vit * 10;
+                currentUser.hp += itemData.vit * 10; // Hồi luôn lượng máu được tăng thêm
+            }
+            if (itemData.int > 0) {
+                currentUser.maxMp += itemData.int * 5;
+                currentUser.mp += itemData.int * 5; // Hồi luôn lượng mana được tăng thêm
+            }
+            
+            alert(`✨ Hào quang rực rỡ! Bạn đã sử dụng [${itemName}] và được hệ thống ban phước: Tăng vĩnh viễn ${itemData.str} STR, ${itemData.int} INT, ${itemData.vit} VIT!`);
+        }
         
-        // Xóa 1 bình thuốc khỏi túi sau khi dùng
+        // Trừ đi 1 vật phẩm khỏi túi sau khi dùng xong
         if (currentUser.inventory[index].quantity > 1) {
             currentUser.inventory[index].quantity--;
         } else {
             currentUser.inventory.splice(index, 1);
         }
         
+        // Lưu dữ liệu và vẽ lại giao diện
         await saveUserData();
-        renderBag();
+        if (typeof renderBag === "function") renderBag();
+        if (typeof render === "function") render(); // Cập nhật lại chỉ số trên màn hình chính ngay lập tức
     };
 
     // 1. Hàm vẽ giao diện Thẻ Bài (Card Grid)
@@ -4639,6 +4743,14 @@
                     const newItem = window.giveItem(droppedItemName); 
                     if (newItem) droppedItemsForUI.push(newItem); 
                 }
+            } else if (window.isGuildRaidMode) {
+                let dropChance = 0.5 + luckBonus; // 50% rớt rương
+                if (Math.random() <= dropChance) {
+                    const possibleChests = enemy.rareDrops || ["Guild Raid Chest II", "Guild Raid Chest III"];
+                    const chestName = possibleChests[Math.floor(Math.random() * possibleChests.length)];
+                    const newItem = window.giveItem(chestName);
+                    if (newItem) droppedItemsForUI.push(newItem);
+                }
             }
         } 
         else {
@@ -4651,6 +4763,16 @@
                     
                     const newItem = window.giveItem(droppedItemName); 
                     if (newItem) droppedItemsForUI.push(newItem);     
+                }
+            }
+            // QUÁI THƯỜNG GUILD RAID: RỚT RƯƠNG THƯỜNG
+            else if (window.isGuildRaidMode) {
+                let dropChance = 0.5 + luckBonus; 
+                if (Math.random() <= dropChance) {
+                    const possibleChests = enemy.drops || ["Guild Raid Chest I"];
+                    const chestName = possibleChests[Math.floor(Math.random() * possibleChests.length)];
+                    const newItem = window.giveItem(chestName);
+                    if (newItem) droppedItemsForUI.push(newItem);
                 }
             }
         }
@@ -4781,9 +4903,27 @@
                 document.getElementById('btnExitDungeon').classList.remove('hidden');
                 document.getElementById('btnExitDungeon').innerText = "HOÀN THÀNH & RỜI KHỎI";
             }
-        } else {
-            const btnFind = document.getElementById('btnFindEnemy');
-            if(btnFind) btnFind.disabled = false;
+        }
+        else if (window.isGuildRaidMode) {
+            const grData = guildRaidData[dCurrentId];
+            if (dCurrentStage < grData.stages.length - 1) {
+                const btnNext = document.getElementById('btnNextStage'); // Bạn có thể dùng chung nút với Dungeon
+                btnNext.classList.remove('hidden');
+                document.getElementById('btnExitDungeon').classList.add('hidden');
+                // Gọi hàm đi tiếp của riêng Guild Raid
+                btnNext.setAttribute("onclick", "startNextGuildRaidStage()"); 
+                btnNext.innerText = "TIẾP TỤC ĐỘT PHÁ GUILD";
+                btnNext.style.borderColor = "#ff00ff"; // Đổi màu tím cho ngầu
+                btnNext.style.color = "#ff00ff";
+            } else {
+                logBattle(`<span style="color:#ff00ff; font-size:22px;">CHÚC MỪNG! BẠN ĐÃ ĐÁNH BẠI ${grData.name.toUpperCase()}!</span>`);
+                document.getElementById('btnExitDungeon').classList.remove('hidden');
+                document.getElementById('btnExitDungeon').innerText = "RỜI KHỎI TRỤ SỞ GUILD";
+            }
+        }
+            else {
+                const btnFind = document.getElementById('btnFindEnemy');
+                if(btnFind) btnFind.disabled = false;
         }
     }
 
