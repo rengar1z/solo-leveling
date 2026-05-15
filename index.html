@@ -2962,7 +2962,6 @@
         let vitVal = itemObj.vit || 0; 
         if (vitVal !== 0) { 
             currentUser.maxHp -= vitVal * 10;
-           
             currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
         }
         await saveUserData();
