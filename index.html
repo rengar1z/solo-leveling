@@ -1185,7 +1185,7 @@
 
         // Đồ hiếm của Baran:
         "Dao găm của ma vương": { rank: "S", type: "weapon", name: "Dao găm của ma vương", str: 85, vit: 0, mp: 40, effect: "Bỏ qua 20% giáp của kẻ địch", img: "wp/Demon_King_Daggers.png", sellPrice: 4500 },
-        "Đại kiếm ma vương": { rank: "S", type: "weapon", name: "Đại kiếm ma vương", str: 120, vit: -10, mp: 0, effect: "Tăng 25% sát thương vật lý nhưng giảm sinh lực", img: "wp/Demon_King_Longsword.png", sellPrice: 5000 },
+        "Đại kiếm ma vương": { rank: "S", type: "weapon", name: "Đại kiếm ma vương", str: 120, vit: 0, mp: 0, effect: "Tăng 25% sát thương vật lý", img: "wp/Demon_King_Longsword.png", sellPrice: 5000 },
 
         // Bộ trang bị Quỷ Cao Cấp (Cerberus - Lâu Đài Quỷ):
         "High-ranking Demon's Helmet": { rank: "S", type: "helmet", name: "High-ranking Demon's Helmet", str: 10, vit: 20, agi: 5, mp: 0, effect: "Giảm 10% sát thương gánh chịu", img: "wp/High-ranking Demon's Helmet.png", sellPrice: 2000 },
@@ -2960,9 +2960,9 @@
         currentUser.maxMp += (itemObj.int || 0) * 5;
         
         let vitVal = itemObj.vit || 0; 
-        if (vitVal !== 0) { 
-            currentUser.maxHp -= vitVal * 10;
-            currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
+        if (vitVal > 0) { 
+            currentUser.maxHp += vitVal * 10; // Đã sửa thành dấu CỘNG
+            currentUser.hp += vitVal * 10;    // Cộng luôn máu hiện tại để người chơi không phải uống thuốc
         }
         await saveUserData();
         renderBag();
@@ -2987,12 +2987,8 @@
         currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
         
         let vitVal = itemObj.vit || 0; 
-        if (vitVal !== 0) { 
+        if (vitVal > 0) { 
             currentUser.maxHp -= vitVal * 10;
-           
-            if (vitVal < 0) {
-                currentUser.hp += Math.abs(vitVal * 10);
-            }
             currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
         }
 
