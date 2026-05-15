@@ -3217,7 +3217,7 @@
 
         // 1. STR/INT & PER: Sát thương dao động
         let maxDmg = baseStat * multi;
-        let precision = Math.min(0.95, 0.5 + (currentUser.sense * 0.005));
+        let precision = Math.min(0.95, 0.5 + (currentUser.sense * 0.001125));
         let minDmg = maxDmg * precision;
         let finalDmg = Math.floor(Math.random() * (maxDmg - minDmg + 1) + minDmg);
 
