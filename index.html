@@ -1499,7 +1499,8 @@
         if (currentUser.equipped.costume && currentUser.equipped.costume.name === itemId) {
             currentUser.str -= (itemData.str || 0);
             currentUser.vit -= (itemData.vit || 0);
-            currentUser.int -= (itemData.int || 0); 
+            currentUser.int -= (itemData.int || 0);
+            currentUser.agi -= (itemData.agi || 0);
             
             currentUser.maxMp -= (itemData.mp || 0); 
             currentUser.maxMp -= (itemData.int || 0) * 5; // FIX BUG: Sửa itemObj thành itemData
@@ -1520,6 +1521,7 @@
                     currentUser.str -= (oldData.str || 0); 
                     currentUser.vit -= (oldData.vit || 0);
                     currentUser.int -= (oldData.int || 0);
+                    currentUser.agi -= (oldData.agi || 0);
                     
                     currentUser.maxMp -= (oldData.mp || 0); 
                     currentUser.maxMp -= (oldData.int || 0) * 5; // FIX BUG: Bổ sung trừ MP từ INT bộ cũ
@@ -1535,7 +1537,8 @@
             currentUser.equipped.costume = { name: itemId };
             currentUser.str += (itemData.str || 0); 
             currentUser.vit += (itemData.vit || 0);
-            currentUser.int += (itemData.int || 0); 
+            currentUser.int += (itemData.int || 0);
+            currentUser.agi += (itemData.agi || 0);
             
             currentUser.maxMp += (itemData.mp || 0); 
             currentUser.maxMp += (itemData.int || 0) * 5; // FIX BUG: Bổ sung cộng MP từ INT bộ mới
@@ -2719,9 +2722,23 @@
     // Khởi tạo Item Data cho các khe đang mặc
     ['weapon', 'armor', 'helmet', 'gloves', 'necklace', 'earring', 'ring', 'shoes'].forEach(slot => {
         const eq = currentUser.equipped[slot];
-        if (eq && eq.str === undefined && ITEM_DATA[eq.name]) {
+        if (eq && ITEM_DATA[eq.name]) {
             const base = ITEM_DATA[eq.name];
-            currentUser.equipped[slot] = { uid: Date.now().toString(36) + Math.random().toString(36).substring(2), name: eq.name, str: base.str, vit: base.vit, mp: base.mp, agi: base.agi, int: base.int };
+            // Tự động chèn các chỉ số mới vào đồ cũ nếu nó bị "undefined"
+            if (eq.agi === undefined) eq.agi = base.agi || 0;
+            if (eq.int === undefined) eq.int = base.int || 0;
+            if (eq.str === undefined) eq.str = base.str || 0;
+            if (eq.vit === undefined) eq.vit = base.vit || 0;
+            if (eq.mp === undefined) eq.mp = base.mp || 0;
+        }
+    });
+
+    // 1.2 CẬP NHẬT CHỈ SỐ BỊ THIẾU CHO ĐỒ TRONG TÚI (INVENTORY CŨ)
+    currentUser.inventory.forEach(itemObj => {
+        if (itemObj && ITEM_DATA[itemObj.name] && !['consumable', 'material', 'rare'].includes(ITEM_DATA[itemObj.name].type)) {
+            const base = ITEM_DATA[itemObj.name];
+            if (itemObj.agi === undefined) itemObj.agi = base.agi || 0;
+            if (itemObj.int === undefined) itemObj.int = base.int || 0;
         }
     });
 
