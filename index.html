@@ -5324,23 +5324,132 @@
     }
 
     window.exitDungeon = function() {
+        // Dọn dẹp thời gian chờ (tránh lỗi combat lặp)
         if (window.combatTimer) {
             clearTimeout(window.combatTimer);
             window.combatTimer = null;
         }
-    
-        isDungeonMode = false;
-        document.getElementById('dungeonCombatUI').classList.add('hidden');
-        
-        if (dCurrentId && dCurrentId.includes('demon_castle')) {
-            document.getElementById('demonCastleArea').classList.remove('hidden');
-        } else {
-            document.getElementById('dungeonListArea').classList.remove('hidden');
+
+        // 1. NẾU LÀ GUILD RAID
+        if (window.isGuildRaidMode) {
+            window.isGuildRaidMode = false;
+            document.getElementById('guildRaidCombatUI').classList.add('hidden');
+            document.getElementById('guildRaidListArea').classList.remove('hidden');
+        } 
+        // 2. NẾU LÀ HẦM NGỤC / LÂU ĐÀI QUỶ
+        else {
+            isDungeonMode = false;
+            document.getElementById('dungeonCombatUI').classList.add('hidden');
+            
+            // Logic cũ của bạn: Phân nhánh Lâu Đài Quỷ và Hầm Ngục thường
+            if (dCurrentId && dCurrentId.includes('demon_castle')) {
+                document.getElementById('demonCastleArea').classList.remove('hidden');
+            } else {
+                document.getElementById('dungeonListArea').classList.remove('hidden');
+            }
         }
+
+        // 3. Reset các nút bấm và trạng thái
+        const btnNext = document.getElementById('btnNextStage');
+        if (btnNext) btnNext.classList.add('hidden');
         
         enemy = null; 
-}
+        
+        // Cập nhật lên máy chủ và vẽ lại giao diện ngoài
+        saveUserData();
+        if (typeof render === "function") render();
+    };
 
+    window.enterGuildRaid = function(raidId) {
+        window.isGuildRaidMode = true;
+        window.isDungeonMode = false;      // Tắt chế độ Dungeon
+        window.currentRedGateId = null;    // Tắt chế độ Cổng Đỏ
+
+        window.dCurrentId = raidId;        // Dùng chung biến dCurrentId để lưu ID Raid
+        window.dCurrentStage = 0;          // Khởi đầu từ ải 0
+
+        // Chuyển đổi giao diện (Ẩn danh sách, Hiện UI chiến đấu)
+        document.getElementById('guildRaidListArea').classList.add('hidden');
+        document.getElementById('guildRaidCombatUI').classList.remove('hidden');
+
+        // Bắt đầu ải đầu tiên
+        startGuildRaidStage();
+    };
+
+    // 2. HÀM NẠP DỮ LIỆU ẢI & QUÁI VẬT (Kèm Lời Thoại)
+    window.startGuildRaidStage = function() {
+        const grData = guildRaidData[dCurrentId];
+        const stageInfo = grData.stages[dCurrentStage];
+
+        // Khởi tạo thông số Kẻ địch
+        enemy = { ...stageInfo }; 
+        enemy.maxHp = enemy.hp;
+
+        // Xóa sạch hiệu ứng (Buff/Debuff) của ải trước
+        window.enemyPoisonTurns = 0;
+        window.enemyBurnTurns = 0;
+        window.enemyDefBreakTurns = 0;
+        window.playerBleedTurns = 0;
+        window.isMagicShieldActive = false;
+        currentUser.shieldHP = 0;
+        window.specialCooldown = 0;
+        
+        window.isMyTurn = true; // Người chơi luôn được đi trước
+
+        // Cập nhật Tiêu đề UI
+        let titleEl = document.getElementById('gr-DungeonTitle');
+        if (titleEl) {
+            titleEl.innerText = `${grData.name} - Ải ${dCurrentStage + 1}: ${enemy.name}`;
+            titleEl.style.color = enemy.isBoss ? "#ff3333" : "#ff00ff"; // Boss thì màu Đỏ, Thường thì màu Tím
+        }
+
+        // Dọn dẹp Log Chiến đấu và in câu chào sân
+        let logEl = document.getElementById('gr-battleLog');
+        if (logEl) {
+            logEl.innerHTML = `<span style="color:#00ffff; font-weight:bold;">[HỆ THỐNG]: Đã tiến vào Ải ${dCurrentStage + 1}. Kẻ địch xuất hiện!</span><br>`;
+            
+            // --- THÊM LỜI THOẠI CỐT TRUYỆN NẾU LÀ BOSS ---
+            if (enemy.isBoss) {
+                let bossQuote = "";
+                if (enemy.bossType === "baek_yoonho") {
+                    bossQuote = "Sức mạnh của cậu thật thú vị, Sung Jin Woo! Hãy cho tôi thấy giới hạn của cậu, tôi sẽ không nương tay đâu. HÓA THÚ!";
+                } else if (enemy.bossType === "choi_jong_in") {
+                    bossQuote = "Tôi được gọi là Vũ Khí Tối Thượng vì ma pháp ngọn lửa của tôi không gì là không thể thiêu rụi. Hãy cẩn thận!";
+                } else if (enemy.bossType === "goto_ryuji") {
+                    bossQuote = "Thợ Săn Hàn Quốc rốt cuộc cũng chỉ đến mức này sao? Để tôi cho cậu thấy sức mạnh thực sự của cường quốc Thợ Săn!";
+                }
+                
+                if (bossQuote) {
+                    logEl.innerHTML += `<br><span style="color:orange; font-style:italic; font-size:16px;">"${bossQuote}"</span><br><br>`;
+                }
+                if (typeof triggerShake === "function") triggerShake(); // Rung màn hình khi gặp Boss
+            }
+        }
+
+        // Khóa nút Chuyển Ải / Thoát (Chỉ mở lại khi đánh thắng)
+        const btnNext = document.getElementById('btnNextStage');
+        const btnExit = document.getElementById('btnExitDungeon');
+        if (btnNext) btnNext.classList.add('hidden');
+        if (btnExit) btnExit.classList.add('hidden');
+
+        // Reset màu sắc và mở khóa các nút Kỹ năng
+        const dynamicBtns = document.querySelectorAll('#gr-actionControls .combat-skill-btn');
+        dynamicBtns.forEach(btn => {
+            btn.disabled = false;
+            btn.style.filter = "none";
+            btn.style.cursor = "pointer";
+            btn.style.pointerEvents = "auto";
+        });
+
+        // Vẽ lại UI máu/mana
+        updateCombatUI();
+    };
+
+    // 3. HÀM CHUYỂN ẢI TIẾP THEO (Được gọi trong winBattle)
+    window.startNextGuildRaidStage = function() {
+        window.dCurrentStage++; // Tăng số thứ tự ải lên 1
+        startGuildRaidStage();  // Gọi lại hàm nạp quái vật
+    };
     // --- HÀM LỌC VẬT PHẨM TRONG CỬA HÀNG ---
     window.filterShop = function(category, btnElement) {
     // 1. Đổi trạng thái nút bấm (Làm sáng nút được chọn)
@@ -5362,21 +5471,21 @@
     });
 };
     // Khởi tạo tab mặc định là 'weapon' (Vũ khí) khớp với giao diện HTML ban đầu
-window.currentInvTab = 'weapon';
+    window.currentInvTab = 'weapon';
 
 // Thêm hàm xử lý chuyển tab trong kho đồ bị thiếu
-window.switchInvTab = function(tabName, btnElement) {
-    window.currentInvTab = tabName;
-    
-    // Đổi trạng thái nút bấm (xóa class active ở các nút cũ, thêm vào nút hiện tại)
-    const btns = document.querySelectorAll('.inv-filter-btn');
-    btns.forEach(btn => btn.classList.remove('active'));
-    if (btnElement) {
-        btnElement.classList.add('active');
-    }
-    
-    // Gọi lại hàm render túi đồ để vẽ lại danh sách item theo tab mới
-    if (window.renderBag) window.renderBag();
+    window.switchInvTab = function(tabName, btnElement) {
+        window.currentInvTab = tabName;
+        
+        // Đổi trạng thái nút bấm (xóa class active ở các nút cũ, thêm vào nút hiện tại)
+        const btns = document.querySelectorAll('.inv-filter-btn');
+        btns.forEach(btn => btn.classList.remove('active'));
+        if (btnElement) {
+            btnElement.classList.add('active');
+        }
+        
+        // Gọi lại hàm render túi đồ để vẽ lại danh sách item theo tab mới
+        if (window.renderBag) window.renderBag();
 };
     window.toggleEquipView = function() {
         // Tắt đèn các nút bên trái
