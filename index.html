@@ -851,7 +851,7 @@
         "skill/hutmaluc.png", "skill/flame_ball.png", "skill/cothethep.png", "skill/cunenphadia.png",
         "skill/trichxuatbongtoi.png", "skill/satkhi.png", "skill/haphuyet.png",
         "skill/thinhnoquanvuong.png", "skill/phandon.png", "skill/basic_attack.png",
-        "https://cdn-icons-png.flaticon.com/512/9483/9483031.png",
+        "https://cdn-icons-png.flaticon.com/512/9483/9483031.png", "skill/doatmenhluoidao.png", "skill/hoangucbocpha.png",
         "https://cdn-icons-png.flaticon.com/256/1845/1845861.png",
         "https://cdn-icons-png.flaticon.com/512/709/709612.png"
     ];
@@ -2960,8 +2960,9 @@
         currentUser.maxMp += (itemObj.int || 0) * 5;
         
         let vitVal = itemObj.vit || 0; 
-        if (vitVal !== 0) {
-            currentUser.maxHp += vitVal * 10;
+        if (vitVal !== 0) { 
+            currentUser.maxHp -= vitVal * 10;
+           
             currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
         }
         await saveUserData();
