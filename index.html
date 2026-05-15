@@ -1440,7 +1440,7 @@
                     alert(`🎉 ÁNH SÁNG CHÓI LÓA! Bạn đã triệu hồi thành công [${rewardName}] (Hạng ${rank})!`);
                     await saveUserData();
                     if (window.renderBag) window.renderBag();
-                }, 100);
+                }, 800); 
             }
         }, spinSpeed);
     };
@@ -1503,12 +1503,12 @@
             currentUser.agi -= (itemData.agi || 0);
             
             currentUser.maxMp -= (itemData.mp || 0); 
-            currentUser.maxMp -= (itemData.int || 0) * 5; // FIX BUG: Sửa itemObj thành itemData
-            currentUser.mp = Math.max(0, currentUser.mp - (itemData.mp || 0) - ((itemData.int || 0) * 5)); 
+            currentUser.maxMp -= (itemData.int || 0) * 5; 
+            currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
             
             if (itemData.vit > 0) {
                 currentUser.maxHp -= itemData.vit * 10; 
-                currentUser.hp = Math.max(1, currentUser.hp - (itemData.vit * 10));
+                currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
             }
             currentUser.equipped.costume = null;
         }
@@ -1525,11 +1525,11 @@
                     
                     currentUser.maxMp -= (oldData.mp || 0); 
                     currentUser.maxMp -= (oldData.int || 0) * 5; // FIX BUG: Bổ sung trừ MP từ INT bộ cũ
-                    currentUser.mp = Math.max(0, currentUser.mp - (oldData.mp || 0) - ((oldData.int || 0) * 5)); 
+                    currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp); 
                     
                     if (oldData.vit > 0) { 
                         currentUser.maxHp -= oldData.vit * 10; 
-                        currentUser.hp = Math.max(1, currentUser.hp - (oldData.vit * 10)); 
+                        currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
                     }
                 }
             }
