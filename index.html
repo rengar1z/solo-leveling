@@ -8,9 +8,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <audio id="bgmAudio" loop preload="auto">
-    <source src="audio/dark_aria_ost.mp3" type="audio/mpeg">
-    </audio>
 <div id="welcomeAlert" class="welcome-overlay hidden">
     <div class="welcome-box">
         <div class="alert-header"><span class="symbol">①</span> Alert <span class="symbol">①</span></div>
@@ -29,6 +26,9 @@
 </div>
     
 <div id="auth" style="text-align:center; padding: 50px 20px;">
+    <audio id="loginBgm" loop>
+    <source src="audio/theme_song.mp3" type="audio/mpeg">
+    </audio>
     <h2 style="font-size: 40px; text-shadow: 0 0 10px #00bfff;">CỔNG DỊ GIỚI ĐANG MỞ</h2>
     <input id="username" placeholder="Tên thợ săn...">
     <input id="password" type="password" placeholder="Mật mã...">
@@ -874,31 +874,37 @@
         loadingBarUi.style.width = percent + "%";
         loadingTextUi.innerText = `Loading Resources... ${percent}%`;
 
-        // Khi tải xong tất cả
+        
         if (loadedAssetsCount === totalAssetsToLoad) {
             loadingTextUi.innerText = "SYSTEM READY!";
             loadingTextUi.style.color = "#00ff00";
             
             setTimeout(() => {
-                loadingScreenUi.classList.add('fade-out'); // Mờ dần
+                loadingScreenUi.classList.add('fade-out'); 
                 setTimeout(() => {
-                    loadingScreenUi.style.display = 'none'; // Giấu hẳn
-                    authUi.style.display = 'block'; // Hiện màn hình Đăng Nhập
-                    authUi.style.animation = 'fadeIn 1s ease'; // Thêm chút hiệu ứng mượt
-                }, 800); // Chờ hiệu ứng CSS fade-out (0.8s) chạy xong
-            }, 500); // Đứng hình ở 100% khoảng 0.5s cho đẹp
-        }
-    }
+                    loadingScreenUi.style.display = 'none'; 
+                    authUi.style.display = 'block'; 
+                    authUi.style.animation = 'fadeIn 1s ease'; 
 
-    // Bắt đầu vòng lặp tải ảnh
-    if (totalAssetsToLoad === 0) onAssetLoad(); // Fallback nếu mảng trống
+                    const bgm = document.getElementById('loginBgm');
+                    if (bgm) {
+                        bgm.volume = 0.5;
+                        bgm.play().catch(e => console.log("Trình duyệt chặn tự động phát:", e));
+                    }
+                    // ----------------------------------
+                    
+                }, 800); 
+            }, 500); 
+        }
+    
+    if (totalAssetsToLoad === 0) onAssetLoad(); 
     
     gameAssets.forEach(src => {
         const img = new Image();
         img.onload = onAssetLoad;
         img.onerror = () => {
             console.warn("Không thể tải ảnh: ", src);
-            onAssetLoad(); // Lỗi vẫn cho đếm tiếp để không bị kẹt Loading mãi mãi
+            onAssetLoad(); 
         };
         img.src = src;
     });
@@ -930,7 +936,7 @@
     const DOM = {};
 
     function initDOM() {
-        // Cache các chỉ số Status
+        
         DOM.playerName = document.getElementById('playerName');
         DOM.level = document.getElementById('level');
         DOM.job = document.getElementById('job');
@@ -1657,11 +1663,12 @@
         document.getElementById('auth').classList.add('hidden');
         document.getElementById('gameWrap').classList.remove('hidden');
 
-        const bgm = document.getElementById('bgmAudio');
+        const bgm = document.getElementById('loginBgm');
         if (bgm) {
-            bgm.volume = 0.5; 
-            bgm.play().catch(e => console.log("Trình duyệt chặn nhạc:", e));
+            bgm.pause();
+            bgm.currentTime = 0; 
         }
+        
         const statsBtn = document.getElementById('defaultOpenTab'); 
         if (statsBtn) {
         
