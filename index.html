@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <audio id="bgmAudio" loop preload="auto">
+    <source src="audio/dark_aria_ost.mp3" type="audio/mpeg">
+    </audio>
 <div id="welcomeAlert" class="welcome-overlay hidden">
     <div class="welcome-box">
         <div class="alert-header"><span class="symbol">①</span> Alert <span class="symbol">①</span></div>
@@ -1653,9 +1656,15 @@
         
         document.getElementById('auth').classList.add('hidden');
         document.getElementById('gameWrap').classList.remove('hidden');
+
+        const bgm = document.getElementById('bgmAudio');
+        if (bgm) {
+            bgm.volume = 0.5; 
+            bgm.play().catch(e => console.log("Trình duyệt chặn nhạc:", e));
+        }
         const statsBtn = document.getElementById('defaultOpenTab'); 
         if (statsBtn) {
-        // Lệnh này giả lập việc bạn click chuột vào nút Stats
+        
         openTab({ currentTarget: statsBtn }, 'tab-stats');
         }
         
