@@ -2161,6 +2161,11 @@
     });
 }
     
+    window.playSound = function(audioSrc) {
+        const sfx = new Audio(audioSrc);
+        sfx.volume = 0.8; 
+        sfx.play().catch(e => console.log("Trình duyệt chặn âm thanh:", e));
+    };
 
     // --- TAB ĐIỀU HƯỚNG ---
     window.openTab = function(evt, tabName) {
@@ -3372,6 +3377,12 @@
                 logBattle(`<span style="color:#00ffff; font-style:italic;">🛡️ Lớp giáp ma thuật đã hấp thụ ${actualDmg} sát thương! (Giáp còn: ${enemy.shieldHP})</span>`);
                 actualDmg = 0; 
             }
+        }  
+        // TỰ ĐỘNG PHÁT ÂM THANH ĐÁNH / BẠO KÍCH
+        if (isCrit) {
+            playSound("audio/crit_slash.mp3"); 
+        } else {
+            playSound("audio/slash.mp3"); 
         }
 
         return { dmg: actualDmg, isCrit: isCrit };
@@ -4393,6 +4404,7 @@
         else if (dmg > 0 && !isDodged) {
             // --- CƠ CHẾ 3: PHẢN ĐÒN HOÀN HẢO ---
             if (isPlayerCountering) {
+                playSound("audio/parry.mp3");
                 isPlayerCountering = false; 
                 let counterDmg = Math.floor(dmg * 1.5); 
                 if (enemy.shieldHP && enemy.shieldHP > 0) {
@@ -4477,6 +4489,10 @@
                 dmg = 0; 
             }
         }
+               if (dmg > 0) {
+                    playSound("audio/monster_hit.mp3"); 
+                }
+                
                 currentUser.hp = Math.max(0, currentUser.hp - dmg);
                 
                 if (isSpecialAttack) {
