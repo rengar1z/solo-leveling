@@ -1904,7 +1904,6 @@
         alert(`Tẩy điểm thành công! Hệ thống đã thu hồi các bùa lợi và hoàn trả ${refundedPoints} Điểm Kỹ Năng.`);
     };
 
-    // --- GHI NHỚ TRẠNG THÁI ĐÓNG/MỞ CỦA TỪNG NHÁNH ---
     window.branchToggleState = window.branchToggleState || {
         "Chung": true,
         "Đặc biệt": true,
@@ -1915,8 +1914,16 @@
 
     // --- HÀM XỬ LÝ CLICK ĐÓNG/MỞ NHÁNH ---
     window.toggleSkillBranch = function(branchName) {
-        window.branchToggleState[branchName] = !window.branchToggleState[branchName];
-        renderSkills(); // Tải lại bảng kỹ năng để áp dụng hiệu ứng
+    
+        let isOpening = !window.branchToggleState[branchName];
+        
+        for (let key in window.branchToggleState) {
+            window.branchToggleState[key] = false;
+        }
+        
+        window.branchToggleState[branchName] = isOpening;
+        
+        renderSkills(); 
     };
 
     // --- HIỂN THỊ DANH SÁCH SKILL (ĐÃ THÊM CƠ CHẾ THU GỌN) ---
@@ -1939,7 +1946,6 @@
 
     const branches = ["Sát Thủ", "Pháp Sư", "Đấu Sĩ", "Đặc biệt", "Chung"];
     
-    // Tối ưu thuật toán: Gom nhóm dữ liệu skill trước khi lặp thay vì lặp mù quáng
     const skillsByBranch = {};
     Object.keys(skillData).forEach(s => {
         const branch = skillData[s].branch;
@@ -1965,7 +1971,6 @@
             <div style="display: ${isOpen ? 'block' : 'none'}; padding: 10px 0; border-left: 2px dashed ${displayColor}; margin-left: 2px; padding-left: 10px; animation: fadeIn 0.3s ease;">
         `;
         
-        // Chỉ lặp qua những skill thuộc nhánh này
         if (skillsByBranch[branch]) {
             skillsByBranch[branch].forEach(s => {
                 const data = skillData[s];
