@@ -26,9 +26,6 @@
 </div>
     
 <div id="auth" style="text-align:center; padding: 50px 20px;">
-    <audio id="loginBgm" loop>
-    <source src="audio/dark_aria_ost.mp3" type="audio/mpeg">
-    </audio>
     <h2 style="font-size: 40px; text-shadow: 0 0 10px #00bfff;">CỔNG DỊ GIỚI ĐANG MỞ</h2>
     <input id="username" placeholder="Tên thợ săn...">
     <input id="password" type="password" placeholder="Mật mã...">
@@ -885,14 +882,6 @@
                     loadingScreenUi.style.display = 'none'; 
                     authUi.style.display = 'block'; 
                     authUi.style.animation = 'fadeIn 1s ease'; 
-
-                    const bgm = document.getElementById('loginBgm');
-                    if (bgm) {
-                        bgm.volume = 0.5;
-                        bgm.play().catch(e => console.log("Trình duyệt chặn tự động phát:", e));
-                    }
-                    // ----------------------------------
-                    
                 }, 800); 
             }, 500); 
         }
@@ -1663,12 +1652,6 @@
         
         document.getElementById('auth').classList.add('hidden');
         document.getElementById('gameWrap').classList.remove('hidden');
-
-        const bgm = document.getElementById('loginBgm');
-        if (bgm) {
-            bgm.pause();
-            bgm.currentTime = 0; 
-        }
         
         const statsBtn = document.getElementById('defaultOpenTab'); 
         if (statsBtn) {
