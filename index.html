@@ -847,11 +847,11 @@
         "effect/Attack_Increase_Effect.png", "effect/Sian_Halat_Scarlet_Domination_Effect.png", "effect/Kasaka_Deadly_Poison_Effect.png",
         
         // Skills
-        "skill/amsat.jpg", "skill/tanghinh.jpg", "skill/dagger.jpg", "skill/loimathuat.png", "skill/ngonluahacam.png", "skill/khienmathuat.png",
+        "skill/tansat.png", "skill/tanghinh.jpg", "skill/dagger.jpg", "skill/loimathuat.png", "skill/ngonluahacam.png", "skill/khienmathuat.png",
         "skill/hutmaluc.png", "skill/flame_ball.png", "skill/cothethep.png", "skill/cunenphadia.png",
         "skill/trichxuatbongtoi.png", "skill/satkhi.png", "skill/haphuyet.png",
-        "skill/thinhnoquanvuong.png", "skill/phandon.png", "skill/basic_attack.png",
-        "https://cdn-icons-png.flaticon.com/512/9483/9483031.png", "skill/doatmenhluoidao.png", "skill/hoangucbocpha.png",
+        "skill/thinhnoquanvuong.png", "skill/phandon.png", "skill/basic_attack.png", "skill/buochanbongtoi.png", "skill/nhatchemtuthan.png", "skill/nemdao.png", "skill/daodoc.png", "skill/dagger_rush.png",
+        "https://cdn-icons-png.flaticon.com/512/9483/9483031.png", "skill/doatmenhluoidao.png", "skill/hoangucbocpha.png", 
         "https://cdn-icons-png.flaticon.com/256/1845/1845861.png",
         "https://cdn-icons-png.flaticon.com/512/709/709612.png"
     ];
@@ -1312,12 +1312,12 @@
         "Bàn Tay May Mắn": { branch: "Chung", type: "passive", maxLv: 1, cost: 5, desc: "Tăng 10% tỷ lệ rớt đồ hiếm khi tiêu diệt Boss.", icon: "skill/amsat.jpg" },
     
         // --- NHÁNH SÁT THỦ (TỐC ĐỘ / BẠO KÍCH) ---
-        "Bước Chân Bóng Tối": { branch: "Sát Thủ", type: "passive", maxLv: 1, cost: 5, desc: "Có 10% cơ hội né tránh hoàn toàn đòn đánh.", icon: "skill/tanghinh.jpg" },
-        "Nhát Chém Tử Thần": { branch: "Sát Thủ", type: "passive", maxLv: 1, cost: 10, desc: "[Bị động] Tăng thêm 30% Sát thương Bạo Kích.", icon: "skill/amsat.jpg" },
-        "Ném Dao": { branch: "Sát Thủ", type: "active", maxLv: 1, cost: 5, mp: 20, func: "useDaggerThrow", desc: "Phóng dao gây ST. 30% gây Choáng.", icon: "skill/dagger.jpg" },
-        "Dagger Rush": { branch: "Sát Thủ", type: "active", maxLv: 1, cost: 10, mp: 35, func: "useDaggerRush", desc: "Tung loạt dao găm chớp nhoáng.", icon: "skill/dagger.jpg" },
-        "Tàn sát": { branch: "Sát Thủ", type: "active", maxLv: 1, cost: 15, mp: 50, func: "useTanSat", desc: "Tàng hình vào bóng tối. Chắc chắn NÉ 100% đòn tiếp theo của địch và đòn đánh kế tiếp của bạn 100% BẠO KÍCH.", icon: "skill/tanghinh.jpg" },
-        "Dao Độc": { branch: "Sát Thủ", type: "active", maxLv: 1, cost: 10, mp: 35, func: "usePoisonDagger", desc: "Tẩm kịch độc vào dao. Gây sát thương và khiến địch trúng độc, mất 5% HP tối đa mỗi lượt (Kéo dài 3 lượt).", icon: "skill/dagger.jpg" },
+        "Bước Chân Bóng Tối": { branch: "Sát Thủ", type: "passive", maxLv: 1, cost: 5, desc: "Có 10% cơ hội né tránh hoàn toàn đòn đánh.", icon: "skill/buochanbongtoi.png" },
+        "Nhát Chém Tử Thần": { branch: "Sát Thủ", type: "passive", maxLv: 1, cost: 10, desc: "[Bị động] Tăng thêm 30% Sát thương Bạo Kích.", icon: "skill/nhatchemtuthan.png" },
+        "Ném Dao": { branch: "Sát Thủ", type: "active", maxLv: 1, cost: 5, mp: 20, func: "useDaggerThrow", desc: "Phóng dao gây ST. 30% gây Choáng.", icon: "skill/nemdao.png" },
+        "Dagger Rush": { branch: "Sát Thủ", type: "active", maxLv: 1, cost: 10, mp: 35, func: "useDaggerRush", desc: "Tung loạt dao găm chớp nhoáng.", icon: "skill/dagger_rush.png" },
+        "Tàn sát": { branch: "Sát Thủ", type: "active", maxLv: 1, cost: 15, mp: 50, func: "useTanSat", desc: "Tàng hình vào bóng tối. Chắc chắn NÉ 100% đòn tiếp theo của địch và đòn đánh kế tiếp của bạn 100% BẠO KÍCH.", icon: "skill/tansat.png" },
+        "Dao Độc": { branch: "Sát Thủ", type: "active", maxLv: 1, cost: 10, mp: 35, func: "usePoisonDagger", desc: "Tẩm kịch độc vào dao. Gây sát thương và khiến địch trúng độc, mất 5% HP tối đa mỗi lượt (Kéo dài 3 lượt).", icon: "skill/daodoc.png" },
 
         // --- NHÁNH PHÁP SƯ (XUYÊN GIÁP) ---
         "Lõi Ma Thuật": { branch: "Pháp Sư", type: "passive", maxLv: 1, cost: 5, desc: "[Bị động] Kích hoạt lõi ma lực. Tăng 25% sát thương cho mọi kỹ năng Phép Thuật (INT).", icon: "skill/loimathuat.png" },
