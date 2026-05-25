@@ -979,6 +979,7 @@
     window.specialCooldown = 0;
     window.combatTimer = null
     window.counterCooldown = 0;
+    window.tanSatCooldown = 0;
     window.playerVulnerabilityTurns = 0;
     window.enemyBurnTurns = 0; 
     window.enemyDefBreakTurns = 0; 
@@ -2456,10 +2457,12 @@
         let isLocked = false;
         
         if (cost > 0 && currentUser.mp < cost) isLocked = true; 
-        if (isCounterSkill && window.counterCooldown && window.counterCooldown > 0) isLocked = true; 
-        
+        const isCounterSkill = btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('useCounterAttack');
+        const isTanSatSkill = btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('useTanSat');  
        
         if (isSpecialSkill && window.specialCooldown && window.specialCooldown > 0) isLocked = true;
+        if (isCounterSkill && window.counterCooldown && window.counterCooldown > 0) isLocked = true; 
+        if (isTanSatSkill && window.tanSatCooldown && window.tanSatCooldown > 0) isLocked = true;
         
         if (isLocked) {
             if (btn.style.cursor !== "not-allowed") {
@@ -2568,6 +2571,9 @@
                 let cdBadgeSkill = '';
                 if (s === 'Phản Đòn' && window.counterCooldown && window.counterCooldown > 0) {
                     cdBadgeSkill = `<div class="potion-cd-badge" style="background:#cc6600; border-color:#fff;">${window.counterCooldown}</div>`;
+                }
+                else if (s === 'Tàn sát' && window.tanSatCooldown && window.tanSatCooldown > 0) {
+                    cdBadgeSkill = `<div class="potion-cd-badge" style="background:#cc6600; border-color:#fff;">${window.tanSatCooldown}</div>`;
                 }
 
                 iconHTML += `
@@ -3433,16 +3439,26 @@
 
     // --- SKILL SÁT THỦ: TÀN SÁT ---
     window.useTanSat = function() {
-        let reqMp = getActualMpCost(50);
-        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return; }
-        currentUser.mp -= reqMp; 
-        
-        window.stealthDodge = true; 
-        window.stealthCrit = true;  
-        
-        logBattle(`<span style="color:#aaa; font-size:18px; font-weight:bold; font-style:italic;">🌫️ Khói mù tỏa ra... Bạn hòa mình vào bóng tối! (Tàng hình: Né 100% đòn tiếp theo và Chí mạng 100% đòn đánh kế tiếp)</span>`);
-        updateCombatUI(); checkBattleEnd();
-    };
+    window.tanSatCooldown = window.tanSatCooldown || 0; 
+    if (window.tanSatCooldown > 0) {
+        return logBattle(`<span style='color:orange'>⏳ Tàn Sát đang hồi chiêu! (Cần chờ thêm ${window.tanSatCooldown} lượt)</span>`);
+    }
+
+    let reqMp = getActualMpCost(50);
+    if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { 
+        if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); 
+        return; 
+    }
+    
+    currentUser.mp -= reqMp; 
+    
+    window.stealthDodge = true; 
+    window.stealthCrit = true;  
+    window.tanSatCooldown = 2; // Khóa chiêu 2 lượt sau khi dùng
+    
+    logBattle(`<span style="color:#aaa; font-size:18px; font-weight:bold; font-style:italic;">🌫️ Khói mù tỏa ra... Bạn hòa mình vào bóng tối! (Tàng hình: Né 100% đòn tiếp theo và Chí mạng 100% đòn đánh kế tiếp)</span>`);
+    updateCombatUI(); checkBattleEnd();
+};
 
     // --- BỘ KỸ NĂNG MỚI: PHÁP SƯ (INT) ---
     window.useShadowStrike = function() {
@@ -4581,6 +4597,9 @@
             if (window.counterCooldown && window.counterCooldown > 0) {
                 window.counterCooldown--;
             }
+            if (window.tanSatCooldown && window.tanSatCooldown > 0) {
+                window.tanSatCooldown--; // Trừ cooldown của Tàn Sát đi 1
+            }
             // Thêm dòng này để trừ thời gian hồi thuốc
             if (window.potionCooldown && window.potionCooldown > 0) {
                 window.potionCooldown--;
@@ -4895,6 +4914,7 @@
                 isEnemyStunned = false; 
         
                 if (window.counterCooldown && window.counterCooldown > 0) window.counterCooldown--;
+                if (window.tanSatCooldown && window.tanSatCooldown > 0) window.tanSatCooldown--;
                 if (window.potionCooldown && window.potionCooldown > 0) window.potionCooldown--; 
                 if (window.enemyAtkBuffTurns && window.enemyAtkBuffTurns > 0) window.enemyAtkBuffTurns--;
                 setTimeout(() => {
@@ -5001,6 +5021,7 @@
         playerArmorBreakTurns = 0;
         enemyPoisonTurns = 0;
         window.counterCooldown = 0;
+        window.tanSatCooldown = 0;
         window.potionCooldown = 0;
         window.playerVulnerabilityTurns = 0;
         window.enemyAtkBuffTurns = 0;
@@ -5064,6 +5085,7 @@
         playerArmorBreakTurns = 0;
         enemyPoisonTurns = 0;
         window.counterCooldown = 0;
+        window.tanSatCooldown = 0;
         window.potionCooldown = 0;
         window.playerVulnerabilityTurns = 0;
         window.enemyAtkBuffTurns = 0;
@@ -5190,6 +5212,7 @@
         playerArmorBreakTurns = 0;
         enemyPoisonTurns = 0;
         window.counterCooldown = 0;
+        window.tanSatCooldown = 0;
         window.potionCooldown = 0;
         window.playerVulnerabilityTurns = 0;
         window.enemyAtkBuffTurns = 0;
