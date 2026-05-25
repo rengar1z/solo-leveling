@@ -3458,7 +3458,7 @@
     
     window.stealthDodge = true; 
     window.stealthCrit = true;  
-    window.tanSatCooldown = 2; // Khóa chiêu 2 lượt sau khi dùng
+    window.tanSatCooldown = 3; 
     
     logBattle(`<span style="color:#aaa; font-size:18px; font-weight:bold; font-style:italic;">🌫️ Khói mù tỏa ra... Bạn hòa mình vào bóng tối! (Tàng hình: Né 100% đòn tiếp theo và Chí mạng 100% đòn đánh kế tiếp)</span>`);
     updateCombatUI(); checkBattleEnd();
@@ -3561,7 +3561,7 @@
         
         currentUser.mp -= reqMp; 
         isPlayerCountering = true; 
-        window.counterCooldown = 2; 
+        window.counterCooldown = 3; 
         
         logBattle(`<span style="color:gold; font-weight:bold;">🛡️ Bạn nắm chặt vũ khí, vào thế phòng thủ sẵn sàng phản công!</span>`);
         updateCombatUI(); checkBattleEnd(); 
