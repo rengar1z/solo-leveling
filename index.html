@@ -2449,8 +2449,6 @@
             let baseWrath = 100 + (monarchWrathUses * 50); 
             cost = getActualMpCost(baseWrath); 
         }
-
-        const isCounterSkill = btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('useCounterAttack');
         
         const isSpecialSkill = btn.getAttribute('onclick') && (btn.getAttribute('onclick').includes('useExecuteBlade') || btn.getAttribute('onclick').includes('useHellfireBlast') || btn.getAttribute('onclick').includes('useArmorShatter'));
 
