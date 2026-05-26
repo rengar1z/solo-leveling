@@ -3476,6 +3476,9 @@
             
             let earring = currentUser.equipped.earring?.name;
             let necklace = currentUser.equipped.necklace?.name;
+            
+            let weapon = currentUser.equipped.weapon?.name; 
+            
             if (earring === "Quả Cầu Tham Lam") finalDmg *= 2.0; 
             if (necklace === "Vòng cổ người gác cổng") finalDmg *= 1.10;
             if (weapon === "Zeke's Fragment") {
@@ -3582,7 +3585,7 @@
         if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return; }
         currentUser.mp -= reqMp; 
         
-        let hit = calcPlayerDamage({ multi: 3.5, stat: 'int', ignoreDef: 0.5 }); 
+        let hit = calcPlayerDamage({ multi: 3.5, stat: 'int', ignoreDef: 0.5, branch: 'Pháp Sư' });
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 XUYÊN THẤU!</span> ` : "";
         logBattle(`${critLog}<span style="color:#9933ff; text-shadow: 0 0 5px #9933ff;">TRÍCH XUẤT BÓNG TỐI!</span> Phá giáp địch, gây <span style="color:#9933ff">${hit.dmg}</span> sát thương Phép!`);
@@ -3595,7 +3598,7 @@
         if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return; }
         currentUser.mp -= reqMp; 
         
-        let hit = calcPlayerDamage({ multi: 1.8, stat: 'int', ignoreDef: 0.2 }); 
+        let hit = calcPlayerDamage({ multi: 1.8, stat: 'int', ignoreDef: 0.2, branch: 'Pháp Sư' }); 
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         window.enemyBurnTurns = 3; 
         
@@ -3628,7 +3631,7 @@
         currentUser.mp -= reqMp; 
         
         // BUFF: Hệ số 2.2x INT và Xuyên 10% Giáp
-        let hit = calcPlayerDamage({ multi: 2.2, stat: 'int', ignoreDef: 0.1 }); 
+        let hit = calcPlayerDamage({ multi: 2.2, stat: 'int', ignoreDef: 0.1, branch: 'Pháp Sư' }); 
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         
         // Logic hồi phục: Hồi HP dựa trên 30% sát thương phép gây ra
@@ -3647,7 +3650,7 @@
         if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return; }
         currentUser.mp -= reqMp; 
         
-        let hit = calcPlayerDamage({ multi: 3.0, stat: 'str' }); 
+        let hit = calcPlayerDamage({ multi: 3.0, stat: 'str', branch: 'Đấu Sĩ' }); 
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         
         let healAmount = Math.floor(hit.dmg * 0.3) + (currentUser.vit * 2);
@@ -3685,7 +3688,7 @@
         if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) { if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return; }
         currentUser.mp -= reqMp; 
         
-        let hit = calcPlayerDamage({ multi: 2.8, stat: 'str' }); 
+        let hit = calcPlayerDamage({ multi: 2.8, stat: 'str', branch: 'Đấu Sĩ' }); 
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         window.enemyDefBreakTurns = 2; 
         
@@ -3721,7 +3724,7 @@
         currentUser.mp -= reqMp; 
         
         // BUFF: Tăng multi từ 2.0 lên 2.5 và Xuyên 30% Giáp
-        let hit = calcPlayerDamage({ multi: 2.5, stat: 'int', ignoreDef: 0.3 }); 
+        let hit = calcPlayerDamage({ multi: 2.5, stat: 'int', ignoreDef: 0.3, branch: 'Pháp Sư' }); 
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
         
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 BẠO KÍCH TÀN PHÁ!</span> ` : "";
@@ -3770,7 +3773,7 @@
         monarchWrathUses++;
 
         // Gây sát thương x6 STR và bỏ qua 80% Giáp
-        let hit = calcPlayerDamage({ multi: 6.0, stat: 'str', ignoreDef: 0.8 }); 
+        let hit = calcPlayerDamage({ multi: 6.0, stat: 'str', ignoreDef: 0.8, branch: 'Đấu Sĩ' }); 
         enemy.hp = Math.max(0, enemy.hp - hit.dmg); triggerShake();
 
         let critLog = hit.isCrit ? `<span style="color:yellow; font-weight:bold;">💥 HỦY DIỆT!</span> ` : "";
