@@ -489,6 +489,19 @@
             </div>
         </div>
 
+        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_cha_haein_spirit')">
+            <div class="sl-shop-icon-box" style="border-color: #ffd700;">
+                <img src="cos/Cha_Hae_In_Spirit.png">
+            </div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name" style="color: #ffd700;">Cha Hae-In Tinh Linh</p>
+                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 500 STR, 250 VIT, 100 AGI, 200 MP.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button id="btn-costume_cha_haein_spirit" class="sl-shop-price-btn" style="color: #ffd700;">20 LÕI MA TINH</button>
+            </div>
+        </div>
+
         <div class="sl-shop-item shop-item-row" data-category="skill" onclick="buyShopItem('skill_execute')">
             <div class="sl-shop-icon-box" style="border-color: gold;">
                 <img src="skill/doatmenhluoidao.png">
@@ -861,7 +874,7 @@
         "cos/Sung_Jinwoo_Black_Suit.png", "cos/Sung_Jinwoo_Mining_Work.png", 
         "cos/Sung_Jinwoo_A_Wish_Come_True.png", "cos/Sung_Jinwoo_Light_Outing_Wear.png",
         "cos/Sung_Jinwoo_Incapable_of_Evaluation.png", "cos/Sung_Jinwoo_Summer_Vacation_2.png",
-        "cos/Sung_Jinwoo_Night_Lord.png", "cos/Sung_Jinwoo_Monarch_of_the_Heaven-Annihilating_Dragons.png",
+        "cos/Sung_Jinwoo_Night_Lord.png", "cos/Sung_Jinwoo_Monarch_of_the_Heaven-Annihilating_Dragons.png", "cos/Cha_Hae-In_The_Flutter_of_Dreams.png",
         "cos/Sung_Jinwoo_God_of_Death.png", "cos/Frieren.png", "cos/Elena_Renault.png", "cos/Sian_Halat_Crimson_Death.png",
 
         // Shadow
@@ -1250,6 +1263,8 @@
         "Frieren": { rank: "S", type: "costume", name: "Frieren", int: 350, vit: 80, mp: 300, effect: "Đổi Avatar thành Frieren", img: "cos/Frieren.png", avatar: "cos/Frieren.png", sellPrice: 100000 },
         "Ma Vương Hàng Lâm": { rank: "SS", type: "costume", name: "Ma Vương Hàng Lâm", str: 450, vit: 150, hp: 300, effect: "Đổi Avatar thành Ma Vương. Tỏa ra sát khí áp đảo.", img: "cos/Elena_Renault.png", avatar: "cos/Elena_Renault.png", sellPrice: 0 },
         "Huyết Giáp Vô Song": { rank: "SS", type: "costume", name: "Huyết Giáp Vô Song", str: 250, vit: 350, agi: 50, effect: "Đổi Avatar thành Huyết Giáp. Phòng ngự tuyệt đối.", img: "cos/Sian_Halat_Crimson_Death.png", avatar: "cos/Sian_Halat_Crimson_Death.png", sellPrice: 0 },
+        "Cha Hae-In Tinh Linh": { rank: "SS", type: "costume", name: "Cha Hae-In Tinh Linh", str: 500, vit: 250, agi: 100, mp: 200, effect: "Đổi Avatar thành Cha Hae-In. Vũ điệu của gió và ánh sáng, tốc độ đạt đến cảnh giới tinh linh.", img: "cos/Cha_Hae-In_The_Flutter_of_Dreams.png", avatar: "cos/Cha_Hae-In_The_Flutter_of_Dreams.png", sellPrice: 0 
+        }
     };
 
     // --- DỮ LIỆU THÀNH TỰU VÀ DANH HIỆU (TITLE) ---
@@ -1349,7 +1364,8 @@
         "skill_hellfire": { name: "Bí Kỹ: Hỏa Ngục", price: 500000, type: "skill", skillName: "Hỏa Ngục Bộc Phá" },
         "skill_shatter": { name: "Bí Kỹ: Toái Giáp", price: 500000, type: "skill", skillName: "Toái Giáp Trảm" },
         "costume_demon_king": { name: "Ma Vương Hàng Lâm", price: 10, currencyType: "item", currencyItem: "Lõi Ma Tinh", type: "item", itemId: "Ma Vương Hàng Lâm" },
-        "costume_blood_armor": { name: "Huyết Giáp Vô Song", price: 15, currencyType: "item", currencyItem: "Lõi Ma Tinh", type: "item", itemId: "Huyết Giáp Vô Song" }
+        "costume_blood_armor": { name: "Huyết Giáp Vô Song", price: 15, currencyType: "item", currencyItem: "Lõi Ma Tinh", type: "item", itemId: "Huyết Giáp Vô Song" },
+        "costume_cha_haein_spirit": { name: "Cha Hae-In Tinh Linh", price: 20, currencyType: "item", currencyItem: "Lõi Ma Tinh", type: "item", itemId: "Cha Hae-In Tinh Linh" },
     };
 
     // --- CƠ SỞ DỮ LIỆU KỸ NĂNG ĐA NHÁNH (MULTI-CLASS) ---
@@ -2229,7 +2245,7 @@
     
     if (!currentUser.ownedCostumes) currentUser.ownedCostumes = [];
     
-    const costumes = ["costume_black_suit", "costume_mining", "costume_wish", "costume_light_outing", "costume_incapable", "costume_summer_2", "costume_night_lord", "costume_dragon_monarch", "costume_god_of_death", "costume_Frieren", "costume_demon_king", "costume_blood_armor"];
+    const costumes = ["costume_black_suit", "costume_mining", "costume_wish", "costume_light_outing", "costume_incapable", "costume_summer_2", "costume_night_lord", "costume_dragon_monarch", "costume_god_of_death", "costume_Frieren", "costume_demon_king", "costume_blood_armor", "costume_cha_haein_spirit"];
     
     costumes.forEach(shopId => {
         const btn = document.getElementById('btn-' + shopId);
