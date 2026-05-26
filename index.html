@@ -1834,8 +1834,17 @@
             currentUser.vit -= oldT.vit;
             currentUser.agi -= oldT.agi;
             currentUser.int -= oldT.int;
+            
             currentUser.maxHp -= oldT.vit * 10;
             currentUser.maxMp -= oldT.int * 5;
+            
+            
+            if (oldT.vit > 0) {
+                currentUser.hp = Math.max(1, currentUser.hp - (oldT.vit * 10));
+            }
+            if (oldT.int > 0) {
+                currentUser.mp = Math.max(0, currentUser.mp - (oldT.int * 5));
+            }
         
             currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
             currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
@@ -1850,8 +1859,13 @@
         
         currentUser.maxHp += newT.vit * 10;
         currentUser.maxMp += newT.int * 5;
-        
-        // === 2. XÓA BỎ DÒNG CỘNG MÁU/MANA HIỆN TẠI TẠI ĐÂY ===
+         
+        if (newT.vit > 0) {
+            currentUser.hp += newT.vit * 10;
+        }
+        if (newT.int > 0) {
+            currentUser.mp += newT.int * 5;
+        }
 
         alert(`Đã trang bị danh hiệu [${newT.name}]! Lực chiến tăng mạnh!`);
         await saveUserData();
