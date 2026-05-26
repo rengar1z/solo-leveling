@@ -491,7 +491,7 @@
 
         <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_cha_haein_spirit')">
             <div class="sl-shop-icon-box" style="border-color: #ffd700;">
-                <img src="cos/Cha_Hae_In_Spirit.png">
+                <img src="cos/Cha_Hae-In_The_Flutter_of_Dreams.png">
             </div>
             <div class="sl-shop-info">
                 <p class="sl-shop-item-name" style="color: #ffd700;">Cha Hae-In Tinh Linh</p>
@@ -4841,48 +4841,39 @@
         currentUser.exp += enemyExp;
 
         // ================= LOGIC RỚT ĐỒ (LOOT SYSTEM) =================
-        // KÍCH HOẠT: BÀN TAY MAY MẮN (+10% Tỷ lệ rớt đồ)
         let luckBonus = (currentUser.skills["Bàn Tay May Mắn"] > 0) ? 0.10 : 0;
         
         if (enemy.isBoss) {
-            // --- NẾU LÀ BOSS: RỚT TRANG BỊ / ĐỒ HIẾM ---
             if (currentRedGateId) {
-                // 1. Boss Cổng Đỏ: Rớt đồ hiếm của Cổng Đỏ
                 let dropChance = 1.0 + luckBonus; 
                 if (Math.random() <= dropChance) {
                     const rareItems = RED_GATES[currentRedGateId].rareDrops;
                     const droppedItemName = rareItems[Math.floor(Math.random() * rareItems.length)];
-                    
                     const newItem = window.giveItem(droppedItemName); 
                     if (newItem) droppedItemsForUI.push(newItem);     
                 }
             } else if (isDungeonMode) {
-                // 2. Boss Hầm Ngục Thường: Rớt trang bị cơ bản hoặc Item Boss
-                let dropChance = 0.9 + luckBonus; // Mặc định 10%
+                let dropChance = 0.9 + luckBonus;
                 if (Math.random() <= dropChance) { 
                     const items = enemy.rareDrops || ["Dagger", "Shield", "Essence of Magic"];
                     const droppedItemName = items[Math.floor(Math.random() * items.length)]; 
-        
                     const newItem = window.giveItem(droppedItemName); 
                     if (newItem) droppedItemsForUI.push(newItem); 
                 }
             }
-        } 
-        else {
-            // --- NẾU LÀ QUÁI THƯỜNG: CHỈ RỚT VẬT LIỆU (MATERIAL) ---
+        } else {
             if (currentRedGateId || isDungeonMode) {
-                let dropChance = 0.30 + luckBonus; // Mặc định 30% tỷ lệ rớt vật liệu
+                let dropChance = 0.30 + luckBonus;
                 if (Math.random() <= dropChance) {
                     const possibleDrops = enemy.drops || ["Ma Thạch Cấp Thấp"];
                     const droppedItemName = possibleDrops[Math.floor(Math.random() * possibleDrops.length)];
-                    
                     const newItem = window.giveItem(droppedItemName); 
                     if (newItem) droppedItemsForUI.push(newItem);     
                 }
             }
         }
 
-        // ================= HIỂN THỊ THÔNG BÁO VÀO LOG (THAY THẾ LOOT UI CŨ) =================
+        // ================= HIỂN THỊ THÔNG BÁO VÀO LOG =================
         logBattle(`<span style="color:#00ff00; font-weight:bold; font-size:18px;">✨ CHIẾN THẮNG!</span>`);
         logBattle(`<span style="color:#fff;">Nhận được: <span style="color:#00ff00;">+${enemyExp} EXP</span> | <span style="color:gold;">+${rewardCash} Cash</span></span>`);
         
@@ -4890,24 +4881,12 @@
             droppedItemsForUI.forEach(item => {
                 let itemData = ITEM_DATA[item.name];
                 let rank = itemData ? (itemData.rank || 'D') : 'D';
-                
-                // Phân loại màu sắc chi tiết theo từng Hạng (Rank)
-                let rankColor = '#ffffff'; // Mặc định D: Màu trắng
-                
-                if (rank === 'C') {
-                    rankColor = '#00ff00'; // C: Xanh lá cây
-                } else if (rank === 'B') {
-                    rankColor = '#00bfff'; // B: Xanh lơ (Cyan)
-                } else if (rank === 'A') {
-                    rankColor = '#ff8c00'; // A: Cam
-                } else if (rank === 'A+') {
-                    rankColor = '#ff8c00'; // A+: Cam
-                } else if (rank === 'S') {
-                    rankColor = '#ff3333'; // S: Đỏ
-                } else if (rank === 'S+') {
-                    rankColor = '#dc143c'; // S+: Đỏ Huyết Sắc (Crimson)
-                }
-
+                let rankColor = '#ffffff'; 
+                if (rank === 'C') rankColor = '#00ff00';
+                else if (rank === 'B') rankColor = '#00bfff';
+                else if (rank === 'A' || rank === 'A+') rankColor = '#ff8c00';
+                else if (rank === 'S') rankColor = '#ff3333';
+                else if (rank === 'S+') rankColor = '#dc143c';
                 logBattle(`<span style="color:${rankColor}; font-weight:bold;">🎁 VẬT PHẨM: [${item.name}] (Hạng ${rank})</span>`);
             });
         }
@@ -4929,27 +4908,6 @@
         saveUserData(); 
         window.combatTimer = setTimeout(resetToButtonMode, 1500);
 
-        let hasExtraction = false;
-        if (!currentUser.ownedShadows) currentUser.ownedShadows = [];
-        if (enemy.isBoss && enemy.bossType && SHADOW_DATA[enemy.bossType]) {
-            if (!currentUser.ownedShadows.includes(enemy.bossType)) {
-                hasExtraction = true;
-                window.currentExtractTarget = enemy.bossType;
-                document.getElementById('extractTargetName').innerText = enemy.name;
-                document.getElementById('extractionPopup').classList.remove('hidden');
-            }
-        }
-
-        // Logic Hàng đợi thông minh: Trích xuất hiện trước, Level Up chờ phía sau
-        if (hasExtraction && leveledUp) {
-            window.pendingLevelUp = { oldJob: oldJob, newJob: getJob(currentUser.level) };
-        } else if (leveledUp) {
-            showPopup(oldJob, getJob(currentUser.level));
-        }
-
-        saveUserData(); 
-        window.combatTimer = setTimeout(resetToButtonMode, 1500);
-
         // ================= XỬ LÝ TIẾN TRÌNH HẦM NGỤC / CỔNG ĐỎ =================
         if (currentRedGateId) {
             const gateData = RED_GATES[currentRedGateId];
@@ -4962,30 +4920,25 @@
                 btnNext.style.color = gateData.themeColor;
             } else {
                 logBattle(`<span style="color:gold; font-size:22px;">CỔNG ĐỎ ĐÃ BỊ PHÁ ĐẢO! KHÔNG GIAN SỤP ĐỔ...</span>`);
-                currentRedGateId = null; // Mở khóa
+                currentRedGateId = null; 
                 const btnExit = document.getElementById('btnExitDungeon');
                 btnExit.classList.remove('hidden');
                 btnExit.innerText = "THOÁT KHỎI CỔNG ĐỎ";
                 document.getElementById('dDungeonTitle').style.color = "#ffcc00"; 
                 document.getElementById('dDungeonTitle').style.textShadow = "none";
             }
-            return; // Dừng tiến trình Hầm ngục bên dưới
+            return; 
         }
         
-        // --- CƠ CHẾ XUẤT HIỆN CỔNG ĐỎ ĐỘC QUYỀN THEO TỪNG HẦM NGỤC ---
+        // CỔNG ĐỎ XUẤT HIỆN
         if (isDungeonMode && !currentRedGateId) {
             let spawnedRedGate = null;
-
-            // Hầm Ngục Côn Trùng -> 10% mở Cổng Đỏ (Ngẫu nhiên ra Vua Băng hoặc Igris)
             if (dCurrentId === 'insect_dungeon') {
-                
                 if (Math.random() <= 0.9) { 
                     if (Math.random() <= 0.5) { spawnedRedGate = "ice_world"; } 
                     else { spawnedRedGate = "red_knight_tomb"; }
                 }
             }
-
-            // NẾU TRÚNG TỶ LỆ, KÍCH HOẠT HÚT VÀO CỔNG ĐỎ
             if (spawnedRedGate) {
                 logBattle(`<span style="color:red; font-size:18px; font-weight:bold; text-shadow: 0 0 10px red;">[CẢNH BÁO MỨC ĐỘ NGUY HIỂM: A] - KHÔNG GIAN SỤP ĐỔ! MỘT CỔNG ĐỎ BẤT NGỜ HÚT BẠN VÀO TRONG!</span>`);
                 setTimeout(() => { enterRedGate(spawnedRedGate); }, 2500);
@@ -4993,7 +4946,7 @@
             }
         }
         
-        // Chuyển ải Hầm ngục bình thường
+        // CHUYỂN ẢI THƯỜNG
         if (isDungeonMode) {
             const dData = dungeonData[dCurrentId];
             if (dCurrentStage < dData.stages.length - 1) {
