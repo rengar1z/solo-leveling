@@ -928,6 +928,9 @@
     function initDOM() {
         
         DOM.playerName = document.getElementById('playerName');
+        DOM.p_name = document.getElementById('p-name');
+        DOM.d_p_name = document.getElementById('d-p-name');
+        
         DOM.level = document.getElementById('level');
         DOM.job = document.getElementById('job');
         DOM.hpDisplay = document.getElementById('hpDisplay');
@@ -2126,6 +2129,8 @@
             if (!DOM.isCached) initDOM(); // Tự động load cache lần đầu tiên
         
             DOM.playerName.textContent = currentUser.username;
+            if (DOM.p_name) DOM.p_name.textContent = currentUser.username;
+            if (DOM.d_p_name) DOM.d_p_name.textContent = currentUser.username;
             DOM.level.textContent = currentUser.level;
             DOM.job.textContent = getJob(currentUser.level);
         
