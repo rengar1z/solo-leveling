@@ -2198,11 +2198,15 @@
         
             DOM.hpDisplay.textContent = currentUser.hp + '/' + currentUser.maxHp;
             DOM.mpDisplay.textContent = currentUser.mp + '/' + currentUser.maxMp;
-            DOM.expText.textContent = currentUser.exp + '/' + currentUser.need;
+        
+            let reqExp = Math.floor(100 * Math.pow(currentUser.level, 1.5));
+
+            DOM.expText.textContent = `EXP: ${Math.floor(currentUser.exp)} / ${reqExp}`;
         
             DOM.hpBar.style.width = (currentUser.hp / currentUser.maxHp * 100) + '%';
             DOM.mpBar.style.width = (currentUser.mp / currentUser.maxMp * 100) + '%';
-            DOM.expBar.style.width = (currentUser.exp / currentUser.need * 100) + '%';
+            let expPercent = Math.min(100, (currentUser.exp / reqExp) * 100);
+            DOM.expBar.style.width = expPercent + '%';
         
             DOM.str.textContent = currentUser.str;
             DOM.vit.textContent = currentUser.vit;
