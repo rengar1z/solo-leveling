@@ -4908,21 +4908,22 @@
             });
         }
 
-        // ================= XỬ LÝ LÊN CẤP VÀ TRÍCH XUẤT (LOẠI BỎ PENDING POPUPS CŨ) =================
-        let leveledUp = false; 
-        let oldJob = getJob(currentUser.level); 
-        while (currentUser.exp >= currentUser.need) {
-            currentUser.exp -= currentUser.need;
-            currentUser.level++; 
-            currentUser.need += 50; 
-            currentUser.points += 3; 
-            currentUser.skillPoints += 2;
-            currentUser.maxHp += 20; 
-            currentUser.maxMp += 10;
-            currentUser.hp = currentUser.maxHp; 
-            currentUser.mp = currentUser.maxMp;
-            leveledUp = true; 
+        // ================= XỬ LÝ LÊN CẤP VÀ TRÍCH XUẤT =================
+        let hasExtraction = false;
+        if (!currentUser.ownedShadows) currentUser.ownedShadows = [];
+        if (enemy.isBoss && enemy.bossType && SHADOW_DATA[enemy.bossType]) {
+            if (!currentUser.ownedShadows.includes(enemy.bossType)) {
+                hasExtraction = true;
+                window.currentExtractTarget = enemy.bossType;
+                document.getElementById('extractTargetName').innerText = enemy.name;
+                document.getElementById('extractionPopup').classList.remove('hidden');
+            }
         }
+
+        window.checkLevelUp(hasExtraction);
+
+        saveUserData(); 
+        window.combatTimer = setTimeout(resetToButtonMode, 1500);
 
         let hasExtraction = false;
         if (!currentUser.ownedShadows) currentUser.ownedShadows = [];
@@ -5123,14 +5124,15 @@
         }
     }
 
-    function checkLevelUp() {
+    window.checkLevelUp = function(hasExtraction = false) {
         let leveledUp = false; 
-        let oldJob = getJob(currentUser.level); // <--- LƯU LẠI RANK TRƯỚC KHI LÊN CẤP
+        let oldJob = getJob(currentUser.level); 
         
-        while (currentUser.exp >= currentUser.need) {
-            currentUser.exp -= currentUser.need;
+        let reqExp = Math.floor(100 * Math.pow(currentUser.level, 1.5));
+
+        while (currentUser.exp >= reqExp) {
+            currentUser.exp -= reqExp;
             currentUser.level++; 
-            currentUser.need += 50; 
             currentUser.points += 3; 
             currentUser.skillPoints += 2;
             currentUser.maxHp += 20; 
@@ -5139,14 +5141,15 @@
             currentUser.mp = currentUser.maxMp;
             
             leveledUp = true; 
-        }
+            reqExp = Math.floor(100 * Math.pow(currentUser.level, 1.5)); 
+        }        
         
-        // Nếu có lên cấp thì gọi bảng thông báo mới
-        if (leveledUp) {
-            let newJob = getJob(currentUser.level); // <--- LẤY RANK SAU KHI LÊN CẤP
-            showPopup(oldJob, newJob); // <--- Truyền 2 Rank vào để hệ thống tự so sánh
+        if (hasExtraction && leveledUp) {
+            window.pendingLevelUp = { oldJob: oldJob, newJob: getJob(currentUser.level) };
+        } else if (leveledUp) {
+            showPopup(oldJob, getJob(currentUser.level));
         }
-    }
+    };
     
     async function saveUserData() {
         await set(ref(db, 'users/' + currentUser.username), currentUser);
