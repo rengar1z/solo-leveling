@@ -2998,18 +2998,22 @@
         
         const itemObj = currentUser.inventory[index];
         const itemData = ITEM_DATA[itemObj.name];
-        let slot = itemData.type; // Lấy type từ ITEM_DATA (ring, necklace, armor, shoes...)
+        let slot = itemData.type; 
 
         // Nếu ô đã có đồ -> Tự động tháo đồ cũ ra trước
         if (currentUser.equipped[slot]) {
             await unequipItem(slot, false); 
         }
 
+        // 1. CHỐT TỶ LỆ MÁU/MANA TRƯỚC KHI MẶC
+        let hpPercent = currentUser.hp / currentUser.maxHp;
+        let mpPercent = currentUser.maxMp > 0 ? (currentUser.mp / currentUser.maxMp) : 0;
+
         // Mặc đồ mới
         currentUser.inventory.splice(index, 1);
         currentUser.equipped[slot] = itemObj;
         
-        // Cộng chỉ số random của món đồ
+        // 2. Cộng chỉ số ngẫu nhiên của món đồ vào Max HP / Max MP
         currentUser.str += (itemObj.str || 0);
         currentUser.vit += (itemObj.vit || 0);
         currentUser.agi += (itemObj.agi || 0);
@@ -3020,9 +3024,13 @@
         
         let vitVal = itemObj.vit || 0; 
         if (vitVal > 0) { 
-            currentUser.maxHp += vitVal * 10; // Đã sửa thành dấu CỘNG
-            currentUser.hp += vitVal * 10;    // Cộng luôn máu hiện tại để người chơi không phải uống thuốc
+            currentUser.maxHp += vitVal * 10; 
         }
+
+        // 3. ĐỒNG BỘ LẠI HP/MP THEO TỶ LỆ CŨ
+        currentUser.hp = Math.max(1, Math.floor(currentUser.maxHp * hpPercent));
+        currentUser.mp = Math.floor(currentUser.maxMp * mpPercent);
+
         await saveUserData();
         renderBag();
     }
@@ -3033,23 +3041,28 @@
         }
         const itemObj = currentUser.equipped[slot];
         if (!itemObj) return;
+
+        // 1. CHỐT TỶ LỆ MÁU/MANA TRƯỚC KHI THÁO
+        let hpPercent = currentUser.hp / currentUser.maxHp;
+        let mpPercent = currentUser.maxMp > 0 ? (currentUser.mp / currentUser.maxMp) : 0;
         
-        // Trừ chỉ số random của món đồ
+        // 2. Trừ chỉ số của món đồ vào Max HP / Max MP
         currentUser.str -= (itemObj.str || 0);
         currentUser.vit -= (itemObj.vit || 0);
-        currentUser.maxMp -= (itemObj.mp || 0);
         currentUser.agi -= (itemObj.agi || 0);
         currentUser.int -= (itemObj.int || 0);
 
+        currentUser.maxMp -= (itemObj.mp || 0);
         currentUser.maxMp -= (itemObj.int || 0) * 5;
-        
-        currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
         
         let vitVal = itemObj.vit || 0; 
         if (vitVal > 0) { 
             currentUser.maxHp -= vitVal * 10;
-            currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
         }
+
+        // 3. ĐỒNG BỘ LẠI HP/MP THEO ĐÚNG TỶ LỆ CŨ VÀ MAX HP MỚI
+        currentUser.hp = Math.max(1, Math.floor(currentUser.maxHp * hpPercent));
+        currentUser.mp = Math.floor(currentUser.maxMp * mpPercent);
 
         // Đẩy lại nguyên Object vào túi
         currentUser.inventory.push(itemObj);
