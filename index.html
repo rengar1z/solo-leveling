@@ -463,6 +463,32 @@
             </div>
         </div>
 
+        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_demon_king')">
+            <div class="sl-shop-icon-box" style="border-color: #cc00ff;">
+                <img src="cos/Elena_Renault.png">
+            </div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name" style="color: #cc00ff;">Ma Vương Hàng Lâm</p>
+                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 450 STR, 150 VIT, 300 HP.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button id="btn-costume_demon_king" class="sl-shop-price-btn" style="color: #cc00ff;">10 LÕI MA TINH</button>
+            </div>
+        </div>
+
+        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_blood_armor')">
+            <div class="sl-shop-icon-box" style="border-color: #ff0000;">
+                <img src="cos/Sian_Halat_Crimson_Death.png">
+            </div>
+            <div class="sl-shop-info">
+                <p class="sl-shop-item-name" style="color: #ff0000;">Huyết Giáp Vô Song</p>
+                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 250 STR, 350 VIT, 50 AGI.</p>
+            </div>
+            <div class="sl-shop-action">
+                <button id="btn-costume_blood_armor" class="sl-shop-price-btn" style="color: #ff0000;">10 LÕI MA TINH</button>
+            </div>
+        </div>
+
         <div class="sl-shop-item shop-item-row" data-category="skill" onclick="buyShopItem('skill_execute')">
             <div class="sl-shop-icon-box" style="border-color: gold;">
                 <img src="skill/doatmenhluoidao.png">
@@ -821,14 +847,14 @@
         
         // --- VŨ KHÍ & PHÒNG CỤ MỚI ---
         "wp/Kasaka_Venom_Fang.png", "wp/Knight_Killer.png", "wp/Orb_of_Avarice.png", "wp/Baran_Earring.png", "wp/Baran_Necklace.png", "wp/Truth_Kasaka_Venom_Fang.png",
-        "wp/Knight_Armor.png", "wp/Demon_King_Daggers.png", "wp/Baran_Ring.png", "wp/Warden_Necklace.png",
+        "wp/Knight_Armor.png", "wp/Demon_King_Daggers.png", "wp/Baran_Ring.png", "wp/Warden_Necklace.png", "wp/Zeke_Fragment.png", "wp/A_Gentle_Touch.png",
         "wp/High-ranking Demon's Helmet.png","wp/High-ranking Demon's Gloves.png","wp/High-ranking Demon's Boots.png","wp/High-ranking Demon's Body Armor.png",
         
         // --- ẢNH NỀN GACHA  ---
         "event/event.png",
 
         //VẬT LIỆU
-        "material/Glue.png",
+        "material/Glue.png", "material/Abyssal_Crystal.png",
         "material/Old Bandage.png", "wp/Sandstorm_Cube.png",
         
         // Costumes
@@ -836,7 +862,7 @@
         "cos/Sung_Jinwoo_A_Wish_Come_True.png", "cos/Sung_Jinwoo_Light_Outing_Wear.png",
         "cos/Sung_Jinwoo_Incapable_of_Evaluation.png", "cos/Sung_Jinwoo_Summer_Vacation_2.png",
         "cos/Sung_Jinwoo_Night_Lord.png", "cos/Sung_Jinwoo_Monarch_of_the_Heaven-Annihilating_Dragons.png",
-        "cos/Sung_Jinwoo_God_of_Death.png", "cos/Frieren.png",
+        "cos/Sung_Jinwoo_God_of_Death.png", "cos/Frieren.png", "cos/Elena_Renault.png", "cos/Sian_Halat_Crimson_Death.png",
 
         // Shadow
         "shadow/Beru_Icon.png", "shadow/Blades_Icon.png", "shadow/Igris_Icon.png", "shadow/Tusk_Icon.png",
@@ -1068,7 +1094,7 @@
                 { name: "Kỵ Sĩ Ác Quỷ", hp: 55000, atk: 1200, def: 400, exp: 7000, img: "bot/enemy.png" },
                 { name: "Rồng Sét Wyvern", hp: 65000, atk: 1400, def: 350, exp: 10000, img: "bot/enemy.png" },
                 { name: "Cận Vệ Hoàng Gia Đỏ", hp: 80000, atk: 1600, def: 500, exp: 15000, img: "bot/enemy.png" },
-                { name: "BOSS: Vua Quỷ Baran", hp: 180000, atk: 2500, def: 600, exp: 50000, img: "boss/Boss_Baran_of_White_Flames.png", isBoss: true, bossType: "baran", rareDrops: ["Dao găm của ma vương", "Đại kiếm ma vương", "Khuyên tai của ma vương", "Dây chuyền của ma vương", "Nhẫn của quỷ vương"] }
+                { name: "BOSS: Vua Quỷ Baran", hp: 180000, atk: 2500, def: 600, exp: 50000, img: "boss/Boss_Baran_of_White_Flames.png", isBoss: true, bossType: "baran", rareDrops: ["Dao găm của ma vương", "Đại kiếm ma vương", "Khuyên tai của ma vương", "Dây chuyền của ma vương", "Nhẫn của quỷ vương", "Lõi Ma Tinh"] }
             ]
         },
         "jeju_island": {
@@ -1137,7 +1163,7 @@
     const ITEM_DATA = {
         // --- VẬT LIỆU QUAY GACHA ---
         "Sandstorm Cube": { rank: "S", type: "material", name: "Sandstorm Cube", effect: "Khối lập phương chứa sức mạnh bão cát. Dùng để quay Lucky Wheel Royale.", img: "wp/Sandstorm_Cube.png", sellPrice: 50000 },
-
+        "Lõi Ma Tinh": { rank: "A", type: "material", name: "Lõi Ma Tinh", effect: "Vật liệu chứa ma lực cực đậm đặc. Dùng để đổi các Trang Phục Đặc Biệt trong Cửa Hàng.", img: "material/Abyssal_Crystal.png", sellPrice: 5000 },
         // --- TRANG BỊ HUYỀN THOẠI TỪ VÒNG QUAY ---
         "Truth: Kasaka's Venom Fang": { rank: "S", type: "weapon", name: "Truth: Kasaka's Venom Fang", str: 170, vit: 0, agi: 60, mp: 0, effect: "Tăng 25% sát thương cho kỹ năng nhánh Sát Thủ. 50% cơ hội gây Kịch Độc trong 3 lượt.", img: "wp/Truth_Kasaka_Venom_Fang.png", sellPrice: 25000 },
         "A Gentle Touch": { 
@@ -1222,6 +1248,8 @@
         "Vua Của Loài Rồng Hủy Diệt Bầu Trời": { rank: "S", type: "costume", name: "Vua Của Loài Rồng Hủy Diệt Bầu Trời", str: 250, vit: 100, mp: 100, effect: "Đổi Avatar thành Vua Của Loài Rồng", img: "cos/Sung_Jinwoo_Monarch_of_the_Heaven-Annihilating_Dragons.png", avatar: "cos/Sung_Jinwoo_Monarch_of_the_Heaven-Annihilating_Dragons.png", sellPrice: 100000 },
         "Tử Thần": { rank: "S", type: "costume", name: "Tử Thần", str: 250, vit: 100, mp: 100, effect: "Đổi Avatar thành Tử Thần", img: "cos/Sung_Jinwoo_God_of_Death.png", avatar: "cos/Sung_Jinwoo_God_of_Death.png", sellPrice: 100000 },
         "Frieren": { rank: "S", type: "costume", name: "Frieren", int: 350, vit: 80, mp: 300, effect: "Đổi Avatar thành Frieren", img: "cos/Frieren.png", avatar: "cos/Frieren.png", sellPrice: 100000 },
+        "Ma Vương Hàng Lâm": { rank: "SS", type: "costume", name: "Ma Vương Hàng Lâm", str: 450, vit: 150, hp: 300, effect: "Đổi Avatar thành Ma Vương. Tỏa ra sát khí áp đảo.", img: "cos/Elena_Renault.png", avatar: "cos/Elena_Renault.png", sellPrice: 0 },
+        "Huyết Giáp Vô Song": { rank: "SS", type: "costume", name: "Huyết Giáp Vô Song", str: 250, vit: 350, agi: 50, effect: "Đổi Avatar thành Huyết Giáp. Phòng ngự tuyệt đối.", img: "cos/Sian_Halat_Crimson_Death.png", avatar: "cos/Sian_Halat_Crimson_Death.png", sellPrice: 0 },
     };
 
     // --- DỮ LIỆU THÀNH TỰU VÀ DANH HIỆU (TITLE) ---
@@ -1319,7 +1347,9 @@
         "costume_Frieren": { name: "Frieren", price: 100000, type: "item", itemId: "Frieren" },
         "skill_execute": { name: "Bí Kỹ: Đoạt Mệnh", price: 500000, type: "skill", skillName: "Lưỡi Dao Đoạt Mệnh" },
         "skill_hellfire": { name: "Bí Kỹ: Hỏa Ngục", price: 500000, type: "skill", skillName: "Hỏa Ngục Bộc Phá" },
-        "skill_shatter": { name: "Bí Kỹ: Toái Giáp", price: 500000, type: "skill", skillName: "Toái Giáp Trảm" }
+        "skill_shatter": { name: "Bí Kỹ: Toái Giáp", price: 500000, type: "skill", skillName: "Toái Giáp Trảm" },
+        "costume_demon_king": { name: "Ma Vương Hàng Lâm", price: 10, currencyType: "item", currencyItem: "Lõi Ma Tinh", type: "item", itemId: "Ma Vương Hàng Lâm" },
+        "costume_blood_armor": { name: "Huyết Giáp Vô Song", price: 15, currencyType: "item", currencyItem: "Lõi Ma Tinh", type: "item", itemId: "Huyết Giáp Vô Song" }
     };
 
     // --- CƠ SỞ DỮ LIỆU KỸ NĂNG ĐA NHÁNH (MULTI-CLASS) ---
@@ -1530,16 +1560,38 @@
             return alert("Vật phẩm này đang bảo trì!");
         }
 
-        // TRƯỜNG HỢP 0: NẾU CHƯA MUA -> XỬ LÝ MUA RỒI DỪNG LẠI (Không động tới HP/MP)
+       // TRƯỜNG HỢP 0: NẾU CHƯA MUA -> XỬ LÝ MUA RỒI DỪNG LẠI
         if (!currentUser.ownedCostumes.includes(itemId) && (!currentUser.equipped.costume || currentUser.equipped.costume.name !== itemId)) {
-            if (currentUser.cash < shopItem.price) return alert(`Không đủ Cash! Cần ${shopItem.price} Cash.`);
-            currentUser.cash -= shopItem.price;
+            
+            // --- KIỂM TRA MUA BẰNG VẬT PHẨM ---
+            if (shopItem.currencyType === "item") {
+                const reqItem = shopItem.currencyItem;
+                const reqAmount = shopItem.price;
+                const invIndex = currentUser.inventory.findIndex(i => i.name === reqItem);
+                
+                if (invIndex === -1 || (currentUser.inventory[invIndex].quantity || 1) < reqAmount) {
+                    return alert(`Không đủ vật liệu! Cần ${reqAmount} [${reqItem}] để đổi trang phục này.`);
+                }
+                
+                // Trừ vật phẩm trong túi
+                if (currentUser.inventory[invIndex].quantity > reqAmount) {
+                    currentUser.inventory[invIndex].quantity -= reqAmount;
+                } else {
+                    currentUser.inventory.splice(invIndex, 1);
+                }
+            } 
+            // --- MUA BẰNG CASH BÌNH THƯỜNG ---
+            else {
+                if (currentUser.cash < shopItem.price) return alert(`Không đủ Cash! Cần ${shopItem.price} Cash.`);
+                currentUser.cash -= shopItem.price;
+            }
+
             currentUser.ownedCostumes.push(itemId);
-            alert(`Đã mua [${shopItem.name}] thành công! Bấm MẶC TRANG PHỤC để sử dụng.`);
+            alert(`Đã sở hữu [${shopItem.name}] thành công! Bấm MẶC TRANG PHỤC để sử dụng.`);
             
             await set(ref(db, 'users/' + currentUser.username), currentUser);
             render();
-            return; // Dừng lại ở đây
+            return;
         }
 
         // === BƯỚC 1: CHỐT TỶ LỆ HP/MP TRƯỚC KHI THÁO HOẶC MẶC ===
@@ -1614,12 +1666,6 @@
         { name: "Woo Jinchul", hp: 1600, atk: 200, def: 70, exp: 300, img: "char/Woo Jinchul.png" },
         { name: "Kang Taeshik", hp: 700, atk: 120, def: 70, exp: 300, img: "char/Kang Taeshik.png" }
     ];
-
-    function getMission() {
-        const d = new Date().getDay();
-        if ([1, 3, 5].includes(d)) return { text: 'Tập tạ 50 cái', exp: 35 };
-        return { text: 'Chạy bộ 5km + Hít đất 70 cái', exp: 100 };
-    }
 
     function getJob(l) {
         if (l >= 100) return 'Thợ Săn Hạng S';
@@ -2183,7 +2229,7 @@
     
     if (!currentUser.ownedCostumes) currentUser.ownedCostumes = [];
     
-    const costumes = ["costume_black_suit", "costume_mining", "costume_wish", "costume_light_outing", "costume_incapable", "costume_summer_2", "costume_night_lord", "costume_dragon_monarch", "costume_god_of_death", "costume_Frieren"];
+    const costumes = ["costume_black_suit", "costume_mining", "costume_wish", "costume_light_outing", "costume_incapable", "costume_summer_2", "costume_night_lord", "costume_dragon_monarch", "costume_god_of_death", "costume_Frieren", "costume_demon_king", "costume_blood_armor"];
     
     costumes.forEach(shopId => {
         const btn = document.getElementById('btn-' + shopId);
@@ -2203,10 +2249,16 @@
                 btn.style.textShadow = "0 1px 3px rgba(0,0,0,0.8)";
             } 
             else {
-                btn.textContent = `MUA (${SHOP_DATA[shopId].price})`;
-                btn.style.background = "linear-gradient(to bottom, #fce068, #df9a20)";
-                btn.style.color = "#222"; 
-            }
+                if (SHOP_DATA[shopId].currencyType === "item") {
+                    btn.textContent = `ĐỔI (${SHOP_DATA[shopId].price} ${SHOP_DATA[shopId].currencyItem.toUpperCase()})`;
+                    btn.style.background = "linear-gradient(to bottom, #cc00ff, #6600cc)";
+                    btn.style.color = "#fff";
+                } else {
+                    btn.textContent = `MUA (${SHOP_DATA[shopId].price})`;
+                    btn.style.background = "linear-gradient(to bottom, #fce068, #df9a20)";
+                    btn.style.color = "#222"; 
+                    }
+                }
         }
     });
 }
