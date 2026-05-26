@@ -4989,9 +4989,9 @@
         window.currentExtractTarget = null;
         
         // Trích xuất xong thì gọi bảng Lên cấp (nếu có)
-        if (window.pendingPopups && window.pendingPopups.levelUp) {
-            showPopup(window.pendingPopups.levelUp.oldJob, window.pendingPopups.levelUp.newJob);
-            window.pendingPopups.levelUp = null;
+        if (window.pendingLevelUp) {
+            showPopup(window.pendingLevelUp.oldJob, window.pendingLevelUp.newJob);
+            window.pendingLevelUp = null;
         }
     };
 
@@ -4999,10 +4999,9 @@
         document.getElementById('extractionPopup').classList.add('hidden');
         window.currentExtractTarget = null;
         
-        // Bỏ qua trích xuất thì cũng gọi bảng Lên cấp (nếu có)
         if (window.pendingLevelUp) {
             showPopup(window.pendingLevelUp.oldJob, window.pendingLevelUp.newJob);
-            window.pendingLevelUp = null; 
+            window.pendingLevelUp = null;
         }
     };
 
