@@ -1137,6 +1137,13 @@
 
         // --- TRANG BỊ HUYỀN THOẠI TỪ VÒNG QUAY ---
         "Truth: Kasaka's Venom Fang": { rank: "S", type: "weapon", name: "Truth: Kasaka's Venom Fang", str: 170, vit: 0, agi: 60, mp: 0, effect: "Tăng 25% sát thương cho kỹ năng nhánh Sát Thủ. 50% cơ hội gây Kịch Độc trong 3 lượt.", img: "wp/Truth_Kasaka_Venom_Fang.png", sellPrice: 25000 },
+        "A Gentle Touch": { 
+            rank: "S", type: "weapon", name: "A Gentle Touch", 
+            str: 160, vit: 50, agi: 0, mp: 0, 
+            effect: "Vũ khí độc quyền của Hwang Dongsoo. Tăng 25% sát thương cho kỹ năng nhánh Đấu Sĩ.", 
+            img: "wp/a_gentle_touch.png",
+            sellPrice: 25000 
+        },
         // --- TRANG BỊ HUYỀN THOẠI TỪ VÒNG QUAY (BẠN CÓ THỂ TỰ TẠO THÊM) ---
         "Kiếm Sét Rực Rỡ": { rank: "S", type: "weapon", name: "Kiếm Sét Rực Rỡ", str: 180, vit: 0, mp: 0, effect: "Vũ khí huyền thoại từ Vòng Quay.", img: "wp/Demon_King_Longsword.png", sellPrice: 20000 },
         "Nhẫn Hư Không": { rank: "S", type: "ring", name: "Nhẫn Hư Không", str: 40, vit: 40, mp: 200, effect: "Tăng 15% Tỷ lệ bạo kích", img: "wp/essenceofmagic.png", sellPrice: 20000 },
@@ -1366,7 +1373,8 @@
         "Khuyên tai của ma vương",
         "Dây chuyền của ma vương",
         "Vòng cổ người gác cổng",
-        "Truth: Kasaka's Venom Fang"
+        "Truth: Kasaka's Venom Fang",
+        "A Gentle Touch"
     ];
 
     window.spinGacha = async function(btnElement) {
@@ -3328,6 +3336,13 @@
                 if (Math.random() <= 0.50 && typeof enemyPoisonTurns !== 'undefined') {
                     if (enemyPoisonTurns === 0) window.enemyNewlyPoisoned = true;
                     enemyPoisonTurns = Math.max(enemyPoisonTurns, 3); 
+                }
+            }
+
+            // === A GENTLE TOUCH ===
+            if (wpName === "A Gentle Touch") {
+                if (config.branch === 'Đấu Sĩ') {
+                    finalDmg *= 1.25; 
                 }
             }
         }
