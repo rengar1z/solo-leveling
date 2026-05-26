@@ -1772,38 +1772,6 @@
         if(window.renderShadowArmy) window.renderShadowArmy();
     }
 
-    window.completeMission = async function() {
-        const today = new Date().toLocaleDateString();
-        if (currentUser.claimedDate === today) return alert('Hôm nay bạn đã rèn luyện rồi!');
-        
-        const m = getMission();
-        let oldJob = getJob(currentUser.level); // <--- 1. LƯU RANK CŨ VÀO ĐÂY
-        currentUser.exp += m.exp;
-        let up = false;
-
-        // ... (Vòng lặp while cộng chỉ số bên trong bạn cứ giữ nguyên nhé) ...
-        while (currentUser.exp >= currentUser.need) {
-            currentUser.exp -= currentUser.need;
-            currentUser.level++;
-            //...
-            up = true;
-        }
-
-        currentUser.claimedDate = today;
-        currentUser.streak++;
-        currentUser.logs = currentUser.logs || [];
-        currentUser.logs.push(today + ' - ' + m.text + ' (+' + m.exp + ' EXP)');
-        
-        await set(ref(db, 'users/' + currentUser.username), currentUser);
-        render();
-        
-        // 2. GỌI BẢNG THÔNG BÁO Ở ĐÂY
-        if (up) {
-            let newJob = getJob(currentUser.level);
-            showPopup(oldJob, newJob); 
-        }
-    }
-
     window.showPopup = function(oldJob, newJob) {
         let titleEl = document.querySelector('.popupInner h2');
         let textEl = document.getElementById('popupText');
