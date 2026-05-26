@@ -1144,6 +1144,13 @@
             img: "wp/a_gentle_touch.png",
             sellPrice: 25000 
         },
+        
+        "Zeke's Fragment": { 
+            rank: "S", type: "weapon", name: "Zeke's Fragment", 
+            str: 0, vit: 30, agi: 0, int: 180, mp: 200, 
+            effect: "Mảnh ma pháp tinh khiết của Zeke. Tăng 30% sát thương cho kỹ năng nhánh Pháp Sư.", 
+            img: "wp/Zeke_Fragment.png", 
+        },
         // --- TRANG BỊ HUYỀN THOẠI TỪ VÒNG QUAY (BẠN CÓ THỂ TỰ TẠO THÊM) ---
         "Kiếm Sét Rực Rỡ": { rank: "S", type: "weapon", name: "Kiếm Sét Rực Rỡ", str: 180, vit: 0, mp: 0, effect: "Vũ khí huyền thoại từ Vòng Quay.", img: "wp/Demon_King_Longsword.png", sellPrice: 20000 },
         "Nhẫn Hư Không": { rank: "S", type: "ring", name: "Nhẫn Hư Không", str: 40, vit: 40, mp: 200, effect: "Tăng 15% Tỷ lệ bạo kích", img: "wp/essenceofmagic.png", sellPrice: 20000 },
@@ -1374,7 +1381,8 @@
         "Dây chuyền của ma vương",
         "Vòng cổ người gác cổng",
         "Truth: Kasaka's Venom Fang",
-        "A Gentle Touch"
+        "A Gentle Touch",
+        "Zeke's Fragment"
     ];
 
     window.spinGacha = async function(btnElement) {
@@ -3424,7 +3432,12 @@
             let earring = currentUser.equipped.earring?.name;
             let necklace = currentUser.equipped.necklace?.name;
             if (earring === "Quả Cầu Tham Lam") finalDmg *= 2.0; 
-            if (necklace === "Vòng cổ người gác cổng") finalDmg *= 1.10; 
+            if (necklace === "Vòng cổ người gác cổng") finalDmg *= 1.10;
+            if (weapon === "Zeke's Fragment") {
+                if (config.branch === 'Pháp Sư') {
+                    finalDmg *= 1.30; 
+                }
+            }
         }
 
         // CHÈN THÊM BUFF CỦA VUA QUỶ BARAN VÀO ĐÂY (Áp dụng cho mọi loại sát thương)
