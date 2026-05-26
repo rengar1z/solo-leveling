@@ -1519,6 +1519,22 @@
             return alert("Vật phẩm này đang bảo trì!");
         }
 
+        // TRƯỜNG HỢP 0: NẾU CHƯA MUA -> XỬ LÝ MUA RỒI DỪNG LẠI (Không động tới HP/MP)
+        if (!currentUser.ownedCostumes.includes(itemId) && (!currentUser.equipped.costume || currentUser.equipped.costume.name !== itemId)) {
+            if (currentUser.cash < shopItem.price) return alert(`Không đủ Cash! Cần ${shopItem.price} Cash.`);
+            currentUser.cash -= shopItem.price;
+            currentUser.ownedCostumes.push(itemId);
+            alert(`Đã mua [${shopItem.name}] thành công! Bấm MẶC TRANG PHỤC để sử dụng.`);
+            
+            await set(ref(db, 'users/' + currentUser.username), currentUser);
+            render();
+            return; // Dừng lại ở đây
+        }
+
+        // === BƯỚC 1: CHỐT TỶ LỆ HP/MP TRƯỚC KHI THÁO HOẶC MẶC ===
+        let hpPercent = currentUser.hp / currentUser.maxHp;
+        let mpPercent = currentUser.maxMp > 0 ? (currentUser.mp / currentUser.maxMp) : 0;
+
         // TRƯỜNG HỢP 1: ĐANG MẶC -> BẤM ĐỂ THÁO RA
         if (currentUser.equipped.costume && currentUser.equipped.costume.name === itemId) {
             currentUser.str -= (itemData.str || 0);
@@ -1528,17 +1544,17 @@
             
             currentUser.maxMp -= (itemData.mp || 0); 
             currentUser.maxMp -= (itemData.int || 0) * 5; 
-            currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
             
             if (itemData.vit > 0) {
                 currentUser.maxHp -= itemData.vit * 10; 
-                currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
             }
             currentUser.equipped.costume = null;
         }
     
+        // TRƯỜNG HỢP 2: ĐÃ MUA -> BẤM MẶC VÀO
         else if (currentUser.ownedCostumes.includes(itemId)) {
             
+            // XÓA CHỈ SỐ BỘ CŨ TRƯỚC (NẾU ĐANG MẶC BỘ KHÁC)
             if (currentUser.equipped.costume) {
                 const oldData = ITEM_DATA[currentUser.equipped.costume.name];
                 if (oldData) { 
@@ -1548,16 +1564,15 @@
                     currentUser.agi -= (oldData.agi || 0);
                     
                     currentUser.maxMp -= (oldData.mp || 0); 
-                    currentUser.maxMp -= (oldData.int || 0) * 5; // FIX BUG: Bổ sung trừ MP từ INT bộ cũ
-                    currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp); 
+                    currentUser.maxMp -= (oldData.int || 0) * 5; 
                     
                     if (oldData.vit > 0) { 
                         currentUser.maxHp -= oldData.vit * 10; 
-                        currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
                     }
                 }
             }
             
+            // CỘNG CHỈ SỐ BỘ MỚI
             currentUser.equipped.costume = { name: itemId };
             currentUser.str += (itemData.str || 0); 
             currentUser.vit += (itemData.vit || 0);
@@ -1565,21 +1580,16 @@
             currentUser.agi += (itemData.agi || 0);
             
             currentUser.maxMp += (itemData.mp || 0); 
-            currentUser.maxMp += (itemData.int || 0) * 5; // FIX BUG: Bổ sung cộng MP từ INT bộ mới
-            currentUser.mp += (itemData.mp || 0) + ((itemData.int || 0) * 5); 
+            currentUser.maxMp += (itemData.int || 0) * 5; 
             
             if (itemData.vit > 0) { 
                 currentUser.maxHp += itemData.vit * 10; 
-                currentUser.hp += itemData.vit * 10; // Vẫn được cộng máu
             }
         }
-        
-        else {
-            if (currentUser.cash < shopItem.price) return alert(`Không đủ Cash! Cần ${shopItem.price} Cash.`);
-            currentUser.cash -= shopItem.price;
-            currentUser.ownedCostumes.push(itemId);
-            alert(`Đã mua [${shopItem.name}] thành công! Bấm MẶC TRANG PHỤC để sử dụng.`);
-        }
+
+        // === BƯỚC 2: ĐỒNG BỘ LẠI HP/MP DỰA TRÊN TỶ LỆ ĐÃ CHỐT ===
+        currentUser.hp = Math.max(1, Math.floor(currentUser.maxHp * hpPercent));
+        currentUser.mp = Math.floor(currentUser.maxMp * mpPercent);
 
         await set(ref(db, 'users/' + currentUser.username), currentUser);
         render(); 
