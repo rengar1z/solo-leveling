@@ -2239,7 +2239,13 @@
             filter: drop-shadow(0 0 8px currentColor);
         }
         
-        /* Người chơi (Màu Xanh System) */
+        .enemy-entity {
+            color: #ff4d4d;
+        }
+        .enemy-entity .combat-avatar-frame {
+            border-color: #ff4d4d;
+            box-shadow: inset 0 0 20px rgba(255, 77, 77, 0.3), 0 0 20px rgba(255, 77, 77, 0.2);
+        }
         .player-entity {
             color: #00bfff;
         }
@@ -2248,15 +2254,6 @@
             box-shadow: inset 0 0 20px rgba(0, 191, 255, 0.3), 0 0 20px rgba(0, 191, 255, 0.2);
         }
         
-        /* Quái vật (Màu Đỏ Tử Vong + Hiệu ứng trôi nổi) */
-        .enemy-entity {
-            color: #ff4d4d;
-            animation: floatMonster 3s ease-in-out infinite;
-        }
-        .enemy-entity .combat-avatar-frame {
-            border-color: #ff4d4d;
-            box-shadow: inset 0 0 20px rgba(255, 77, 77, 0.3), 0 0 20px rgba(255, 77, 77, 0.2);
-        }
         
         @keyframes floatMonster {
             0%, 100% { transform: translateY(0); }
