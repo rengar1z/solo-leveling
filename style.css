@@ -76,23 +76,6 @@
             transition: width 0.5s ease;
         }
 
-        #hpBar {
-            background: linear-gradient(90deg, #ff0000, #ff4d4d);
-            box-shadow: 0 0 12px #ff0000;
-        }
-
-        #mpBar {
-            background: linear-gradient(90deg, #0066ff, #00bfff);
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            font-size: 26px;
-            margin-top: 20px;
-        }
-
         .card {
             margin-top: 20px;
             border: 1px solid #00bfff;
@@ -389,41 +372,6 @@
             margin: 15px 0;
             border-bottom: 1px solid rgba(0, 191, 255, 0.3);
             height: 50px;
-        }
-
-        .stat-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 12px;
-            margin-bottom: 5px;
-            background: rgba(0, 191, 255, 0.05);
-            border: 1px solid rgba(0, 191, 255, 0.2);
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .stat-item:hover {
-            background: rgba(0, 191, 255, 0.15);
-        }
-
-        .add-btn {
-            background: #00bfff;
-            color: #000;
-            border: none;
-            width: 24px;
-            height: 24px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 3px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .add-btn:disabled {
-            background: #444;
-            cursor: not-allowed;
         }
 
         .shake {
@@ -764,193 +712,7 @@
             opacity: 1;
             bottom: 110%;
         }
-
-        /* --- SOLO LEVELING STATUS UI --- */
-        .sl-box {
-            border: 1px solid rgba(142, 239, 255, 0.4);
-            border-radius: 2px;
-            padding: 20px;
-            margin-top: 15px;
-            background: rgba(0, 20, 50, 0.3);
-            box-shadow: inset 0 0 15px rgba(0, 191, 255, 0.05);
-        }
-
-        .sl-top-row {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
-
-        .sl-status-block {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .sl-icon-col {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #8eefff;
-            text-shadow: 0 0 10px #8eefff;
-        }
-
-        .sl-bar-col {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-        }
-
-        /* KÉO DÀI THANH MÁU TRÊN PC */
-        .sl-bar-outer {
-            width: 320px;
-            height: 14px;
-            border: 2px solid rgba(142, 239, 255, 0.7);
-            border-radius: 10px;
-            padding: 2px;
-            box-shadow: 0 0 8px rgba(142, 239, 255, 0.4);
-        }
-
-        /* VẼ ICON CHỮ THẬP CHUẨN SOLO LEVELING BẰNG CSS */
-        .hp-cross {
-            position: relative;
-            width: 24px;
-            height: 24px;
-            display: inline-block;
-            margin-bottom: 4px;
-        }
-
-        .hp-cross::before, .hp-cross::after {
-            content: '';
-            position: absolute;
-            background: #8eefff;
-            box-shadow: 0 0 10px #8eefff, 0 0 15px #8eefff;
-            border-radius: 4px;
-        }
-
-        .hp-cross::before {
-            top: 0; bottom: 0; left: 7px; right: 7px;
-        }
-
-        .hp-cross::after {
-            left: 0; right: 0; top: 7px; bottom: 7px;
-        }
-
-        /* RESPONSIVE: Tự động thu nhỏ lại khi dùng trên Điện thoại */
-        @media (max-width: 768px) {
-            .sl-bar-outer {
-                width: 140px; 
-            }
-            .sl-top-row {
-                flex-wrap: wrap;
-                gap: 15px;
-            }
-        }
-        
-        /* Ghi đè màu thanh HP/MP cũ thành xanh Neon */
-        #hpBar, #mpBar {
-            height: 100%;
-            background: #8eefff !important; 
-            border-radius: 5px;
-            box-shadow: 0 0 12px #8eefff !important;
-            transition: width 0.4s ease;
-        }
-        
-        .sl-bar-text {
-            font-size: 20px;
-            margin-top: 5px;
-            color: #fff;
-            text-shadow: 0 0 5px #8eefff;
-        }
-        
-        .sl-stat-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px 40px;
-            padding: 25px 40px;
-        }
-
-        .sl-stat-item {
-            display: flex;
-            align-items: center;
-            font-size: 24px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .sl-stat-item:hover {
-            transform: scale(1.02);
-        }
-
-        .sl-stat-item:hover .sl-stat-label, .sl-stat-item:hover .sl-stat-val {
-            text-shadow: 0 0 15px #fff;
-        }
-
-        .sl-stat-icon {
-            font-size: 28px;
-            margin-right: 15px;
-            filter: drop-shadow(0 0 5px #8eefff);
-        }
-
-        .sl-stat-label {
-            width: 60px;
-            color: #fff;
-            text-shadow: 0 0 8px #8eefff;
-        }
-
-        .sl-stat-val {
-            font-size: 36px;
-            font-weight: bold;
-            margin-left: 15px;
-            color: #fff;
-            text-shadow: 0 0 10px #8eefff;
-            width: 100px;
-            text-align: left;
-        }
-
-        .sl-points-block {
-            justify-content: flex-end;
-            text-align: right;
-            cursor: default;
-        }
-
-        .sl-points-block:hover {
-            transform: none;
-        }
-
-        .sl-points-label {
-            font-size: 14px;
-            line-height: 1.2;
-            color: #8eefff;
-            margin-right: 15px;
-            text-transform: uppercase;
-        }
-
-        .sl-points-val {
-            font-size: 48px;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 15px #8eefff;
-        }
-
-        /* Nút cộng điểm nâng cấp giao diện tròn */
-        .sl-stat-item .add-btn {
-            background: transparent;
-            border: 1px solid #8eefff;
-            color: #8eefff;
-            box-shadow: inset 0 0 5px #8eefff;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            margin-left: 10px;
-        }
-
-        .sl-stat-item .add-btn:hover:not(:disabled) {
-            background: #8eefff;
-            color: #000;
-            box-shadow: 0 0 15px #8eefff;
-        }
-
+      
         /* --- HIỆU ỨNG RAGE MODE (KHÔNG CẦN ĐỔI ẢNH) --- */
         @keyframes rageAuraPulsate {
             0% { 
@@ -969,7 +731,6 @@
             box-shadow: inset 0 0 20px rgba(255, 0, 0, 0.5), 0 0 20px rgba(255, 0, 0, 0.5) !important;
         }
 
-        /* Thanh cuộn dành riêng cho kho đồ */
         #inventoryArea::-webkit-scrollbar {
             width: 6px;
         }
@@ -987,14 +748,12 @@
 
         /* ================= GIAO DIỆN CHIẾN ĐẤU (ARENA & DUNGEON) ================= */
 
-        /* 2. Chữ "VS" rực lửa */
         .vs-text {
             font-size: 60px !important;
             font-weight: bold;
             color: #ffcc00;
             font-style: italic;
             text-shadow: 0 0 10px #ff0000, 0 0 20px #ff4d4d, 0 0 40px #ffcc00;
-            animation: pulseVS 1.5s infinite alternate;
         }
 
         @keyframes pulseVS {
@@ -1002,7 +761,6 @@
             to { transform: scale(1.1); opacity: 1; }
         }
 
-        /* 3. Nâng cấp Thanh Máu (HP Bar) - Dày hơn, có viền 3D và bóng mờ */
         .combat-hp-track {
             height: 18px !important;
             background: rgba(0, 0, 0, 0.8) !important;
