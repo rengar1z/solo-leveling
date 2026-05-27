@@ -1127,81 +1127,73 @@
 
         /* ================= ĐỒNG BỘ NÚT TÚI ĐỒ VỚI SHOP ================= */
         .bag-action-btn {
-            min-width: 70px !important;      /* Thu hẹp chiều rộng tối thiểu cho gọn */
+            min-width: 58px !important;       /* Thu hẹp chiều ngang thêm nữa */
             width: auto !important;
-            height: 28px !important;         /* Khóa độ cao vừa vặn, không bị phình to */
-            font-size: 13px !important;      /* Chữ nhỏ gọn, sắc nét chuẩn UI game */
+            height: 22px !important;          /* Hạ độ cao xuống siêu mỏng gọn (22px) */
+            font-size: 11px !important;       /* Chữ nhỏ lại tinh tế hơn */
             font-weight: bold !important;
-            padding: 0 12px !important;      /* Khoảng cách chữ vừa vặn */
-            margin: 2px 4px !important;
-            background: rgba(0, 0, 0, 0.6) !important; /* Nền tối mờ huyền bí */
-            letter-spacing: 1px;
+            padding: 0 8px !important;        /* Thu nhỏ khoảng đệm 2 bên chữ */
+            margin: 0 3px !important;         /* Khoảng cách giữa các nút vừa vặn */
+            background: rgba(0, 0, 0, 0.7) !important;
+            letter-spacing: 0.5px;
             text-transform: uppercase;
-            display: inline-flex !important;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             
-            /* Đường cắt góc siêu nhỏ tinh tế (chỉ 4px) thay vì rách sâu như cũ */
-            clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px) !important;
+            /* CĂN GIỮA CHỮ TUYỆT ĐỐI (Sửa lỗi lệch font Oswald) */
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            line-height: 1 !important;
+            text-align: center !important;
+            
+            /* Đường cắt góc micro siêu nhỏ (chỉ 3px) cực sắc sảo */
+            clip-path: polygon(3px 0, 100% 0, 100% calc(100% - 3px), calc(100% - 3px) 100%, 0 100%, 0 3px) !important;
             position: relative;
             border: none !important;
         }
         
-        /* Xóa bỏ hiệu ứng viền gạch phụ cũ */
         .bag-action-btn::after {
-            display: none !important;
+            display: none !important; /* Xóa bỏ viền rác cũ */
         }
         
-        /* --- ĐỊNH NGHĨA VIỀN VÀ MÀU SẮC RIÊNG BIỆT --- */
-        
-        /* Nút Dùng (Vật phẩm tiêu hao) - Màu Xanh Lá Hệ Thống */
+        /* --- ĐỒNG BỘ MÀU VIỀN PHÁT SÁNG KHI HOVER --- */
         .btn-use { 
-            border: 1px solid rgba(0, 255, 100, 0.4) !important; 
-            color: rgba(0, 255, 100, 0.8) !important; 
+            border: 1px solid rgba(0, 255, 100, 0.3) !important; 
+            color: rgba(0, 255, 100, 0.7) !important; 
         }
         .btn-use:hover { 
             background: rgba(0, 255, 100, 0.15) !important; 
-            color: #fff !important;
-            border-color: #00ff64 !important;
-            box-shadow: 0 0 10px rgba(0, 255, 100, 0.4);
+            color: #fff !important; border-color: #00ff64 !important;
+            box-shadow: 0 0 8px rgba(0, 255, 100, 0.4);
         }
         
-        /* Nút Mặc (Trang bị) - Màu Xanh Lam Ngọc */
         .btn-equip { 
-            border: 1px solid rgba(0, 191, 255, 0.4) !important; 
-            color: rgba(0, 191, 255, 0.8) !important; 
+            border: 1px solid rgba(0, 191, 255, 0.3) !important; 
+            color: rgba(0, 191, 255, 0.7) !important; 
         }
         .btn-equip:hover { 
             background: rgba(0, 191, 255, 0.15) !important; 
-            color: #fff !important;
-            border-color: #00bfff !important;
-            box-shadow: 0 0 10px rgba(0, 191, 255, 0.4);
+            color: #fff !important; border-color: #00bfff !important;
+            box-shadow: 0 0 8px rgba(0, 191, 255, 0.4);
         }
         
-        /* Nút Tháo (Đang mặc trên người) - Màu Xám Kim Loại */
         .btn-unequip { 
-            border: 1px solid rgba(170, 170, 170, 0.4) !important; 
-            color: rgba(170, 170, 170, 0.8) !important; 
+            border: 1px solid rgba(170, 170, 170, 0.3) !important; 
+            color: rgba(170, 170, 170, 0.7) !important; 
         }
         .btn-unequip:hover { 
             background: rgba(170, 170, 170, 0.15) !important; 
-            color: #fff !important;
-            border-color: #ffffff !important;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            color: #fff !important; border-color: #ffffff !important;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
         }
         
-        /* Nút Bán (Kiếm tiền) - Màu Đỏ Rực Huyết */
         .btn-sell { 
-            border: 1px solid rgba(255, 77, 77, 0.4) !important; 
-            color: rgba(255, 77, 77, 0.8) !important; 
+            border: 1px solid rgba(255, 77, 77, 0.3) !important; 
+            color: rgba(255, 77, 77, 0.7) !important; 
         }
         .btn-sell:hover { 
             background: rgba(255, 77, 77, 0.15) !important; 
-            color: #fff !important;
-            border-color: #ff4d4d !important;
-            box-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
+            color: #fff !important; border-color: #ff4d4d !important;
+            box-shadow: 0 0 8px rgba(255, 77, 77, 0.4);
         }
    
 
