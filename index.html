@@ -67,122 +67,126 @@
         </div>
             <div class="tabs-content">
                 <div id="tab-stats" class="tab-panel active">
-                    <div class="row">
-            <span>NAME: <span id="playerName"></span></span>
-            <span>LEVEL: <span id="level"></span></span>
-        </div>
-        <div class="row">
-            <span>JOB: <span id="job" class="sh-title"></span></span>
-        </div>
-        
-        <div class="row small" style="justify-content: flex-start; gap: 15px;">
-            <span>TITLE:</span>
-            <span id="equippedTitleDisplay" class="sh-title" style="cursor: pointer; border-bottom: 1px dashed #00bfff; padding-bottom: 2px;" onclick="openTab(event, 'tab-achievement')">Chưa trang bị</span>
-        </div>
-        
-        <div>EXP: <span id="expText"></span></div>
-        <div class="barbox" style="margin-bottom: 5px;">
-            <div class="bar" id="expBar"></div>
-        </div>
-
-        <div class="sl-box sl-top-row" style="flex-wrap: wrap; gap: 15px;">
-            
-            
-            <div class="sl-status-block">
-        <div class="sl-icon-col">
-            <img src="effect/HP.png" style="width: 28px; height: 28px; margin-bottom: 2px; filter: drop-shadow(0 0 5px rgba(255, 77, 77, 0.8)); object-fit: contain;"> 
-            <span style="font-size:16px; font-weight:bold; letter-spacing: 1px;">HP</span>
-        </div>
-        <div class="sl-bar-col">
-            <div class="sl-bar-outer">
-                <div id="hpBar"></div>
+    
+    <div class="sys-window">
+        <div class="sys-header">STATUS</div>
+        <div class="sys-info-grid">
+            <div class="sys-info-row">
+                <span class="sys-label">NAME</span>
+                <span class="sys-value" id="playerName" style="color: #00bfff;"></span>
             </div>
-            <div class="sl-bar-text" id="hpDisplay">100/100</div>
-        </div>
-    </div>
-            
-    <div class="sl-status-block">
-        <div class="sl-icon-col">
-            <img src="effect/mana.png" style="width: 28px; height: 28px; margin-bottom: 2px; filter: drop-shadow(0 0 5px rgba(0, 191, 255, 0.8)); object-fit: contain;">
-            <span style="font-size:16px; font-weight:bold; letter-spacing: 1px;">MP</span>
-        </div>
-        <div class="sl-bar-col">
-            <div class="sl-bar-outer">
-                <div id="mpBar"></div>
+            <div class="sys-info-row">
+                <span class="sys-label">LEVEL</span>
+                <span class="sys-value" id="level" style="color: #00ff00;"></span>
             </div>
-            <div class="sl-bar-text" id="mpDisplay">10/10</div>
+            <div class="sys-info-row">
+                <span class="sys-label">JOB</span>
+                <span class="sys-value" id="job"></span>
+            </div>
+            <div class="sys-info-row">
+                <span class="sys-label">TITLE</span>
+                <span class="sys-value sys-title-val" id="equippedTitleDisplay" onclick="openTab(event, 'tab-achievement')">Chưa trang bị</span>
+            </div>
         </div>
     </div>
 
-        <div class="sl-status-block" style="flex-direction: row; align-items: center; gap: 8px; padding: 0 15px;">
-            <img src="effect/Cash.png" style="width: 28px; height: 28px; filter: drop-shadow(0 0 8px gold); object-fit: contain;">
-            <span style="font-size: 22px; font-weight: bold; color: #fff; text-shadow: 0 0 10px gold;">:</span>   
-            <span id="cashText" style="font-size: 22px; font-weight: bold; color: #fff; text-shadow: 0 0 10px gold; letter-spacing: 1px;">0</span>
+    <div class="sys-window">
+        <div class="sys-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <span>RESOURCES</span>
+            <span style="font-size: 22px; color: gold; display: flex; align-items: center; gap: 8px; text-shadow: 0 0 10px gold; text-transform: none;">
+                <img src="effect/Cash.png" style="width: 28px; height: 28px; filter: drop-shadow(0 0 5px gold);">
+                <span id="cashText">0</span>
+            </span>
         </div>
-            
+
+        <div class="sys-bar-container">
+            <div class="sys-bar-top">
+                <span style="color: #ff4d4d; text-shadow: 0 0 5px red;">HP</span>
+                <span id="hpDisplay" style="color: #fff;">100/100</span>
+            </div>
+            <div class="sys-bar-outer"><div id="hpBar"></div></div>
+        </div>
+
+        <div class="sys-bar-container">
+            <div class="sys-bar-top">
+                <span style="color: #00bfff; text-shadow: 0 0 5px #00bfff;">MP</span>
+                <span id="mpDisplay" style="color: #fff;">10/10</span>
+            </div>
+            <div class="sys-bar-outer"><div id="mpBar"></div></div>
+        </div>
+
+        <div class="sys-bar-container" style="margin-bottom: 0;">
+            <div class="sys-bar-top">
+                <span style="color: #00ff00; text-shadow: 0 0 5px #00ff00;">EXP</span>
+                <span id="expText" style="color: #fff;">0 / 100</span>
+            </div>
+            <div class="sys-bar-outer"><div id="expBar"></div></div>
+        </div>
     </div>
-                    <div class="sl-box sl-stat-grid">
-                        <div class="sl-stat-item">
-                <span class="sl-stat-icon">🏋️</span> 
-                <span class="sl-stat-label">STR:</span> 
-                <span class="sl-stat-val" id="str">0</span> 
-                <button class="add-btn" onclick="upgradeStat(event, 'str')">+</button>
+
+    <div class="sys-window">
+        <div class="sys-header">ATTRIBUTES</div>
+        
+        <div class="sys-points-display">
+            <span class="sys-points-text">Available Ability Points</span>
+            <span class="sys-points-val" id="points">0</span>
+        </div>
+
+        <div class="sys-stat-grid">
+            
+            <div class="sys-stat-row sl-stat-item">
+                <span class="sys-stat-name">STR</span>
+                <span class="sys-stat-number" id="str">0</span>
+                <button class="sys-btn-add add-btn" onclick="upgradeStat(event, 'str')">+</button>
                 <div class="stat-tooltip">
                     <h4 style="color: #8eefff; margin: 0 0 5px 0;">STRENGTH (SỨC MẠNH)</h4>
                     <span style="color: #ccc;">Tăng sát thương vật lý gốc cho đòn đánh thường và bộ kỹ năng nhánh <span style="color: #4a90e2">Sát Thủ</span>, <span style="color: #ff4d4d">Đấu Sĩ</span>.</span>
                 </div>
             </div>
-            
-            <div class="sl-stat-item">
-                <span class="sl-stat-icon">💖</span> 
-                <span class="sl-stat-label">VIT:</span> 
-                <span class="sl-stat-val" id="vit">0</span> 
-                <button class="add-btn" onclick="upgradeStat(event, 'vit')">+</button>
+
+            <div class="sys-stat-row sl-stat-item">
+                <span class="sys-stat-name">VIT</span>
+                <span class="sys-stat-number" id="vit">0</span>
+                <button class="sys-btn-add add-btn" onclick="upgradeStat(event, 'vit')">+</button>
                 <div class="stat-tooltip">
                     <h4 style="color: #8eefff; margin: 0 0 5px 0;">VITALITY (THỂ LỰC)</h4>
                     <span style="color: #ccc;">Mỗi điểm cộng thêm <span style="color: #00ff00">10 HP tối đa</span> và tăng tỷ lệ miễn thương (giảm sát thương gánh chịu).</span>
                 </div>
             </div>
-            
-            <div class="sl-stat-item">
-                <span class="sl-stat-icon">👟</span> 
-                <span class="sl-stat-label">AGI:</span> 
-                <span class="sl-stat-val" id="agi">0</span> 
-                <button class="add-btn" onclick="upgradeStat(event, 'agi')">+</button>
+
+            <div class="sys-stat-row sl-stat-item">
+                <span class="sys-stat-name">AGI</span>
+                <span class="sys-stat-number" id="agi">0</span>
+                <button class="sys-btn-add add-btn" onclick="upgradeStat(event, 'agi')">+</button>
                 <div class="stat-tooltip">
                     <h4 style="color: #8eefff; margin: 0 0 5px 0;">AGILITY (NHANH NHẸN)</h4>
                     <span style="color: #ccc;">Mỗi điểm tăng <span style="color: yellow">0.5% Tỷ lệ Bạo kích</span> và cộng thêm sát thương khi bạo kích.</span>
                 </div>
             </div>
-            
-            <div class="sl-stat-item">
-                <span class="sl-stat-icon">🧠</span> 
-                <span class="sl-stat-label">INT:</span> 
-                <span class="sl-stat-val" id="int">0</span> 
-                <button class="add-btn" onclick="upgradeStat(event, 'int')">+</button>
+
+            <div class="sys-stat-row sl-stat-item">
+                <span class="sys-stat-name">INT</span>
+                <span class="sys-stat-number" id="int">0</span>
+                <button class="sys-btn-add add-btn" onclick="upgradeStat(event, 'int')">+</button>
                 <div class="stat-tooltip">
                     <h4 style="color: #8eefff; margin: 0 0 5px 0;">INTELLIGENCE (TRÍ LỰC)</h4>
                     <span style="color: #ccc;">Mỗi điểm cộng thêm <span style="color: #00bfff">5 MP tối đa</span>. Cốt lõi tăng sát thương cho kỹ năng nhánh <span style="color: #9933ff">Pháp Sư</span>.</span>
                 </div>
             </div>
-            
-            <div class="sl-stat-item">
-                <span class="sl-stat-icon">👁️</span> 
-                <span class="sl-stat-label">PER:</span> 
-                <span class="sl-stat-val" id="sense">0</span> 
-                <button class="add-btn" onclick="upgradeStat(event, 'sense')">+</button>
+
+            <div class="sys-stat-row sl-stat-item">
+                <span class="sys-stat-name">PER</span>
+                <span class="sys-stat-number" id="sense">0</span>
+                <button class="sys-btn-add add-btn" onclick="upgradeStat(event, 'sense')">+</button>
                 <div class="stat-tooltip">
                     <h4 style="color: #8eefff; margin: 0 0 5px 0;">SENSE (CẢM NHẬN)</h4>
                     <span style="color: #ccc;">Tăng độ ổn định của đòn đánh (kéo mức sát thương tối thiểu lên gần sát thương tối đa nhất).</span>
                 </div>
             </div>
-            
-            <div class="sl-stat-item sl-points-block">
-                <span class="sl-points-label">Available<br>Ability<br>Points:</span> 
-                <span class="sl-points-val" id="points">0</span>
-            </div>
+
         </div>
     </div>
+</div>
 </div>
                 <!-- ================= TAB BAG (TÚI ĐỒ) MỚI ================= -->
             <div id="tab-bag" class="tab-panel">
