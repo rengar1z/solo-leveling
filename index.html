@@ -651,6 +651,12 @@
                             <p style="font-size: 20px; color: #ccc;">Độ khó: <span style="color: #ff3333; font-weight: bold;">Số tầng: 4 | Độ khó: S</span></p>
                             <button class="tab-btn btn-system" style="border-color: #cc0000; color: #ff3333 !important; font-size: 24px;">TIẾN VÀO HẦM NGỤC</button>
                         </div>
+                        
+                        <div class="dungeon-card" onclick="enterDungeon('hunter_trial')" style="background: rgba(0, 30, 50, 0.8); border-color: #00ffff; box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);">
+                            <h3 style="color: #00ffff; text-shadow: 0 0 10px #00ffff;">THÁP THỬ THÁCH (HẠNG S)</h3>
+                            <p style="font-size: 20px; color: #ccc;">Số ải: 3 | Độ khó: <span style="color: #00ffff; font-weight: bold;">HẠNG S</span></p>
+                            <button class="tab-btn btn-system" style="border-color: #00ffff; color: #00ffff !important; font-size: 24px;">KHIÊU CHIẾN THỢ SĂN</button>
+                        </div>
 
                         <!-- CỔNG ĐẢO JEJU (HẠNG S+) -->
                         <div class="dungeon-card" onclick="enterDungeon('jeju_island')" style="background: rgba(20, 0, 30, 0.8); border-color: #9900ff; box-shadow: 0 0 25px rgba(153, 0, 255, 0.6), inset 0 0 15px rgba(153, 0, 255, 0.3);">
@@ -830,7 +836,7 @@
     const gameAssets = [
         "char/Sungjinwoo.png", "bot/enemy.png", "char/Hwang Dongsoo.png", 
         "char/Yoo Jinho.png", "char/Kim Sangshik.png", "char/Cha Hae-In.png", 
-        "char/Woo Jinchul.png", "char/Kang Taeshik.png",
+        "char/Woo Jinchul.png", "char/Kang Taeshik.png", "char/Rage_Cha_Hae-In.png", "char/Silver_Mane_Baek_Yoonho.png",
                 
         // Quái & Boss
         "bot/Boss_Red_Mane_Lycan.png", "boss/Boss_Blue_Venom-fanged_Kasaka.png",
@@ -852,7 +858,7 @@
         "bot/linh.png", "bot/linhtinhnhue.png", "bot/linhcanve.png", "boss/igris.png",
         
         // Consumables & Items
-        "cons/HP_Potion.png", "cons/Item_Hi-HP_Potion.png", "cons/Item_Heal-All.png",
+        "cons/HP_Potion.png", "cons/Item_Hi-HP_Potion.png", "cons/Item_Heal-All.png", "cons/Guild_Raid_Chest_I.png", "cons/Guild_Raid_Chest_II.png", "cons/Guild_Raid_Chest_III.png", "cons/Guild_Raid_Chest_IV.png",
         "cons/Item_SP_Potion.png", "cons/Item_Hi-SP_Potion.png", "cons/Item_Hi-SP_Potion_+.png",
         "cons/Item_Maxheal_Dust.png", "wp/dagger.png", "wp/shield.png", 
         "wp/essenceofmagic.png", "wp/baruka_dagger.png", "wp/Demon_King_Longsword.png",
@@ -884,6 +890,7 @@
         "effect/Heal_Effect.png", "effect/Burn_Effect.png", "effect/Defense_Decrease_Effect.png", "effect/rage_beru.png", "effect/HP.png", "effect/mana.png", "effect/Cash.png",
         "effect/Stun_Effect.png", "effect/Punishment_Effect.png", "effect/Poison_Effect.png", "effect/Defense_Magic_Effect.png", "effect/Strorm_of_White_Flames_Effect.png",
         "effect/Attack_Increase_Effect.png", "effect/Sian_Halat_Scarlet_Domination_Effect.png", "effect/Kasaka_Deadly_Poison_Effect.png",
+        "effect/Impulsive_Revenge_Effect.png", "effect/Beast_Form_Effect.png", "effect/The_Dancer_Effect.png",
         
         // Skills
         "skill/tansat.png", "skill/tanghinh.jpg", "skill/dagger.jpg", "skill/loimathuat.png", "skill/ngonluahacam.png", "skill/khienmathuat.png",
@@ -1110,6 +1117,15 @@
                 { name: "BOSS: Vua Quỷ Baran", hp: 180000, atk: 2500, def: 600, exp: 50000, img: "boss/Boss_Baran_of_White_Flames.png", isBoss: true, bossType: "baran", rareDrops: ["Dao găm của ma vương", "Đại kiếm ma vương", "Khuyên tai của ma vương", "Dây chuyền của ma vương", "Nhẫn của quỷ vương", "Lõi Ma Tinh"] }
             ]
         },
+        "hunter_trial": {
+            name: "Tháp Thử Thách (Thợ Săn Hạng S)",
+            stages: [
+                { name: "Thợ Săn Giấu Mặt", hp: 45000, atk: 1000, def: 200, exp: 5000, img: "bot/enemy.png", rareDrops: ["Guild Raid Chest 1"] },
+                { name: "BOSS: Hwang Dongsoo", hp: 120000, atk: 2500, def: 500, exp: 35000, img: "char/Hwang Dongsoo.png", isBoss: true, bossType: "hwang_dongsoo", rareDrops: ["Guild Raid Chest 2"] },
+                { name: "BOSS: Cha Hae-In", hp: 160000, atk: 3200, def: 400, exp: 50000, img: "char/Cha Hae-In.png", isBoss: true, bossType: "cha_haein", rareDrops: ["Guild Raid Chest 3"] },
+                { name: "BOSS: Baek Yoonho", hp: 200000, atk: 3500, def: 600, exp: 80000, img: "char/Baek_Yoonho.png", isBoss: true, bossType: "baek_yoonho", rareDrops: ["Sandstorm Cube", "Guild Raid Chest 4"] }
+            ]
+        },
         "jeju_island": {
             name: "Chiến Dịch Đảo Jeju",
             stages: [
@@ -1117,7 +1133,7 @@
                 { name: "Kiến Cánh Trinh Sát", hp: 80000, atk: 1500, def: 350, exp: 12000, img: "bot/Boss_Purple_Blade_Camula.png" },
                 { name: "Kiến Cận Vệ Hoàng Gia", hp: 120000, atk: 2000, def: 500, exp: 18000, img: "bot/Boss_1st_Gen._White_Ant_Leader.png" },
                 { name: "Nữ Hoàng Kiến", hp: 200000, atk: 2500, def: 600, exp: 35000, img: "boss/Boss_Queen_Ant.png", isBoss: true, bossType: "ant_queen" },
-                { name: "BOSS: Vua Kiến", hp: 300000, atk: 3500, def: 800, exp: 100000, img: "boss/Boss_Ant_King.png", isBoss: true, bossType: "beru", rareDrops: ["Sandstorm Cube"] }
+                { name: "BOSS: Vua Kiến", hp: 400000, atk: 4000, def: 800, exp: 100000, img: "boss/Boss_Ant_King.png", isBoss: true, bossType: "beru", rareDrops: ["Sandstorm Cube"] }
             ]
         },
         "scavenger_usa": {
@@ -1174,6 +1190,11 @@
     };
     // --- DỮ LIỆU ITEM (ĐÃ THÊM RANK S, A, B, C, D) ---
     const ITEM_DATA = {
+        // --- GUILD RAID CHESTS (RƯƠNG THƯỞNG BOSS HẠNG S) ---
+        "Guild Raid Chest 1": { rank: "A", type: "consumable", effectType: "add_mixed", strAmt: 2, vitAmt: 2, intAmt: 2, name: "Guild Raid Chest 1", effect: "Rương thưởng từ Thợ Săn Giấu Mặt. Mở ra tăng VĨNH VIỄN 2 STR, 2 VIT và 2 INT.", img: "cons/Guild_Raid_Chest_I.png", sellPrice: 10000 },
+        "Guild Raid Chest 2": { rank: "S", type: "consumable", effectType: "add_str", amount: 20, name: "Guild Raid Chest 2", effect: "Rương thưởng từ Hwang Dongsoo. Mở ra tăng VĨNH VIỄN 20 STR (Sức mạnh).", img: "cons/Guild_Raid_Chest_II.png", sellPrice: 20000 },
+        "Guild Raid Chest 3": { rank: "S", type: "consumable", effectType: "add_vit", amount: 20, name: "Guild Raid Chest 3", effect: "Rương thưởng từ Cha Hae-In. Mở ra tăng VĨNH VIỄN 20 VIT (Thể lực).", img: "cons/Guild_Raid_Chest_III.png", sellPrice: 20000 },
+        "Guild Raid Chest 4": { rank: "S", type: "consumable", effectType: "add_int", amount: 20, name: "Guild Raid Chest 4", effect: "Rương thưởng từ Baek Yoonho. Mở ra tăng VĨNH VIỄN 20 INT (Trí lực).", img: "cons/Guild_Raid_Chest_IV.png", sellPrice: 20000 },
         // --- VẬT LIỆU QUAY GACHA ---
         "Sandstorm Cube": { rank: "S", type: "material", name: "Sandstorm Cube", effect: "Khối lập phương chứa sức mạnh bão cát. Dùng để quay Lucky Wheel Royale.", img: "wp/Sandstorm_Cube.png", sellPrice: 50000 },
         "Lõi Ma Tinh": { rank: "A", type: "material", name: "Lõi Ma Tinh", effect: "Vật liệu chứa ma lực cực đậm đặc. Dùng để đổi các Trang Phục Đặc Biệt trong Cửa Hàng.", img: "material/Abyssal_Crystal.png", sellPrice: 5000 },
@@ -2396,6 +2417,21 @@
                             <img src="effect/Steel_Tyrant.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px; box-shadow: 0 0 5px red;" alt="Rage">
                           </div>`;
             }
+            else if (enemy.bossType === "hwang_dongsoo") {
+                eHTML += `<div class="status-icon" title="Cơn Thịnh Nộ Bạo Long (ATK +30%)">
+                            <img src="effect/Impulsive_Revenge_Effect.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px; box-shadow: 0 0 5px orange;" alt="Rage">
+                          </div>`;
+            }
+            else if (enemy.bossType === "cha_haein") {
+                eHTML += `<div class="status-icon" title="Vũ Điệu Tinh Linh (ATK +30%)">
+                            <img src="effect/The_Dancer_Effect.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px; box-shadow: 0 0 5px #ffd700;" alt="Rage">
+                          </div>`;
+            }
+            else if (enemy.bossType === "baek_yoonho") {
+                eHTML += `<div class="status-icon" title="Hóa Thú Bạch Hổ (ATK +30%)">
+                            <img src="effect/Beast_Form_Effect.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px; box-shadow: 0 0 8px #ffffff;" alt="Rage">
+                          </div>`;
+            }
         }
         
         eBoard.innerHTML = eHTML;
@@ -2519,6 +2555,15 @@
                     eImgElement.src = enemy.img;
                 } else if(enemy.bossType === "thomas_andre") {
                     enemy.img = "boss/Rage_Thomas.png";
+                    eImgElement.src = enemy.img;
+                } else if(enemy.bossType === "hwang_dongsoo") {
+                    enemy.img = "char/Hwang Dongsoo.png"; 
+                    eImgElement.src = enemy.img;
+                } else if(enemy.bossType === "cha_haein") {
+                    enemy.img = "char/Rage_Cha_Hae-In.png"; 
+                    eImgElement.src = enemy.img;
+                } else if(enemy.bossType === "baek_yoonho") {
+                    enemy.img = "char/Silver_Mane_Baek_Yoonho.png"; 
                     eImgElement.src = enemy.img;
                 }
             }
@@ -3174,11 +3219,34 @@
             alert(`✨ Bạn đã uống [${itemObj.name}] và hồi phục ${itemData.amount} MP!`);
         }
         else if (itemData.effectType === "add_str") {
-            // Đây là sức mạnh của các Item hiếm!
             currentUser.str += itemData.amount;
-            alert(`💪 Bạn đã hấp thụ [${itemObj.name}]! Sức mạnh (STR) được tăng VĨNH VIỄN thêm ${itemData.amount} điểm!`);
+            alert(`Bạn đã mở [${itemObj.name}]! Sức mạnh (STR) được tăng VĨNH VIỄN thêm ${itemData.amount} điểm!`);
         }
-        
+        else if (itemData.effectType === "add_vit") {
+            currentUser.vit += itemData.amount;
+            currentUser.maxHp += itemData.amount * 10; 
+            currentUser.hp += itemData.amount * 10;
+            alert(`Bạn đã mở [${itemObj.name}]! Thể lực (VIT) được tăng VĨNH VIỄN thêm ${itemData.amount} điểm!`);
+        }
+        else if (itemData.effectType === "add_int") {
+            currentUser.int += itemData.amount;
+            currentUser.maxMp += itemData.amount * 5; 
+            currentUser.mp += itemData.amount * 5;
+            alert(`Bạn đã mở [${itemObj.name}]! Trí lực (INT) được tăng VĨNH VIỄN thêm ${itemData.amount} điểm!`);
+        }
+        else if (itemData.effectType === "add_mixed") {
+            currentUser.str += itemData.strAmt;
+            
+            currentUser.vit += itemData.vitAmt;
+            currentUser.maxHp += itemData.vitAmt * 10;
+            currentUser.hp += itemData.vitAmt * 10;
+            
+            currentUser.int += itemData.intAmt;
+            currentUser.maxMp += itemData.intAmt * 5;
+            currentUser.mp += itemData.intAmt * 5;
+            
+            alert(`Bạn đã mở [${itemObj.name}]! Lực chiến tăng vọt: +${itemData.strAmt} STR, +${itemData.vitAmt} VIT, +${itemData.intAmt} INT VĨNH VIỄN!`);
+        }
         // Sau khi dùng xong thì xóa vật phẩm khỏi túi
         currentUser.inventory.splice(index, 1);
         
@@ -3225,6 +3293,35 @@
             if (currentUser.mp >= currentUser.maxMp) return alert("MP của bạn đã đầy, không cần sử dụng!");
             currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + itemData.amount);
             alert(`✨ Bạn đã uống [${itemObj.name}] và hồi phục ${itemData.amount} MP!`);
+        }
+        else if (itemData.effectType === "add_str") {
+            currentUser.str += itemData.amount;
+            alert(`Bạn đã mở [${itemObj.name}]! Sức mạnh (STR) được tăng VĨNH VIỄN thêm ${itemData.amount} điểm!`);
+        }
+        else if (itemData.effectType === "add_vit") {
+            currentUser.vit += itemData.amount;
+            currentUser.maxHp += itemData.amount * 10; 
+            currentUser.hp += itemData.amount * 10;
+            alert(`Bạn đã mở [${itemObj.name}]! Thể lực (VIT) được tăng VĨNH VIỄN thêm ${itemData.amount} điểm!`);
+        }
+        else if (itemData.effectType === "add_int") {
+            currentUser.int += itemData.amount;
+            currentUser.maxMp += itemData.amount * 5; 
+            currentUser.mp += itemData.amount * 5;
+            alert(`Bạn đã mở [${itemObj.name}]! Trí lực (INT) được tăng VĨNH VIỄN thêm ${itemData.amount} điểm!`);
+        }
+        else if (itemData.effectType === "add_mixed") {
+            currentUser.str += itemData.strAmt;
+            
+            currentUser.vit += itemData.vitAmt;
+            currentUser.maxHp += itemData.vitAmt * 10;
+            currentUser.hp += itemData.vitAmt * 10;
+            
+            currentUser.int += itemData.intAmt;
+            currentUser.maxMp += itemData.intAmt * 5;
+            currentUser.mp += itemData.intAmt * 5;
+            
+            alert(`Bạn đã mở [${itemObj.name}]! Lực chiến tăng vọt: +${itemData.strAmt} STR, +${itemData.vitAmt} VIT, +${itemData.intAmt} INT VĨNH VIỄN!`);
         }
         
         // Xóa 1 bình thuốc khỏi túi sau khi dùng
@@ -4438,6 +4535,124 @@
                 dmg = Math.max(50, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                 isSpecialAttack = true;
                 specialAttackLog = `<span style="color:#ccc; font-weight:bold;">🛡️ SỨC ÉP THỂ CHẤT!</span> Lấy phòng ngự làm vũ khí, khối cơ bắp bọc giáp của Thomas tông thẳng vào bạn gây ${Math.floor(dmg)} ST!`;
+            }
+        }
+
+        // 11. KỸ NĂNG CỦA HWANG DONGSOO (Thiên về Đấm Phá Giáp và Choáng)
+        if (isDungeonMode && enemy.bossType === "hwang_dongsoo") {
+            let rand = Math.random(); 
+            
+            // --- GIAI ĐOẠN 2: KHÍ TỨC SÁT THỦ (Dưới 50% Máu) ---
+            if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasEnragedBuff) {
+                enemy.hasEnragedBuff = true;
+                if (!enemy.isEnraged) { 
+                    enemy.isEnraged = true; 
+                    enemy.atk = Math.floor(enemy.atk * 1.3); 
+                }
+                let shieldAmount = Math.floor(enemy.maxHp * 0.25); 
+                enemy.shieldHP = shieldAmount; 
+                dmg = 0; isSpecialAttack = true;
+                specialAttackLog = `<span style="color:#ff6600; font-weight:bold; text-shadow: 0 0 10px #ff6600;">💢 KHÍ TỨC TÀN BẠO!</span> Hwang Dongsoo phát điên! Cơ bắp hắn cuộn trào, nhận <span style="color:#00ffff">${shieldAmount} Khiên Ảo</span> và sát thương tăng vọt!`;
+            } 
+            // --- KỸ NĂNG NGẪU NHIÊN ---
+            else if (rand <= 0.3) {
+                let rawDmg = enemyAtk * 1.8; 
+                dmg = Math.max(50, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; 
+                effectArmorBreak = 3; 
+                specialAttackLog = `<span style="color:#ff3300; font-weight:bold;">💥 CÚ NỆN PHÁ GIÁP!</span> Một cú đấm sấm sét giáng xuống, gây ${Math.floor(dmg)} ST và khiến bạn <span style="color:orange;">[PHÁ GIÁP]</span> trong 3 lượt!`;
+            } 
+            else if (rand <= 0.5) {
+                let rawDmg = enemyAtk * 1.5; 
+                dmg = Math.max(30, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; 
+                isPlayerStunned = true; 
+                specialAttackLog = `<span style="color:#ffcc00; font-weight:bold;">🌪️ LỐC XOÁY NGHIỀN NÁT!</span> Dongsoo tóm lấy bạn đập mạnh xuống đất gây ${Math.floor(dmg)} ST và làm bạn <span style="color:yellow;">[CHOÁNG VÁNG]</span>!`;
+            }
+        }
+
+        // 12. KỸ NĂNG CỦA CHA HAE-IN (Thiên về Tốc độ, Chảy Máu và Chí mạng)
+        if (isDungeonMode && enemy.bossType === "cha_haein") {
+            let rand = Math.random(); 
+            
+            // --- GIAI ĐOẠN 2: VŨ ĐIỆU TINH LINH (Dưới 50% Máu) ---
+            if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasSpiritDance) {
+                enemy.hasSpiritDance = true;
+                if (!enemy.isEnraged) { 
+                    enemy.isEnraged = true; 
+                    enemy.atk = Math.floor(enemy.atk * 1.3); 
+                }
+                let healAmount = Math.floor(enemy.maxHp * 0.20);
+                enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
+                dmg = 0; isSpecialAttack = true;
+                specialAttackLog = `<span style="color:#ffd700; font-weight:bold; text-shadow: 0 0 10px #ffd700;">✨ VŨ ĐIỆU TINH LINH!</span> Cha Hae-In bộc phát hào quang ánh sáng, lập tức hồi phục <span style="color:#00ff00">${healAmount} HP</span>. Tốc độ vung kiếm của cô ấy giờ đã vượt mức giới hạn!`;
+            } 
+            // --- KỸ NĂNG NGẪU NHIÊN ---
+            else if (rand <= 0.3) {
+                let rawDmg = enemyAtk * 2.2; 
+                dmg = Math.max(80, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; 
+                applyBleedToPlayer = true; 
+                specialAttackLog = `<span style="color:#ffcc00; font-weight:bold;">⚔️ KIẾM VŨ ÁNH SÁNG!</span> Một đường kiếm chớp nhoáng cắt ngang không gian, gây ${Math.floor(dmg)} ST và khiến bạn bị thương nặng <span style="color:red;">[CHẢY MÁU]</span> 2 lượt!`;
+            } 
+            else if (rand <= 0.6) {
+                let rawDmg = enemyAtk * 2.5; 
+                dmg = Math.max(120, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; 
+                effectArmorBreak = 2; 
+                specialAttackLog = `<span style="color:#00ffff; font-weight:bold;">🌟 ĐÂM XUYÊN YẾU HUYỆT!</span> Mũi kiếm sắc lẹm đâm trúng tử huyệt, giáng ${Math.floor(dmg)} ST và đâm thủng phòng ngự <span style="color:orange;">[PHÁ GIÁP]</span> trong 2 lượt!`;
+            }
+        }
+
+        // 13. KỸ NĂNG CỦA BAEK YOONHO (Hóa thú, Cào xé, Áp đảo thể chất)
+        if (isDungeonMode && enemy.bossType === "baek_yoonho") {
+            let rand = Math.random(); 
+            
+            // --- GIAI ĐOẠN 2: HÓA THÚ BẠCH HỔ (Dưới 50% Máu) ---
+            if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasBeastForm) {
+                enemy.hasBeastForm = true;
+                if (!enemy.isEnraged) { 
+                    enemy.isEnraged = true; 
+                    enemy.atk = Math.floor(enemy.atk * 1.3); 
+                }
+                
+                // Khả năng sinh tồn tột đỉnh: Vừa hồi máu, vừa tạo khiên dày
+                let healAmount = Math.floor(enemy.maxHp * 0.15);
+                enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
+                let shieldAmount = Math.floor(enemy.maxHp * 0.25); 
+                enemy.shieldHP = shieldAmount; 
+
+                dmg = 0; isSpecialAttack = true;
+                specialAttackLog = `<span style="color:#ffffff; font-weight:bold; text-shadow: 0 0 10px #ffffff, 0 0 20px #00ffff;">🐅 HÓA THÚ: BẠCH HỔ!</span> Baek Yoonho gầm lên, cơ thể biến đổi thành một con hổ trắng khổng lồ! Hắn hồi <span style="color:#00ff00">${healAmount} HP</span>, nhận <span style="color:#00ffff">${shieldAmount} Khiên Ảo</span> và Sức mạnh tăng đột biến!`;
+                
+                // Hiệu ứng rung màn hình cho ngầu
+                const eImgElement = document.getElementById(getPrefix() + 'e-img');
+                if (eImgElement) {
+                    eImgElement.classList.add('shake');
+                    setTimeout(() => eImgElement.classList.remove('shake'), 600);
+                }
+            } 
+            // --- KỸ NĂNG NGẪU NHIÊN ---
+            else if (rand <= 0.3) {
+                let rawDmg = enemyAtk * 2.2; 
+                dmg = Math.max(90, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; 
+                applyBleedToPlayer = true; 
+                specialAttackLog = `<span style="color:#ff0000; font-weight:bold;">🩸 MÓNG VUỐT XUYÊN THẤU!</span> Móng vuốt sắc bén xé toạc phòng ngự, giáng ${Math.floor(dmg)} ST và khiến bạn bị <span style="color:red;">[CHẢY MÁU]</span> tàn bạo 2 lượt!`;
+            } 
+            else if (rand <= 0.55) {
+                let rawDmg = enemyAtk * 1.8; 
+                dmg = Math.max(70, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; 
+                isPlayerStunned = true; 
+                specialAttackLog = `<span style="color:#ffcc00; font-weight:bold;">🐅 ÁP ĐẢO THÚ TÍNH!</span> Baek Yoonho chồm tới đè bẹp bạn xuống đất bằng sức mạnh dã thú, gây ${Math.floor(dmg)} ST và làm bạn <span style="color:yellow;">[CHOÁNG VÁNG]</span>!`;
+            }
+            else if (rand <= 0.75) {
+                let rawDmg = enemyAtk * 1.5; 
+                dmg = Math.max(45, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; 
+                effectArmorBreak = 3; 
+                specialAttackLog = `<span style="color:#00ffff; font-weight:bold;">🔊 TIẾNG GẦM CHÚA TỂ!</span> Sóng âm từ tiếng gầm xé tai gây ${Math.floor(dmg)} ST và chấn động tâm trí, <span style="color:orange;">[PHÁ GIÁP]</span> của bạn trong 3 lượt!`;
             }
         }
         
