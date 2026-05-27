@@ -2372,114 +2372,78 @@
         .sys-eq-slot {
             width: 75px;
             height: 75px;
-            background: rgba(5, 15, 25, 0.85);
-            border: 1px solid rgba(0, 191, 255, 0.4);
-            box-shadow: inset 0 0 15px rgba(0, 191, 255, 0.1);
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-            position: relative;
+            
+            /* XÓA NỀN VÀ CLIP-PATH Ở THẺ CHA ĐỂ KHÔNG BỊ CẮT TOOLTIP */
+            background: transparent !important; 
+            border: none !important;
+            box-shadow: none !important;
+            clip-path: none !important; 
         }
         
+        /* TẠO MÀNG NỀN CẮT GÓC PHÍA SAU (Nơi chứa màu và viền) */
         .sys-eq-slot::before {
-            content: ''; position: absolute; inset: 2px;
+            content: ''; 
+            position: absolute; 
+            inset: 0;
+            background: rgba(5, 15, 25, 0.85);
+            border: 1px solid rgba(0, 191, 255, 0.4);
+            box-shadow: inset 0 0 15px rgba(0, 191, 255, 0.1);
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            z-index: 0; /* Nằm dưới đáy */
+            transition: all 0.3s ease;
+        }
+        
+        /* KHUNG VIỀN MỎNG TRANG TRÍ BÊN TRONG */
+        .sys-eq-slot::after {
+            content: ''; 
+            position: absolute; 
+            inset: 2px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
             pointer-events: none;
+            z-index: 1;
         }
         
+        /* HIỆU ỨNG KHI RÊ CHUỘT VÀO Ô TRANG BỊ */
         .sys-eq-slot:hover {
+            transform: scale(1.05); /* Phóng to toàn bộ ô */
+        }
+        
+        /* Đổi màu màng nền khi hover */
+        .sys-eq-slot:hover::before {
             background: rgba(0, 40, 80, 0.9);
             border-color: #00bfff;
             box-shadow: 0 0 20px rgba(0, 191, 255, 0.5), inset 0 0 20px rgba(0, 191, 255, 0.3);
-            transform: scale(1.05);
         }
         
-        .sys-eq-slot span {
+        /* ĐẢM BẢO CHỮ, ẢNH VÀ TOOLTIP LUÔN NỔI LÊN TRÊN CÙNG */
+        .sys-eq-slot span, 
+        .sys-eq-slot .item-icon-wrapper {
+            position: relative;
+            z-index: 10; /* Nâng lớp đồ đạc lên trên lớp nền cắt góc */
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: rgba(255, 255, 255, 0.3);
             font-size: 11px;
             font-weight: bold;
             letter-spacing: 1px;
         }
         
-        .sys-eq-slot.has-item span { display: none; }
-        
-        /* Nhân vật ở giữa */
-        .sys-char-center {
-            position: relative;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: flex-end; /* Ép nhân vật đứng trên bệ */
-            flex: 1;
+        /* Ẩn chữ đi khi ô đã có item đắp vào */
+        .sys-eq-slot.has-item span { 
+            display: none; 
         }
         
-        #visual-p-img {
-            max-height: 480px;
-            object-fit: contain;
-            filter: drop-shadow(0 0 20px rgba(0, 191, 255, 0.4));
-            z-index: 2;
-            animation: floatChar 4s ease-in-out infinite;
-        }
-        
-        /* Bệ phóng năng lượng dưới chân */
-        .sys-char-pedestal {
-            position: absolute;
-            bottom: 20px;
-            width: 250px;
-            height: 60px;
-            background: radial-gradient(ellipse, rgba(0, 191, 255, 0.4) 0%, transparent 70%);
-            border-radius: 50%;
-            border-bottom: 2px solid rgba(0, 191, 255, 0.8);
-            box-shadow: 0 10px 30px #00bfff;
-            z-index: 1;
-            transform: rotateX(60deg);
-        }
-        
-        @keyframes floatChar {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        /* GIAO DIỆN KHO ĐỒ BÊN TRONG */
-        .sys-inv-filters {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            padding: 15px;
-            background: rgba(0, 10, 20, 0.9);
-            border-bottom: 1px solid rgba(0, 191, 255, 0.2);
-        }
-        
-        .sys-filter-btn {
-            background: rgba(0, 191, 255, 0.1);
-            border: 1px solid rgba(0, 191, 255, 0.3);
-            color: #a4b3c6;
-            padding: 8px 18px;
-            font-family: 'Oswald', sans-serif;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: 0.2s;
-            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
-        }
-        
-        .sys-filter-btn:hover {
-            color: #fff;
-            border-color: #00bfff;
-        }
-        
-        .sys-filter-btn.active {
-            background: #00bfff;
-            color: #000;
-            box-shadow: 0 0 15px rgba(0, 191, 255, 0.6);
-            font-weight: bold;
-        }
-        
-        /* Fix lỗi vị trí Tooltip khi nằm trong Cut-corner */
+        /* CANH LỀ CHO TOOLTIP BAY RA NGOÀI ĐỂ KHÔNG BỊ CHE NHÂN VẬT */
         .sys-eq-slot .item-tooltip {
             left: 85px !important;
         }
