@@ -579,42 +579,49 @@
                 </div>
             
                 <div id="tab-arena" class="tab-panel">
-                    <div id="combatArea" class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 30px; background: rgba(0, 15, 30, 0.6); border: 2px solid #00bfff; border-radius: 12px; min-height: 350px; box-shadow: 0 0 30px rgba(0, 191, 255, 0.15); position: relative; overflow: hidden;">
-
-                        <div style="text-align: center; width: 40%; z-index: 1;">
-                            <div id="p-name" style="color: #00bfff; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #00bfff; margin-bottom: 15px; text-transform: uppercase;">SUNG JIN WOO</div>
-                            <img id="p-img" src="char/Sungjinwoo.png" class="avatar-frame" style="border-color: #00bfff; box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);">
-                            
-                            <div class="combat-hp-track" style="border-color: #00bfff;">
-                                <div id="p-hp-bar" class="combat-hp-fill-player" style="width: 100%;"></div>
+                    <div id="combatArea" class="combat-stage">
+                        <div class="combat-entities">
+                            <div class="combat-entity player-entity">
+                                <div id="p-name" style="font-size: 22px; margin-bottom: 10px; font-weight: bold; letter-spacing: 1px; text-shadow: 0 0 5px #00bfff; text-transform: uppercase;">SUNG JIN WOO</div>
+                                <div class="combat-avatar-frame">
+                                    <img id="p-img" src="char/Sungjinwoo.png" alt="Player">
+                                </div>
+                                
+                                <div class="combat-hp-track" style="width: 100%; margin: 8px 0 !important; border-color: #00bfff;">
+                                    <div id="p-hp-bar" class="combat-hp-fill-player" style="width: 100%;"></div>
+                                </div>
+                                <div id="p-hp-text" class="combat-hp-text" style="color: #00bfff;">HP: 100/100</div>
+                                <div id="p-status-board" class="status-board"></div>
                             </div>
-                            <div id="p-hp-text" class="combat-hp-text" style="color: #00bfff;">HP: 100/100</div>
-                            <div id="p-status-board" class="status-board"></div>
+                
+                            <div class="vs-text" style="color: gold; text-shadow: 0 0 10px #ffcc00, 0 0 20px gold, 0 0 40px #fff; z-index: 1;">VS</div>
+                
+                            <div class="combat-entity enemy-entity">
+                                <div id="e-name" style="font-size: 22px; margin-bottom: 10px; font-weight: bold; letter-spacing: 1px; text-shadow: 0 0 5px #ff4d4d; text-transform: uppercase;">ĐỐI THỦ</div>
+                                <div class="combat-avatar-frame">
+                                    <img id="e-img" src="bot/enemy.png" alt="Enemy">
+                                </div>
+                                
+                                <div class="combat-hp-track" style="width: 100%; margin: 8px 0 !important; border-color: #ff4d4d;">
+                                    <div id="e-hp-bar" class="combat-hp-fill-enemy" style="width: 100%;"></div>
+                                </div>
+                                <div id="e-hp-text" class="combat-hp-text" style="color: #ff4d4d;">HP: 100/100</div>
+                                <div id="e-status-board" class="status-board"></div>
+                            </div>
                         </div>
-
-                        <div class="vs-text" style="color: gold; text-shadow: 0 0 10px #ffcc00, 0 0 20px gold, 0 0 40px #fff; z-index: 1;">VS</div>
-
-                        <div style="text-align: center; width: 40%; z-index: 1;">
-                            <div id="e-name" style="color: #ff4d4d; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #ff4d4d; margin-bottom: 15px; text-transform: uppercase;">ĐỐI THỦ</div>
-                            <img id="e-img" src="bot/enemy.png" class="avatar-frame" style="border-color: #ff4d4d; box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);">
-                            
-                            <div class="combat-hp-track" style="border-color: #ff4d4d;">
-                                <div id="e-hp-bar" class="combat-hp-fill-enemy" style="width: 100%;"></div>
+                
+                        <div id="actionControls" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px; width: 100%; position: relative; z-index: 2;">
+                            <div id="skillRow" class="combat-action-grid">
+                                <button id="btnAttack" class="combat-btn combat-btn-attack" onclick="playerAttack()" style="flex: 1;">TẤN CÔNG</button>
                             </div>
-                            <div id="e-hp-text" class="combat-hp-text" style="color: #ff4d4d;">HP: 100/100</div>
-                            <div id="e-status-board" class="status-board"></div>
+                            <button id="btnFindEnemy" class="combat-btn combat-btn-skill" onclick="startNewBattle()" style="width: 100%; margin-top: 5px;">
+                                TÌM ĐỐI THỦ MỚI
+                            </button>
                         </div>
                     </div>
-
+                
                     <div id="battleLog">
                         Sẵn sàng khiêu chiến...
-                    </div>
-
-                    <div id="actionControls" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px; width: 100%;">
-                        <div id="skillRow" style="display: flex; gap: 15px; justify-content: center; align-items: center; width: 100%;">
-                            <button id="btnAttack" class="tab-btn btn-system" onclick="playerAttack()" style="flex: 1;">TẤN CÔNG</button>
-                        </div>
-                        <button id="btnFindEnemy" class="tab-btn btn-system" onclick="startNewBattle()" style="width: 100%;">TÌM ĐỐI THỦ MỚI</button>
                     </div>
                 </div>
                 
@@ -737,58 +744,61 @@
 
                 <div id="dungeonCombatUI" class="hidden">
                     <h3 id="dDungeonTitle" style="color: #ffcc00; text-align: center; margin-top: 0; margin-bottom: 5px; font-size: 32px;">Làng Của Goblin</h3>
-                    <h4 id="dStageText" style="color: #fff; text-align: center; margin-top: 0; font-size: 24px;">Ải 1/5</h4>
+                    <h4 id="dStageText" style="color: #fff; text-align: center; margin-top: 0; font-size: 24px; margin-bottom: 15px;">Ải 1/5</h4>
                     
-                    <div id="dungeonCombatDisplay" class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 30px; background: rgba(20, 0, 0, 0.6); border: 2px solid #ff4d4d; border-radius: 12px; min-height: 350px; box-shadow: 0 0 30px rgba(255, 77, 77, 0.2); position: relative; overflow: hidden;">
-    
+                    <div id="dungeonCombatDisplay" class="combat-stage">
                         <div id="phaser-game-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;"></div>
-
-                        <div style="text-align: center; width: 40%; z-index: 1;">
-                            <div id="d-p-name" style="color: #00bfff; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #00bfff; margin-bottom: 15px; text-transform: uppercase;">SUNG JIN WOO</div>
-                            <img id="d-p-img" src="char/Sungjinwoo.png" class="avatar-frame" style="border-color: #00bfff; box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);">
-                            
-                            <div class="combat-hp-track" style="border-color: #00bfff;">
-                                <div id="d-p-hp-bar" class="combat-hp-fill-player" style="width: 100%;"></div>
+                
+                        <div class="combat-entities">
+                            <div class="combat-entity player-entity">
+                                <div id="d-p-name" style="font-size: 22px; margin-bottom: 10px; font-weight: bold; letter-spacing: 1px; text-shadow: 0 0 5px #00bfff; text-transform: uppercase;">SUNG JIN WOO</div>
+                                <div class="combat-avatar-frame">
+                                    <img id="d-p-img" src="char/Sungjinwoo.png" alt="Player">
+                                </div>
+                                
+                                <div class="combat-hp-track" style="width: 100%; margin: 8px 0 !important; border-color: #00bfff;">
+                                    <div id="d-p-hp-bar" class="combat-hp-fill-player" style="width: 100%;"></div>
+                                </div>
+                                <div id="d-p-hp-text" class="combat-hp-text" style="color: #00bfff;">HP: 100/100</div>
+                                <div id="d-p-status-board" class="status-board"></div>
                             </div>
-                            <div id="d-p-hp-text" class="combat-hp-text" style="color: #00bfff;">HP: 100/100</div>
-                            
-                            <div id="d-p-status-board" class="status-board"></div>
-                        </div>
-
-                        <div class="vs-text" style="color: #ff4d4d; text-shadow: 0 0 10px #ff0000, 0 0 20px #ff4d4d, 0 0 40px #fff; z-index: 1;">VS</div>
-
-                        <div style="text-align: center; width: 40%; z-index: 1;">
-                            <div id="d-e-name" style="color: #ff4d4d; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px #ff4d4d; margin-bottom: 15px; text-transform: uppercase;">QUÁI VẬT</div>
-                            <img id="d-e-img" src="bot/enemy.png" class="avatar-frame" style="border-color: #ff4d4d; box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);">
-                            
-                            <div class="combat-hp-track" style="border-color: #ff4d4d;">
-                                <div id="d-e-hp-bar" class="combat-hp-fill-enemy" style="width: 100%;"></div>
+                
+                            <div class="vs-text" style="color: #ff4d4d; text-shadow: 0 0 10px #ff0000, 0 0 20px #ff4d4d, 0 0 40px #fff; z-index: 1;">VS</div>
+                
+                            <div class="combat-entity enemy-entity">
+                                <div id="d-e-name" style="font-size: 22px; margin-bottom: 10px; font-weight: bold; letter-spacing: 1px; text-shadow: 0 0 5px red; text-transform: uppercase;">QUÁI VẬT</div>
+                                <div class="combat-avatar-frame">
+                                    <img id="d-e-img" src="bot/enemy.png" alt="Monster">
+                                </div>
+                                
+                                <div class="combat-hp-track" style="width: 100%; margin: 8px 0 !important; border-color: #ff4d4d;">
+                                    <div id="d-e-hp-bar" class="combat-hp-fill-enemy" style="width: 100%;"></div>
+                                </div>
+                                <div id="d-e-hp-text" class="combat-hp-text" style="color: #ff4d4d;">HP: 100/100</div>
+                                <div id="d-e-status-board" class="status-board"></div>
                             </div>
-                            <div id="d-e-hp-text" class="combat-hp-text" style="color: #ff4d4d;">HP: 100/100</div>
-                            
-                            <div id="d-e-status-board" class="status-board"></div>
+                        </div>
+                
+                        <div id="d-actionControls" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px; width: 100%; position: relative; z-index: 2;">
+                            <div id="d-skillRow" class="combat-action-grid">
+                                <button id="d-btnAttack" class="combat-btn combat-btn-attack" onclick="playerAttack()" style="flex: 1;">TẤN CÔNG</button>
+                                <button id="d-btnDagger" class="combat-btn hidden-skill" onclick="useDaggerRush()"></button>
+                                <button id="d-btnTanSat" class="combat-btn hidden-skill" onclick="useTanSat()"></button>
+                            </div>
+                
+                            <button id="btnNextStage" class="combat-btn hidden" onclick="startNextStage()" style="border-color: gold; color: gold !important; font-size: 20px; text-shadow: 0 0 5px gold;">
+                                TIẾN VÀO ẢI TIẾP THEO
+                            </button>
+                            <button id="btnExitDungeon" class="combat-btn" onclick="exitDungeon()" style="border-color: #888; color: #888 !important; font-size: 18px;">
+                                BỎ CUỘC & THOÁT
+                            </button>
                         </div>
                     </div>
-                    
-                    <div id="d-battleLog">
-                        Hệ thống hầm ngục đã kích hoạt...
-                    </div>
-
-                    <div id="d-actionControls" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px; width: 100%;">
-                        <div id="d-skillRow" style="display: flex; gap: 15px; justify-content: center; align-items: center; width: 100%;">
-                            <button id="d-btnAttack" class="tab-btn btn-system" onclick="playerAttack()" style="flex: 1;">TẤN CÔNG</button>
-                            <button id="d-btnDagger" class="tab-btn btn-system hidden-skill" onclick="useDaggerRush()"></button>
-                            <button id="d-btnTanSat" class="tab-btn btn-system hidden-skill" onclick="useTanSat()"></button>
-                        </div>
-
-                        <button id="btnNextStage" class="tab-btn btn-system hidden" onclick="startNextStage()" style="width: 100%; border-color: gold; color: gold !important; font-size: 24px; text-shadow: 0 0 5px gold;">
-                            TIẾN VÀO ẢI TIẾP THEO
-                        </button>
-                        <button id="btnExitDungeon" class="tab-btn btn-system" onclick="exitDungeon()" style="width: 100%; border-color: red;">
-                            BỎ CUỘC & THOÁT
-                        </button>
-                    </div>
-                </div>
+    
+    <div id="d-battleLog">
+        Hệ thống hầm ngục đã kích hoạt...
+    </div>
+</div>
             </div>
 
         </div>
