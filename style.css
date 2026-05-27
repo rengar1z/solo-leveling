@@ -1127,29 +1127,82 @@
 
         /* ================= ĐỒNG BỘ NÚT TÚI ĐỒ VỚI SHOP ================= */
         .bag-action-btn {
-            min-width: 90px !important; /* Thu nhỏ lại cho vừa túi đồ */
-            font-size: 16px !important;
-            padding: 6px 12px !important;
-            background: transparent !important; /* Xóa nền đặc, chỉ giữ khung viền */
-            box-shadow: none !important;
+            min-width: 70px !important;      /* Thu hẹp chiều rộng tối thiểu cho gọn */
+            width: auto !important;
+            height: 28px !important;         /* Khóa độ cao vừa vặn, không bị phình to */
+            font-size: 13px !important;      /* Chữ nhỏ gọn, sắc nét chuẩn UI game */
+            font-weight: bold !important;
+            padding: 0 12px !important;      /* Khoảng cách chữ vừa vặn */
+            margin: 2px 4px !important;
+            background: rgba(0, 0, 0, 0.6) !important; /* Nền tối mờ huyền bí */
             letter-spacing: 1px;
+            text-transform: uppercase;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            /* Đường cắt góc siêu nhỏ tinh tế (chỉ 4px) thay vì rách sâu như cũ */
+            clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px) !important;
+            position: relative;
+            border: none !important;
         }
-
-        .btn-use { color: #00ff00 !important; }
-        .btn-use::after { border-color: #00ff00 !important; }
-        .btn-use:hover { background: rgba(0, 255, 0, 0.1) !important; }
-
-        .btn-equip { color: #00bfff !important; }
-        .btn-equip::after { border-color: #00bfff !important; }
-        .btn-equip:hover { background: rgba(0, 191, 255, 0.1) !important; }
-
-        .btn-unequip { color: #aaaaaa !important; }
-        .btn-unequip::after { border-color: #aaaaaa !important; }
-        .btn-unequip:hover { background: rgba(170, 170, 170, 0.1) !important; }
-
-        .btn-sell { color: #ff4d4d !important; }
-        .btn-sell::after { border-color: #ff4d4d !important; }
-        .btn-sell:hover { background: rgba(255, 77, 77, 0.1) !important; }
+        
+        /* Xóa bỏ hiệu ứng viền gạch phụ cũ */
+        .bag-action-btn::after {
+            display: none !important;
+        }
+        
+        /* --- ĐỊNH NGHĨA VIỀN VÀ MÀU SẮC RIÊNG BIỆT --- */
+        
+        /* Nút Dùng (Vật phẩm tiêu hao) - Màu Xanh Lá Hệ Thống */
+        .btn-use { 
+            border: 1px solid rgba(0, 255, 100, 0.4) !important; 
+            color: rgba(0, 255, 100, 0.8) !important; 
+        }
+        .btn-use:hover { 
+            background: rgba(0, 255, 100, 0.15) !important; 
+            color: #fff !important;
+            border-color: #00ff64 !important;
+            box-shadow: 0 0 10px rgba(0, 255, 100, 0.4);
+        }
+        
+        /* Nút Mặc (Trang bị) - Màu Xanh Lam Ngọc */
+        .btn-equip { 
+            border: 1px solid rgba(0, 191, 255, 0.4) !important; 
+            color: rgba(0, 191, 255, 0.8) !important; 
+        }
+        .btn-equip:hover { 
+            background: rgba(0, 191, 255, 0.15) !important; 
+            color: #fff !important;
+            border-color: #00bfff !important;
+            box-shadow: 0 0 10px rgba(0, 191, 255, 0.4);
+        }
+        
+        /* Nút Tháo (Đang mặc trên người) - Màu Xám Kim Loại */
+        .btn-unequip { 
+            border: 1px solid rgba(170, 170, 170, 0.4) !important; 
+            color: rgba(170, 170, 170, 0.8) !important; 
+        }
+        .btn-unequip:hover { 
+            background: rgba(170, 170, 170, 0.15) !important; 
+            color: #fff !important;
+            border-color: #ffffff !important;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Nút Bán (Kiếm tiền) - Màu Đỏ Rực Huyết */
+        .btn-sell { 
+            border: 1px solid rgba(255, 77, 77, 0.4) !important; 
+            color: rgba(255, 77, 77, 0.8) !important; 
+        }
+        .btn-sell:hover { 
+            background: rgba(255, 77, 77, 0.15) !important; 
+            color: #fff !important;
+            border-color: #ff4d4d !important;
+            box-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
+        }
    
 
         /* ================= GIAO DIỆN ACHIEVEMENT (CHUẨN SOLO LEVELING: ARISE) ================= */
