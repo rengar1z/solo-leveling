@@ -5657,35 +5657,30 @@
         }
     });
 };
-    // Khởi tạo tab mặc định là 'weapon' (Vũ khí) khớp với giao diện HTML ban đầu
+  
 window.currentInvTab = 'weapon';
 
-// Thêm hàm xử lý chuyển tab trong kho đồ bị thiếu
 window.switchInvTab = function(tabName, btnElement) {
     window.currentInvTab = tabName;
     
-    // Đổi trạng thái nút bấm (xóa class active ở các nút cũ, thêm vào nút hiện tại)
     const btns = document.querySelectorAll('.inv-filter-btn');
     btns.forEach(btn => btn.classList.remove('active'));
     if (btnElement) {
         btnElement.classList.add('active');
     }
     
-    // Gọi lại hàm render túi đồ để vẽ lại danh sách item theo tab mới
     if (window.renderBag) window.renderBag();
 };
     window.toggleEquipView = function() {
-        // Tắt đèn các nút bên trái
+    
         const btns = document.getElementsByClassName("eq-tab-btn");
         for (let i = 0; i < btns.length; i++) btns[i].classList.remove("active");
         
-        // Bật đèn chính nó
         const btnToggleVisual = document.getElementById('btnToggleVisual');
         if (btnToggleVisual) btnToggleVisual.classList.add('active');
 
-        // HIỂN THỊ LẠI MÔ HÌNH NHÂN VẬT VÀ GIẤU KHUNG TÚI ĐỒ (Đã xóa dòng gọi equippedListArea)
         const visualArea = document.getElementById('characterVisualArea');
-        if (visualArea) visualArea.style.display = 'block';
+        if (visualArea) visualArea.style.display = 'flex'; 
         
         const invArea = document.getElementById('inventoryCardArea');
         if (invArea) invArea.style.display = 'none';
