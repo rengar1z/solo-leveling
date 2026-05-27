@@ -2003,7 +2003,6 @@
             filter: brightness(1.2);
         }
         
-        /* Tia sáng chạy viền mỏng ở trên */
         .skill-branch-header::before {
             content: '';
             position: absolute;
@@ -2011,7 +2010,6 @@
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
         }
         
-        /* Lưới tự động chia cột (Responsive) */
         .skill-card-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -2020,7 +2018,6 @@
             animation: fadeIn 0.4s ease;
         }
         
-        /* Thẻ bài Kỹ năng */
         .sl-skill-card {
             display: flex;
             align-items: center;
@@ -2033,7 +2030,6 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
         
-        /* Trạng thái thẻ bài */
         .sl-skill-card.unlocked {
             background: linear-gradient(135deg, rgba(0, 30, 60, 0.4), rgba(0, 5, 15, 0.7));
         }
@@ -2055,7 +2051,6 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
         }
         
-        /* Khung Avatar Icon */
         .sl-skill-icon-frame {
             width: 65px;
             height: 65px;
@@ -2083,7 +2078,6 @@
             object-fit: contain;
         }
         
-        /* Thông tin chữ */
         .sl-skill-info {
             flex: 1;
             margin-left: 15px;
@@ -2110,7 +2104,6 @@
             width: fit-content;
         }
         
-        /* Nút nâng cấp hình tròn Tech */
         .sl-skill-upgrade-btn {
             width: 38px;
             height: 38px;
@@ -2128,7 +2121,7 @@
             transition: all 0.2s;
             box-shadow: inset 0 0 8px currentColor;
             margin-left: 10px;
-            padding-bottom: 4px; /* Căn giữa dấu + */
+            padding-bottom: 4px; 
         }
         
         .sl-skill-upgrade-btn:hover:not(:disabled) {
@@ -2149,24 +2142,23 @@
             visibility: hidden;
             opacity: 0;
             position: absolute;
-            bottom: 80%; /* Nằm ẩn phía trên thẻ bài */
+            bottom: 80%;
             left: 50%;
             transform: translateX(-50%);
             width: 280px;
-            background: rgba(2, 10, 25, 0.98) !important; /* Nền tối sâu thẳm hắc ám */
+            background: rgba(2, 10, 25, 0.98) !important; 
             color: #fff;
             padding: 16px;
             border-radius: 8px;
-            z-index: 9999 !important; /* Bắt buộc nổi lên trên cùng, không bị các ô skill khác đè khuất */
+            z-index: 9999 !important; 
             transition: all 0.25s ease-in-out;
             pointer-events: none;
-            text-align: left; /* Căn lề trái đọc mô tả kĩ năng dễ dàng hơn */
+            text-align: left; 
             line-height: 1.5;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
             border: 1px solid rgba(0, 191, 255, 0.4);
         }
         
-        /* Định dạng các thẻ chữ bên trong Tooltip mô tả */
         .skill-list-tooltip h4 {
             font-family: 'Oswald', sans-serif;
             margin: 0 0 6px 0;
@@ -2175,14 +2167,152 @@
         }
         
         .skill-list-tooltip span {
-            font-family: sans-serif; /* Chữ mô tả dùng font không chân để dễ đọc mượt mắt */
+            font-family: sans-serif; 
             font-size: 14px;
             color: #cbd5e1;
         }
         
-        /* 2. KÍCH HOẠT KHI DI CHUỘT: Thay thế hoàn toàn .skill-item thành .sl-skill-card */
         .sl-skill-card:hover .skill-list-tooltip {
             visibility: visible;
             opacity: 1;
-            bottom: 105%; /* Đẩy bảng bay lên phía trên thẻ bài một chút cực mượt */
+            bottom: 105%; 
+        }
+
+        /* ================= NÂNG CẤP KHÔNG GIAN CHIẾN ĐẤU (BOSS ROOM) ================= */
+        .combat-stage {
+            background: radial-gradient(circle at center, rgba(30, 0, 0, 0.7) 0%, rgba(5, 5, 10, 0.95) 100%);
+            border: 2px solid #ff3333;
+            border-radius: 10px;
+            padding: 30px 20px;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.15), inset 0 0 50px rgba(0, 0, 0, 0.8);
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Thêm tia sét/sương mù mờ ảo sau lưng */
+        .combat-stage::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1), rgba(0,0,0,0.1) 2px, transparent 2px, transparent 4px);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        /* Bố cục 2 bên mặt đối mặt */
+        .combat-entities {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .combat-entity {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 38%;
+        }
+        
+        /* Khung Avatar Nhân vật & Quái vật */
+        .combat-avatar-frame {
+            width: 140px;
+            height: 140px;
+            border-radius: 10px; /* Bỏ tròn, dùng góc bo nhẹ cho mạnh mẽ */
+            border: 2px solid;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.8);
+            position: relative;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        
+        .combat-avatar-frame img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px currentColor);
+        }
+        
+        /* Người chơi (Màu Xanh System) */
+        .player-entity {
+            color: #00bfff;
+        }
+        .player-entity .combat-avatar-frame {
+            border-color: #00bfff;
+            box-shadow: inset 0 0 20px rgba(0, 191, 255, 0.3), 0 0 20px rgba(0, 191, 255, 0.2);
+        }
+        
+        /* Quái vật (Màu Đỏ Tử Vong + Hiệu ứng trôi nổi) */
+        .enemy-entity {
+            color: #ff4d4d;
+            animation: floatMonster 3s ease-in-out infinite;
+        }
+        .enemy-entity .combat-avatar-frame {
+            border-color: #ff4d4d;
+            box-shadow: inset 0 0 20px rgba(255, 77, 77, 0.3), 0 0 20px rgba(255, 77, 77, 0.2);
+        }
+        
+        @keyframes floatMonster {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+        
+        /* Khay nút hành động vát góc chuẩn System */
+        .combat-action-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .combat-btn {
+            background: rgba(5, 10, 20, 0.9) !important;
+            border: 1px solid !important;
+            padding: 12px 25px !important;
+            font-size: 18px !important;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            /* Cắt góc chuẩn System */
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+        }
+        
+        .combat-btn:disabled {
+            filter: grayscale(1);
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .combat-btn-attack {
+            border-color: #ff4d4d !important;
+            color: #ff4d4d !important;
+        }
+        .combat-btn-attack:hover:not(:disabled) {
+            background: #ff4d4d !important; color: #fff !important; box-shadow: 0 0 20px #ff4d4d;
+        }
+        
+        .combat-btn-skill {
+            border-color: #00bfff !important;
+            color: #00bfff !important;
+        }
+        .combat-btn-skill:hover:not(:disabled) {
+            background: #00bfff !important; color: #000 !important; box-shadow: 0 0 20px #00bfff;
+        }
+        
+        .combat-btn-util {
+            border-color: #1dbf48 !important;
+            color: #1dbf48 !important;
+        }
+        .combat-btn-util:hover:not(:disabled) {
+            background: #1dbf48 !important; color: #000 !important; box-shadow: 0 0 20px #1dbf48;
         }
