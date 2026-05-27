@@ -190,57 +190,35 @@
 </div>
                 <!-- ================= TAB BAG (TÚI ĐỒ) MỚI ================= -->
             <div id="tab-bag" class="tab-panel">
-    <div class="sys-window" style="height: 620px; display: flex; flex-direction: column; padding: 0;">
+            <div style="position: relative; width: 100%; max-width: 1400px; margin: 0 auto;">
+                <!-- Nhãn "Bag" đen trắng bo góc chuẩn ảnh -->
+                <div style="position: absolute; top: -14px; left: 15px; background: #000; color: #fff; padding: 4px 20px; font-size: 22px; font-weight: bold; font-family: 'Oswald', sans-serif; z-index: 10; border: 2px solid #000; letter-spacing: 1px; clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);">
+                    Bag
+                </div>
+                
+                <div class="new-bag-container">
+                    <!-- CỘT 1: Sidebar Phân Loại -->
+                    <div class="bag-sidebar">
+                        <button class="bag-side-btn active" onclick="switchInvTab('all', this)">All</button>
+                        <button class="bag-side-btn" onclick="switchInvTab('item', this)">Items</button>
+                        <button class="bag-side-btn" onclick="switchInvTab('material', this)">Materials</button>
+                        <button class="bag-side-btn" onclick="switchInvTab('equip', this)">Equips</button>
+                    </div>
         
-        <!-- HEADER: THANH ĐIỀU HƯỚNG TÚI ĐỒ -->
-        <div class="sys-bag-header">
-            <button id="btnToggleVisual" class="sys-bag-tab active" onclick="toggleEquipView()">MÔ HÌNH NHÂN VẬT</button>
-            <button class="sys-bag-tab eq-tab-btn" onclick="switchEqTab(event, 'inventory')">KHO ĐỒ QUÝ</button>
-        </div>
-
-        <!-- KHU VỰC 1: MÔ HÌNH NHÂN VẬT (TRANG BỊ ĐANG MẶC) -->
-        <div id="characterVisualArea" class="sys-character-view">
-            <!-- Cột Trái: Thiên hướng Tấn Công -->
-            <div class="sys-equip-col left">
-                <div class="sys-eq-slot slot-left" id="slot-weapon" title="Vũ khí"><span>WEAPON</span></div>
-                <div class="sys-eq-slot slot-left" id="slot-helmet" title="Mũ"><span>HELMET</span></div>
-                <div class="sys-eq-slot slot-left" id="slot-armor" title="Áo giáp"><span>ARMOR</span></div>
-                <div class="sys-eq-slot slot-left" id="slot-gloves" title="Găng tay"><span>GLOVES</span></div>
-            </div>
-
-            <!-- Ở Giữa: Hologram Nhân Vật -->
-            <div class="sys-char-center">
-                <div class="sys-char-pedestal"></div>
-                <img id="visual-p-img" src="char/Sungjinwoo.png" alt="Character">
-            </div>
-
-            <!-- Cột Phải: Thiên hướng Phòng thủ / Trang sức -->
-            <div class="sys-equip-col right">
-                <div class="sys-eq-slot slot-right" id="slot-necklace" title="Vòng cổ"><span>NECKLACE</span></div>
-                <div class="sys-eq-slot slot-right" id="slot-ring" title="Nhẫn"><span>RING</span></div>
-                <div class="sys-eq-slot slot-right" id="slot-earring" title="Khuyên tai"><span>EARRING</span></div>
-                <div class="sys-eq-slot slot-right" id="slot-shoes" title="Giày"><span>SHOES</span></div>
+                    <!-- CỘT 2: Lưới Vật Phẩm (Grid) -->
+                    <div class="bag-grid" id="bagGridArea">
+                        <!-- Javascript sẽ render ô vuông vật phẩm vào đây -->
+                    </div>
+        
+                    <!-- CỘT 3: Bảng Chi Tiết (Detail Panel) -->
+                    <div class="bag-detail" id="bagDetailArea">
+                        <div style="text-align:center; margin-top: 100px; color: #888; font-size: 16px; font-family: sans-serif;">
+                            Chọn một vật phẩm để xem chi tiết
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <!-- KHU VỰC 2: DANH SÁCH KHO ĐỒ (ẨN MẶC ĐỊNH) -->
-        <div id="inventoryCardArea" class="sys-inventory-view" style="display: none; flex-direction: column; height: 100%;">
-            
-            <!-- Nút Lọc Phân Loại -->
-            <div class="sys-inv-filters">
-                <button class="sys-filter-btn inv-filter-btn active" onclick="switchInvTab('weapon', this)">VŨ KHÍ</button>
-                <button class="sys-filter-btn inv-filter-btn" onclick="switchInvTab('armor', this)">PHÒNG CỤ</button>
-                <button class="sys-filter-btn inv-filter-btn" onclick="switchInvTab('accessory', this)">TRANG SỨC</button>
-                <button class="sys-filter-btn inv-filter-btn" onclick="switchInvTab('consum', this)">TIÊU HAO</button>
-                <button class="sys-filter-btn inv-filter-btn" onclick="switchInvTab('material', this)">VẬT LIỆU</button>
-            </div>
-
-            <!-- Danh sách vật phẩm -->
-            <div id="inventoryArea" class="sl-shop-list" style="flex: 1; overflow-y: auto; padding: 15px;"></div>
-        </div>
-
-    </div>
-</div>
 <!-- ================= KẾT THÚC TAB BAG ================= -->
 <div id="tab-shop" class="tab-panel">
     
