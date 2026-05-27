@@ -544,27 +544,30 @@
     </div>
 </div>
             <div id="tab-gacha" class="tab-panel">
-    <style>
-        @keyframes gachaSpin { 100% { transform: rotate(360deg); } }
-        @keyframes itemPop { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-    </style>
-    <div style="border: 2px solid #00bfff; border-radius: 10px; padding: 25px; background: url('event/event.png') center/100% 100% no-repeat; box-shadow: 0 0 25px rgba(0, 191, 255, 0.3); min-height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+    <div class="gacha-wrapper">
+    
+        <div class="gacha-magic-circle"></div>
         
-        <div style="z-index: 1; text-align: center; width: 100%;">
-            <h2 style="color: #ffcc00; text-shadow: 0 0 15px #00bfff, 0 0 30px #fff; font-weight: bold; font-size: 42px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 2px;">LUCKY WHEEL ROYALE</h2>
-            <p style="color: #ccc; font-size: 18px; margin-bottom: 30px;">Tế lễ <span style="color: #ffcc00; font-weight: bold;">Sandstorm Cube</span> để triệu hồi Bảo Vật Thất Truyền!</p>
+        <div style="z-index: 2; text-align: center; width: 100%;">
+            <h2 style="color: #ffcc00; text-shadow: 0 0 15px #ffcc00, 0 0 40px rgba(255, 204, 0, 0.5); font-weight: bold; font-size: 46px; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 4px;">
+                TẾ ĐÀN DỊ GIỚI
+            </h2>
+            <p style="color: #a4b3c6; font-size: 18px; margin-bottom: 40px; font-style: italic;">
+                Tế lễ <span style="color: #ffcc00; font-weight: bold; text-shadow: 0 0 5px gold;">Sandstorm Cube</span> để triệu hồi Bảo Vật Thất Truyền!
+            </p>
             
-            <div id="gachaResultArea" style="min-height: 180px; display: flex; justify-content: center; align-items: center; margin-bottom: 30px;">
-                <div id="gachaBox" style="width: 140px; height: 140px; border: 3px solid #ffd700; border-radius: 15px; display: flex; align-items: center; justify-content: center; background: rgba(0, 15, 30, 0.95); box-shadow: 0 0 30px rgba(255, 215, 0, 0.6), inset 0 0 15px rgba(255, 215, 0, 0.4); z-index: 2;">
-                    <span style="color: #ffd700; font-size: 50px; text-shadow: 0 0 15px #ffd700;">?</span>
+            <div id="gachaResultArea" class="gacha-result-area">
+                <div id="gachaBox" class="gacha-box">
+                    <span>?</span>
                 </div>
             </div>
 
-            <button class="tab-btn btn-system" onclick="spinGacha()" style="border-color: #ffcc00; color: #ffcc00 !important; font-size: 24px; padding: 15px 40px; box-shadow: inset 0 0 15px rgba(255,204,0,0.4); border-radius: 30px; letter-spacing: 1px;">
-                QUAY 1 LẦN (1 CUBE)
+            <button class="gacha-btn-system" onclick="spinGacha()">
+                RÚT THƯỞNG (1 CUBE)
             </button>
-            <div style="margin-top: 20px; color: #fff; font-size: 18px;">
-                Kho chứa Cube: <span id="cubeCountDisplay" style="color: #ffcc00; font-weight: bold; font-size: 24px; text-shadow: 0 0 10px gold;">0</span>
+            
+            <div style="margin-top: 30px; color: #a4b3c6; font-size: 20px; font-family: 'Oswald', sans-serif;">
+                Kho chứa Cube: <span id="cubeCountDisplay" style="color: #00ffcc; font-weight: bold; font-size: 28px; text-shadow: 0 0 10px #00ffcc; margin-left: 5px;">0</span>
             </div>
         </div>
     </div>
