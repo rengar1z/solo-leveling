@@ -1627,6 +1627,9 @@
             if (itemData.vit > 0) {
                 currentUser.maxHp -= itemData.vit * 10; 
             }
+            if (itemData.hp > 0) {
+                currentUser.maxHp -= itemData.hp;
+            }
             currentUser.equipped.costume = null;
         }
     
@@ -1648,6 +1651,7 @@
                     if (oldData.vit > 0) { 
                         currentUser.maxHp -= oldData.vit * 10; 
                     }
+                    if (oldData.hp > 0) currentUser.maxHp -= oldData.hp;
                 }
             }
             
@@ -1663,6 +1667,9 @@
             
             if (itemData.vit > 0) { 
                 currentUser.maxHp += itemData.vit * 10; 
+            }
+            if (itemData.hp > 0) {
+                currentUser.maxHp += itemData.hp;
             }
         }
 
@@ -3326,6 +3333,8 @@
         if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
             return alert("⚠️ HỆ THỐNG: Khí tức hỗn loạn! Không thể thay đổi Đội Hình Bóng Tối khi đang chiến đấu!");
         }
+        let hpPercent = currentUser.hp / currentUser.maxHp;
+        let mpPercent = currentUser.maxMp > 0 ? (currentUser.mp / currentUser.maxMp) : 0;
 
         // Tháo bóng cũ (Trừ chỉ số)
         if (currentUser.equippedShadow && SHADOW_DATA[currentUser.equippedShadow]) {
@@ -3348,10 +3357,10 @@
             currentUser.str += newData.str; currentUser.vit += newData.vit;
             currentUser.agi += newData.agi; currentUser.int += newData.int;
             currentUser.maxHp += newData.vit * 10; currentUser.maxMp += newData.int * 5;
-            
-            // === 2. XÓA BỎ DÒNG CỘNG MÁU/MANA HIỆN TẠI TẠI ĐÂY ===
-            // (Đã xóa dòng: currentUser.hp += newData.vit * 10; currentUser.mp += newData.int * 5;)
         }
+
+        currentUser.hp = Math.max(1, Math.floor(currentUser.maxHp * hpPercent));
+        currentUser.mp = Math.floor(currentUser.maxMp * mpPercent);
 
         await saveUserData();
         renderShadowArmy(); 
