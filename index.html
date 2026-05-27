@@ -2048,7 +2048,16 @@
         }
     }
 
-    let html = `<div style="text-align: right; margin-bottom: 15px;"><button onclick="resetSkills()" style="background: #ff4d4d; border-color: #cc0000; color: #fff; font-size: 16px;">🔄 TẨY ĐIỂM ĐỔI NHÁNH (1000 CASH)</button></div>`;
+    let html = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px dashed rgba(0,191,255,0.3); padding-bottom: 15px;">
+            <div style="color: #a4b3c6; font-size: 16px; font-style: italic;">
+                Điểm kỹ năng khả dụng: <span style="color:#00ffcc; font-weight:bold; font-size:22px; text-shadow: 0 0 5px #00ffcc;">${currentUser.skillPoints || 0}</span>
+            </div>
+            <button onclick="resetSkills()" class="sl-shop-price-btn" style="color: #ff4d4d; border: 1px solid #ff4d4d; min-width: auto; font-size: 16px !important; padding: 8px 20px !important; margin: 0 !important; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);">
+                🔄 TẨY ĐIỂM ĐỔI NHÁNH (1000 CASH)
+            </button>
+        </div>
+    `;
 
     const branches = ["Sát Thủ", "Pháp Sư", "Đấu Sĩ", "Đặc biệt", "Chung"];
     
@@ -2060,21 +2069,28 @@
     });
 
     branches.forEach(branch => {
-        let branchColor = "#8eefff";
+        let branchColor = "#00bfff";
         if(branch === 'Sát Thủ') branchColor = '#4a90e2';
         if(branch === 'Pháp Sư') branchColor = '#9933ff';
         if(branch === 'Đấu Sĩ') branchColor = '#ff4d4d';
         if(branch === 'Đặc biệt') branchColor = '#ffcc00';
+        
         let isBranchLocked = (currentClass !== null && currentClass !== branch && branch !== "Chung" && branch !== "Đặc biệt");
         let displayColor = isBranchLocked ? '#555' : branchColor; 
         let isOpen = window.branchToggleState[branch];
         
+        // Vẽ Header Nhánh
         html += `
-            <div style="cursor: pointer; background: rgba(0, 10, 30, 0.8); padding: 12px 15px; margin-top: 15px; border-radius: 6px; border-left: 5px solid ${displayColor}; border-bottom: 1px solid rgba(0,0,0,0.5); box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; justify-content: space-between; align-items: center; transition: 0.2s;" onclick="toggleSkillBranch('${branch}')">
-                <h3 style="color: ${displayColor}; margin: 0; font-size: 22px; letter-spacing: 1px;">[ NHÁNH ${branch.toUpperCase()} ] ${isBranchLocked ? '<span style="color:red; font-size:16px;">(ĐÃ KHÓA)</span>' : ''}</h3>
+            <div class="skill-branch-header" style="border-left-color: ${displayColor};" onclick="toggleSkillBranch('${branch}')">
+                <h3 style="color: ${displayColor}; margin: 0; font-size: 22px; letter-spacing: 1px;">
+                    [ NHÁNH ${branch.toUpperCase()} ] 
+                    ${isBranchLocked ? '<span style="color:#ff3333; font-size:14px; text-shadow: 0 0 5px red; margin-left: 10px;">(ĐÃ KHÓA)</span>' : ''}
+                </h3>
                 <span style="color: ${displayColor}; font-size: 20px; transition: 0.3s; transform: ${isOpen ? 'rotate(90deg)' : 'rotate(0deg)'};">▶</span>
             </div>
-            <div style="display: ${isOpen ? 'block' : 'none'}; padding: 10px 0; border-left: 2px dashed ${displayColor}; margin-left: 2px; padding-left: 10px; animation: fadeIn 0.3s ease;">
+            
+            <div style="display: ${isOpen ? 'block' : 'none'}; padding: 5px 0;">
+                <div class="skill-card-container">
         `;
         
         if (skillsByBranch[branch]) {
@@ -2084,40 +2100,64 @@
                 const isMax = lv >= data.maxLv;
                 let canUpgrade = currentUser.skillPoints >= data.cost && !isMax && !isBranchLocked && data.branch !== "Đặc biệt";
 
-                let actualMp = data.mp ? getActualMpCost(data.mp) : 0;
+                let actualMp = data.mp ? window.getActualMpCost(data.mp) : 0;
                 let dynamicText = "";
+                
+                // Hiệu ứng text nhỏ bên dưới
                 if (lv > 0 && data.maxLv > 1) {
-                    if (s === "Phát Triển Cấp Tốc") dynamicText = `<br><span style="color:#00ff00; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 10}% EXP</span>`;
-                    if (s === "Thợ Săn Tiền Thưởng") dynamicText = `<br><span style="color:gold; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 15}% CASH</span>`;
-                    if (s === "Siêu Giác Quan") dynamicText = `<br><span style="color:#8eefff; font-size:14px; font-weight:bold;">↳ Đang kích hoạt: +${lv * 3}% Né Đòn</span>`;
-                    if (s === "Thể Chất Siêu Phàm") dynamicText = `<br><span style="color:#ff4d4d; font-size:14px; font-weight:bold;">↳ Đã cộng vĩnh viễn: +${lv * 5} STR/VIT</span>`;
+                    if (s === "Phát Triển Cấp Tốc") dynamicText = `<div style="color:#00ff00; font-size:13px; margin-top:4px;">↳ Kích hoạt: +${lv * 10}% EXP</div>`;
+                    if (s === "Thợ Săn Tiền Thưởng") dynamicText = `<div style="color:gold; font-size:13px; margin-top:4px;">↳ Kích hoạt: +${lv * 15}% CASH</div>`;
+                    if (s === "Siêu Giác Quan") dynamicText = `<div style="color:#8eefff; font-size:13px; margin-top:4px;">↳ Kích hoạt: +${lv * 3}% Né Đòn</div>`;
+                    if (s === "Thể Chất Siêu Phàm") dynamicText = `<div style="color:#ff4d4d; font-size:13px; margin-top:4px;">↳ Đã cộng: +${lv * 5} STR/VIT</div>`;
                 }
 
+                // Xét class cho thẻ bài
+                let cardClass = lv === 0 ? 'locked' : (isMax ? 'unlocked maxed' : 'unlocked');
+                let highlightColor = lv > 0 ? displayColor : '#666';
+
+                // Vẽ Thẻ bài Kỹ năng (Grid Item)
                 html += `
-                    <div class="skill-item ${lv === 0 ? 'locked' : 'unlocked'}" style="position: relative; border-color: ${lv > 0 ? displayColor : '#333'}; opacity: ${isBranchLocked ? 0.4 : 1}; pointer-events: ${isBranchLocked ? 'none' : 'auto'}; margin-bottom: 8px; background: rgba(0,0,0,0.6);">
+                    <div class="sl-skill-card ${cardClass}" style="border-color: ${lv > 0 ? displayColor : 'rgba(255,255,255,0.1)'}; color: ${displayColor};" onmouseover="this.style.borderColor='${highlightColor}'" onmouseout="this.style.borderColor='${lv > 0 ? displayColor : 'rgba(255,255,255,0.1)'}'">
+                        
+                        <!-- Tooltip chuẩn Hệ thống -->
                         <div class="skill-list-tooltip" style="border: 1px solid ${displayColor}; box-shadow: 0 0 15px ${displayColor};">
                             <h4 style="color: ${displayColor}; margin: 0 0 5px 0; font-size: 20px; text-transform: uppercase;">${s}</h4>
-                            <span style="color: #ccc; font-size: 15px;">${data.desc}</span>
+                            <span style="color: #ccc; font-size: 15px; display: block; line-height: 1.4;">${data.desc}</span>
                             ${data.mp ? `<br><hr style="border-color: #444; margin: 8px 0;"><span style="color: #00bfff; font-size: 14px; font-weight:bold;">Tiêu hao: ${actualMp} MP</span>` : ''}
                         </div>
-                        <div style="display: flex; align-items: center;">
-                            <img src="${data.icon}" style="width: 60px; height: 75x; object-fit: contain; margin-right: 15px; filter: ${isBranchLocked ? 'grayscale(1)' : 'none'};">
-                            <div style="display: flex; flex-direction: column;">
-                                <span>${s} ${isMax ? '<span style="color: gold;">[MAX]</span>' : `(Lv.${lv}/${data.maxLv})`}</span>
-                                ${!isMax ? `<small style="color: #aaa; font-size: 12px;">Cần: ${data.cost} Điểm</small>` : ''}
-                                ${dynamicText}
-                            </div>
+
+                        <!-- Khung Icon -->
+                        <div class="sl-skill-icon-frame" style="border-color: ${lv > 0 ? displayColor : '#444'};">
+                            <img src="${data.icon}" style="filter: ${isBranchLocked || lv === 0 ? 'grayscale(1)' : 'none'};">
                         </div>
-                        <button class="add-skill-btn" onclick="upgradeSkill(event, '${s}')" ${canUpgrade ? '' : 'disabled'} style="background: ${displayColor}; color: #000;">+</button>
+                        
+                        <!-- Khung Thông tin -->
+                        <div class="sl-skill-info">
+                            <div class="sl-skill-name" style="color: ${lv > 0 ? '#fff' : '#aaa'};">${s}</div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span class="sl-skill-level" style="color: ${isMax ? 'gold' : displayColor}; border-color: ${isMax ? 'gold' : displayColor};">
+                                    ${isMax ? 'MAX' : `Lv.${lv}/${data.maxLv}`}
+                                </span>
+                                ${!isMax && data.branch !== "Đặc biệt" ? `<span style="color: #aaa; font-size: 13px;">Cần: <b style="color:#fff;">${data.cost}</b> Điểm</span>` : ''}
+                            </div>
+                            ${dynamicText}
+                        </div>
+                        
+                        <!-- Nút nâng cấp -->
+                        ${data.branch !== "Đặc biệt" ? `
+                        <button class="sl-skill-upgrade-btn" onclick="upgradeSkill(event, '${s}')" ${canUpgrade ? '' : 'disabled'} style="color: ${displayColor}; border-color: ${displayColor};">
+                            +
+                        </button>
+                        ` : `<div style="width: 38px; text-align: center; color: gold; font-size: 22px; margin-left: 10px; filter: drop-shadow(0 0 5px gold);">★</div>`}
                     </div>
                 `;
             });
         }
-        html += `</div>`; 
+        html += `</div></div>`; // Đóng card-container và div nhánh
     });
     
     list.innerHTML = html;
-    };
+};
 
     // --- LOGIC NÂNG CẤP SKILL KẾT HỢP KHÓA NHÁNH ---
     window.upgradeSkill = async function(e, name) {
