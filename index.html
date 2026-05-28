@@ -546,6 +546,17 @@
     </div>
 </div>
     
+<div id="deathPopup" class="welcome-overlay hidden" style="z-index: 10000; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(3px);" onclick="closeDeathPopup()">
+    <div style="background: radial-gradient(circle, #1a1a1a 0%, #050505 100%); border: 2px solid #b37700; padding: 60px 100px; text-align: center; box-shadow: 0 0 40px rgba(179, 119, 0, 0.4), inset 0 0 20px rgba(0,0,0,1); position: relative;">
+        
+        <div style="position: absolute; top: 6px; left: 6px; right: 6px; bottom: 6px; border: 1px solid rgba(179, 119, 0, 0.3); pointer-events: none;"></div>
+        
+        <div class="death-text-glitch">['PLAYER' HAS DIED.]</div>
+        
+        <div style="margin-top: 25px; font-size: 16px; color: #666; font-family: sans-serif; animation: flash 1.5s infinite;">[ Nhấp vào bất kỳ đâu để tiếp tục ]</div>
+    </div>
+</div>    
+    
 <div id="extractionPopup" class="welcome-overlay hidden" style="z-index: 9999;">
     <div class="welcome-box" style="border-color: #9933ff; box-shadow: 0 0 40px rgba(153, 51, 255, 0.6); background: linear-gradient(to bottom, #1a0033, #000000);">
         <div class="alert-header" style="color: #cc33ff; border-bottom: 1px solid #cc33ff; font-weight: bold; font-size: 28px; text-shadow: 0 0 10px #cc33ff;">[ THÔNG BÁO HỆ THỐNG ]</div>
@@ -3721,31 +3732,8 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
             }
         }
         
-        if (currentUser.hp <= 0) { 
-            updateCombatUI(); 
-            logBattle(`<span style="color:red; font-size: 20px;">BẠN ĐÃ THẤT BẠI DO VẾT THƯƠNG QUÁ NẶNG!</span>`);
-            resetToButtonMode(); 
+        if (currentUser.hp <= 0) return loseBattle();
 
-            saveUserData();
-            
-            if (currentRedGateId) {
-                currentRedGateId = null; 
-                document.getElementById('dDungeonTitle').style.color = "#ffcc00"; 
-                document.getElementById('dDungeonTitle').style.textShadow = "none";
-                document.getElementById('btnExitDungeon').classList.remove('hidden');
-                document.getElementById('btnExitDungeon').innerText = "BỎ MẠNG & THOÁT KHỎI CỔNG ĐỎ";
-            } 
-            else if (isDungeonMode) {
-                document.getElementById('btnNextStage').classList.add('hidden');
-                document.getElementById('btnExitDungeon').classList.remove('hidden');
-            } else {
-                const btnFind = document.getElementById('btnFindEnemy');
-                if(btnFind) btnFind.disabled = false;
-            }
-            return; 
-        }
-
-        // --- XỬ LÝ DƯ ÂM TIẾNG THÉT ---
         if (window.playerVulnerabilityTurns && window.playerVulnerabilityTurns > 0 && currentUser.hp > 0) {
             window.playerVulnerabilityTurns--;
             if (window.playerVulnerabilityTurns === 0) {
@@ -4559,25 +4547,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         if (typeof render === "function") render(); 
 
         if (currentUser.hp <= 0) {
-            logBattle(`<span style="color:red; font-size: 20px;">BẠN ĐÃ THẤT BẠI! Bị thương nặng...</span>`);
-            resetToButtonMode(); 
-
-            saveUserData()
-            
-            if (currentRedGateId) {
-                currentRedGateId = null; 
-                document.getElementById('dDungeonTitle').style.color = "#ffcc00"; 
-                document.getElementById('dDungeonTitle').style.textShadow = "none";
-                document.getElementById('btnExitDungeon').classList.remove('hidden');
-                document.getElementById('btnExitDungeon').innerText = "BỎ MẠNG & THOÁT KHỎI CỔNG ĐỎ";
-            } 
-            else if (isDungeonMode) {
-                document.getElementById('btnNextStage').classList.add('hidden');
-                document.getElementById('btnExitDungeon').classList.remove('hidden');
-            } else {
-                const btnFind = document.getElementById('btnFindEnemy');
-                if(btnFind) btnFind.disabled = false;
-            }
+            loseBattle();
         } else {
             // --- HỆ THỐNG GIẢM COOLDOWN Ở CUỐI MỖI LƯỢT ---
             if (window.counterCooldown && window.counterCooldown > 0) {
@@ -4733,6 +4703,33 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 document.getElementById('extractionPopup').classList.remove('hidden');
             }
         }
+        
+        // ================= XỬ LÝ SỰ KIỆN TỬ TRẬN =================
+        window.loseBattle = function() {
+            updateCombatUI();
+            logBattle(`<span style="color:red; font-size: 20px; font-weight:bold;">['PLAYER' HAS DIED.]</span>`);
+            resetToButtonMode();
+            saveUserData();
+            document.getElementById('deathPopup').classList.remove('hidden');
+            if (currentRedGateId) {
+                currentRedGateId = null;
+                document.getElementById('dDungeonTitle').style.color = "#ffcc00";
+                document.getElementById('dDungeonTitle').style.textShadow = "none";
+                document.getElementById('btnExitDungeon').classList.remove('hidden');
+                document.getElementById('btnExitDungeon').innerText = "BỎ MẠNG & THOÁT KHỎI CỔNG ĐỎ";
+            }
+            else if (isDungeonMode) {
+                document.getElementById('btnNextStage').classList.add('hidden');
+                document.getElementById('btnExitDungeon').classList.remove('hidden');
+            } else {
+                const btnFind = document.getElementById('btnFindEnemy');
+                if(btnFind) btnFind.disabled = false;
+            }
+        };
+        
+        window.closeDeathPopup = function() {
+            document.getElementById('deathPopup').classList.add('hidden');
+        };
 
         window.checkLevelUp(hasExtraction);
 
