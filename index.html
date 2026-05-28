@@ -634,7 +634,7 @@
 
         //VẬT LIỆU
         "material/Glue.png", "material/Abyssal_Crystal.png", "material/Gold.png", "material/mathachcapthap.png",
-        "material/Old Bandage.png", "wp/Sandstorm_Cube.png",
+        "material/Old Bandage.png", "wp/Sandstorm_Cube.png", "material/giaychungnhanthosan.png",
         
         // Costumes
         "cos/Sung_Jinwoo_Black_Suit.png", "cos/Sung_Jinwoo_Mining_Work.png", 
@@ -650,11 +650,11 @@
         "effect/Heal_Effect.png", "effect/Burn_Effect.png", "effect/Defense_Decrease_Effect.png", "effect/rage_beru.png", "effect/HP.png", "effect/mana.png",
         "effect/Stun_Effect.png", "effect/Punishment_Effect.png", "effect/Poison_Effect.png", "effect/Defense_Magic_Effect.png", "effect/Strorm_of_White_Flames_Effect.png",
         "effect/Attack_Increase_Effect.png", "effect/Sian_Halat_Scarlet_Domination_Effect.png", "effect/Kasaka_Deadly_Poison_Effect.png",
-        "effect/Impulsive_Revenge_Effect.png", "effect/Beast_Form_Effect.png", "effect/The_Dancer_Effect.png", "effect/Beast_Form_Effect_2",
+        "effect/Impulsive_Revenge_Effect.png", "effect/Beast_Form_Effect.png", "effect/The_Dancer_Effect.png", "effect/Beast_Form_Effect_2.png",
         
         // Skills
         "skill/tansat.png", "skill/tanghinh.jpg", "skill/dagger.jpg", "skill/loimathuat.png", "skill/ngonluahacam.png", "skill/khienmathuat.png",
-        "skill/hutmaluc.png", "skill/flame_ball.png", "skill/cothethep.png", "skill/cunenphadia.png",
+        "skill/hutmaluc.png", "skill/flame_ball.png", "skill/cothethep.png", "skill/cunenphadia.png", "skill/Beast_Form_Skill.png",
         "skill/trichxuatbongtoi.png", "skill/satkhi.png", "skill/haphuyet.png",
         "skill/thinhnoquanvuong.png", "skill/phandon.png", "skill/basic_attack.png", "skill/buochanbongtoi.png", "skill/nhatchemtuthan.png", "skill/nemdao.png", "skill/daodoc.png", "skill/dagger_rush.png",
         "https://cdn-icons-png.flaticon.com/512/9483/9483031.png", "skill/doatmenhluoidao.png", "skill/hoangucbocpha.png", 
@@ -884,7 +884,7 @@
                 { name: "Thợ Săn Giấu Mặt", hp: 45000, atk: 1000, def: 200, exp: 5000, img: "bot/enemy.png", rareDrops: ["Guild Raid Chest 1"] },
                 { name: "BOSS: Hwang Dongsoo", hp: 120000, atk: 2500, def: 500, exp: 35000, img: "char/Hwang Dongsoo.png", isBoss: true, bossType: "hwang_dongsoo", rareDrops: ["Guild Raid Chest 2"] },
                 { name: "BOSS: Cha Hae-In", hp: 160000, atk: 3200, def: 400, exp: 50000, img: "char/Cha_Hae-In.png", isBoss: true, bossType: "cha_haein", rareDrops: ["Guild Raid Chest 3"] },
-                { name: "BOSS: Baek Yoonho", hp: 200000, atk: 3500, def: 600, exp: 80000, img: "char/Baek_Yoonho.png", isBoss: true, bossType: "baek_yoonho", rareDrops: ["Sandstorm Cube", "Guild Raid Chest 4"] }
+                { name: "BOSS: Baek Yoonho", hp: 200000, atk: 3500, def: 600, exp: 80000, img: "char/Baek_Yoonho.png", isBoss: true, bossType: "baek_yoonho", rareDrops: ["Sandstorm Cube", "Guild Raid Chest 4", "Giấy chứng nhận thợ săn"] }
             ]
         },
         "jeju_island": {
@@ -959,6 +959,8 @@
         // --- VẬT LIỆU QUAY GACHA ---
         "Sandstorm Cube": { rank: "S", type: "material", name: "Sandstorm Cube", effect: "Khối lập phương chứa sức mạnh bão cát. Dùng để quay Lucky Wheel Royale.", img: "wp/Sandstorm_Cube.png", sellPrice: 50000 },
         "Lõi Ma Tinh": { rank: "A", type: "material", name: "Lõi Ma Tinh", effect: "Vật liệu chứa ma lực cực đậm đặc. Dùng để đổi các Trang Phục Đặc Biệt trong Cửa Hàng.", img: "material/Abyssal_Crystal.png", sellPrice: 5000 },
+
+        "Giấy chứng nhận thợ săn": { rank: "S", type: "material", name: "Giấy chứng nhận thợ săn", effect: "Chứng thư danh giá minh chứng bạn đã vượt qua bài kiểm tra của Thợ Săn Hạng S. Dùng để đổi Bí Kỹ Đặc Biệt trong Cửa hàng.", img: "material/giaychungnhanthosan.png", sellPrice: 15000 },
         // --- TRANG BỊ HUYỀN THOẠI TỪ VÒNG QUAY ---
         "Truth: Kasaka's Venom Fang": { rank: "S", type: "weapon", name: "Truth: Kasaka's Venom Fang", str: 170, vit: 0, agi: 60, mp: 0, effect: "Tăng 25% sát thương cho kỹ năng nhánh Sát Thủ. 50% cơ hội gây Kịch Độc trong 3 lượt.", img: "wp/Truth_Kasaka_Venom_Fang.png", sellPrice: 25000 },
         "A Gentle Touch": { 
@@ -1203,7 +1205,7 @@
         "Hóa Thú (Beast Form)": { 
             branch: "Đặc biệt", type: "active", maxLv: 1, cost: 0, mp: 80, func: "useBeastForm", 
             desc: "[Bí Kỹ] Hóa thân thành Bạch Hổ. Tăng 30% TẤT CẢ sát thương đầu ra nhưng mất 15% HP tối đa mỗi lượt. Hiệu ứng kéo dài 3 lượt. (Yêu cầu: 10 Giấy chứng nhận thợ săn)", 
-            icon: "effect/Beast_Form_Effect.png" 
+            icon: "skill/Beast_Form_Skill.png" 
         },
     };
 
@@ -3619,7 +3621,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         }
         
         currentUser.mp -= reqMp;
-        window.isPlayerBeastForm = 3; 
+        window.isPlayerBeastForm = 4; 
         window.specialCooldown = 4; 
 
         triggerPlayerShake(); 
@@ -4897,10 +4899,21 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                     }
                     if (window.isPlayerBeastForm && window.isPlayerBeastForm > 0) {
                         let beastDmg = Math.floor(currentUser.maxHp * 0.15);
-                        currentUser.hp = Math.max(0, currentUser.hp - beastDmg);
+                        
+                        if (currentUser.shieldHP && currentUser.shieldHP > 0) {
+                            if (currentUser.shieldHP >= beastDmg) { currentUser.shieldHP -= beastDmg; } 
+                            else {
+                                let leftOver = beastDmg - currentUser.shieldHP; 
+                                currentUser.shieldHP = 0;
+                                currentUser.hp = Math.max(0, currentUser.hp - leftOver);
+                            }
+                        } else {
+                            currentUser.hp = Math.max(0, currentUser.hp - beastDmg); 
+                        }
+
                         window.isPlayerBeastForm--;
-                        logBattle(`<span style="color:red; font-style:italic;">🐅 Khí huyết cuộn trào! Trừ ${beastDmg} HP.</span>`);
-                        if (window.isPlayerBeastForm === 0) logBattle(`<span style="color:#aaa; font-style:italic;">Trạng thái Hóa Thú đã kết thúc.</span>`);
+                        logBattle(`<span style="color:#ff0000; font-style:italic;">🐅 Khí huyết cuộn trào do Hóa Thú! Bạn mất ${beastDmg} Máu/Khiên.</span>`);
+                        if (window.isPlayerBeastForm === 0) logBattle(`<span style="color:#aaa; font-style:italic;">Trạng thái Hóa Thú đã kết thúc. Cơ thể bạn trở lại bình thường.</span>`);
                     }
                     // Thêm xử lý Thiêu Đốt khi Boss choáng
                     if (window.enemyBurnTurns && window.enemyBurnTurns > 0) {
