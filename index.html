@@ -546,16 +546,16 @@
     </div>
 </div>
     
-<div id="deathPopup" class="welcome-overlay hidden" style="z-index: 10000; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(3px);" onclick="closeDeathPopup()">
-    <div style="background: radial-gradient(circle, #1a1a1a 0%, #050505 100%); border: 2px solid #b37700; padding: 60px 100px; text-align: center; box-shadow: 0 0 40px rgba(179, 119, 0, 0.4), inset 0 0 20px rgba(0,0,0,1); position: relative;">
-        
-        <div style="position: absolute; top: 6px; left: 6px; right: 6px; bottom: 6px; border: 1px solid rgba(179, 119, 0, 0.3); pointer-events: none;"></div>
-        
-        <div class="death-text-glitch">['PLAYER' HAS DIED.]</div>
-        
-        <div style="margin-top: 25px; font-size: 16px; color: #666; font-family: sans-serif; animation: flash 1.5s infinite;">[ Nhấp vào bất kỳ đâu để tiếp tục ]</div>
+<div id="deathPopup" class="welcome-overlay hidden" style="z-index: 10000; background: rgba(0, 0, 0, 0.9);" onclick="closeDeathPopup()">
+    <div style="text-align: center;">
+        <div style="font-family: 'Oswald', sans-serif; font-size: 55px; color: #ffaa00; font-weight: bold; letter-spacing: 4px; text-transform: uppercase; text-shadow: 0 0 20px rgba(255, 170, 0, 0.6);">
+            ['PLAYER' HAS DIED.]
+        </div>
+        <div style="margin-top: 20px; font-size: 16px; color: #888; font-family: sans-serif;">
+            [ Nhấp vào bất kỳ đâu để tiếp tục ]
+        </div>
     </div>
-</div>    
+</div>  
     
 <div id="extractionPopup" class="welcome-overlay hidden" style="z-index: 9999;">
     <div class="welcome-box" style="border-color: #9933ff; box-shadow: 0 0 40px rgba(153, 51, 255, 0.6); background: linear-gradient(to bottom, #1a0033, #000000);">
@@ -4769,13 +4769,16 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         }
     }
 
-    // ================= XỬ LÝ SỰ KIỆN TỬ TRẬN =================
-    window.loseBattle = function() {
+        // ================= XỬ LÝ SỰ KIỆN TỬ TRẬN =================
+        window.loseBattle = function() {
         updateCombatUI();
         logBattle(`<span style="color:red; font-size: 20px; font-weight:bold;">['PLAYER' HAS DIED.]</span>`);
         resetToButtonMode();
         saveUserData();
+        
+        // Bật Popup chữ vàng tĩnh lên
         document.getElementById('deathPopup').classList.remove('hidden');
+    
         if (currentRedGateId) {
             currentRedGateId = null;
             document.getElementById('dDungeonTitle').style.color = "#ffcc00";
@@ -4792,8 +4795,8 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         }
     };
     
-    window.closeDeathPopup = function() {
-        document.getElementById('deathPopup').classList.add('hidden');
+        window.closeDeathPopup = function() {
+            document.getElementById('deathPopup').classList.add('hidden');
     };
 
     window.attemptExtraction = async function() {
