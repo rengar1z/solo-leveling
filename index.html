@@ -294,7 +294,6 @@
 </div>
 
                 <div id="tab-skills" class="tab-panel">
-                    <h2 style="color: #00bfff;">SKILL POINTS: <span id="skPoints">0</span></h2>
                     <div id="skillList" class="skill-list"></div>
                 </div>
             
@@ -1808,7 +1807,7 @@
     let html = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
             <div style="color: #fff; font-size: 20px; font-family: 'Oswald', sans-serif; text-transform: uppercase;">
-                Soul Points: <span style="color:#00ffcc; font-weight:bold; font-size:32px; text-shadow: 0 0 15px #00ffcc; margin-left: 10px;">${currentUser.skillPoints || 0}</span>
+                Skill Points: <span style="color:#00ffcc; font-weight:bold; font-size:32px; text-shadow: 0 0 15px #00ffcc; margin-left: 10px;">${currentUser.skillPoints || 0}</span>
             </div>
             <button onclick="resetSkills()" class="sl-shop-price-btn" style="background: linear-gradient(90deg, #cc0000, #ff3333) !important; color: #fff; border: none !important; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
                 🔄 TẨY ĐIỂM (1000 CASH)
