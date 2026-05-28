@@ -2023,16 +2023,26 @@
             DOM.points.textContent = currentUser.points;
             if (DOM.cashText) DOM.cashText.textContent = currentUser.cash;
         
-            if (window.renderSkills) window.renderSkills();
-
             if (window.updateCubeDisplay) window.updateCubeDisplay();
             
             const addBtns = document.getElementsByClassName('add-btn');
             for (let btn of addBtns) btn.disabled = currentUser.points <= 0;
             
             if (enemy) updateCombatUI();
-            if (window.renderBag) window.renderBag();
-            if (window.renderAchievements) window.renderAchievements();
+            
+            // LAZY RENDERING //
+            const activeTab = document.querySelector('.tab-panel.active');
+            if (activeTab) {
+                const activeId = activeTab.id;
+                if (activeId === 'tab-skills' && window.renderSkills) window.renderSkills();
+                if (activeId === 'tab-bag' && window.renderBag) window.renderBag();
+                if (activeId === 'tab-achievement' && window.renderAchievements) window.renderAchievements();
+                if (activeId === 'tab-shop' && window.renderShopGrid) window.renderShopGrid();
+                if (activeId === 'tab-shadows' && window.renderShadowArmy) window.renderShadowArmy();
+            }
+            // ==============================================================
+            
+            window.updatePlayerAvatar = function() {
             
             window.updatePlayerAvatar = function() {
                 let defaultAvatar = "char/Sungjinwoo.png"; 
@@ -2132,6 +2142,9 @@
         }
         if (tabName === 'tab-shop' && window.renderShopGrid) window.renderShopGrid();
         if (tabName === 'tab-shadows' && window.renderShadowArmy) window.renderShadowArmy();
+        if (tabName === 'tab-bag' && window.renderBag) window.renderBag();
+        if (tabName === 'tab-skills' && window.renderSkills) window.renderSkills();
+        if (tabName === 'tab-achievement' && window.renderAchievements) window.renderAchievements();
     }
 
     // --- CƠ CHẾ DÙNG CHUNG (MINIGAME VÀ DUNGEON) ---
