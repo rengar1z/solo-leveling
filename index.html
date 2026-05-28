@@ -453,11 +453,29 @@
                 </div>
 
                 <div id="tab-shadows" class="tab-panel">
-                    <h2 style="color: #cc33ff; text-shadow: 0 0 15px #cc33ff; text-align: center; font-size: 40px; letter-spacing: 5px; margin-bottom: 5px;">SHADOW ARMY</h2>
-                    <div style="text-align: center; color: #aaa; margin-bottom: 25px; font-style: italic;">Lãnh chúa, đây là đội quân của ngài.</div>
-                    
-                    <div id="shadowGridContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; padding: 10px;">
+                    <div style="position: relative; width: 100%; max-width: 1400px; margin: 0 auto;">
+                        <div style="position: absolute; top: -14px; left: 15px; background: #000; color: #fff; padding: 4px 20px; font-size: 22px; font-weight: bold; font-family: 'Oswald', sans-serif; z-index: 10; border: 2px solid #000; letter-spacing: 1px; clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);">
+                            Shadows
                         </div>
+                        
+                        <div class="new-bag-container"> 
+                            <div class="bag-sidebar">
+                                <button class="bag-side-btn active" onclick="switchShadowTab('all', this)">All</button>
+                                <button class="bag-side-btn" onclick="switchShadowTab('knight', this)">Knights</button>
+                                <button class="bag-side-btn" onclick="switchShadowTab('general', this)">Generals</button>
+                                <button class="bag-side-btn" style="color: #cc66ff; border-top: 1px dashed rgba(204,102,255,0.4);" onclick="switchShadowTab('monarch', this)">✦ Monarchs</button>
+                            </div>
+
+                            <div class="bag-grid" id="shadowGridArea" style="flex: 1; align-content: start; background: #e9ecef;">
+                                </div>
+
+                            <div class="bag-detail" id="shadowDetailArea">
+                                <div style="text-align:center; margin-top: 100px; color: #888; font-size: 16px; font-family: sans-serif;">
+                                    Chọn một Bóng Ma để xem chi tiết
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="dungeonCombatUI" class="hidden">
@@ -5553,6 +5571,158 @@ window.openTab = function(evt, tabName) {
     }
 };
 
+    // ================= HỆ THỐNG GIAO DIỆN SHADOW ARMY (GACHA STYLE) =================
+window.currentShadowTab = 'all';
+window.selectedShadowId = null;
+
+// Lọc cấp bậc
+window.switchShadowTab = function(tabName, btnElement) {
+    window.currentShadowTab = tabName;
+    const btns = document.querySelectorAll('#tab-shadows .bag-side-btn');
+    btns.forEach(btn => btn.classList.remove('active'));
+    if (btnElement) btnElement.classList.add('active');
+
+    window.selectedShadowId = null;
+    document.getElementById('shadowDetailArea').innerHTML = '<div style="text-align:center; margin-top: 100px; color: #888; font-size: 16px; font-family: sans-serif;">Chọn một Bóng Ma để xem chi tiết</div>';
+
+    renderShadowArmy();
+    if(typeof playSound === 'function') playSound("audio/click.mp3");
+};
+
+// Ghi đè hàm renderShadowArmy cũ
+window.renderShadowArmy = function() {
+    if (!currentUser.ownedShadows) currentUser.ownedShadows = [];
+    const gridArea = document.getElementById('shadowGridArea');
+    if (!gridArea) return;
+
+    let html = "";
+    let hasItems = false;
+
+    currentUser.ownedShadows.forEach(bossId => {
+        const data = SHADOW_DATA[bossId];
+        if(!data) return;
+
+        // Lọc theo Tab Cấp Bậc
+        let isMatch = false;
+        if (window.currentShadowTab === 'all') isMatch = true;
+        else if (window.currentShadowTab === 'knight' && (data.rank === 'Normal' || data.rank === 'Elite Knight')) isMatch = true;
+        else if (window.currentShadowTab === 'general' && data.rank === 'General') isMatch = true;
+        else if (window.currentShadowTab === 'monarch' && (data.rank === 'Marshal' || data.rank === 'Monarch')) isMatch = true;
+
+        if (!isMatch) return;
+        hasItems = true;
+
+        // Quy đổi Cấp bậc ra Màu sắc Viền
+        let rankClass = "B";
+        if (data.rank === "Elite Knight") rankClass = "A";
+        if (data.rank === "General") rankClass = "S";
+        if (data.rank === "Marshal" || data.rank === "Monarch") rankClass = "SS";
+
+        let imgSrc = data.icon || data.img;
+        let isSelected = (window.selectedShadowId === bossId);
+        let isEquipped = (currentUser.equippedShadow === bossId);
+
+        // Chữ "TRANG BỊ" nhỏ nổi lên trên icon nếu đang dùng
+        let equipTag = isEquipped ? '<div style="position:absolute; bottom:2px; right:2px; font-size:10px; font-weight:bold; background:rgba(204,51,255,0.9); color:#fff; padding:2px 4px; border-radius:3px; z-index:5;">ĐANG DÙNG</div>' : '';
+
+        html += `
+            <div class="bag-item-slot rank-${rankClass} ${isSelected ? 'selected' : ''}" style="position: relative;" onclick="selectShadow('${bossId}')">
+                <img src="${imgSrc}" style="border-radius: 5px; width: 100%; height: 100%; object-fit: cover;">
+                ${equipTag}
+            </div>
+        `;
+    });
+
+    if (!hasItems) {
+        gridArea.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #888; margin-top: 20px; font-family: sans-serif;">Chưa có Bóng Ma nào trong phân loại này.</div>';
+    } else {
+        gridArea.innerHTML = html;
+    }
+};
+
+// Hàm mới: Hiển thị chi tiết khi Click vào Icon
+window.selectShadow = function(bossId) {
+    if(typeof playSound === 'function') playSound("audio/click.mp3");
+    window.selectedShadowId = bossId;
+    const data = SHADOW_DATA[bossId];
+
+    let rankClass = "B";
+    let rankColor = "#00bfff";
+    if (data.rank === "Elite Knight") { rankClass = "A"; rankColor = "#ff8c00"; }
+    if (data.rank === "General") { rankClass = "S"; rankColor = "#ff3333"; }
+    if (data.rank === "Marshal" || data.rank === "Monarch") { rankClass = "SS"; rankColor = "#cc33ff"; }
+
+    let isEquipped = (currentUser.equippedShadow === bossId);
+
+    let actionBtn = "";
+    if (isEquipped) {
+        actionBtn = `<button class="bag-action-btn-yellow" onclick="handleEquipShadow('${bossId}')" style="background: linear-gradient(to bottom, #8ea1b2, #5a6e84); color: #111;">THU HỒI VÀO BÓNG</button>`;
+    } else {
+        actionBtn = `<button class="bag-action-btn-yellow" onclick="handleEquipShadow('${bossId}')" style="background: linear-gradient(to bottom, #cc33ff, #9900cc); color: #fff; text-shadow: 0 0 5px #000;">TRỖI DẬY (TRIỆU HỒI)</button>`;
+    }
+
+    let imgSrc = data.icon || data.img;
+
+    document.getElementById('shadowDetailArea').innerHTML = `
+        <div style="padding: 15px; display: flex; flex-direction: column; height: 100%;">
+            <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                <div class="bag-item-slot rank-${rankClass}" style="width: 85px; height: 85px; cursor: default;">
+                    <img src="${imgSrc}" style="border-radius: 5px; width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div style="flex: 1; font-family: sans-serif;">
+                    <div style="color: ${rankColor}; font-weight: bold; font-size: 18px; text-shadow: 1px 1px 1px rgba(0,0,0,0.2); margin-bottom: 5px; line-height: 1.2; text-transform: uppercase;">${data.name}</div>
+                    <div style="color: #666; font-weight: bold; font-size: 14px;">Cấp bậc: <span style="color:${rankColor}">${data.rank}</span></div>
+                </div>
+            </div>
+
+            <div style="background: #f8f9fa; border: 1px solid #ddd; border-bottom: none; padding: 15px 20px; flex: 1; font-family: sans-serif; overflow-y: auto;">
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;">
+                    <div style="color: #e62e2e; font-size: 14px; font-weight:bold;">❤️ VIT: +${data.vit}</div>
+                    <div style="color: #ff8c00; font-size: 14px; font-weight:bold;">⚔️ STR: +${data.str}</div>
+                    <div style="color: #00bfff; font-size: 14px; font-weight:bold;">💨 AGI: +${data.agi}</div>
+                    <div style="color: #9933ff; font-size: 14px; font-weight:bold;">🔮 INT: +${data.int}</div>
+                </div>
+
+                <div style="background: rgba(0, 191, 255, 0.05); border-left: 3px solid #00bfff; padding: 10px; margin-bottom: 15px;">
+                    <b style="color: #00bfff; font-size: 14px;">[ ${data.skillName} ]</b><br>
+                    <span style="color: #333; font-size: 13px;">${data.skillDesc}</span>
+                </div>
+
+                <div style="color: #666; font-style: italic; font-size: 13px; line-height: 1.5;">
+                    "${data.bio}"
+                </div>
+
+                <div style="text-align:center; color:#ccc; font-weight:bold; border-bottom: 1px solid #ddd; line-height:0.1em; margin: 30px 0 10px 0; font-family: 'Oswald', sans-serif; letter-spacing: 2px;">
+                    <span style="background:#f8f9fa; padding:0 15px;">SHADOW LORE</span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; background: #f8f9fa; border: 1px solid #ddd; border-top: none; padding: 0 15px 20px 15px;">
+                ${actionBtn}
+            </div>
+        </div>
+    `;
+
+    renderShadowArmy(); // Update để viền vàng chạy tới đúng món đang chọn
+};
+
+// Wrapper bắt sự kiện sau khi Triệu hồi xong để load lại Nút
+const originalEquipShadow = window.equipShadow;
+window.handleEquipShadow = async function(bossId) {
+    if(originalEquipShadow) await originalEquipShadow(bossId);
+    if(window.selectedShadowId) window.selectShadow(window.selectedShadowId); 
+    if(typeof playSound === 'function') playSound("audio/equip.mp3");
+};
+
+// Tự động load Lưới khi vừa chuyển sang Tab Shadow
+const originalOpenTabShadow = window.openTab;
+window.openTab = function(evt, tabName) {
+    originalOpenTabShadow(evt, tabName);
+    if (tabName === 'tab-shadows' && window.renderShadowArmy) {
+        window.renderShadowArmy();
+    }
+};
     setTimeout(startNewBattle, 2000);
 </script>
 </body>
