@@ -238,309 +238,29 @@
         </div>
     </div>
 </div>
-<!-- ================= KẾT THÚC TAB BAG ================= -->
+
 <div id="tab-shop" class="tab-panel">
-    
-    <!-- THÊM ĐOẠN KHAY NÚT LỌC NÀY VÀO ĐÂY -->
-    <div class="sl-shop-filter-row" style="justify-content: center; margin-bottom: 15px; flex-wrap: wrap;">
-        <div class="sl-shop-filter-btn active" title="Tất cả" onclick="filterShop('all', this)">🛒</div>
-        <div class="sl-shop-filter-btn" title="Kỹ năng" onclick="filterShop('skill', this)">📜</div>
-        <div class="sl-shop-filter-btn" title="Tiêu Hao" onclick="filterShop('potion', this)">🧪</div>
-        <div class="sl-shop-filter-btn" title="Trang Phục" onclick="filterShop('costume', this)">👔</div>
-    </div>
-    <!-- KẾT THÚC THÊM -->
-
-    <div class="sl-shop-list" id="shopItemsContainer">
-        
-        <!-- ================= THUỐC (POTION) ================= -->
-        <div class="sl-shop-item shop-item-row" data-category="potion" onclick="buyShopItem('hp_potion')">
-            <div class="sl-shop-icon-box">
-                <img src="cons/HP_Potion.png">
-            </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">HP Potion (Nhỏ)</p>
-                <p class="sl-shop-item-desc">Hồi phục tức thời 100 HP.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button class="sl-shop-price-btn">50 CASH</button>
-            </div>
-        </div>
-
-        <div class="sl-shop-item shop-item-row" data-category="potion" onclick="buyShopItem('hp_potion_mid')">
-            <div class="sl-shop-icon-box">
-                <img src="cons/Item_Hi-HP_Potion.png">
-            </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">HP Potion (Trung)</p>
-                <p class="sl-shop-item-desc">Hồi phục tức thời 500 HP.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button class="sl-shop-price-btn">200 CASH</button>
-            </div>
-        </div>
-
-        <div class="sl-shop-item shop-item-row" data-category="potion" onclick="buyShopItem('hp_potion_high')">
-            <div class="sl-shop-icon-box">
-                <img src="cons/Item_Heal-All.png">
-            </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">HP Potion (Lớn)</p>
-                <p class="sl-shop-item-desc">Hồi phục tức thời 2000 HP.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button class="sl-shop-price-btn">700 CASH</button>
-            </div>
-        </div>
-
-        <div class="sl-shop-item shop-item-row" data-category="potion" onclick="buyShopItem('mp_potion')">
-            <div class="sl-shop-icon-box">
-                <img src="cons/Item_SP_Potion.png">
-            </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Mana Potion (Nhỏ)</p>
-                <p class="sl-shop-item-desc">Khôi phục 100 MP.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button class="sl-shop-price-btn">50 CASH</button>
-            </div>
-        </div>
-
-        <div class="sl-shop-item shop-item-row" data-category="potion" onclick="buyShopItem('mp_potion_mid')">
-            <div class="sl-shop-icon-box">
-                <img src="cons/Item_Hi-SP_Potion.png">
-            </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Mana Potion (Trung)</p>
-                <p class="sl-shop-item-desc">Khôi phục 300 MP.</p>
-            </div>
-            <div class="sl-shop-action">
-                    <button class="sl-shop-price-btn">150 CASH</button>
-            </div>
-        </div>
-
-        <div class="sl-shop-item shop-item-row" data-category="potion" onclick="buyShopItem('mp_potion_high')">
-            <div class="sl-shop-icon-box">
-                <img src="cons/Item_Hi-SP_Potion_+.png">
-            </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Mana Potion (Lớn)</p>
-                <p class="sl-shop-item-desc">Khôi phục 1000 MP.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button class="sl-shop-price-btn">700 CASH</button>
-            </div>
-        </div>
-
-        <!-- ================= TRANG PHỤC (COSTUME) ================= -->
-        <!-- Đã thêm style="display: none;" để ẩn đi lúc mới vào cửa hàng -->
-        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_black_suit')">
-            <div class="sl-shop-icon-box" style="border-color: gold;">
-                <img src="cos/Sung_Jinwoo_Black_Suit.png">
-            </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Bộ Vest Đen Ám Sát</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_black_suit" class="sl-shop-price-btn">5000 CASH</button>
-            </div>
-        </div>
-
-        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_mining')">
-            <div class="sl-shop-icon-box">
-                <img src="cos/Sung_Jinwoo_Mining_Work.png">
-            </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Mining Work Clothes</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 150 STR, 100 VIT.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_mining" class="sl-shop-price-btn">15000 CASH</button>
-            </div>
-        </div>
-
-        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_wish')">
-            <div class="sl-shop-icon-box">
-                <img src="cos/Sung_Jinwoo_A_Wish_Come_True.png">
-            </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Điều Ước Thành Hiện Thực</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 70 STR, 30 VIT.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_wish" class="sl-shop-price-btn">10000 CASH</button>
-            </div>
-        </div>
-
-        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_light_outing')">
-            <div class="sl-shop-icon-box">
-                <img src="cos/Sung_Jinwoo_Light_Outing_Wear.png">
-            </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Dạo Phố Nhẹ Nhàng</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_light_outing" class="sl-shop-price-btn">10000 CASH</button>
-            </div>
+    <div style="position: relative; width: 100%; max-width: 1400px; margin: 0 auto;">
+        <div style="position: absolute; top: -14px; left: 15px; background: #000; color: #fff; padding: 4px 20px; font-size: 22px; font-weight: bold; font-family: 'Oswald', sans-serif; z-index: 10; border: 2px solid #000; letter-spacing: 1px; clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);">
+            Shop
         </div>
         
-        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_incapable')">
-            <div class="sl-shop-icon-box">
-                <img src="cos/Sung_Jinwoo_Incapable_of_Evaluation.png">
+        <div class="new-bag-container"> <div class="bag-sidebar">
+                <button class="bag-side-btn active" onclick="switchShopTab('all', this)">All</button>
+                <button class="bag-side-btn" onclick="switchShopTab('potion', this)">Potions</button>
+                <button class="bag-side-btn" onclick="switchShopTab('skill', this)">Skills</button>
+                <button class="bag-side-btn" style="color: #ffcc00; border-top: 1px dashed rgba(255, 204, 0, 0.4);" onclick="switchShopTab('costume', this)">✦ Costumes</button>
             </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Incapable of Evaluation</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_incapable" class="sl-shop-price-btn">10000 CASH</button>
-            </div>
-        </div>
 
-        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_summer_2')">
-            <div class="sl-shop-icon-box">
-                <img src="cos/Sung_Jinwoo_Summer_Vacation_2.png">
-            </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Kỳ Nghỉ Hè 2</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_summer_2" class="sl-shop-price-btn">10000 CASH</button>
-            </div>
-        </div>
+            <div class="bag-grid" id="shopGridArea" style="flex: 1; align-content: start; background: #e9ecef;">
+                </div>
 
-        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_night_lord')">
-            <div class="sl-shop-icon-box" style="border-color: #ff4d4d;">
-                <img src="cos/Sung_Jinwoo_Night_Lord.png">
-            </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name" style="color: #ff4d4d;">Chúa Tể Màn Đêm</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 50 STR, 20 VIT.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_night_lord" class="sl-shop-price-btn" style="color: #ff4d4d;">20000 CASH</button>
+            <div class="bag-detail" id="shopDetailArea">
+                <div style="text-align:center; margin-top: 100px; color: #888; font-size: 16px; font-family: sans-serif;">
+                    Chọn một mặt hàng để xem chi tiết
+                </div>
             </div>
         </div>
-
-        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_dragon_monarch')">
-            <div class="sl-shop-icon-box" style="border-color: #ffcc00;">
-                <img src="cos/Sung_Jinwoo_Monarch_of_the_Heaven-Annihilating_Dragons.png">
-            </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name" style="color: #ffcc00;">Vua Của Loài Rồng</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 250 STR, 100 VIT, 100 MP.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_dragon_monarch" class="sl-shop-price-btn">100000 CASH</button>
-            </div>
-        </div>
-
-        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_god_of_death')">
-            <div class="sl-shop-icon-box" style="border-color: #ffcc00;">
-                <img src="cos/Sung_Jinwoo_God_of_Death.png">
-            </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name" style="color: #ffcc00;">Tử Thần</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 250 STR, 100 VIT, 100 MP.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_god_of_death" class="sl-shop-price-btn">100000 CASH</button>
-            </div>
-        </div>
-
-        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_Frieren')">
-            <div class="sl-shop-icon-box" style="border-color: #ffcc00;">
-                <img src="cos/Frieren.png">
-            </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name" style="color: #ffcc00;">Frieren</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 350 INT, 80 VIT, 300 MP.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_Frieren" class="sl-shop-price-btn">100000 CASH</button>
-            </div>
-        </div>
-
-        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_demon_king')">
-            <div class="sl-shop-icon-box" style="border-color: #cc00ff;">
-                <img src="cos/Elena_Renault.png">
-            </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name" style="color: #cc00ff;">Ma Vương Hàng Lâm</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 450 STR, 150 VIT, 300 HP.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_demon_king" class="sl-shop-price-btn" style="color: #cc00ff;">10 LÕI MA TINH</button>
-            </div>
-        </div>
-
-        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_blood_armor')">
-            <div class="sl-shop-icon-box" style="border-color: #ff0000;">
-                <img src="cos/Sian_Halat_Crimson_Death.png">
-            </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name" style="color: #ff0000;">Huyết Giáp Vô Song</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 250 STR, 350 VIT, 50 AGI.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_blood_armor" class="sl-shop-price-btn" style="color: #ff0000;">10 LÕI MA TINH</button>
-            </div>
-        </div>
-
-        <div class="sl-shop-item shop-item-row" data-category="costume" onclick="handleCostume('costume_cha_haein_spirit')">
-            <div class="sl-shop-icon-box" style="border-color: #ffd700;">
-                <img src="cos/Cha_Hae-In_The_Flutter_of_Dreams.png">
-            </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name" style="color: #ffd700;">Cha Hae-In Tinh Linh</p>
-                <p class="sl-shop-item-desc">Đổi Avatar. Tăng 500 STR, 250 VIT, 100 AGI, 200 MP.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button id="btn-costume_cha_haein_spirit" class="sl-shop-price-btn" style="color: #ffd700;">20 LÕI MA TINH</button>
-            </div>
-        </div>
-
-        <div class="sl-shop-item shop-item-row" data-category="skill" onclick="buyShopItem('skill_execute')">
-            <div class="sl-shop-icon-box" style="border-color: gold;">
-                <img src="skill/doatmenhluoidao.png">
-            </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Bí Kỹ: Lưỡi Dao Đoạt Mệnh</p>
-                <p class="sl-shop-item-desc">[Sát Thủ] Kích nổ độc tính, xuyên Khiên Boss.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button class="sl-shop-price-btn">500.000 CASH</button>
-            </div>
-        </div>
-        
-        <div class="sl-shop-item shop-item-row" data-category="skill" onclick="buyShopItem('skill_hellfire')">
-            <div class="sl-shop-icon-box" style="border-color: gold;">
-                <img src="skill/flame_ball.png">
-            </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Bí Kỹ: Hỏa Ngục Bộc Phá</p>
-                <p class="sl-shop-item-desc">[Pháp Sư] Sát thương diện rộng & gây Choáng.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button class="sl-shop-price-btn">500.000 CASH</button>
-            </div>
-        </div>
-        
-        <div class="sl-shop-item shop-item-row" data-category="skill" onclick="buyShopItem('skill_shatter')">
-            <div class="sl-shop-icon-box" style="border-color: gold;">
-                <img src="skill/cothethep.png">
-            </div>
-            <div class="sl-shop-info">
-                <p class="sl-shop-item-name">Bí Kỹ: Toái Giáp Trảm</p>
-                <p class="sl-shop-item-desc">[Đấu Sĩ] Phá Khiên và hồi 15% Max HP.</p>
-            </div>
-            <div class="sl-shop-action">
-                <button class="sl-shop-price-btn">500.000 CASH</button>
-            </div>
-        </div>
-
     </div>
 </div>
             <div id="tab-gacha" class="tab-panel">
@@ -5653,6 +5373,181 @@ window.switchInvTab = function(tabName, btnElement) {
     document.getElementById('bagDetailArea').innerHTML = '<div style="text-align:center; margin-top: 100px; color: #888; font-size: 16px; font-family: sans-serif;">Chọn một vật phẩm để xem chi tiết</div>';
     
     if (window.renderBag) window.renderBag();
+};
+    // ================= HỆ THỐNG LOGIC SHOP MỚI (GACHA STYLE) =================
+window.currentShopTab = 'all';
+window.selectedShopItemKey = null;
+
+window.switchShopTab = function(tabName, btnElement) {
+    window.currentShopTab = tabName;
+    const btns = document.querySelectorAll('#tab-shop .bag-side-btn');
+    btns.forEach(btn => btn.classList.remove('active'));
+    if (btnElement) btnElement.classList.add('active');
+    
+    // Đặt lại hiển thị chi tiết bên phải
+    window.selectedShopItemKey = null;
+    document.getElementById('shopDetailArea').innerHTML = '<div style="text-align:center; margin-top: 100px; color: #888; font-size: 16px; font-family: sans-serif;">Chọn một mặt hàng để xem chi tiết</div>';
+    
+    renderShopGrid();
+    playSound("audio/click.mp3"); // Âm thanh click tab
+};
+
+window.renderShopGrid = function() {
+    const gridArea = document.getElementById('shopGridArea');
+    if (!gridArea) return;
+    
+    let html = "";
+    let hasItems = false;
+    
+    Object.keys(SHOP_DATA).forEach(key => {
+        const shopItem = SHOP_DATA[key];
+        
+        // Lọc vật phẩm theo Tab
+        let isMatch = false;
+        if (window.currentShopTab === 'all') isMatch = true;
+        else if (window.currentShopTab === 'potion' && key.includes('potion')) isMatch = true;
+        else if (window.currentShopTab === 'skill' && shopItem.type === 'skill') isMatch = true;
+        else if (window.currentShopTab === 'costume' && key.includes('costume')) isMatch = true;
+        
+        if (!isMatch) return;
+        hasItems = true;
+        
+        // Trích xuất ảnh và cấp bậc (Rank) từ Data gốc
+        let itemData = null;
+        let rank = "C";
+        let imgSrc = "";
+        
+        if (shopItem.type === "skill") {
+            itemData = skillData[shopItem.skillName];
+            imgSrc = itemData ? itemData.icon : "";
+            rank = "S"; // Kỹ năng shop luôn có viền vàng đỏ (Rank S)
+        } else {
+            itemData = ITEM_DATA[shopItem.itemId];
+            imgSrc = itemData ? itemData.img : "";
+            rank = itemData ? (itemData.rank || "D") : "D";
+        }
+        
+        let isSelected = (window.selectedShopItemKey === key);
+        
+        html += `
+            <div class="bag-item-slot rank-${rank} ${isSelected ? 'selected' : ''}" onclick="selectShopItem('${key}')">
+                <img src="${imgSrc}">
+            </div>
+        `;
+    });
+    
+    if (!hasItems) {
+        gridArea.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #888; margin-top: 20px; font-family: sans-serif;">Chưa có mặt hàng nào trong danh mục này.</div>';
+    } else {
+        gridArea.innerHTML = html;
+    }
+};
+
+window.selectShopItem = function(key) {
+    playSound("audio/click.mp3"); // Âm thanh khi nhấp vào món đồ
+    window.selectedShopItemKey = key;
+    const shopItem = SHOP_DATA[key];
+    
+    let itemData = null, rank = "C", imgSrc = "", desc = "", statsStr = "";
+    
+    // Rút trích chỉ số cho Khung Chi Tiết
+    if (shopItem.type === "skill") {
+        itemData = skillData[shopItem.skillName];
+        imgSrc = itemData.icon;
+        rank = "S";
+        desc = itemData.desc;
+        statsStr = "Kỹ Năng Chủ Động";
+    } else {
+        itemData = ITEM_DATA[shopItem.itemId];
+        imgSrc = itemData.img;
+        rank = itemData.rank || "D";
+        desc = itemData.effect || "Không có mô tả.";
+        
+        statsStr = [
+            itemData.str > 0 ? `+${itemData.str} STR` : '',
+            itemData.vit > 0 ? `+${itemData.vit} VIT` : '',
+            itemData.mp > 0 ? `+${itemData.mp} MP` : '',
+            itemData.agi > 0 ? `+${itemData.agi} AGI` : '',
+            itemData.int > 0 ? `+${itemData.int} INT` : ''
+        ].filter(Boolean).join(' | ');
+    }
+    
+    let buyBtnHtml = "";
+    let priceText = shopItem.currencyType === "item" ? `${shopItem.price} ${shopItem.currencyItem.toUpperCase()}` : `${shopItem.price} CASH`;
+    
+    // Xác định trạng thái nút mua (Đã mua, Đang mặc, Chưa mua)
+    let isOwned = false;
+    if (shopItem.type === "skill" && currentUser.skills[shopItem.skillName] > 0) isOwned = true;
+    else if (key.includes("costume") && currentUser.ownedCostumes && currentUser.ownedCostumes.includes(shopItem.itemId)) isOwned = true;
+    
+    if (isOwned) {
+        if (key.includes("costume")) {
+            let isEquipped = (currentUser.equipped.costume && currentUser.equipped.costume.name === shopItem.itemId);
+            if (isEquipped) {
+                buyBtnHtml = `<button class="bag-action-btn-yellow" style="background: linear-gradient(to bottom, #8ea1b2, #5a6e84); color: #111;" disabled>Đang Sử Dụng</button>`;
+            } else {
+                buyBtnHtml = `<button class="bag-action-btn-yellow" onclick="handleCostume('${key}')" style="background: linear-gradient(to bottom, #5cb8ff, #1a75ff); color: #fff;">Thay Trang Phục</button>`;
+            }
+        } else {
+            buyBtnHtml = `<button class="bag-action-btn-yellow" style="background: #888; color: #fff; cursor: not-allowed;" disabled>Đã Lĩnh Ngộ</button>`;
+        }
+    } else {
+        let btnFunction = key.includes("costume") ? `handleCostume('${key}')` : `buyShopItem('${key}')`;
+        let btnBg = shopItem.currencyType === "item" ? `background: linear-gradient(to bottom, #cc66ff, #9900cc); color: #fff;` : ``;
+        buyBtnHtml = `<button class="bag-action-btn-yellow" onclick="${btnFunction}" style="${btnBg}">MUA (${priceText})</button>`;
+    }
+    
+    // Đổ Giao diện Chi tiết chuẩn Gacha lên Panel
+    document.getElementById('shopDetailArea').innerHTML = `
+        <div style="padding: 15px; display: flex; flex-direction: column; height: 100%;">
+            <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                <div class="bag-item-slot rank-${rank}" style="width: 85px; height: 85px; cursor: default;">
+                    <img src="${imgSrc}">
+                </div>
+                <div style="flex: 1; font-family: sans-serif;">
+                    <div style="color: #e67e22; font-weight: bold; font-size: 18px; text-shadow: 1px 1px 1px rgba(0,0,0,0.1); margin-bottom: 5px; line-height: 1.2;">${shopItem.name}</div>
+                    <div style="color: #007bff; font-weight: bold; font-size: 14px;">${priceText}</div>
+                </div>
+            </div>
+            
+            <div style="background: #f8f9fa; border: 1px solid #ddd; border-bottom: none; padding: 15px 20px; flex: 1; font-family: sans-serif;">
+                <div style="font-size: 16px; color: #222; line-height: 1.6; margin-bottom: 15px;">${desc}</div>
+                <div style="color: #dc3545; font-weight: bold; font-size: 14px;">${statsStr}</div>
+                <div style="text-align:center; color:#ccc; font-weight:bold; border-bottom: 1px solid #ddd; line-height:0.1em; margin: 40px 0 10px 0; font-family: 'Oswald', sans-serif; letter-spacing: 2px;">
+                    <span style="background:#f8f9fa; padding:0 15px;">SHOPPING CENTER</span>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 10px; background: #f8f9fa; border: 1px solid #ddd; border-top: none; padding: 0 15px 20px 15px;">
+                ${buyBtnHtml}
+            </div>
+        </div>
+    `;
+
+    renderShopGrid(); // Refresh lại viền vàng nhấp nháy cho món đang chọn
+};
+
+// ================= WRAPPER: ĐỒNG BỘ AUTO REFRESH SHOP =================
+const originalBuyShopItem = window.buyShopItem;
+window.buyShopItem = async function(itemId) {
+    if (originalBuyShopItem) await originalBuyShopItem(itemId);
+    if (window.selectedShopItemKey) window.selectShopItem(window.selectedShopItemKey); // Load lại nút thành Đã Sở Hữu/Thay đồ
+};
+
+const originalHandleCostume = window.handleCostume;
+window.handleCostume = async function(shopId) {
+    if (originalHandleCostume) await originalHandleCostume(shopId);
+    if (window.selectedShopItemKey) window.selectShopItem(window.selectedShopItemKey);
+    renderShopGrid();
+};
+
+const originalOpenTab = window.openTab;
+window.openTab = function(evt, tabName) {
+    originalOpenTab(evt, tabName);
+    // Tự động bung danh sách vật phẩm khi vừa bấm vào Tab Shop
+    if (tabName === 'tab-shop' && window.renderShopGrid) {
+        window.renderShopGrid();
+    }
 };
 
     setTimeout(startNewBattle, 2000);
