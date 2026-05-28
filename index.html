@@ -1995,110 +1995,109 @@
     };
 
     function render() {
-            if (!DOM.isCached) initDOM(); // Tự động load cache lần đầu tiên
+        if (!DOM.isCached) initDOM(); 
         
-            DOM.playerName.textContent = currentUser.username;
-            if (DOM.p_name) DOM.p_name.textContent = currentUser.username;
-            if (DOM.d_p_name) DOM.d_p_name.textContent = currentUser.username;
-            DOM.level.textContent = currentUser.level;
-            DOM.job.textContent = getJob(currentUser.level);
-        
-            DOM.hpDisplay.textContent = currentUser.hp + '/' + currentUser.maxHp;
-            DOM.mpDisplay.textContent = currentUser.mp + '/' + currentUser.maxMp;
-        
-            let reqExp = Math.floor(100 * Math.pow(currentUser.level, 1.5));
+        DOM.playerName.textContent = currentUser.username;
+        if (DOM.p_name) DOM.p_name.textContent = currentUser.username;
+        if (DOM.d_p_name) DOM.d_p_name.textContent = currentUser.username;
+        DOM.level.textContent = currentUser.level;
+        DOM.job.textContent = getJob(currentUser.level);
+    
+        DOM.hpDisplay.textContent = currentUser.hp + '/' + currentUser.maxHp;
+        DOM.mpDisplay.textContent = currentUser.mp + '/' + currentUser.maxMp;
+    
+        let reqExp = Math.floor(100 * Math.pow(currentUser.level, 1.5));
 
-            DOM.expText.textContent = `EXP: ${Math.floor(currentUser.exp)} / ${reqExp}`;
+        DOM.expText.textContent = `EXP: ${Math.floor(currentUser.exp)} / ${reqExp}`;
+    
+        DOM.hpBar.style.width = (currentUser.hp / currentUser.maxHp * 100) + '%';
+        DOM.mpBar.style.width = (currentUser.mp / currentUser.maxMp * 100) + '%';
+        let expPercent = Math.min(100, (currentUser.exp / reqExp) * 100);
+        DOM.expBar.style.width = expPercent + '%';
+    
+        DOM.str.textContent = currentUser.str;
+        DOM.vit.textContent = currentUser.vit;
+        DOM.agi.textContent = currentUser.agi;
+        DOM.int.textContent = currentUser.int;
+        DOM.sense.textContent = currentUser.sense;
+        DOM.points.textContent = currentUser.points;
+        if (DOM.cashText) DOM.cashText.textContent = currentUser.cash;
+    
+        if (window.updateCubeDisplay) window.updateCubeDisplay();
         
-            DOM.hpBar.style.width = (currentUser.hp / currentUser.maxHp * 100) + '%';
-            DOM.mpBar.style.width = (currentUser.mp / currentUser.maxMp * 100) + '%';
-            let expPercent = Math.min(100, (currentUser.exp / reqExp) * 100);
-            DOM.expBar.style.width = expPercent + '%';
+        const addBtns = document.getElementsByClassName('add-btn');
+        for (let btn of addBtns) btn.disabled = currentUser.points <= 0;
         
-            DOM.str.textContent = currentUser.str;
-            DOM.vit.textContent = currentUser.vit;
-            DOM.agi.textContent = currentUser.agi;
-            DOM.int.textContent = currentUser.int;
-            DOM.sense.textContent = currentUser.sense;
-            DOM.points.textContent = currentUser.points;
-            if (DOM.cashText) DOM.cashText.textContent = currentUser.cash;
+        if (enemy) updateCombatUI();
         
-            if (window.updateCubeDisplay) window.updateCubeDisplay();
-            
-            const addBtns = document.getElementsByClassName('add-btn');
-            for (let btn of addBtns) btn.disabled = currentUser.points <= 0;
-            
-            if (enemy) updateCombatUI();
-            
-            // LAZY RENDERING //
-            const activeTab = document.querySelector('.tab-panel.active');
-            if (activeTab) {
-                const activeId = activeTab.id;
-                if (activeId === 'tab-skills' && window.renderSkills) window.renderSkills();
-                if (activeId === 'tab-bag' && window.renderBag) window.renderBag();
-                if (activeId === 'tab-achievement' && window.renderAchievements) window.renderAchievements();
-                if (activeId === 'tab-shop' && window.renderShopGrid) window.renderShopGrid();
-                if (activeId === 'tab-shadows' && window.renderShadowArmy) window.renderShadowArmy();
-            }
-            // ==============================================================
-            
-            window.updatePlayerAvatar = function() {
-            
-            window.updatePlayerAvatar = function() {
-                let defaultAvatar = "char/Sungjinwoo.png"; 
-                if (currentUser.equipped && currentUser.equipped.costume) {
-                    const costumeName = currentUser.equipped.costume.name;
-                    if (ITEM_DATA[costumeName] && ITEM_DATA[costumeName].avatar) {
-                        defaultAvatar = ITEM_DATA[costumeName].avatar;
-            }
+        // LAZY RENDERING //
+        const activeTab = document.querySelector('.tab-panel.active');
+        if (activeTab) {
+            const activeId = activeTab.id;
+            if (activeId === 'tab-skills' && window.renderSkills) window.renderSkills();
+            if (activeId === 'tab-bag' && window.renderBag) window.renderBag();
+            if (activeId === 'tab-achievement' && window.renderAchievements) window.renderAchievements();
+            if (activeId === 'tab-shop' && window.renderShopGrid) window.renderShopGrid();
+            if (activeId === 'tab-shadows' && window.renderShadowArmy) window.renderShadowArmy();
         }
+        // ==============================================================
         
-        const pImg = document.getElementById('p-img');
-        if (pImg) pImg.src = defaultAvatar;
-
-        const dpImg = document.getElementById('d-p-img');
-        if (dpImg) dpImg.src = defaultAvatar;
-
-        const visualPImg = document.getElementById('visual-p-img');
-        if (visualPImg) visualPImg.src = defaultAvatar;
-    };
-    updatePlayerAvatar(); 
-    
-    if (!currentUser.ownedCostumes) currentUser.ownedCostumes = [];
-    
-    const costumes = ["costume_black_suit", "costume_mining", "costume_wish", "costume_light_outing", "costume_incapable", "costume_summer_2", "costume_night_lord", "costume_dragon_monarch", "costume_god_of_death", "costume_Frieren", "costume_demon_king", "costume_blood_armor", "costume_cha_haein_spirit"];
-    
-    costumes.forEach(shopId => {
-        const btn = document.getElementById('btn-' + shopId);
-        if (btn) {
-            const itemId = SHOP_DATA[shopId].itemId;
-            btn.style = ""; 
+        window.updatePlayerAvatar = function() {
+            let defaultAvatar = "char/Sungjinwoo.png"; 
+            if (currentUser.equipped && currentUser.equipped.costume) {
+                const costumeName = currentUser.equipped.costume.name;
+                if (ITEM_DATA[costumeName] && ITEM_DATA[costumeName].avatar) {
+                    defaultAvatar = ITEM_DATA[costumeName].avatar;
+                }
+            }
             
-            if (currentUser.equipped && currentUser.equipped.costume && currentUser.equipped.costume.name === itemId) {
-                btn.textContent = "ĐANG SỬ DỤNG";
-                btn.style.background = "linear-gradient(to bottom, #8ea1b2, #5a6e84)";
-                btn.style.color = "#111"; 
-            } 
-            else if (currentUser.ownedCostumes.includes(itemId)) {
-                btn.textContent = "MẶC TRANG PHỤC";
-                btn.style.background = "linear-gradient(to bottom, #5cb8ff, #1a75ff)";
-                btn.style.color = "#fff"; 
-                btn.style.textShadow = "0 1px 3px rgba(0,0,0,0.8)";
-            } 
-            else {
-                if (SHOP_DATA[shopId].currencyType === "item") {
-                    btn.textContent = `ĐỔI (${SHOP_DATA[shopId].price} ${SHOP_DATA[shopId].currencyItem.toUpperCase()})`;
-                    btn.style.background = "linear-gradient(to bottom, #cc00ff, #6600cc)";
-                    btn.style.color = "#fff";
-                } else {
-                    btn.textContent = `MUA (${SHOP_DATA[shopId].price})`;
-                    btn.style.background = "linear-gradient(to bottom, #fce068, #df9a20)";
-                    btn.style.color = "#222"; 
+            const pImg = document.getElementById('p-img');
+            if (pImg) pImg.src = defaultAvatar;
+
+            const dpImg = document.getElementById('d-p-img');
+            if (dpImg) dpImg.src = defaultAvatar;
+
+            const visualPImg = document.getElementById('visual-p-img');
+            if (visualPImg) visualPImg.src = defaultAvatar;
+        };
+        
+        updatePlayerAvatar(); 
+        
+        if (!currentUser.ownedCostumes) currentUser.ownedCostumes = [];
+        
+        const costumes = ["costume_black_suit", "costume_mining", "costume_wish", "costume_light_outing", "costume_incapable", "costume_summer_2", "costume_night_lord", "costume_dragon_monarch", "costume_god_of_death", "costume_Frieren", "costume_demon_king", "costume_blood_armor", "costume_cha_haein_spirit"];
+        
+        costumes.forEach(shopId => {
+            const btn = document.getElementById('btn-' + shopId);
+            if (btn) {
+                const itemId = SHOP_DATA[shopId].itemId;
+                btn.style = ""; 
+                
+                if (currentUser.equipped && currentUser.equipped.costume && currentUser.equipped.costume.name === itemId) {
+                    btn.textContent = "ĐANG SỬ DỤNG";
+                    btn.style.background = "linear-gradient(to bottom, #8ea1b2, #5a6e84)";
+                    btn.style.color = "#111"; 
+                } 
+                else if (currentUser.ownedCostumes.includes(itemId)) {
+                    btn.textContent = "MẶC TRANG PHỤC";
+                    btn.style.background = "linear-gradient(to bottom, #5cb8ff, #1a75ff)";
+                    btn.style.color = "#fff"; 
+                    btn.style.textShadow = "0 1px 3px rgba(0,0,0,0.8)";
+                } 
+                else {
+                    if (SHOP_DATA[shopId].currencyType === "item") {
+                        btn.textContent = `ĐỔI (${SHOP_DATA[shopId].price} ${SHOP_DATA[shopId].currencyItem.toUpperCase()})`;
+                        btn.style.background = "linear-gradient(to bottom, #cc00ff, #6600cc)";
+                        btn.style.color = "#fff";
+                    } else {
+                        btn.textContent = `MUA (${SHOP_DATA[shopId].price})`;
+                        btn.style.background = "linear-gradient(to bottom, #fce068, #df9a20)";
+                        btn.style.color = "#222"; 
                     }
                 }
-        }
-    });
-}
+            }
+        });
+    }
     
     window.playSound = function(audioSrc) {
         const sfx = new Audio(audioSrc);
