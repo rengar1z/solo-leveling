@@ -2377,14 +2377,13 @@
             background: linear-gradient(135deg, #a4c952, #5a9332); /* Nền xanh lá cơ bản */
         }
         
-        /* Đổi màu Gradient nền theo Rank */
+        .bag-item-slot.rank-SS { background: linear-gradient(135deg, #e08aff, #7a00cc) !important; }
         .bag-item-slot.rank-S { background: linear-gradient(135deg, #ff8a8a, #cc0000); }
         .bag-item-slot.rank-A { background: linear-gradient(135deg, #ffd659, #e69500); }
         .bag-item-slot.rank-B { background: linear-gradient(135deg, #8cbaf8, #2a6df4); }
         .bag-item-slot.rank-C { background: linear-gradient(135deg, #a4c952, #5a9332); }
         .bag-item-slot.rank-D { background: linear-gradient(135deg, #f0f0f0, #a0a0a0); }
         
-        /* Khung Viền Vàng Bo Góc (Bracket) khi được chọn */
         .bag-item-slot.selected {
             outline: 3px solid #ffe851;
             outline-offset: -1px;
