@@ -1777,16 +1777,16 @@
             transform: translateX(8px);
             background: linear-gradient(90deg, rgba(20,20,30,0.9) 0%, rgba(40,40,50,1) 100%);
             box-shadow: -5px 5px 20px rgba(0,0,0,0.8), 0 0 15px rgba(255,255,255,0.1);
+            z-index: 100; 
         }
         
         .sl-skill-card.locked { opacity: 0.5; filter: grayscale(1); border-left-style: dashed; }
         .sl-skill-card.maxed { border-left-color: gold; }
         
-        /* Avatar hình TRÒN viền DÀY đặc trưng của thẻ Soul Tree */
         .sl-skill-icon-frame {
             width: 75px; height: 75px; flex-shrink: 0;
             border: 4px solid #444; 
-            border-radius: 50%; /* Hình tròn */
+            border-radius: 50%; 
             background: #000;
             display: flex; justify-content: center; align-items: center;
             position: relative;
@@ -1816,7 +1816,6 @@
             text-shadow: 1px 1px 2px #000;
         }
         
-        /* Thẻ Level nhỏ dính đè lên Icon (Đúng kiểu BBS) */
         .sl-skill-level {
             position: absolute;
             bottom: -8px; left: 50%; transform: translateX(-50%);
@@ -1829,18 +1828,17 @@
         }
         .sl-skill-card.maxed .sl-skill-level { border-color: gold; color: gold; text-shadow: 0 0 5px gold; }
         
-        /* Nút bấm Vát Chéo chuẩn Action Game */
         .sl-skill-upgrade-btn {
             padding: 8px 15px; flex-shrink: 0;
             background: var(--branch-color); color: #fff;
             border: none; font-size: 16px; font-weight: bold; font-family: 'Oswald', sans-serif;
             cursor: pointer; transition: 0.2s; margin-left: 10px;
-            transform: skewX(-15deg); /* Vát chéo nút */
+            transform: skewX(-15deg); 
             box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
             text-transform: uppercase;
         }
         
-        .sl-skill-upgrade-btn span { display: block; transform: skewX(15deg); /* Đảo chữ cho thẳng */ }
+        .sl-skill-upgrade-btn span { display: block; transform: skewX(15deg);  }
         
         .sl-skill-upgrade-btn:hover:not(:disabled) {
             filter: brightness(1.3);
@@ -1864,8 +1862,8 @@
             opacity: 0; 
             position: absolute;
             bottom: 90%; 
-            left: 20px; /* Ép bảng thông tin luôn bắt đầu từ bên trong thẻ */
-            transform: none !important; /* Xóa bỏ lệnh căn giữa cũ gây lỗi tràn viền */
+            left: 20px;
+            transform: none !important; 
             width: 300px;
             background: rgba(10, 15, 20, 0.98); 
             color: #fff; 
