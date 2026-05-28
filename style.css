@@ -2294,15 +2294,35 @@
             margin-left: 10px; text-shadow: 0 0 10px gold;
         }
         
-        /* Tooltip hiển thị */
         .skill-list-tooltip {
-            visibility: hidden; opacity: 0; position: absolute;
-            bottom: 90%; left: 15%; width: 320px;
-            background: rgba(10, 15, 20, 0.98); color: #fff; padding: 15px;
-            border: 2px solid var(--branch-color); border-radius: 4px; z-index: 9999; 
-            transition: 0.2s; pointer-events: none; text-align: left; line-height: 1.5;
+            visibility: hidden; 
+            opacity: 0; 
+            position: absolute;
+            bottom: 90%; 
+            left: 20px; /* Ép bảng thông tin luôn bắt đầu từ bên trong thẻ */
+            transform: none !important; /* Xóa bỏ lệnh căn giữa cũ gây lỗi tràn viền */
+            width: 300px;
+            background: rgba(10, 15, 20, 0.98); 
+            color: #fff; 
+            padding: 15px;
+            border: 2px solid var(--branch-color); 
+            border-radius: 4px; 
+            z-index: 9999; 
+            transition: 0.2s; 
+            pointer-events: none; 
+            text-align: left; 
+            line-height: 1.5;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
         }
         
-        .skill-list-tooltip h4 { margin: 0 0 6px 0; font-size: 22px; font-style: italic; }
-        .sl-skill-card:hover .skill-list-tooltip { visibility: visible; opacity: 1; bottom: 110%; }
+        .skill-list-tooltip h4 { 
+            margin: 0 0 6px 0; 
+            font-size: 22px; 
+            font-style: italic; 
+        }
+        
+        .sl-skill-card:hover .skill-list-tooltip { 
+            visibility: visible; 
+            opacity: 1; 
+            bottom: 110%; 
+        }
