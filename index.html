@@ -4447,6 +4447,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         // TỰ ĐỘNG HỦY THẾ THỦ NẾU BOSS KHÔNG ĐÁNH (VÍ DỤ: BUFF MÁU)
         if (isPlayerCountering) {
             isPlayerCountering = false;
+            logBattle(`<span style="color:#aaa; font-style:italic;">Kẻ địch không tấn công trực diện. Thế Phản Đòn của bạn đã bị lãng phí!</span>`);
         }
 
 
@@ -4789,24 +4790,21 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         else {
             isMyTurn = false;
             updateCombatUI(); 
-            
             saveUserData()    
-            
-            if (isPlayerCountering) {
-                    isPlayerCountering = false;
-                    logBattle(`<span style="color:#aaa; font-style:italic;">Kẻ địch không tấn công. Thế Phản Đòn của bạn đã bị hủy bỏ!</span>`);
-            }
             // Xử lý cơ chế Quái vật bị choáng
             if (isEnemyStunned) {
                 isEnemyStunned = false; 
-        
+                if (isPlayerCountering) {
+                    isPlayerCountering = false;
+                    logBattle(`<span style="color:#aaa; font-style:italic;">Kẻ địch bị choáng không thể ra đòn. Thế Phản Đòn của bạn đã bị hủy bỏ!</span>`);
+                }
                 if (window.counterCooldown && window.counterCooldown > 0) window.counterCooldown--;
                 if (window.tanSatCooldown && window.tanSatCooldown > 0) window.tanSatCooldown--;
                 if (window.potionCooldown && window.potionCooldown > 0) window.potionCooldown--; 
                 if (window.enemyAtkBuffTurns && window.enemyAtkBuffTurns > 0) window.enemyAtkBuffTurns--;
                 setTimeout(() => {
                     
-                    // ============ FIX LỖI: BOSS BỊ CHOÁNG VẪN PHẢI DÍNH ĐỘC ============
+                    // BOSS BỊ CHOÁNG VẪN PHẢI DÍNH ĐỘC
                    if (enemyPoisonTurns > 0) {
                         if (window.enemyNewlyPoisoned) {
                             window.enemyNewlyPoisoned = false;
