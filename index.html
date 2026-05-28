@@ -1316,6 +1316,7 @@
         display.innerText = count;
     };
 
+    // ================= XỬ LÝ MUA ĐỒ TRONG SHOP =================
     window.buyShopItem = async function(itemId) {
         const item = SHOP_DATA[itemId];
         if (!item) return;
@@ -1330,10 +1331,9 @@
             }
             
             currentUser.cash -= item.price;
-            currentUser.skills[item.skillName] = 1; // Kích hoạt kỹ năng ngay lập tức
+            currentUser.skills[item.skillName] = 1; 
             alert(`✨ Chúc mừng! Bạn đã lĩnh ngộ được [${item.skillName}]!`);
         } else {
-            // Logic mua vật phẩm thông thường
             currentUser.cash -= item.price;
             window.giveItem(item.itemId);
             alert(`🛒 Mua thành công [${item.name}]!`);
@@ -1341,9 +1341,12 @@
     
         await set(ref(db, 'users/' + currentUser.username), currentUser);
         render();
-};
 
-    // --- HỆ THỐNG TỦ ĐỒ (COSTUME) - ĐÃ FIX LỖI KẸT DATA ---
+        // Cập nhật lại giao diện Shop ngay lập tức
+        if (window.selectedShopItemKey) window.selectShopItem(window.selectedShopItemKey);
+    };
+
+    // ================= XỬ LÝ TỦ ĐỒ (COSTUME) =================
     window.handleCostume = async function(shopId) {
         if (!currentUser.ownedCostumes) currentUser.ownedCostumes = [];
         
@@ -1359,7 +1362,6 @@
        // TRƯỜNG HỢP 0: NẾU CHƯA MUA -> XỬ LÝ MUA RỒI DỪNG LẠI
         if (!currentUser.ownedCostumes.includes(itemId) && (!currentUser.equipped.costume || currentUser.equipped.costume.name !== itemId)) {
             
-            // --- KIỂM TRA MUA BẰNG VẬT PHẨM ---
             if (shopItem.currencyType === "item") {
                 const reqItem = shopItem.currencyItem;
                 const reqAmount = shopItem.price;
@@ -1369,14 +1371,12 @@
                     return alert(`Không đủ vật liệu! Cần ${reqAmount} [${reqItem}] để đổi trang phục này.`);
                 }
                 
-                // Trừ vật phẩm trong túi
                 if (currentUser.inventory[invIndex].quantity > reqAmount) {
                     currentUser.inventory[invIndex].quantity -= reqAmount;
                 } else {
                     currentUser.inventory.splice(invIndex, 1);
                 }
             } 
-            // --- MUA BẰNG CASH BÌNH THƯỜNG ---
             else {
                 if (currentUser.cash < shopItem.price) return alert(`Không đủ Cash! Cần ${shopItem.price} Cash.`);
                 currentUser.cash -= shopItem.price;
@@ -1387,7 +1387,11 @@
             
             await set(ref(db, 'users/' + currentUser.username), currentUser);
             render();
-            return;
+
+            // CHÈN UPDATE GIAO DIỆN VÀO TRƯỚC KHI RETURN
+            if (window.selectedShopItemKey) window.selectShopItem(window.selectedShopItemKey);
+            if (window.renderShopGrid) window.renderShopGrid();
+            return; 
         }
 
         // === BƯỚC 1: CHỐT TỶ LỆ HP/MP TRƯỚC KHI THÁO HOẶC MẶC ===
@@ -1404,19 +1408,15 @@
             currentUser.maxMp -= (itemData.mp || 0); 
             currentUser.maxMp -= (itemData.int || 0) * 5; 
             
-            if (itemData.vit > 0) {
-                currentUser.maxHp -= itemData.vit * 10; 
-            }
-            if (itemData.hp > 0) {
-                currentUser.maxHp -= itemData.hp;
-            }
+            if (itemData.vit > 0) currentUser.maxHp -= itemData.vit * 10; 
+            if (itemData.hp > 0) currentUser.maxHp -= itemData.hp;
+            
             currentUser.equipped.costume = null;
         }
     
         // TRƯỜNG HỢP 2: ĐÃ MUA -> BẤM MẶC VÀO
         else if (currentUser.ownedCostumes.includes(itemId)) {
             
-            // XÓA CHỈ SỐ BỘ CŨ TRƯỚC (NẾU ĐANG MẶC BỘ KHÁC)
             if (currentUser.equipped.costume) {
                 const oldData = ITEM_DATA[currentUser.equipped.costume.name];
                 if (oldData) { 
@@ -1428,14 +1428,11 @@
                     currentUser.maxMp -= (oldData.mp || 0); 
                     currentUser.maxMp -= (oldData.int || 0) * 5; 
                     
-                    if (oldData.vit > 0) { 
-                        currentUser.maxHp -= oldData.vit * 10; 
-                    }
+                    if (oldData.vit > 0) currentUser.maxHp -= oldData.vit * 10; 
                     if (oldData.hp > 0) currentUser.maxHp -= oldData.hp;
                 }
             }
             
-            // CỘNG CHỈ SỐ BỘ MỚI
             currentUser.equipped.costume = { name: itemId };
             currentUser.str += (itemData.str || 0); 
             currentUser.vit += (itemData.vit || 0);
@@ -1445,20 +1442,20 @@
             currentUser.maxMp += (itemData.mp || 0); 
             currentUser.maxMp += (itemData.int || 0) * 5; 
             
-            if (itemData.vit > 0) { 
-                currentUser.maxHp += itemData.vit * 10; 
-            }
-            if (itemData.hp > 0) {
-                currentUser.maxHp += itemData.hp;
-            }
+            if (itemData.vit > 0) currentUser.maxHp += itemData.vit * 10; 
+            if (itemData.hp > 0) currentUser.maxHp += itemData.hp;
         }
 
-        // === BƯỚC 2: ĐỒNG BỘ LẠI HP/MP DỰA TRÊN TỶ LỆ ĐÃ CHỐT ===
+        // === BƯỚC 2: ĐỒNG BỘ LẠI HP/MP ===
         currentUser.hp = Math.max(1, Math.floor(currentUser.maxHp * hpPercent));
         currentUser.mp = Math.floor(currentUser.maxMp * mpPercent);
 
         await set(ref(db, 'users/' + currentUser.username), currentUser);
         render(); 
+
+        // CHÈN UPDATE GIAO DIỆN VÀO CUỐI CÙNG (Dành cho Mặc/Tháo)
+        if (window.selectedShopItemKey) window.selectShopItem(window.selectedShopItemKey);
+        if (window.renderShopGrid) window.renderShopGrid();
     };
     
     const enemies = [
@@ -2106,6 +2103,8 @@
                 dropdown.style.display = ''; 
             }, 50);
         }
+        if (tabName === 'tab-shop' && window.renderShopGrid) window.renderShopGrid();
+        if (tabName === 'tab-shadows' && window.renderShadowArmy) window.renderShadowArmy();
     }
 
     // --- CƠ CHẾ DÙNG CHUNG (MINIGAME VÀ DUNGEON) ---
@@ -2612,38 +2611,6 @@
         }
     }
     
-    // --- QUẢN LÝ CHUYỂN TAB ĐỒ ĐANG MẶC ---
-    window.currentEqTab = 'basic'; // Mặc định mở tab Trang bị cơ bản
-
-    // Hàm xử lý khi bấm các nút Nhóm Trái (Trang bị, Cổ vật, TÚI ĐỒ)
-    window.switchEqTab = function(evt, tabName) {
-        window.currentEqTab = tabName;
-        
-        // Tắt đèn toàn bộ các nút
-        const btns = document.getElementsByClassName("eq-tab-btn");
-        for (let i = 0; i < btns.length; i++) btns[i].classList.remove("active");
-        if(evt) evt.currentTarget.classList.add("active"); 
-        
-        const btnToggleVisual = document.getElementById('btnToggleVisual');
-        if(btnToggleVisual) btnToggleVisual.classList.remove('active');
-
-        // Gọi 2 khung giao diện chính ra (Đã bỏ listArea cũ đi)
-        const visualArea = document.getElementById('characterVisualArea');
-        const invArea = document.getElementById('inventoryCardArea');
-
-        // Phân nhánh hiển thị:
-        if (tabName === 'inventory') {
-            // NẾU BẤM VÀO KHO ĐỒ: Tắt nhân vật, Bật Kho đồ
-            if (visualArea) visualArea.style.display = 'none';
-            if (invArea) invArea.style.display = 'flex'; 
-        } else {
-            // NẾU BẤM VÀO CỔ VẬT HOẶC TRANG BỊ: Bật nhân vật, Tắt Kho đồ
-            // (Hiện tại bạn chưa làm ô Cổ vật trên người, nhưng logic vẫn mở ra màn hình Nhân Vật)
-            if (visualArea) visualArea.style.display = 'block';
-            if (invArea) invArea.style.display = 'none'; 
-        }
-    };
-    //Trang bi item
     window.renderBag = function() {
     if (!currentUser.inventory) currentUser.inventory = [];
     if (!currentUser.equipped) currentUser.equipped = { weapon: null, armor: null, helmet: null, gloves: null, necklace: null, earring: null, ring: null, shoes: null, costume: null };
@@ -2965,66 +2932,13 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
             render(); 
         }
     }
-    window.useItem = async function(index) {
-        // === FIX BUG UỐNG THUỐC KHÔNG MẤT LƯỢT ===
-        if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
-            return alert("⚠️ HỆ THỐNG: Không thể lôi đồ trong túi ra dùng khi đang đối mặt với quái vật! Hãy sử dụng Túi Thuốc Nhanh ở khay Kỹ năng.");
-        }
-        const itemObj = currentUser.inventory[index];
-        const itemData = ITEM_DATA[itemObj.name];
-        
-        if (itemData.effectType === "heal_hp") {
-            if (currentUser.hp >= currentUser.maxHp) return alert("HP của bạn đã đầy, không cần sử dụng!");
-            currentUser.hp = Math.min(currentUser.maxHp, currentUser.hp + itemData.amount);
-            alert(`✨ Bạn đã uống [${itemObj.name}] và hồi phục ${itemData.amount} HP!`);
-        } 
-        else if (itemData.effectType === "heal_mp") {
-            if (currentUser.mp >= currentUser.maxMp) return alert("MP của bạn đã đầy, không cần sử dụng!");
-            currentUser.mp = Math.min(currentUser.maxMp, currentUser.mp + itemData.amount);
-            alert(`✨ Bạn đã uống [${itemObj.name}] và hồi phục ${itemData.amount} MP!`);
-        }
-        else if (itemData.effectType === "add_str") {
-            currentUser.str += itemData.amount;
-            alert(`Bạn đã mở [${itemObj.name}]! Sức mạnh (STR) được tăng VĨNH VIỄN thêm ${itemData.amount} điểm!`);
-        }
-        else if (itemData.effectType === "add_vit") {
-            currentUser.vit += itemData.amount;
-            currentUser.maxHp += itemData.amount * 10; 
-            currentUser.hp += itemData.amount * 10;
-            alert(`Bạn đã mở [${itemObj.name}]! Thể lực (VIT) được tăng VĨNH VIỄN thêm ${itemData.amount} điểm!`);
-        }
-        else if (itemData.effectType === "add_int") {
-            currentUser.int += itemData.amount;
-            currentUser.maxMp += itemData.amount * 5; 
-            currentUser.mp += itemData.amount * 5;
-            alert(`Bạn đã mở [${itemObj.name}]! Trí lực (INT) được tăng VĨNH VIỄN thêm ${itemData.amount} điểm!`);
-        }
-        else if (itemData.effectType === "add_mixed") {
-            currentUser.str += itemData.strAmt;
-            
-            currentUser.vit += itemData.vitAmt;
-            currentUser.maxHp += itemData.vitAmt * 10;
-            currentUser.hp += itemData.vitAmt * 10;
-            
-            currentUser.int += itemData.intAmt;
-            currentUser.maxMp += itemData.intAmt * 5;
-            currentUser.mp += itemData.intAmt * 5;
-            
-            alert(`Bạn đã mở [${itemObj.name}]! Lực chiến tăng vọt: +${itemData.strAmt} STR, +${itemData.vitAmt} VIT, +${itemData.intAmt} INT VĨNH VIỄN!`);
-        }
-        // Sau khi dùng xong thì xóa vật phẩm khỏi túi
-        currentUser.inventory.splice(index, 1);
-        
-        await saveUserData();
-        renderBag();
-    };
-
+    
     // --- HÀM BÁN CHO ĐỒ GỘP (CHỈ BÁN 1 CÁI MỖI LẦN BẤM) ---
     window.sellStackedItem = async function(itemName, price) {
         const index = currentUser.inventory.findIndex(item => item.name === itemName);
         if (index !== -1) {
             playSound("audio/bantrangbi.mp3");
-            // Kiểm tra quantity để trừ hoặc xóa
+            
             if (currentUser.inventory[index].quantity > 1) {
                 currentUser.inventory[index].quantity--;
             } else {
@@ -5394,29 +5308,6 @@ window.selectShopItem = function(key) {
     renderShopGrid(); // Refresh lại viền vàng nhấp nháy cho món đang chọn
 };
 
-// ================= WRAPPER: ĐỒNG BỘ AUTO REFRESH SHOP =================
-const originalBuyShopItem = window.buyShopItem;
-window.buyShopItem = async function(itemId) {
-    if (originalBuyShopItem) await originalBuyShopItem(itemId);
-    if (window.selectedShopItemKey) window.selectShopItem(window.selectedShopItemKey); // Load lại nút thành Đã Sở Hữu/Thay đồ
-};
-
-const originalHandleCostume = window.handleCostume;
-window.handleCostume = async function(shopId) {
-    if (originalHandleCostume) await originalHandleCostume(shopId);
-    if (window.selectedShopItemKey) window.selectShopItem(window.selectedShopItemKey);
-    renderShopGrid();
-};
-
-const originalOpenTab = window.openTab;
-window.openTab = function(evt, tabName) {
-    originalOpenTab(evt, tabName);
-    // Tự động bung danh sách vật phẩm khi vừa bấm vào Tab Shop
-    if (tabName === 'tab-shop' && window.renderShopGrid) {
-        window.renderShopGrid();
-    }
-};
-
     // ================= HỆ THỐNG GIAO DIỆN SHADOW ARMY (GACHA STYLE) =================
 window.currentShadowTab = 'all';
 window.selectedShadowId = null;
@@ -5591,15 +5482,6 @@ window.handleEquipShadow = async function(bossId) {
     renderShadowArmy(); 
     if(window.selectedShadowId) window.selectShadow(window.selectedShadowId); 
     if(typeof playSound === 'function') playSound("audio/dungtrangbi.mp3"); 
-};
-    
-
-const originalOpenTabShadow = window.openTab;
-window.openTab = function(evt, tabName) {
-    originalOpenTabShadow(evt, tabName);
-    if (tabName === 'tab-shadows' && window.renderShadowArmy) {
-        window.renderShadowArmy();
-    }
 };
     setTimeout(startNewBattle, 2000);
 </script>
