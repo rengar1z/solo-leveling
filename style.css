@@ -2585,3 +2585,21 @@
         }
         .bag-action-btn-yellow:hover { background: #fff06b; }
         .bag-action-btn-yellow.sell { background: linear-gradient(to bottom, #ff9999, #e60000); color: #fff; }
+
+        .bag-item-slot.empty-slot {
+            background: #e2e6ea !important;
+            border: 2px dashed #b6bfc7 !important;
+            color: #7b8893 !important;
+            font-size: 11px !important;
+            font-weight: bold !important;
+            font-family: 'Oswald', sans-serif !important;
+            letter-spacing: 0.5px !important;
+            cursor: default !important;
+            box-shadow: none !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        .bag-item-slot.empty-slot:hover {
+            background: #dee2e6 !important;
+        }
