@@ -3118,7 +3118,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
             return alert("⚠️ HỆ THỐNG: Khí tức quái vật quá áp đảo, bạn không thể thay đổi trang bị lúc này!");
         }
-        
+        playSound("audio/dungtrangbi");
         const itemObj = currentUser.inventory[index];
         const itemData = ITEM_DATA[itemObj.name];
         let slot = itemData.type; 
@@ -3162,6 +3162,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
     if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
         return alert("⚠️ HỆ THỐNG: Không thể tháo trang bị khi đang trong trạng thái chiến đấu!");
     }
+    playSound("audio/thaotrangbi.mp3");    
     const itemObj = currentUser.equipped[slot];
     if (!itemObj) return;
 
@@ -3211,6 +3212,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
     window.sellItem = async function(index, price) {
         const itemObj = currentUser.inventory[index];
         if (confirm(`Bạn có chắc chắn muốn bán [${itemObj.name}] để lấy ${price} Cash không?`)) {
+            playSound("audio/bantrangbi.mp3");
             currentUser.inventory.splice(index, 1);
             currentUser.cash += price;
             
@@ -3277,6 +3279,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
     window.sellStackedItem = async function(itemName, price) {
         const index = currentUser.inventory.findIndex(item => item.name === itemName);
         if (index !== -1) {
+            playSound("audio/bantrangbi.mp3");
             // Kiểm tra quantity để trừ hoặc xóa
             if (currentUser.inventory[index].quantity > 1) {
                 currentUser.inventory[index].quantity--;
@@ -3299,7 +3302,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         
         const index = currentUser.inventory.findIndex(item => item.name === itemName);
         if (index === -1) return;
-
+        playSound("audio/dungvatpham.mp3");
         const itemObj = currentUser.inventory[index];
         const itemData = ITEM_DATA[itemObj.name];
         
