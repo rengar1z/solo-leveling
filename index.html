@@ -625,8 +625,9 @@
         
         // --- VŨ KHÍ & PHÒNG CỤ MỚI ---
         "wp/Kasaka_Venom_Fang.png", "wp/Knight_Killer.png", "wp/Orb_of_Avarice.png", "wp/Baran_Earring.png", "wp/Baran_Necklace.png", "wp/Truth_Kasaka_Venom_Fang.png",
-        "wp/Knight_Armor.png", "wp/Demon_King_Daggers.png", "wp/Baran_Ring.png", "wp/Warden_Necklace.png", "wp/Zeke_Fragment.png", "wp/A_Gentle_Touch.png",
+        "wp/Knight_Armor.png", "wp/Demon_King_Daggers.png", "wp/Baran_Ring.png", "wp/Warden_Necklace.png", "wp/Zeke_Fragment.png", "wp/A_Gentle_Touch.png", "wp/nhanhukhong.png",
         "wp/High-ranking Demon's Helmet.png","wp/High-ranking Demon's Gloves.png","wp/High-ranking Demon's Boots.png","wp/High-ranking Demon's Body Armor.png",
+        "wp/Ice Elf Cloak.png",
         
         // --- ẢNH NỀN GACHA  ---
         "event/event.png",
@@ -975,7 +976,7 @@
         },
         // --- TRANG BỊ HUYỀN THOẠI TỪ VÒNG QUAY (BẠN CÓ THỂ TỰ TẠO THÊM) ---
         "Kiếm Sét Rực Rỡ": { rank: "S", type: "weapon", name: "Kiếm Sét Rực Rỡ", str: 180, vit: 0, mp: 0, effect: "Vũ khí huyền thoại từ Vòng Quay.", img: "wp/Demon_King_Longsword.png", sellPrice: 20000 },
-        "Nhẫn Hư Không": { rank: "S", type: "ring", name: "Nhẫn Hư Không", str: 40, vit: 40, mp: 200, effect: "Tăng 15% Tỷ lệ bạo kích", img: "wp/essenceofmagic.png", sellPrice: 20000 },
+        "Nhẫn Hư Không": { rank: "S", type: "ring", name: "Nhẫn Hư Không", str: 40, vit: 40, mp: 200, effect: "Tăng 15% Tỷ lệ bạo kích", img: "wp/nhanhukhong.png", sellPrice: 20000 },
         
         // --- VẬT PHẨM TIÊU HAO (MÁU, MANA, BUFF VĨNH VIỄN) ---
         "HP Potion (Nhỏ)": { rank: "C", type: "consumable", effectType: "heal_hp", amount: 100, name: "HP Potion (Nhỏ)", effect: "Hồi phục 100 HP.", img: "cons/HP_Potion.png", sellPrice: 25 },
@@ -1002,7 +1003,7 @@
         
         // Đồ hiếm Red Gate:
         "Baruka's Dagger": { rank: "A", type: "weapon", name: "Baruka's Dagger", str: 35, vit: 0, mp: 20, effect: "Vũ khí của Vua Tiên Băng. Tăng 10% ST đòn thường", img: "wp/baruka_dagger.png", sellPrice: 1500 },
-        "Ice Elf Cloak": { rank: "A", type: "necklace", name: "Ice Elf Cloak", str: 5, vit: 15, mp: 0, effect: "Giảm 5% sát thương gánh chịu", img: "wp/Demon_King_Longsword.png", sellPrice: 700 },
+        "Ice Elf Cloak": { rank: "A", type: "necklace", name: "Ice Elf Cloak", str: 5, vit: 15, mp: 0, effect: "Giảm 5% sát thương gánh chịu", img: "wp/Ice Elf Cloak.png", sellPrice: 700 },
         
         // Đồ hiếm của Igris:
         "Crimson Shadow": { rank: "S", type: "weapon", name: "Crimson Shadow", str: 60, vit: 0, mp: 0, effect: "Vũ khí của Igris. Tăng 15% ST đòn thường", img: "wp/Crimson_Shadow.png", sellPrice: 3000 },
@@ -4696,7 +4697,11 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
             if (dCurrentStage < dData.stages.length - 1) {
                 const btnNext = document.getElementById('btnNextStage');
                 btnNext.classList.remove('hidden');
-                document.getElementById('btnExitDungeon').classList.add('hidden');
+                
+                const btnExit = document.getElementById('btnExitDungeon');
+                btnExit.classList.remove('hidden'); 
+                btnExit.innerText = "RỜI KHỎI";
+                
                 btnNext.setAttribute("onclick", "startNextStage()");
                 btnNext.innerText = "TIẾN VÀO ẢI TIẾP THEO";
                 btnNext.style.borderColor = "gold";
@@ -5138,12 +5143,14 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
 
     window.startNextRedGateStage = function() {
         if (currentUser.hp <= 0) return alert("Hết máu rồi, không thể đi tiếp!");
+        if (window.combatTimer) { clearTimeout(window.combatTimer); window.combatTimer = null; } 
         rgCurrentStage++;
         startRedGateStage();
     }
 
     window.startNextStage = function() {
         if (currentUser.hp <= 0) return alert("Bạn không thể đi tiếp khi hết máu!");
+        if (window.combatTimer) { clearTimeout(window.combatTimer); window.combatTimer = null; } 
         dCurrentStage++;
         startDungeonStage();
     }
