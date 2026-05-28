@@ -5425,6 +5425,9 @@ window.renderShopGrid = function() {
             itemData = ITEM_DATA[shopItem.itemId];
             imgSrc = itemData ? itemData.img : "";
             rank = itemData ? (itemData.rank || "D") : "D";
+            if (key.includes("costume") && (!itemData || !itemData.rank)) {
+                rank = "SS"; 
+                }
         }
         
         let isSelected = (window.selectedShopItemKey === key);
