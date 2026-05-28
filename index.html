@@ -3137,53 +3137,6 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         gridDiv.innerHTML = html;
     };
 
-    // 2. Hàm bật Popup Thông tin chi tiết (Bio & Stats) khi bấm nút "i"
-    window.showShadowPopup = function(bossId) {
-        const data = SHADOW_DATA[bossId];
-        
-        let popup = document.getElementById('shadowLorePopup');
-        if (!popup) {
-            popup = document.createElement('div');
-            popup.id = 'shadowLorePopup';
-            popup.className = 'welcome-overlay';
-            popup.style.zIndex = '9999';
-            document.body.appendChild(popup);
-        }
-
-        let rankColor = "#fff";
-        if(data.rank === "Hiệp Sĩ") rankColor = "#ff4d4d";
-        else if(data.rank === "Tinh Anh") rankColor = "#ff9900";
-        else if(data.rank === "Tướng Quân") rankColor = "gold";
-
-        popup.innerHTML = `
-        <div class="welcome-box" style="border-color: #cc33ff; box-shadow: 0 0 40px rgba(153, 51, 255, 0.6); background: linear-gradient(to bottom, #1a0033, #000000); max-width: 500px; text-align: left;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; border-bottom: 1px solid #cc33ff; padding-bottom: 10px;">
-                <div>
-                    <h2 style="margin: 0; color: #fff; text-shadow: 0 0 10px #cc33ff; text-transform: uppercase;">${data.name}</h2>
-                    <div style="color: ${rankColor}; font-weight: bold;">Hạng: ${data.rank}</div>
-                </div>
-                <button onclick="document.getElementById('shadowLorePopup').style.display='none'" style="background: transparent; border: none; color: #ff4d4d; font-size: 24px; cursor: pointer;">✖</button>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 5px; border: 1px solid #444; margin-bottom: 15px;">
-                <div style="color: #ff4d4d; font-size: 16px;">❤️ VIT: +${data.vit}</div>
-                <div style="color: #ff9900; font-size: 16px;">⚔️ STR: +${data.str}</div>
-                <div style="color: #00ffcc; font-size: 16px;">💨 AGI: +${data.agi}</div>
-                <div style="color: #cc66ff; font-size: 16px;">🔮 INT: +${data.int}</div>
-            </div>
-
-            <div style="background: rgba(0, 191, 255, 0.1); border: 1px solid #00bfff; border-radius: 5px; padding: 10px; margin-bottom: 15px;">
-                <b style="color: #00bfff;">[ ${data.skillName} ]:</b> <span style="color: #fff;">${data.skillDesc}</span>
-            </div>
-
-            <div style="color: #ccc; font-style: italic; border-left: 3px solid #cc33ff; padding-left: 10px; line-height: 1.5; font-size: 15px;">
-                "${data.bio}"
-            </div>
-        </div>
-        `;
-        popup.style.display = 'flex';
-    };
-    
     window.equipShadow = async function(bossId) {
         // === 1. CHẶN ĐỔI BÓNG MA TRONG CHIẾN ĐẤU ===
         if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
@@ -5345,28 +5298,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         
         enemy = null; 
 }
-
-    // --- HÀM LỌC VẬT PHẨM TRONG CỬA HÀNG ---
-    window.filterShop = function(category, btnElement) {
-    // 1. Đổi trạng thái nút bấm (Làm sáng nút được chọn)
-        const btns = document.querySelectorAll('.sl-shop-filter-btn');
-        btns.forEach(btn => btn.classList.remove('active'));
-        btnElement.classList.add('active');
-
-    // 2. Lọc danh sách (Chỉ hiện những món có data-category trùng khớp)
-        const items = document.querySelectorAll('.shop-item-row');
-        items.forEach(item => {
-            const itemCategory = item.getAttribute('data-category');
-        
-        // Nếu chọn 'all' thì hiện tất cả, nếu không thì so sánh category
-        if (category === 'all' || itemCategory === category) {
-            item.style.display = 'flex'; // Hiển thị
-        } else {
-            item.style.display = 'none'; // Ẩn đi
-        }
-    });
-};
-  
+ 
 window.currentInvTab = 'all';
 window.selectedBagItemInfo = null;
 
@@ -5602,7 +5534,6 @@ window.renderShadowArmy = function() {
         const data = SHADOW_DATA[bossId];
         if(!data) return;
 
-        // Lọc theo Tab Cấp Bậc
         let isMatch = false;
         if (window.currentShadowTab === 'all') isMatch = true;
         else if (window.currentShadowTab === 'knight' && (data.rank === 'Normal' || data.rank === 'Elite Knight')) isMatch = true;
@@ -5612,17 +5543,15 @@ window.renderShadowArmy = function() {
         if (!isMatch) return;
         hasItems = true;
 
-        // Quy đổi Cấp bậc ra Màu sắc Viền
         let rankClass = "B";
         if (data.rank === "Elite Knight") rankClass = "A";
         if (data.rank === "General") rankClass = "S";
         if (data.rank === "Marshal" || data.rank === "Monarch") rankClass = "SS";
 
-        let imgSrc = data.icon || data.img;
+        let imgSrc = data.img;
         let isSelected = (window.selectedShadowId === bossId);
         let isEquipped = (currentUser.equippedShadow === bossId);
 
-        // Chữ "TRANG BỊ" nhỏ nổi lên trên icon nếu đang dùng
         let equipTag = isEquipped ? '<div style="position:absolute; bottom:2px; right:2px; font-size:10px; font-weight:bold; background:rgba(204,51,255,0.9); color:#fff; padding:2px 4px; border-radius:3px; z-index:5;">ĐANG DÙNG</div>' : '';
 
         html += `
@@ -5640,7 +5569,6 @@ window.renderShadowArmy = function() {
     }
 };
 
-// Hàm mới: Hiển thị chi tiết khi Click vào Icon
 window.selectShadow = function(bossId) {
     if(typeof playSound === 'function') playSound("audio/click.mp3");
     window.selectedShadowId = bossId;
