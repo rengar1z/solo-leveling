@@ -2355,3 +2355,30 @@
         .bag-item-slot.empty-slot:hover {
             background: #dee2e6 !important;
         }
+
+        /* ================= HIỆU ỨNG TỬ TRẬN (DEATH POPUP) ================= */
+        .death-text-glitch {
+            font-family: 'Oswald', sans-serif;
+            font-size: 50px;
+            color: #ffaa00; /* Màu cam vàng Hệ thống */
+            font-weight: bold;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            animation: verticalShake 0.1s infinite linear alternate;
+        }
+        
+        @keyframes verticalShake {
+            0% { 
+                text-shadow: 0 -6px 10px rgba(255, 170, 0, 0.7), 0 2px 4px rgba(255, 170, 0, 0.4); 
+                transform: translateY(-1px) scaleY(1.05); 
+            }
+            100% { 
+                text-shadow: 0 6px 10px rgba(255, 170, 0, 0.7), 0 -2px 4px rgba(255, 170, 0, 0.4); 
+                transform: translateY(1px) scaleY(0.95); 
+            }
+        }
+        
+        @keyframes flash { 
+            0%, 100% { opacity: 1; } 
+            50% { opacity: 0; } 
+        }
