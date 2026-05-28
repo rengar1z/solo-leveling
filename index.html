@@ -1806,18 +1806,17 @@
     }
 
     let html = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px dashed rgba(0,191,255,0.3); padding-bottom: 15px;">
-            <div style="color: #a4b3c6; font-size: 16px; font-style: italic;">
-                Điểm kỹ năng khả dụng: <span style="color:#00ffcc; font-weight:bold; font-size:26px; text-shadow: 0 0 10px #00ffcc; font-family: 'Oswald', sans-serif;">${currentUser.skillPoints || 0}</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+            <div style="color: #fff; font-size: 20px; font-family: 'Oswald', sans-serif; text-transform: uppercase;">
+                Soul Points: <span style="color:#00ffcc; font-weight:bold; font-size:32px; text-shadow: 0 0 15px #00ffcc; margin-left: 10px;">${currentUser.skillPoints || 0}</span>
             </div>
-            <button onclick="resetSkills()" class="sl-shop-price-btn" style="color: #ff4d4d; border: 1px solid #ff4d4d; min-width: auto; font-size: 16px !important; padding: 8px 20px !important; margin: 0 !important; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);">
+            <button onclick="resetSkills()" class="sl-shop-price-btn" style="background: linear-gradient(90deg, #cc0000, #ff3333) !important; color: #fff; border: none !important; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
                 🔄 TẨY ĐIỂM (1000 CASH)
             </button>
         </div>
     `;
 
     const branches = ["Sát Thủ", "Pháp Sư", "Đấu Sĩ", "Đặc biệt", "Chung"];
-    
     const skillsByBranch = {};
     Object.keys(skillData).forEach(s => {
         const branch = skillData[s].branch;
@@ -1826,23 +1825,24 @@
     });
 
     branches.forEach(branch => {
-        let branchColor = "#00bfff";
-        if(branch === 'Sát Thủ') branchColor = '#4a90e2';
-        if(branch === 'Pháp Sư') branchColor = '#9933ff';
-        if(branch === 'Đấu Sĩ') branchColor = '#ff4d4d';
-        if(branch === 'Đặc biệt') branchColor = '#ffcc00';
+        // Màu sắc được chọn giống bảng thuộc tính của Bleach (Speed, Power, Heart, Mind)
+        let branchColor = "#00bfff"; // Tốc độ (Speed - Xanh)
+        if(branch === 'Sát Thủ') branchColor = '#00aaff';
+        if(branch === 'Đấu Sĩ') branchColor = '#ff3333'; // Sức mạnh (Power - Đỏ)
+        if(branch === 'Pháp Sư') branchColor = '#b84dff'; // Trái tim (Heart - Tím)
+        if(branch === 'Đặc biệt') branchColor = '#ffcc00'; // Tâm trí (Mind - Vàng)
         
         let isBranchLocked = (currentClass !== null && currentClass !== branch && branch !== "Chung" && branch !== "Đặc biệt");
         let displayColor = isBranchLocked ? '#555' : branchColor; 
         let isOpen = window.branchToggleState[branch];
         
         html += `
-            <div class="skill-branch-header" style="border-left-color: ${displayColor};" onclick="toggleSkillBranch('${branch}')">
-                <h3 style="color: ${displayColor}; margin: 0; font-size: 22px; letter-spacing: 1px; text-shadow: 0 0 5px ${isBranchLocked ? 'transparent' : displayColor};">
-                    [ NHÁNH ${branch.toUpperCase()} ] 
-                    ${isBranchLocked ? '<span style="color:#ff3333; font-size:14px; text-shadow: 0 0 5px red; margin-left: 10px;">(ĐÃ KHÓA)</span>' : ''}
+            <div class="skill-branch-header" style="--branch-color: ${displayColor};" onclick="toggleSkillBranch('${branch}')">
+                <h3 style="color: #fff; text-shadow: 0 0 10px ${displayColor}, 2px 2px 0px #000;">
+                    ${branch.toUpperCase()} SOUL TREE
+                    ${isBranchLocked ? '<span style="color:#ff3333; font-size:16px; margin-left: 10px; font-style: normal;">(LOCKED)</span>' : ''}
                 </h3>
-                <span style="color: ${displayColor}; font-size: 20px; transition: 0.3s; transform: ${isOpen ? 'rotate(90deg)' : 'rotate(0deg)'};">▶</span>
+                <span style="color: #fff; transition: 0.3s; transform: ${isOpen ? 'skewX(10deg) rotate(90deg)' : 'skewX(10deg) rotate(0deg)'}; text-shadow: 2px 2px 0px #000;">▶</span>
             </div>
             
             <div style="display: ${isOpen ? 'block' : 'none'}; padding: 10px 0;">
@@ -1860,41 +1860,38 @@
                 let dynamicText = "";
                 
                 if (lv > 0 && data.maxLv > 1) {
-                    if (s === "Phát Triển Cấp Tốc") dynamicText = `<div class="skill-dynamic-txt" style="color:#00ff00;">↳ Kích hoạt: +${lv * 10}% EXP</div>`;
-                    if (s === "Thợ Săn Tiền Thưởng") dynamicText = `<div class="skill-dynamic-txt" style="color:gold;">↳ Kích hoạt: +${lv * 15}% CASH</div>`;
-                    if (s === "Siêu Giác Quan") dynamicText = `<div class="skill-dynamic-txt" style="color:#8eefff;">↳ Kích hoạt: +${lv * 3}% Né Đòn</div>`;
-                    if (s === "Thể Chất Siêu Phàm") dynamicText = `<div class="skill-dynamic-txt" style="color:#ff4d4d;">↳ Đã cộng: +${lv * 5} STR/VIT</div>`;
+                    if (s === "Phát Triển Cấp Tốc") dynamicText = `<div class="skill-dynamic-txt">Lv Effect: <span style="color:#00ff00;">+${lv * 10}% EXP</span></div>`;
+                    if (s === "Thợ Săn Tiền Thưởng") dynamicText = `<div class="skill-dynamic-txt">Lv Effect: <span style="color:gold;">+${lv * 15}% CASH</span></div>`;
+                    if (s === "Siêu Giác Quan") dynamicText = `<div class="skill-dynamic-txt">Lv Effect: <span style="color:#8eefff;">+${lv * 3}% Né</span></div>`;
+                    if (s === "Thể Chất Siêu Phàm") dynamicText = `<div class="skill-dynamic-txt">Lv Effect: <span style="color:#ff4d4d;">+${lv * 5} STR/VIT</span></div>`;
                 }
 
                 let cardClass = lv === 0 ? 'locked' : (isMax ? 'unlocked maxed' : 'unlocked');
 
                 html += `
-                    <div class="sl-skill-card ${cardClass}" style="--branch-color: ${displayColor}; color: ${displayColor};">
+                    <div class="sl-skill-card ${cardClass}" style="--branch-color: ${displayColor};">
                         
-                        <div class="skill-list-tooltip" style="border-color: ${displayColor}; box-shadow: 0 0 15px ${displayColor};">
-                            <h4 style="color: ${displayColor}; margin: 0 0 5px 0; font-size: 20px; text-transform: uppercase; text-shadow: 0 0 5px ${displayColor};">${s}</h4>
-                            <span style="color: #ccc; font-size: 14px; display: block; line-height: 1.5;">${data.desc}</span>
-                            ${data.mp ? `<div style="margin-top:8px; padding-top:8px; border-top: 1px dashed #444; color: #00bfff; font-size: 14px; font-weight:bold;">Tiêu hao: ${actualMp} MP</div>` : ''}
+                        <div class="skill-list-tooltip">
+                            <h4 style="color: ${displayColor};">${s}</h4>
+                            <span style="color: #ddd;">${data.desc}</span>
+                            ${data.mp ? `<div style="margin-top:10px; padding-top:8px; border-top: 1px solid #444; color: #00bfff; font-weight:bold;">Cost: ${actualMp} SP</div>` : ''}
                         </div>
 
+                        <!-- Khung Icon Tròn Kèm Level Đè Lên Trái Tim -->
                         <div class="sl-skill-icon-frame">
                             <img src="${data.icon}" style="filter: ${isBranchLocked || lv === 0 ? 'grayscale(1)' : 'none'};">
+                            <div class="sl-skill-level">${isMax ? 'MAX' : `${lv}/${data.maxLv}`}</div>
                         </div>
                         
                         <div class="sl-skill-info">
-                            <div class="sl-skill-name" style="color: ${lv > 0 ? '#fff' : '#aaa'};">${s}</div>
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <span class="sl-skill-level" style="color: ${isMax ? 'gold' : displayColor}; border-color: ${isMax ? 'gold' : displayColor}; box-shadow: ${isMax ? '0 0 5px gold' : 'none'};">
-                                    ${isMax ? 'MAX' : `Lv.${lv}/${data.maxLv}`}
-                                </span>
-                                ${!isMax && data.branch !== "Đặc biệt" ? `<span style="color: #aaa; font-size: 12px; font-family: sans-serif;">Cần: <b style="color:#fff;">${data.cost}</b> Điểm</span>` : ''}
-                            </div>
+                            <div class="sl-skill-name" style="color: ${lv > 0 ? displayColor : '#aaa'};">${s}</div>
+                            ${!isMax && data.branch !== "Đặc biệt" ? `<div style="color: #aaa; font-size: 13px;">Require: <b style="color:#fff;">${data.cost}</b> Pts</div>` : ''}
                             ${dynamicText}
                         </div>
                         
                         ${data.branch !== "Đặc biệt" ? `
                         <button class="sl-skill-upgrade-btn" onclick="upgradeSkill(event, '${s}')" ${canUpgrade ? '' : 'disabled'}>
-                            +
+                            <span>UNLOCK</span>
                         </button>
                         ` : `<div class="special-star-icon">★</div>`}
                     </div>
