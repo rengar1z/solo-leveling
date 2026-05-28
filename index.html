@@ -650,7 +650,7 @@
         "effect/Heal_Effect.png", "effect/Burn_Effect.png", "effect/Defense_Decrease_Effect.png", "effect/rage_beru.png", "effect/HP.png", "effect/mana.png",
         "effect/Stun_Effect.png", "effect/Punishment_Effect.png", "effect/Poison_Effect.png", "effect/Defense_Magic_Effect.png", "effect/Strorm_of_White_Flames_Effect.png",
         "effect/Attack_Increase_Effect.png", "effect/Sian_Halat_Scarlet_Domination_Effect.png", "effect/Kasaka_Deadly_Poison_Effect.png",
-        "effect/Impulsive_Revenge_Effect.png", "effect/Beast_Form_Effect.png", "effect/The_Dancer_Effect.png",
+        "effect/Impulsive_Revenge_Effect.png", "effect/Beast_Form_Effect.png", "effect/The_Dancer_Effect.png", "effect/Beast_Form_Effect_2",
         
         // Skills
         "skill/tansat.png", "skill/tanghinh.jpg", "skill/dagger.jpg", "skill/loimathuat.png", "skill/ngonluahacam.png", "skill/khienmathuat.png",
@@ -785,6 +785,7 @@
     let monarchWrathUses = 0;
     let playerBleedTurns = 0; 
     let playerArmorBreakTurns = 0;
+    window.isPlayerBeastForm = 0;
     window.enemyDeathMark = false;
     window.specialCooldown = 0;
     window.combatTimer = null
@@ -1144,6 +1145,7 @@
         "skill_execute": { name: "Bí Kỹ: Đoạt Mệnh", price: 500000, type: "skill", skillName: "Lưỡi Dao Đoạt Mệnh" },
         "skill_hellfire": { name: "Bí Kỹ: Hỏa Ngục", price: 500000, type: "skill", skillName: "Hỏa Ngục Bộc Phá" },
         "skill_shatter": { name: "Bí Kỹ: Toái Giáp", price: 500000, type: "skill", skillName: "Toái Giáp Trảm" },
+        "skill_beast": { name: "Bí Kỹ: Hóa Thú", price: 10, currencyType: "item", currencyItem: "Giấy chứng nhận thợ săn", type: "skill", skillName: "Hóa Thú (Beast Form)" },
         "costume_demon_king": { name: "Ma Vương Hàng Lâm", price: 10, currencyType: "item", currencyItem: "Lõi Ma Tinh", type: "item", itemId: "Ma Vương Hàng Lâm" },
         "costume_blood_armor": { name: "Huyết Giáp Vô Song", price: 15, currencyType: "item", currencyItem: "Lõi Ma Tinh", type: "item", itemId: "Huyết Giáp Vô Song" },
         "costume_cha_haein_spirit": { name: "Cha Hae-In Tinh Linh", price: 20, currencyType: "item", currencyItem: "Lõi Ma Tinh", type: "item", itemId: "Cha Hae-In Tinh Linh" },
@@ -1197,6 +1199,11 @@
             branch: "Đặc biệt", type: "active", maxLv: 1, cost: 0, mp: 50, func: "useArmorShatter", 
             desc: "[Bí Kỹ] ST Vật lý bỏ qua 30% Giáp. Đập tan Shield của địch và hồi 15% Max HP. (Giá: 500.000 CASH)", 
             icon: "skill/cothethep.png" 
+        },
+        "Hóa Thú (Beast Form)": { 
+            branch: "Đặc biệt", type: "active", maxLv: 1, cost: 0, mp: 80, func: "useBeastForm", 
+            desc: "[Bí Kỹ] Hóa thân thành Bạch Hổ. Tăng 30% TẤT CẢ sát thương đầu ra nhưng mất 15% HP tối đa mỗi lượt. Hiệu ứng kéo dài 3 lượt. (Yêu cầu: 10 Giấy chứng nhận thợ săn)", 
+            icon: "effect/Beast_Form_Effect.png" 
         },
     };
 
@@ -1322,20 +1329,35 @@
         const item = SHOP_DATA[itemId];
         if (!item) return;
     
-        if (currentUser.cash < item.price) {
-            return alert(`Hệ thống: Bạn không đủ Cash! Cần ${item.price} để sở hữu Bí Kỹ này.`);
+        // KIỂM TRA MUA BẰNG ITEM HAY CASH
+        if (item.currencyType === "item") {
+            const reqItem = item.currencyItem;
+            const reqAmount = item.price;
+            const invIndex = currentUser.inventory.findIndex(i => i.name === reqItem);
+            
+            if (invIndex === -1 || (currentUser.inventory[invIndex].quantity || 1) < reqAmount) {
+                return alert(`Hệ thống: Bạn không đủ vật liệu! Cần thu thập đủ ${reqAmount} [${reqItem}] để đổi Bí kỹ này.`);
+            }
+            
+            if (currentUser.inventory[invIndex].quantity > reqAmount) {
+                currentUser.inventory[invIndex].quantity -= reqAmount;
+            } else {
+                currentUser.inventory.splice(invIndex, 1);
+            }
+        } else {
+            if (currentUser.cash < item.price) {
+                return alert(`Hệ thống: Bạn không đủ Cash! Cần ${item.price} để sở hữu mặt hàng này.`);
+            }
+            currentUser.cash -= item.price;
         }
     
         if (item.type === "skill") {
             if (currentUser.skills[item.skillName] > 0) {
                 return alert("Hệ thống: Bạn đã lĩnh ngộ kỹ năng này rồi!");
             }
-            
-            currentUser.cash -= item.price;
             currentUser.skills[item.skillName] = 1; 
             alert(`✨ Chúc mừng! Bạn đã lĩnh ngộ được [${item.skillName}]!`);
         } else {
-            currentUser.cash -= item.price;
             window.giveItem(item.itemId);
             alert(`🛒 Mua thành công [${item.name}]!`);
         }
@@ -1343,10 +1365,9 @@
         await set(ref(db, 'users/' + currentUser.username), currentUser);
         render();
 
-        // Cập nhật lại giao diện Shop ngay lập tức
         if (window.selectedShopItemKey) window.selectShopItem(window.selectedShopItemKey);
     };
-
+    
     // ================= XỬ LÝ TỦ ĐỒ (COSTUME) =================
     window.handleCostume = async function(shopId) {
         if (!currentUser.ownedCostumes) currentUser.ownedCostumes = [];
@@ -2179,6 +2200,9 @@
         if (window.playerVulnerabilityTurns && window.playerVulnerabilityTurns > 0) {
             pHTML += `<div class="status-icon" title="Chấn động (Nhận thêm 5% ST)"><img src="effect/Punishment_Effect.png" style="width: 100%; height: 100%; object-fit: contain;"></span><div class="status-turn">${window.playerVulnerabilityTurns}</div></div>`;
         }
+        if (window.isPlayerBeastForm && window.isPlayerBeastForm > 0) {
+            pHTML += `<div class="status-icon" title="Hóa Thú (ATK +30%, mất 15% HP/lượt)"><img src="effect/Beast_Form_Effect_2.png" style="width: 100%; height: 100%; object-fit: contain;"><div class="status-turn">${window.isPlayerBeastForm}</div></div>`;
+        }
         if (currentUser.equippedShadow && SHADOW_DATA[currentUser.equippedShadow]) {
             const shadow = SHADOW_DATA[currentUser.equippedShadow];
             pHTML += `<div class="status-icon" title="[ ${shadow.name} ] - Nội tại: ${shadow.skillName}" style="border-radius: 50%; border: 2px solid #cc33ff; box-shadow: 0 0 10px #cc33ff; overflow: hidden; margin-right: 5px;">
@@ -2421,7 +2445,7 @@
             cost = getActualMpCost(baseWrath); 
         }
         
-        const isSpecialSkill = btn.getAttribute('onclick') && (btn.getAttribute('onclick').includes('useExecuteBlade') || btn.getAttribute('onclick').includes('useHellfireBlast') || btn.getAttribute('onclick').includes('useArmorShatter'));
+        const isSpecialSkill = btn.getAttribute('onclick') && (btn.getAttribute('onclick').includes('useExecuteBlade') || btn.getAttribute('onclick').includes('useHellfireBlast') || btn.getAttribute('onclick').includes('useArmorShatter') || btn.getAttribute('onclick').includes('useBeastForm'));
 
         let isLocked = false;
         
@@ -3187,7 +3211,10 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
 
         // CHÈN THÊM BUFF CỦA VUA QUỶ BARAN VÀO ĐÂY (Áp dụng cho mọi loại sát thương)
         if (currentUser.equippedShadow === "baran") {
-            finalDmg *= 1.15; // Tăng 15% Sát thương tổng
+            finalDmg *= 1.15; 
+        }
+        if (window.isPlayerBeastForm && window.isPlayerBeastForm > 0) {
+            finalDmg *= 1.30; 
         }
 
         // 7. CƠ CHẾ CHẶN SÁT THƯƠNG CỦA LỚP GIÁP ẢO (SHIELD BARRIER BÊN QUÁI)
@@ -3579,6 +3606,29 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         logBattle(`${critLog}<span style="color:#ffcc00; font-weight:bold;">✨ TOÁI GIÁP TRẢM</span> nện xuống, gây <span style="color:#ff4d4d">${hit.dmg}</span> ST!${bonusLog}`);
         updateCombatUI(); checkBattleEnd();
     };
+
+    // --- SKILL ĐẶC BIỆT: HÓA THÚ ---
+    window.useBeastForm = function() {
+        if (window.specialCooldown > 0) {
+            logBattle(`<span style='color:orange; font-weight:bold;'>Bí Kỹ đang hồi chiêu! Cần chờ ${window.specialCooldown} lượt nữa.</span>`);
+            return;
+        }
+        let reqMp = getActualMpCost(80);
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) {
+            if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return;
+        }
+        
+        currentUser.mp -= reqMp;
+        window.isPlayerBeastForm = 3; 
+        window.specialCooldown = 4; 
+
+        triggerPlayerShake(); 
+        
+        logBattle(`<span style="color:#ffffff; font-weight:bold; text-shadow: 0 0 10px #fff, 0 0 20px #00ffff;">🐅 HÓA THÚ: BẠCH HỔ!</span> Bạn gầm lên, cơ thể biến đổi! <span style="color:#ff3333;">Sát thương tăng 30%</span> nhưng sẽ <span style="color:red;">mất 15% HP mỗi lượt</span> trong 3 lượt tới!`);
+        
+        updateCombatUI(); 
+        checkBattleEnd();
+    };
     
     function enemyTurn() {
         if (!enemy || enemy.hp <= 0 || !currentUser) return;
@@ -3647,9 +3697,8 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         
         // --- CƠ CHẾ NGƯỜI CHƠI BỊ CHẢY MÁU ---
         if (window.playerBleedTurns && window.playerBleedTurns > 0) {
-            let bleedDmg = Math.floor(currentUser.maxHp * 0.05); // Hoặc mức sát thương tùy bạn set
+            let bleedDmg = Math.floor(currentUser.maxHp * 0.05); 
             
-            // KHIÊN CỦA NGƯỜI CHƠI ĐỠ CHẢY MÁU
             if (currentUser.shieldHP && currentUser.shieldHP > 0) {
                 if (currentUser.shieldHP >= bleedDmg) {
                     currentUser.shieldHP -= bleedDmg; 
@@ -3664,6 +3713,30 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
 
             window.playerBleedTurns--;
             logBattle(`<span style="color:#ff0000; font-style:italic;">🩸 Bạn bị mất máu liên tục! Trừ ${bleedDmg} Máu/Khiên.</span>`);
+            updateCombatUI(); 
+            if (currentUser.hp <= 0) { return setTimeout(loseBattle, 1000); }
+        }
+
+        // --- CƠ CHẾ MẤT MÁU KHI HÓA THÚ ---
+        if (window.isPlayerBeastForm && window.isPlayerBeastForm > 0) {
+            let beastDmg = Math.floor(currentUser.maxHp * 0.15); // Rút 15% HP Max
+            if (currentUser.shieldHP && currentUser.shieldHP > 0) {
+                if (currentUser.shieldHP >= beastDmg) { currentUser.shieldHP -= beastDmg; } 
+                else {
+                    let leftOver = beastDmg - currentUser.shieldHP; 
+                    currentUser.shieldHP = 0;
+                    currentUser.hp = Math.max(0, currentUser.hp - leftOver);
+                }
+            } else {
+                currentUser.hp = Math.max(0, currentUser.hp - beastDmg); 
+            }
+
+            window.isPlayerBeastForm--;
+            logBattle(`<span style="color:#ff0000; font-style:italic;">🐅 Khí huyết cuộn trào do Hóa Thú! Bạn mất ${beastDmg} Máu/Khiên.</span>`);
+            
+            if (window.isPlayerBeastForm === 0) {
+                logBattle(`<span style="color:#aaa; font-style:italic;">Trạng thái Hóa Thú đã kết thúc. Cơ thể bạn trở lại bình thường.</span>`);
+            }
             updateCombatUI(); 
             if (currentUser.hp <= 0) { return setTimeout(loseBattle, 1000); }
         }
@@ -4822,6 +4895,13 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                         playerBleedTurns--;
                         logBattle(`<span style="color:red; font-style:italic;">🩸 Vết thương rỉ máu! Bạn mất thêm ${bleedDmg} HP.</span>`);
                     }
+                    if (window.isPlayerBeastForm && window.isPlayerBeastForm > 0) {
+                        let beastDmg = Math.floor(currentUser.maxHp * 0.15);
+                        currentUser.hp = Math.max(0, currentUser.hp - beastDmg);
+                        window.isPlayerBeastForm--;
+                        logBattle(`<span style="color:red; font-style:italic;">🐅 Khí huyết cuộn trào! Trừ ${beastDmg} HP.</span>`);
+                        if (window.isPlayerBeastForm === 0) logBattle(`<span style="color:#aaa; font-style:italic;">Trạng thái Hóa Thú đã kết thúc.</span>`);
+                    }
                     // Thêm xử lý Thiêu Đốt khi Boss choáng
                     if (window.enemyBurnTurns && window.enemyBurnTurns > 0) {
                         let burnDmg = Math.floor(enemy.maxHp * 0.03);
@@ -4907,6 +4987,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         playerBleedTurns = 0;
         playerArmorBreakTurns = 0;
         enemyPoisonTurns = 0;
+        window.isPlayerBeastForm = 0;
         window.counterCooldown = 0;
         window.tanSatCooldown = 0;
         window.potionCooldown = 0;
@@ -4972,6 +5053,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         playerBleedTurns = 0;
         playerArmorBreakTurns = 0;
         enemyPoisonTurns = 0;
+        window.isPlayerBeastForm = 0;
         window.counterCooldown = 0;
         window.tanSatCooldown = 0;
         window.potionCooldown = 0;
@@ -5100,6 +5182,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         playerBleedTurns = 0;
         playerArmorBreakTurns = 0;
         enemyPoisonTurns = 0;
+        window.isPlayerBeastForm = 0;
         window.counterCooldown = 0;
         window.tanSatCooldown = 0;
         window.potionCooldown = 0;
