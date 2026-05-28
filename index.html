@@ -3118,7 +3118,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
             return alert("⚠️ HỆ THỐNG: Khí tức quái vật quá áp đảo, bạn không thể thay đổi trang bị lúc này!");
         }
-        playSound("audio/dungtrangbi");
+        playSound("audio/dungtrangbi.mp3");
         const itemObj = currentUser.inventory[index];
         const itemData = ITEM_DATA[itemObj.name];
         let slot = itemData.type; 
