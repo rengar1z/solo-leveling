@@ -1595,7 +1595,15 @@
         const listDiv = document.getElementById('achievementList');
         if (!listDiv) return;
         
-        let html = "";
+        let html = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-left: 10px; margin-right: 10px;">
+                <div style="color: #fff; font-family: 'Oswald', sans-serif; text-transform: uppercase;">
+                    <span style="color:gold; font-weight:bold; font-size:32px; text-shadow: 0 0 15px rgba(255,215,0,0.5); font-style: italic; letter-spacing: 2px;">ACHIEVEMENTS</span>
+                </div>
+                <div style="color: #888; font-style: italic; font-size: 16px;">Vượt qua giới hạn để nhận danh hiệu</div>
+            </div>
+        `;
+
         for (let key in TITLE_DATA) {
             const t = TITLE_DATA[key];
             const isUnlocked = currentUser.unlockedTitles.includes(key);
@@ -1605,48 +1613,67 @@
             const progressVal = Math.min(currentKills, t.req);
             const percent = t.req > 0 ? (progressVal / t.req) * 100 : 100;
             
-            // Xử lý Giao diện Ô Phần Thưởng (Kiêm nút bấm Trang bị)
-            let boxClass = "ach-reward-box";
-            let boxContent = "";
+            let btnClass = "bbs-ach-btn locked";
+            let btnContent = "<span>LOCKED</span>";
             let onClickAttr = "";
+            let themeColor = "#555"; 
+            let iconFilter = "grayscale(1) opacity(0.5)";
+            let progressBgColor = "#333";
+            let progressFill = "#555";
+            let textShadow = "none";
+            let iconEmoji = "🔒";
             
+            // Nếu đang trang bị
             if (isEquipped) {
-                boxClass += " equipped";
-                boxContent = `<div class="ach-reward-icon">👑</div><div class="ach-btn-text" style="color:#ffcc00;">ĐANG DÙNG</div>`;
-            } else if (isUnlocked) {
+                btnClass = "bbs-ach-btn equipped";
+                btnContent = "<span>EQUIPPED</span>";
+                themeColor = "gold";
+                iconFilter = "none";
+                progressBgColor = "#552200";
+                progressFill = "linear-gradient(90deg, #ffcc00, #fffaaa)";
+                textShadow = "0 0 10px gold";
+                iconEmoji = "👑";
+            } 
+            // Nếu đã mở khóa nhưng chưa trang bị
+            else if (isUnlocked) {
+                btnClass = "bbs-ach-btn claim";
+                btnContent = "<span>EQUIP</span>";
                 onClickAttr = `onclick="equipTitle('${key}')"`;
-                boxContent = `<div class="ach-reward-icon" style="filter: drop-shadow(0 0 5px #00ff00);">📜</div><div class="ach-btn-text" style="color:#00ff00;">TRANG BỊ</div>`;
-            } else {
-                boxClass += " locked";
-                boxContent = `<div class="ach-reward-icon">🔒</div><div class="ach-btn-text" style="color:#aaa;">CHƯA MỞ</div>`;
+                themeColor = "#00ffcc";
+                iconFilter = "none";
+                progressBgColor = "#003333";
+                progressFill = "linear-gradient(90deg, #00bfff, #00ffcc)";
+                textShadow = "0 0 8px #00ffcc";
+                iconEmoji = "🏆";
             }
 
-            // Xuất cấu trúc HTML y hệt ảnh Arise
             html += `
-            <div class="ach-row">
-                <div class="ach-icon-trophy">🏆</div>
-                <div class="ach-content">
-                    <div class="ach-text-row">
-                        <div>
-                            <div class="ach-title">${t.name}</div>
-                            <div class="ach-desc">${t.desc}</div>
-                        </div>
-                        <div class="ach-progress-text">
-                            ${progressVal}/${t.req} <span style="font-size: 14px; opacity: 0.7;">🔎</span>
+            <div class="bbs-ach-row" style="border-left-color: ${themeColor}; filter: ${isUnlocked ? 'none' : 'brightness(0.7)'};">
+                <div class="bbs-ach-content-wrapper">
+                    
+                    <div class="bbs-ach-icon" style="filter: ${iconFilter}; border-color: ${themeColor}; color: ${themeColor}; text-shadow: ${textShadow}; box-shadow: inset 0 0 15px rgba(0,0,0,0.8), 0 0 15px ${isUnlocked ? themeColor : 'transparent'};">
+                        ${iconEmoji}
+                    </div>
+                    
+                    <div class="bbs-ach-info">
+                        <div class="bbs-ach-title" style="color: ${isUnlocked ? '#fff' : '#aaa'};">${t.name}</div>
+                        <div class="bbs-ach-desc">${t.desc}</div>
+                        
+                        <div class="bbs-ach-progress-bg" style="border-color: ${themeColor}; background: ${progressBgColor};">
+                            <div class="bbs-ach-progress-fill" style="width: ${percent}%; background: ${progressFill}; box-shadow: ${isUnlocked ? '0 0 10px ' + themeColor : 'none'};"></div>
+                            <div class="bbs-ach-progress-text" style="color: ${themeColor}; text-shadow: ${textShadow};">${progressVal} / ${t.req}</div>
                         </div>
                     </div>
-                    <div class="ach-progress-bar-bg">
-                        <div class="ach-progress-bar-fill" style="width: ${percent}%;"></div>
-                    </div>
-                </div>
-                <div class="${boxClass}" ${onClickAttr}>
-                    ${boxContent}
+                    
+                    <button class="${btnClass}" ${onClickAttr}>
+                        ${btnContent}
+                    </button>
                 </div>
             </div>`;
         }
         listDiv.innerHTML = html;
         
-        // Cập nhật lên Panel Status bên ngoài
+        // Cập nhật thẻ hiển thị ngoài Panel Status
         const titleDisp = document.getElementById('equippedTitleDisplay');
         if (titleDisp) {
             titleDisp.innerText = currentUser.equippedTitle && TITLE_DATA[currentUser.equippedTitle] ? `[ ${TITLE_DATA[currentUser.equippedTitle].name} ]` : "Chưa trang bị";
