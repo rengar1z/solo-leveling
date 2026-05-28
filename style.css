@@ -927,40 +927,6 @@
             transform: none;
         }
         
-        /* ================= GIAO DIỆN CỬA HÀNG CHUẨN SOLO LEVELING ANIME ================= */
-
-        .sl-shop-filter-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .sl-shop-filter-btn {
-            width: 55px;
-            height: 55px;
-            border: 1px solid rgba(0, 191, 255, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            cursor: pointer;
-            background: rgba(0,0,0,0.6);
-            transition: 0.2s;
-            filter: grayscale(1) opacity(0.5);
-        }
-
-        .sl-shop-filter-btn.active {
-            border-color: #fff;
-            background: #fff;
-            filter: grayscale(0) opacity(1);
-            box-shadow: 0 0 15px rgba(255,255,255,0.6);
-        }
-
-        .sl-shop-filter-btn:hover {
-            border-color: #00bfff;
-            filter: grayscale(0) opacity(1);
-        }
-
         .sl-shop-list {
             display: flex;
             flex-direction: column;
@@ -983,74 +949,6 @@
             background: #00bfff;
             border-radius: 4px;
             box-shadow: 0 0 5px #00bfff;
-        }
-
-        .sl-shop-item {
-            display: flex;
-            align-items: center;
-            border: 1px solid rgba(0, 191, 255, 0.2);
-            padding: 15px 20px;
-            background: linear-gradient(90deg, rgba(0, 15, 30, 0.8), rgba(0, 5, 15, 0.9));
-            transition: 0.2s;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .sl-shop-item:hover {
-            border-color: #00bfff;
-            background: linear-gradient(90deg, rgba(0, 30, 60, 0.8), rgba(0, 10, 20, 0.9));
-            box-shadow: 0 0 20px rgba(0, 191, 255, 0.15) inset;
-        }
-
-        .sl-shop-icon-box {
-            width: 60px;
-            height: 60px;
-            border: 1px solid #00bfff;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            box-shadow: inset 0 0 15px rgba(0, 191, 255, 0.3);
-            flex-shrink: 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .sl-shop-icon-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* Đổi từ cover thành contain để ảnh thu nhỏ lại vừa vặn */
-            padding: 4px; /* Thêm một chút đệm để ảnh không chạm viền */
-            box-sizing: border-box;
-        }
-
-        .sl-shop-info {
-            flex: 1;
-            margin-left: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .sl-shop-item-name {
-            font-size: 24px;
-            color: #fff;
-            margin: 0;
-            letter-spacing: 1px;
-            text-shadow: 0 0 5px rgba(255,255,255,0.4);
-            font-weight: normal;
-        }
-
-        .sl-shop-item-desc {
-            font-size: 14px;
-            color: #888;
-            margin-top: 5px;
-        }
-
-        .sl-shop-action {
-            text-align: right;
-            min-width: 150px;
         }
 
         .sl-shop-price-btn {
