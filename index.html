@@ -190,35 +190,54 @@
 </div>
                 <!-- ================= TAB BAG (TÚI ĐỒ) MỚI ================= -->
             <div id="tab-bag" class="tab-panel">
-            <div style="position: relative; width: 100%; max-width: 1400px; margin: 0 auto;">
-                <!-- Nhãn "Bag" đen trắng bo góc chuẩn ảnh -->
-                <div style="position: absolute; top: -14px; left: 15px; background: #000; color: #fff; padding: 4px 20px; font-size: 22px; font-weight: bold; font-family: 'Oswald', sans-serif; z-index: 10; border: 2px solid #000; letter-spacing: 1px; clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);">
-                    Bag
-                </div>
-                
-                <div class="new-bag-container">
-                    <!-- CỘT 1: Sidebar Phân Loại -->
-                    <div class="bag-sidebar">
-                        <button class="bag-side-btn active" onclick="switchInvTab('all', this)">All</button>
-                        <button class="bag-side-btn" onclick="switchInvTab('item', this)">Items</button>
-                        <button class="bag-side-btn" onclick="switchInvTab('material', this)">Materials</button>
-                        <button class="bag-side-btn" onclick="switchInvTab('equip', this)">Equips</button>
-                    </div>
+    <div style="position: relative; width: 100%; max-width: 1400px; margin: 0 auto;">
+        <div style="position: absolute; top: -14px; left: 15px; background: #000; color: #fff; padding: 4px 20px; font-size: 22px; font-weight: bold; font-family: 'Oswald', sans-serif; z-index: 10; border: 2px solid #000; letter-spacing: 1px; clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);">
+            Bag
+        </div>
         
-                    <!-- CỘT 2: Lưới Vật Phẩm (Grid) -->
-                    <div class="bag-grid" id="bagGridArea">
-                        <!-- Javascript sẽ render ô vuông vật phẩm vào đây -->
+        <div class="new-bag-container">
+            <div class="bag-sidebar">
+                <button class="bag-side-btn active" onclick="switchInvTab('all', this)">All</button>
+                <button class="bag-side-btn" style="color: #cc66ff; border-bottom: 1px dashed rgba(204,102,255,0.2);" onclick="switchInvTab('character', this)">✦ Character</button>
+                <button class="bag-side-btn" onclick="switchInvTab('item', this)">Items</button>
+                <button class="bag-side-btn" onclick="switchInvTab('material', this)">Materials</button>
+                <button class="bag-side-btn" onclick="switchInvTab('equip', this)">Equips</button>
+            </div>
+
+            <div style="flex: 1; position: relative; height: 100%; background: #e9ecef; overflow: hidden;">
+                <div class="bag-grid" id="bagGridArea" style="height: 100%; width: 100%; box-sizing: border-box;">
                     </div>
-        
-                    <!-- CỘT 3: Bảng Chi Tiết (Detail Panel) -->
-                    <div class="bag-detail" id="bagDetailArea">
-                        <div style="text-align:center; margin-top: 100px; color: #888; font-size: 16px; font-family: sans-serif;">
-                            Chọn một vật phẩm để xem chi tiết
-                        </div>
+
+                <div id="characterVisualArea" style="display: none; height: 100%; width: 100%; justify-content: space-between; align-items: center; padding: 25px 35px; box-sizing: border-box;">
+                    <div style="display: flex; flex-direction: column; gap: 14px; width: 85px;">
+                        <div id="slot-weapon"></div>
+                        <div id="slot-helmet"></div>
+                        <div id="slot-armor"></div>
+                        <div id="slot-gloves"></div>
+                    </div>
+
+                    <div style="flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; position: relative;">
+                        <div style="position: absolute; bottom: 15px; width: 200px; height: 25px; background: rgba(0, 0, 0, 0.08); border-radius: 50%; filter: blur(2px); z-index: 1;"></div>
+                        <img id="visual-p-img" src="char/Sungjinwoo.png" alt="Character" style="height: 92%; max-height: 480px; object-fit: contain; z-index: 2; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.12)); transition: 0.3s;">
+                    </div>
+
+                    <div style="flex-direction: column; display: flex; gap: 14px; width: 85px;">
+                        <div id="slot-necklace"></div>
+                        <div id="slot-ring"></div>
+                        <div id="slot-earring"></div>
+                        <div id="slot-shoes"></div>
                     </div>
                 </div>
             </div>
+
+            <div class="bag-detail" id="bagDetailArea">
+                <div style="text-align:center; margin-top: 100px; color: #888; font-size: 16px; font-family: sans-serif;">
+                    Chọn một vật phẩm để xem chi tiết
+                </div>
+            </div>
         </div>
+    </div>
+</div>
 <!-- ================= KẾT THÚC TAB BAG ================= -->
 <div id="tab-shop" class="tab-panel">
     
@@ -2890,13 +2909,33 @@
     if (!currentUser.inventory) currentUser.inventory = [];
     if (!currentUser.equipped) currentUser.equipped = { weapon: null, armor: null, helmet: null, gloves: null, necklace: null, earring: null, ring: null, shoes: null, costume: null };
 
-    const gridArea = document.getElementById('bagGridArea');
-    if (!gridArea) return; 
+    const allSlots = ['weapon', 'armor', 'helmet', 'gloves', 'necklace', 'earring', 'ring', 'shoes'];
+    allSlots.forEach(slot => {
+        const slotContainer = document.getElementById('slot-' + slot);
+        if (!slotContainer) return;
+        
+        const itemObj = currentUser.equipped[slot];
+        if (itemObj) {
+            const itemData = ITEM_DATA[itemObj.name];
+            const rank = itemData.rank || 'D';
+            let isSelected = window.selectedBagItemInfo && window.selectedBagItemInfo.isEquipped && window.selectedBagItemInfo.slot === slot;
+            
+            slotContainer.innerHTML = `
+                <div class="bag-item-slot rank-${rank} ${isSelected ? 'selected' : ''}" onclick="selectEquippedItem('${slot}')" style="width:85px; height:85px; margin:0 auto;">
+                    <img src="${itemData.img}">
+                </div>
+            `;
+        } else {
+            slotContainer.innerHTML = `
+                <div class="bag-item-slot empty-slot" style="width:85px; height:85px; margin:0 auto;">
+                    ${slot.toUpperCase()}
+                </div>
+            `;
+        }
+    });
 
-    // 1. GỘP CÁC ITEM CÙNG LOẠI LÀM MỘT
     let compressedInventory = [];
     let stackMap = {};
-
     currentUser.inventory.forEach(itemObj => {
         if (typeof itemObj === 'string') {
             const base = ITEM_DATA[itemObj];
@@ -2920,7 +2959,8 @@
     });
     currentUser.inventory = compressedInventory;
 
-    // 2. LỌC ITEM THEO TABS
+    const gridArea = document.getElementById('bagGridArea');
+    if (!gridArea) return;
     let gridHTML = "";
     let displayItems = [];
 
@@ -2943,12 +2983,11 @@
         }
     });
 
-    // 3. RENDER LƯỚI GRID
+    // RENDER LƯỚI GRID ĐẠO CỤ
     displayItems.forEach(item => {
         const rank = item.data.rank || 'D';
         const clickParam = item.isStacked ? `'${item.obj.name}', true, ${item.qty}` : `${item.index}, false, 1`;
-        
-        let isSelected = window.selectedBagItemInfo && 
+        let isSelected = window.selectedBagItemInfo && !window.selectedBagItemInfo.isEquipped &&
                         ((item.isStacked && window.selectedBagItemInfo.name === item.obj.name) || 
                         (!item.isStacked && window.selectedBagItemInfo.index === item.index));
         
@@ -2966,9 +3005,10 @@
         gridArea.innerHTML = gridHTML;
     }
     
-    // Auto-update chi tiết panel nếu item chọn bị thay đổi số lượng
     if (window.selectedBagItemInfo) {
-        if (window.selectedBagItemInfo.isStacked) {
+        if (window.selectedBagItemInfo.isEquipped) {
+            selectEquippedItem(window.selectedBagItemInfo.slot, true);
+        } else if (window.selectedBagItemInfo.isStacked) {
             selectBagItem(window.selectedBagItemInfo.name, true, stackMap[window.selectedBagItemInfo.name]?.quantity || 0, true);
         } else {
             selectBagItem(window.selectedBagItemInfo.index, false, 1, true);
@@ -2978,7 +3018,6 @@
 
 window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
     let itemObj, itemData, originalIndex = null;
-
     if (isStacked) {
         originalIndex = currentUser.inventory.findIndex(i => i.name === identifier);
         if (originalIndex === -1 || qty <= 0) {
@@ -3003,23 +3042,39 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
     itemData = ITEM_DATA[itemObj.name];
     const rank = itemData.rank || 'D';
     const sellPrice = itemData.sellPrice || 10;
-
-    window.selectedBagItemInfo = { name: itemObj.name, index: originalIndex, isStacked: isStacked };
+    window.selectedBagItemInfo = { name: itemObj.name, index: originalIndex, isStacked: isStacked, isEquipped: false };
     
     let actionBtnsHTML = "";
-    
     if (itemData.type === 'consumable') {
         actionBtnsHTML += `<button class="bag-action-btn-yellow" onclick="useStackedItem('${itemObj.name}')">Dùng</button>`;
     } else if (!isStacked && itemData.type !== 'material' && itemData.type !== 'rare' && itemData.type !== 'costume') {
         actionBtnsHTML += `<button class="bag-action-btn-yellow" onclick="equipItem(${originalIndex})">Trang bị</button>`;
     }
-    
     if (isStacked) {
         actionBtnsHTML += `<button class="bag-action-btn-yellow sell" onclick="sellStackedItem('${itemObj.name}', ${sellPrice})">Bán (${sellPrice})</button>`;
     } else {
         actionBtnsHTML += `<button class="bag-action-btn-yellow sell" onclick="sellItem(${originalIndex}, ${sellPrice})">Bán (${sellPrice})</button>`;
     }
 
+    renderDetailPanel(itemObj, itemData, rank, actionBtnsHTML, qty, false);
+    if(!isRefresh) renderBag(); 
+};
+
+    window.selectEquippedItem = function(slot, isRefresh = false) {
+    const itemObj = currentUser.equipped[slot];
+    if (!itemObj) return;
+
+    const itemData = ITEM_DATA[itemObj.name];
+    const rank = itemData.rank || 'D';
+    window.selectedBagItemInfo = { slot: slot, isEquipped: true, name: itemObj.name };
+
+    let actionBtnsHTML = `<button class="bag-action-btn-yellow sell" onclick="unequipItem('${slot}')">Tháo Xuống</button>`;
+    
+    renderDetailPanel(itemObj, itemData, rank, actionBtnsHTML, 1, true);
+    if(!isRefresh) renderBag();
+};
+
+    function renderDetailPanel(itemObj, itemData, rank, buttonsHTML, qty, isEquippedView) {
     let statsStr = [
         itemObj.str > 0 ? `+${itemObj.str} STR` : '',
         itemObj.vit > 0 ? `+${itemObj.vit} VIT` : '',
@@ -3028,7 +3083,9 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         itemObj.int > 0 ? `+${itemObj.int} INT` : ''
     ].filter(Boolean).join(' | ');
 
-    let detailHTML = `
+    let statusText = isEquippedView ? `<div style="color: #2b61b3; font-size: 14px; font-weight: bold;">[ ĐANG TRANG BỊ ]</div>` : `<div style="color: #666; font-size: 15px; font-weight: bold;">Đang có: &nbsp;&nbsp;&nbsp; ${qty}</div>`;
+
+    document.getElementById('bagDetailArea').innerHTML = `
         <div style="padding: 15px; display: flex; flex-direction: column; height: 100%;">
             <div style="display: flex; gap: 15px; margin-bottom: 20px;">
                 <div class="bag-item-slot rank-${rank}" style="width: 85px; height: 85px; cursor: default;">
@@ -3036,7 +3093,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 </div>
                 <div style="flex: 1; font-family: sans-serif;">
                     <div style="color: #e67e22; font-weight: bold; font-size: 18px; text-shadow: 1px 1px 1px rgba(0,0,0,0.1); margin-bottom: 5px;">${itemObj.name}</div>
-                    <div style="color: #666; font-size: 15px; font-weight: bold;">Đang có: &nbsp;&nbsp;&nbsp; ${qty}</div>
+                    ${statusText}
                 </div>
             </div>
             
@@ -3052,14 +3109,10 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
             </div>
             
             <div style="display: flex; gap: 10px; background: #f8f9fa; border: 1px solid #ddd; border-top: none; padding: 0 15px 20px 15px;">
-                ${actionBtnsHTML}
+                ${buttonsHTML}
             </div>
         </div>
     `;
-
-    document.getElementById('bagDetailArea').innerHTML = detailHTML;
-    
-    if(!isRefresh) renderBag(); 
 }
     window.equipItem = async function(index) {
         if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
@@ -3106,43 +3159,54 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
     }
     
     window.unequipItem = async function(slot, doSave = true) {
-        if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
-            return alert("⚠️ HỆ THỐNG: Không thể tháo trang bị khi đang trong trạng thái chiến đấu!");
-        }
-        const itemObj = currentUser.equipped[slot];
-        if (!itemObj) return;
+    if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
+        return alert("⚠️ HỆ THỐNG: Không thể tháo trang bị khi đang trong trạng thái chiến đấu!");
+    }
+    const itemObj = currentUser.equipped[slot];
+    if (!itemObj) return;
 
-        // 1. CHỐT TỶ LỆ MÁU/MANA TRƯỚC KHI THÁO
-        let hpPercent = currentUser.hp / currentUser.maxHp;
-        let mpPercent = currentUser.maxMp > 0 ? (currentUser.mp / currentUser.maxMp) : 0;
-        
-        // 2. Trừ chỉ số của món đồ vào Max HP / Max MP
-        currentUser.str -= (itemObj.str || 0);
-        currentUser.vit -= (itemObj.vit || 0);
-        currentUser.agi -= (itemObj.agi || 0);
-        currentUser.int -= (itemObj.int || 0);
-
-        currentUser.maxMp -= (itemObj.mp || 0);
-        currentUser.maxMp -= (itemObj.int || 0) * 5;
-        
-        let vitVal = itemObj.vit || 0; 
-        if (vitVal > 0) { 
-            currentUser.maxHp -= vitVal * 10;
-        }
-
-        // 3. ĐỒNG BỘ LẠI HP/MP THEO ĐÚNG TỶ LỆ CŨ VÀ MAX HP MỚI
-        currentUser.hp = Math.max(1, Math.floor(currentUser.maxHp * hpPercent));
-        currentUser.mp = Math.floor(currentUser.maxMp * mpPercent);
-
-        // Đẩy lại nguyên Object vào túi
-        currentUser.inventory.push(itemObj);
-        currentUser.equipped[slot] = null;
-
-        if (doSave) {
-            await saveUserData();
-            renderBag();
+    // =====================================================================
+    // ĐOẠN THÊM MỚI: Tự động xóa thông tin ở cột bên phải nếu tháo đúng món đó
+    if (window.selectedBagItemInfo && window.selectedBagItemInfo.isEquipped && window.selectedBagItemInfo.slot === slot) {
+        window.selectedBagItemInfo = null;
+        const detailArea = document.getElementById('bagDetailArea');
+        if (detailArea) {
+            detailArea.innerHTML = '<div style="text-align:center; margin-top: 100px; color: #888; font-size: 16px; font-family: sans-serif;">Chọn một vật phẩm để xem chi tiết</div>';
         }
     }
+    // =====================================================================
+
+    // 1. CHỐT TỶ LỆ MÁU/MANA TRƯỚC KHI THÁO
+    let hpPercent = currentUser.hp / currentUser.maxHp;
+    let mpPercent = currentUser.maxMp > 0 ? (currentUser.mp / currentUser.maxMp) : 0;
+    
+    // 2. Trừ chỉ số của món đồ vào Max HP / Max MP
+    currentUser.str -= (itemObj.str || 0);
+    currentUser.vit -= (itemObj.vit || 0);
+    currentUser.agi -= (itemObj.agi || 0);
+    currentUser.int -= (itemObj.int || 0);
+
+    currentUser.maxMp -= (itemObj.mp || 0);
+    currentUser.maxMp -= (itemObj.int || 0) * 5;
+    
+    let vitVal = itemObj.vit || 0; 
+    if (vitVal > 0) { 
+        currentUser.maxHp -= vitVal * 10;
+    }
+
+    // 3. ĐỒNG BỘ LẠI HP/MP THEO ĐÚNG TỶ LỆ CŨ VÀ MAX HP MỚI
+    currentUser.hp = Math.max(1, Math.floor(currentUser.maxHp * hpPercent));
+    currentUser.mp = Math.floor(currentUser.maxMp * mpPercent);
+
+    // Đẩy lại nguyên Object vào túi
+    currentUser.inventory.push(itemObj);
+    currentUser.equipped[slot] = null;
+
+    if (doSave) {
+        await saveUserData();
+        renderBag();
+    }
+}
 
     window.sellItem = async function(index, price) {
         const itemObj = currentUser.inventory[index];
@@ -5571,7 +5635,17 @@ window.switchInvTab = function(tabName, btnElement) {
     btns.forEach(btn => btn.classList.remove('active'));
     if (btnElement) btnElement.classList.add('active');
     
-    // Reset Panel Chi tiết khi đổi Tab
+    const gridArea = document.getElementById('bagGridArea');
+    const charArea = document.getElementById('characterVisualArea');
+    
+    if (tabName === 'character') {
+        gridArea.style.display = 'none';
+        charArea.style.display = 'flex';
+    } else {
+        gridArea.style.display = 'grid';
+        charArea.style.display = 'none';
+    }
+    
     window.selectedBagItemInfo = null;
     document.getElementById('bagDetailArea').innerHTML = '<div style="text-align:center; margin-top: 100px; color: #888; font-size: 16px; font-family: sans-serif;">Chọn một vật phẩm để xem chi tiết</div>';
     
