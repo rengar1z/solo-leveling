@@ -4704,33 +4704,6 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
             }
         }
         
-        // ================= XỬ LÝ SỰ KIỆN TỬ TRẬN =================
-        window.loseBattle = function() {
-            updateCombatUI();
-            logBattle(`<span style="color:red; font-size: 20px; font-weight:bold;">['PLAYER' HAS DIED.]</span>`);
-            resetToButtonMode();
-            saveUserData();
-            document.getElementById('deathPopup').classList.remove('hidden');
-            if (currentRedGateId) {
-                currentRedGateId = null;
-                document.getElementById('dDungeonTitle').style.color = "#ffcc00";
-                document.getElementById('dDungeonTitle').style.textShadow = "none";
-                document.getElementById('btnExitDungeon').classList.remove('hidden');
-                document.getElementById('btnExitDungeon').innerText = "BỎ MẠNG & THOÁT KHỎI CỔNG ĐỎ";
-            }
-            else if (isDungeonMode) {
-                document.getElementById('btnNextStage').classList.add('hidden');
-                document.getElementById('btnExitDungeon').classList.remove('hidden');
-            } else {
-                const btnFind = document.getElementById('btnFindEnemy');
-                if(btnFind) btnFind.disabled = false;
-            }
-        };
-        
-        window.closeDeathPopup = function() {
-            document.getElementById('deathPopup').classList.add('hidden');
-        };
-
         window.checkLevelUp(hasExtraction);
 
         saveUserData(); 
@@ -4795,6 +4768,33 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
             if(btnFind) btnFind.disabled = false;
         }
     }
+
+    // ================= XỬ LÝ SỰ KIỆN TỬ TRẬN =================
+    window.loseBattle = function() {
+        updateCombatUI();
+        logBattle(`<span style="color:red; font-size: 20px; font-weight:bold;">['PLAYER' HAS DIED.]</span>`);
+        resetToButtonMode();
+        saveUserData();
+        document.getElementById('deathPopup').classList.remove('hidden');
+        if (currentRedGateId) {
+            currentRedGateId = null;
+            document.getElementById('dDungeonTitle').style.color = "#ffcc00";
+            document.getElementById('dDungeonTitle').style.textShadow = "none";
+            document.getElementById('btnExitDungeon').classList.remove('hidden');
+            document.getElementById('btnExitDungeon').innerText = "BỎ MẠNG & THOÁT KHỎI CỔNG ĐỎ";
+        }
+        else if (isDungeonMode) {
+            document.getElementById('btnNextStage').classList.add('hidden');
+            document.getElementById('btnExitDungeon').classList.remove('hidden');
+        } else {
+            const btnFind = document.getElementById('btnFindEnemy');
+            if(btnFind) btnFind.disabled = false;
+        }
+    };
+    
+    window.closeDeathPopup = function() {
+        document.getElementById('deathPopup').classList.add('hidden');
+    };
 
     window.attemptExtraction = async function() {
         document.getElementById('extractionPopup').classList.add('hidden');
