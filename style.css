@@ -1889,3 +1889,145 @@
             opacity: 1; 
             bottom: 110%; 
         }
+
+        /* ================= BẢNG THÀNH TỰU (BLEACH BRAVE SOULS STYLE) ================= */
+        .bbs-ach-row {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(90deg, rgba(20,20,25,0.9) 0%, rgba(40,40,50,0.95) 100%);
+            border-left: 6px solid gold;
+            margin-bottom: 18px;
+            padding: 15px 20px;
+            transform: skewX(-10deg); /* Vát chéo toàn bộ thẻ */
+            box-shadow: 3px 5px 15px rgba(0,0,0,0.6);
+            transition: 0.2s ease;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+        
+        .bbs-ach-row:hover {
+            transform: skewX(-10deg) translateX(8px);
+            background: linear-gradient(90deg, rgba(30,30,40,0.9) 0%, rgba(50,50,60,1) 100%);
+            box-shadow: -2px 5px 20px rgba(0,0,0,0.8), 0 0 10px rgba(255,255,255,0.1);
+        }
+        
+        .bbs-ach-content-wrapper {
+            transform: skewX(10deg); /* Đảo ngược lại để nội dung bên trong không bị méo */
+            display: flex;
+            align-items: center;
+            width: 100%;
+            justify-content: space-between;
+        }
+        
+        /* Khung Icon Tròn Dày Đặc Trưng */
+        .bbs-ach-icon {
+            width: 65px; height: 65px;
+            background: #050505;
+            border: 3px solid;
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 32px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5);
+            margin-right: 25px;
+            flex-shrink: 0;
+            transition: 0.3s;
+        }
+        
+        .bbs-ach-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin-right: 20px;
+        }
+        
+        .bbs-ach-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 22px;
+            font-weight: bold;
+            font-style: italic; /* Chữ nghiêng tốc độ */
+            text-transform: uppercase;
+            text-shadow: 1px 1px 2px #000;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+        
+        .bbs-ach-desc {
+            color: #ccc;
+            font-family: sans-serif;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+        
+        /* Thanh Tiến Độ Chuẩn Hành Động */
+        .bbs-ach-progress-bg {
+            width: 100%;
+            height: 12px;
+            background: #111;
+            border: 2px solid;
+            border-radius: 8px;
+            position: relative;
+            overflow: visible;
+        }
+        
+        .bbs-ach-progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .bbs-ach-progress-text {
+            position: absolute;
+            right: 0;
+            top: -22px;
+            font-size: 14px;
+            font-weight: bold;
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 1px;
+        }
+        
+        /* Nút Bấm Vát Chéo (Skewed Button) */
+        .bbs-ach-btn {
+            padding: 12px 25px;
+            border: none;
+            font-family: 'Oswald', sans-serif;
+            font-size: 18px;
+            font-weight: bold;
+            font-style: italic;
+            cursor: pointer;
+            transform: skewX(-15deg); /* Vát chéo nút */
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.6);
+            transition: 0.2s;
+            min-width: 140px;
+            text-align: center;
+        }
+        
+        .bbs-ach-btn span {
+            display: block;
+            transform: skewX(15deg); /* Dựng thẳng chữ lại */
+        }
+        
+        /* Trạng thái Nút: Sẵn sàng Trang bị */
+        .bbs-ach-btn.claim {
+            background: #00ffcc;
+            color: #000;
+        }
+        .bbs-ach-btn.claim:hover {
+            filter: brightness(1.3);
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.6), 0 0 20px rgba(0,255,204,0.6);
+        }
+        
+        /* Trạng thái Nút: Đang dùng */
+        .bbs-ach-btn.equipped {
+            background: gold;
+            color: #000;
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.5);
+            cursor: default;
+        }
+        
+        /* Trạng thái Nút: Khóa */
+        .bbs-ach-btn.locked {
+            background: #444;
+            color: #888;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
