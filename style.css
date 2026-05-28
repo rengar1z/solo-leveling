@@ -482,33 +482,6 @@
             bottom: 125%;
         }
 
-        /* --- HIỆU ỨNG TOOLTIP CHO DANH SÁCH SKILL --- */
-        .skill-list-tooltip {
-            visibility: hidden;
-            opacity: 0;
-            position: absolute;
-            bottom: 80%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 260px;
-            background: rgba(0, 10, 30, 0.98);
-            color: #fff;
-            padding: 15px;
-            border-radius: 6px;
-            z-index: 1000;
-            transition: 0.2s ease-in-out;
-            pointer-events: none;
-            text-align: center;
-            line-height: 1.4;
-        }
-
-        /* Khi rê chuột vào thẻ skill thì Tooltip bay lên hiện ra */
-        .skill-item:hover .skill-list-tooltip {
-            visibility: visible;
-            opacity: 1;
-            bottom: 105%; 
-        }
-        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
