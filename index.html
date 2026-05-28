@@ -546,16 +546,19 @@
     </div>
 </div>
     
-<div id="deathPopup" class="welcome-overlay hidden" style="z-index: 10000; background: rgba(0, 0, 0, 0.9);" onclick="closeDeathPopup()">
-    <div style="text-align: center;">
-        <div style="font-family: 'Oswald', sans-serif; font-size: 55px; color: #ffaa00; font-weight: bold; letter-spacing: 4px; text-transform: uppercase; text-shadow: 0 0 20px rgba(255, 170, 0, 0.6);">
-            ['PLAYER' HAS DIED.]
+<div id="deathPopup" class="welcome-overlay hidden" style="z-index: 10000; background: rgba(0, 0, 0, 0.85);" onclick="closeDeathPopup()">
+    <div class="welcome-box" style="background: linear-gradient(to bottom, #1a1a1a, #000000); border-top: 2px solid #ffcc00; border-bottom: 2px solid #ffcc00; box-shadow: 0 0 30px rgba(255, 204, 0, 0.3);">
+        <div class="alert-header" style="color: #ffcc00; border-bottom: 1px solid rgba(255, 204, 0, 0.2);">
+            <span class="symbol">①</span> Alert <span class="symbol">①</span>
         </div>
-        <div style="margin-top: 20px; font-size: 16px; color: #888; font-family: sans-serif;">
-            [ Nhấp vào bất kỳ đâu để tiếp tục ]
+        <div class="alert-content" style="color: #ffcc00; text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);">
+            [ 'PLAYER' HAS DIED. ]
+        </div>
+        <div style="margin-top: 20px; font-size: 14px; color: #888; font-family: sans-serif; font-weight: normal; letter-spacing: 0;">
+            ( Nhấp vào màn hình để tiếp tục )
         </div>
     </div>
-</div>  
+</div>
     
 <div id="extractionPopup" class="welcome-overlay hidden" style="z-index: 9999;">
     <div class="welcome-box" style="border-color: #9933ff; box-shadow: 0 0 40px rgba(153, 51, 255, 0.6); background: linear-gradient(to bottom, #1a0033, #000000);">
