@@ -5651,37 +5651,7 @@ window.switchInvTab = function(tabName, btnElement) {
     
     if (window.renderBag) window.renderBag();
 };
-    
-    window.toggleEquipView = function() {
-    
-        const btns = document.getElementsByClassName("eq-tab-btn");
-        for (let i = 0; i < btns.length; i++) btns[i].classList.remove("active");
-        
-        const btnToggleVisual = document.getElementById('btnToggleVisual');
-        if (btnToggleVisual) btnToggleVisual.classList.add('active');
 
-        const visualArea = document.getElementById('characterVisualArea');
-        if (visualArea) visualArea.style.display = 'flex'; 
-        
-        const invArea = document.getElementById('inventoryCardArea');
-        if (invArea) invArea.style.display = 'none';
-    };
-
-    let pressTimer;
-
-window.startPress = function(slot) {
-    // Bắt đầu đếm giờ khi chạm vào
-    pressTimer = window.setTimeout(function() {
-        if (confirm(`Hệ thống: Bạn muốn tháo trang bị ở ô ${slot.toUpperCase()}?`)) {
-            unequipItem(slot);
-        }
-    }, 500);
-};
-
-window.endPress = function() {
-    // Hủy đếm giờ nếu nhấc tay ra sớm hoặc di chuyển tay (cuộn trang)
-    clearTimeout(pressTimer);
-};
     setTimeout(startNewBattle, 2000);
 </script>
 </body>
