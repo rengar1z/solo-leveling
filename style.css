@@ -549,83 +549,6 @@
             border-radius: 2px;
         }
 
-        /* --- HIỆU ỨNG ITEM KHO ĐỒ --- */
-        .item-icon-wrapper {
-            position: relative;
-            display: inline-block;
-            cursor: pointer;
-        }
-          
-        .item-img-premium {
-            width: 60px;
-            height: 60px;
-            object-fit: contain; 
-            padding: 6px; 
-            box-sizing: border-box; 
-            border: 2px solid #00bfff;
-            border-radius: 8px;
-            background: radial-gradient(circle, #003366, #000);
-            box-shadow: 0 0 10px rgba(0, 191, 255, 0.4);
-            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
-            vertical-align: middle;
-}
-        /* Khi rê chuột hoặc chạm vào ảnh */
-        .item-icon-wrapper:hover .item-img-premium,
-        .item-icon-wrapper:active .item-img-premium {
-            transform: scale(1.15);
-            border-color: gold;
-            box-shadow: 0 0 20px gold;
-            z-index: 10;
-        }
-
-        .item-tooltip {
-            visibility: hidden;
-            opacity: 0;
-            position: absolute;
-            left: 75px; 
-            top: 50%;
-            transform: translateY(-50%);
-            width: 360px !important;
-            background: #0a2013 !important;
-            border: 2px solid #1dbf48 !important;
-            box-shadow: 0 0 15px rgba(29, 191, 72, 0.4) !important;
-            color: #fff;
-            padding: 15px !important;
-            border-radius: 4px;
-            z-index: 999;
-            transition: 0.3s;
-            pointer-events: none;
-            text-transform: uppercase;
-            font-family: 'Oswald', sans-serif;
-            text-align: left !important;
-        }
-
-        .sl-tt-top { 
-            display: flex; 
-            gap: 15px; 
-            margin-bottom: 12px; 
-        }
-
-        .sl-tt-img-box {
-            width: 75px; height: 75px;
-            background: #040e08; 
-            border-radius: 4px;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
-            flex-shrink: 0;
-        }
-
-        .sl-tt-img-box img { width: 85%; height: 85%; object-fit: contain; }
-
-        .sl-tt-info { display: flex; flex-direction: column; justify-content: center; gap: 4px; }
-
-        /* Xóa bỏ màu vàng chanh mặc định của Tiêu đề Item trong tooltip */
-        .sl-tt-title { font-size: 18px; font-weight: bold; }
-        .sl-tt-line { font-size: 15px; color: #ffffff !important; }
-
-        .sl-tt-bottom { font-size: 15px; color: #fff; line-height: 1.6; }
-        .sl-tt-price { margin-top: 8px; color: #ffcc00; font-size: 14px; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 8px; }
-
         /* ================= HỆ THỐNG MÀU RANK MỚI ================= */
         .text-rank-S { color: #ff3333 !important; text-shadow: 0 0 8px rgba(255, 51, 51, 0.6); }
         .text-rank-A { color: #ff9900 !important; text-shadow: 0 0 8px rgba(255, 153, 0, 0.6); }
@@ -1144,33 +1067,8 @@
         .tab-panel .tab-btn:last-child {
             clip-path: none !important; 
             border-radius: 0 !important; 
-        }
+        }      
 
-        /* Ô chứa trang bị */
-        .eq-slot {
-            width: 65px;
-            height: 65px;
-            background: rgba(0, 10, 25, 0.9);
-            border: 1px solid rgba(0, 191, 255, 0.4);
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.6);
-            box-shadow: inset 0 0 10px rgba(0, 191, 255, 0.1);
-            cursor: pointer;
-            transition: 0.2s;
-            z-index: 10; /* Luôn nằm đè lên trên ảnh nhân vật nếu có chạm nhau */
-        }
-
-        .eq-slot:hover {
-            border-color: #00bfff;
-            box-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
-            color: #fff;
-        }
-       
-        /* Khóa cứng kích thước ảnh nhân vật bên trong để không bao giờ tràn viền */
         #visual-p-img {
             max-width: 100% !important;
             max-height: 440px !important; 
@@ -1178,25 +1076,6 @@
             z-index: 1;
         }
    
-        
-            #slot-weapon .item-tooltip,
-            #slot-shoes .item-tooltip {
-                top: auto !important;
-                bottom: 115% !important;
-            }
-
-            /* Khi chạm vào thì mới hiển thị khối Tooltip lên */
-            .item-icon-wrapper:hover .item-tooltip,
-            .item-icon-wrapper:active .item-tooltip {
-                display: block !important;
-            }
-        }
-
-        .eq-slot {
-            -webkit-user-select: none; 
-            user-select: none;         
-        }
-        
         .combat-potion-wrapper {
             position: relative;
             display: flex !important;
@@ -1829,149 +1708,6 @@
             background: transparent;
         }
 
-        /* ================= TÚI ĐỒ & MÔ HÌNH NHÂN VẬT CHUẨN SYSTEM ================= */
-
-        /* Thanh Header Túi Đồ */
-        .sys-bag-header {
-            display: flex;
-            justify-content: center;
-            background: rgba(0, 15, 30, 0.9);
-            border-bottom: 2px solid rgba(0, 191, 255, 0.3);
-            padding: 0 20px;
-        }
-        
-        .sys-bag-tab {
-            background: transparent;
-            border: none;
-            color: #647b96;
-            font-family: 'Oswald', sans-serif;
-            font-size: 20px;
-            font-weight: bold;
-            padding: 15px 30px;
-            cursor: pointer;
-            position: relative;
-            transition: 0.3s;
-            letter-spacing: 1px;
-        }
-        
-        .sys-bag-tab:hover { color: #8eefff; }
-        
-        .sys-bag-tab.active {
-            color: #fff;
-            text-shadow: 0 0 10px #00bfff;
-        }
-        
-        .sys-bag-tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px; left: 0; width: 100%; height: 3px;
-            background: #00bfff;
-            box-shadow: 0 0 15px #00bfff;
-        }
-        
-        /* Bố cục Mô hình Nhân vật */
-        .sys-character-view {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 100%;
-            padding: 20px 40px;
-            background: radial-gradient(circle at center, rgba(0, 30, 60, 0.5) 0%, rgba(0, 5, 15, 0.8) 100%);
-            position: relative;
-        }
-        
-        /* Cột chứa trang bị 2 bên */
-        .sys-equip-col {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            z-index: 10;
-        }
-        
-        /* Ô Trang bị (Cut-corners Cyberpunk) */
-        .sys-eq-slot {
-            width: 75px;
-            height: 75px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            
-            /* XÓA NỀN VÀ CLIP-PATH Ở THẺ CHA ĐỂ KHÔNG BỊ CẮT TOOLTIP */
-            background: transparent !important; 
-            border: none !important;
-            box-shadow: none !important;
-            clip-path: none !important; 
-        }
-        
-        /* TẠO MÀNG NỀN CẮT GÓC PHÍA SAU (Nơi chứa màu và viền) */
-        .sys-eq-slot::before {
-            content: ''; 
-            position: absolute; 
-            inset: 0;
-            background: rgba(5, 15, 25, 0.85);
-            border: 1px solid rgba(0, 191, 255, 0.4);
-            box-shadow: inset 0 0 15px rgba(0, 191, 255, 0.1);
-            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-            z-index: 0; /* Nằm dưới đáy */
-            transition: all 0.3s ease;
-        }
-        
-        /* KHUNG VIỀN MỎNG TRANG TRÍ BÊN TRONG */
-        .sys-eq-slot::after {
-            content: ''; 
-            position: absolute; 
-            inset: 2px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        /* HIỆU ỨNG KHI RÊ CHUỘT VÀO Ô TRANG BỊ */
-        .sys-eq-slot:hover {
-            transform: scale(1.05); /* Phóng to toàn bộ ô */
-        }
-        
-        /* Đổi màu màng nền khi hover */
-        .sys-eq-slot:hover::before {
-            background: rgba(0, 40, 80, 0.9);
-            border-color: #00bfff;
-            box-shadow: 0 0 20px rgba(0, 191, 255, 0.5), inset 0 0 20px rgba(0, 191, 255, 0.3);
-        }
-        
-        /* ĐẢM BẢO CHỮ, ẢNH VÀ TOOLTIP LUÔN NỔI LÊN TRÊN CÙNG */
-        .sys-eq-slot span, 
-        .sys-eq-slot .item-icon-wrapper {
-            position: relative;
-            z-index: 10; /* Nâng lớp đồ đạc lên trên lớp nền cắt góc */
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 11px;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-        
-        /* Ẩn chữ đi khi ô đã có item đắp vào */
-        .sys-eq-slot.has-item span { 
-            display: none; 
-        }
-        
-        /* CANH LỀ CHO TOOLTIP BAY RA NGOÀI ĐỂ KHÔNG BỊ CHE NHÂN VẬT */
-        .sys-eq-slot .item-tooltip {
-            left: 85px !important;
-        }
-        .sys-equip-col.right .item-tooltip {
-            left: auto !important;
-            right: 85px !important;
-        }
-
         .new-bag-container {
             display: flex;
             flex-direction: row;
@@ -1984,7 +1720,6 @@
             margin-top: 15px;
         }
         
-        /* Sidebar Trái */
         .bag-sidebar {
             width: 120px;
             background: #20242b;
