@@ -4803,7 +4803,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                     }
                     if (currentUser.hp <= 0) {
                         updateCombatUI();
-                        return enemyTurn();
+                        return loseBattle();
                     }
                     logBattle(`<span style="color:yellow; font-weight:bold;">Kẻ địch đang bị choáng, mất lượt!</span>`);
                     isMyTurn = true;
