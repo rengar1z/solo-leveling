@@ -5821,43 +5821,50 @@ window.switchInvTab = function(tabName, btnElement) {
         const station = document.getElementById('forgeStation');
     
         if (isSuccess) {
-            playSound("audio/dungtrangbi.mp3"); // Bạn có thể đổi thành âm thanh đập búa nếu có
-            itemObj.enhanceLevel = level + 1;
-            
-            // Cộng chỉ số
-            if (itemObj.str > 0) itemObj.str += Math.max(2, Math.floor(itemObj.str * 0.1));
-            if (itemObj.vit > 0) itemObj.vit += Math.max(2, Math.floor(itemObj.vit * 0.1));
-            if (itemObj.int > 0) itemObj.int += Math.max(2, Math.floor(itemObj.int * 0.1));
-            if (itemObj.agi > 0) itemObj.agi += Math.max(2, Math.floor(itemObj.agi * 0.1));
-            if (itemObj.mp > 0) itemObj.mp += Math.max(10, Math.floor(itemObj.mp * 0.1));
+        playSound("audio/dungtrangbi.mp3"); 
+        itemObj.enhanceLevel = level + 1;
+        
+        // Cộng chỉ số
+        if (itemObj.str > 0) itemObj.str += Math.max(2, Math.floor(itemObj.str * 0.1));
+        if (itemObj.vit > 0) itemObj.vit += Math.max(2, Math.floor(itemObj.vit * 0.1));
+        if (itemObj.int > 0) itemObj.int += Math.max(2, Math.floor(itemObj.int * 0.1));
+        if (itemObj.agi > 0) itemObj.agi += Math.max(2, Math.floor(itemObj.agi * 0.1));
+        if (itemObj.mp > 0) itemObj.mp += Math.max(10, Math.floor(itemObj.mp * 0.1));
+
+        // HIỆU ỨNG THÀNH CÔNG NHẸ NHÀNG, MƯỢT MÀ
+        station.innerHTML = `
+            <img src="${ITEM_DATA[itemObj.name].img}" style="width: 100px; height: 100px; object-fit: contain; animation: smoothItemGlow 0.6s forwards; z-index: 10;">
+            <div class="smooth-success-text">SUCCESS!</div>
+            <div style="position: absolute; top: -10px; right: -10px; color: #ffcc00; font-size: 26px; font-weight: bold; font-family: 'Oswald', sans-serif; text-shadow: 0 0 10px gold, 2px 2px 0 #000; animation: smoothSuccessPop 0.4s 0.2s both; z-index: 25;">
+                +${itemObj.enhanceLevel}
+            </div>
+        `;
+        
+        setTimeout(async () => {
+            await saveUserData();
+            selectForgeItem(window.selectedForgeItemIndex);
+            renderForgeList();
+            render();
+        }, 1200);
+    } else {
+
+        playSound("audio/forge_item.mp3"); 
+        station.innerHTML = `
+            <img src="${ITEM_DATA[itemObj.name].img}" style="width: 100px; height: 100px; object-fit: contain; animation: smoothFailFade 0.4s forwards; z-index: 10;">
+            <div class="smooth-fail-text">FAILED</div>
+        `;
+        station.classList.remove('forge-active');
+        
+        setTimeout(async () => {
+            await saveUserData();
+            selectForgeItem(window.selectedForgeItemIndex);
+            renderForgeList();
+            render();
+        }, 1000); 
+    }
+};
     
-            station.innerHTML = `<div style="color: #00ff00; font-size: 24px; font-weight: bold; text-shadow: 0 0 10px #00ff00; z-index: 10; position: absolute;">THÀNH CÔNG!</div>` + station.innerHTML;
-            station.querySelector('img').classList.add('upgrade-success-anim');
-            
-            // Chờ animation chạy xong rồi render lại
-            setTimeout(async () => {
-                await saveUserData();
-                selectForgeItem(window.selectedForgeItemIndex);
-                renderForgeList();
-                render();
-            }, 1000);
-        } else {
-            // Thất bại
-            playSound("audio/monster_hit.mp3"); // Âm thanh vỡ/bể
-            station.innerHTML = `<div style="color: #ff3333; font-size: 24px; font-weight: bold; text-shadow: 0 0 10px #ff3333; z-index: 10; position: absolute; transform: rotate(-15deg);">THẤT BẠI!</div>` + station.innerHTML;
-            station.querySelector('img').style.filter = "grayscale(1) brightness(0.5)";
-            station.classList.remove('forge-active');
-            
-            setTimeout(async () => {
-                await saveUserData();
-                selectForgeItem(window.selectedForgeItemIndex);
-                renderForgeList();
-                render();
-            }, 1000);
-        }
-    };
     
-    // ================= GHI ĐÈ HÀM OPENTAB ĐỂ BẬT AUTO LOAD LÒ RÈN =================
     const originalOpenTabForForge = window.openTab;
     window.openTab = function(evt, tabName) {
         originalOpenTabForForge(evt, tabName);
