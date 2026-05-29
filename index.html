@@ -49,6 +49,7 @@
                 <div class="dropdown-content">
                     <button id="defaultOpenTab" class="tab-btn sub-tab active" onclick="openTab(event, 'tab-stats')">STATS</button>
                     <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-bag')">BAG</button>
+                    <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-forge')">LÒ RÈN</button>
                     <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-shop')">SHOP</button>
                     <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-skills')">SKILLS</button>
                     <button class="tab-btn sub-tab" onclick="openTab(event, 'tab-gacha')">LUCKY WHEEL</button>
@@ -238,7 +239,58 @@
         </div>
     </div>
 </div>
+<div id="tab-forge" class="tab-panel">
+    <div style="position: relative; width: 100%; max-width: 1400px; margin: 0 auto;">
+        <div style="position: absolute; top: -14px; left: 15px; background: #000; color: #ffcc00; padding: 4px 20px; font-size: 22px; font-weight: bold; font-family: 'Oswald', sans-serif; z-index: 10; border: 2px solid #000; letter-spacing: 1px; clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);">
+            Forge
+        </div>
+        
+        <div class="new-bag-container" style="border-color: #ff9900 !important;">
+            <!-- Cột Menu Trái -->
+            <div class="bag-sidebar" style="background: #2a1a00; border-right: 2px solid #ff9900;">
+                <button class="bag-side-btn active" style="color: #ffcc00;" onclick="switchForgeTab('enhance', this)">Cường Hóa</button>
+                <button class="bag-side-btn" style="color: #666;" onclick="switchForgeTab('socket', this)">Khảm Thạch <br><span style="font-size: 11px;">(Sắp mở)</span></button>
+            </div>
 
+            <!-- Cột Danh Sách Trang Bị -->
+            <div style="width: 35%; background: #1a1a1a; border-right: 2px solid #444; display: flex; flex-direction: column;">
+                <div style="background: #000; color: #fff; padding: 10px; text-align: center; font-weight: bold; border-bottom: 1px solid #333;">CHỌN TRANG BỊ TỪ TÚI</div>
+                <div class="bag-grid" id="forgeItemList" style="flex: 1; background: #1a1a1a; padding: 10px; overflow-y: auto;">
+                    <!-- Đồ load vào đây -->
+                </div>
+            </div>
+
+            <!-- Cột Thao Tác Cường Hóa -->
+            <div style="flex: 1; background: radial-gradient(circle at center, #2a1a00, #000); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+                
+                <!-- Bệ Rèn (Khu vực đặt đồ) -->
+                <div id="forgeStation" style="width: 150px; height: 150px; border: 3px dashed #ff9900; border-radius: 10px; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.5); box-shadow: inset 0 0 20px rgba(255, 153, 0, 0.2); position: relative; margin-bottom: 30px; transition: 0.3s;">
+                    <div style="color: #ff9900; opacity: 0.5; font-weight: bold;">ĐẶT TRANG BỊ</div>
+                </div>
+
+                <!-- Khung Thông tin Nâng cấp -->
+                <div id="forgeInfo" style="width: 80%; background: rgba(0,0,0,0.8); border: 1px solid #ffcc00; padding: 15px; border-radius: 8px; text-align: center; display: none;">
+                    <h3 id="forgeItemName" style="color: #ffcc00; margin: 0 0 10px 0; text-shadow: 0 0 5px gold;">Tên Vũ Khí</h3>
+                    
+                    <div style="display: flex; justify-content: space-around; font-family: sans-serif; font-size: 16px; margin-bottom: 15px;">
+                        <div style="color: #aaa;">Hiện tại: <br><span id="forgeCurrentStats" style="color: #fff; font-weight: bold;">...</span></div>
+                        <div style="color: #ffcc00; font-size: 24px; display: flex; align-items: center;">➔</div>
+                        <div style="color: #aaa;">Sau nâng: <br><span id="forgeNextStats" style="color: #00ff00; font-weight: bold;">...</span></div>
+                    </div>
+
+                    <div style="background: #111; padding: 10px; border-radius: 5px; font-size: 14px;">
+                        <div style="color: #fff; margin-bottom: 5px;">Tỷ lệ thành công: <span id="forgeSuccessRate" style="color: #00ffcc; font-weight: bold;">100%</span></div>
+                        <div style="color: #aaa;">Yêu cầu: <span id="forgeCost" style="color: gold; font-weight: bold;">1000 Cash + 1 Ma Thạch</span></div>
+                    </div>
+
+                    <button class="gacha-btn-system" style="width: 100%; margin-top: 15px; font-size: 20px !important; padding: 10px !important;" onclick="executeEnhance()">CƯỜNG HÓA</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+            
 <div id="tab-shop" class="tab-panel">
     <div style="position: relative; width: 100%; max-width: 1400px; margin: 0 auto;">
         <div style="position: absolute; top: -14px; left: 15px; background: #000; color: #fff; padding: 4px 20px; font-size: 22px; font-weight: bold; font-family: 'Oswald', sans-serif; z-index: 10; border: 2px solid #000; letter-spacing: 1px; clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);">
@@ -5623,7 +5675,194 @@ window.handleEquipShadow = async function(bossId) {
     if(window.selectedShadowId) window.selectShadow(window.selectedShadowId); 
     if(typeof playSound === 'function') playSound("audio/dungtrangbi.mp3"); 
 };
+    // ================= HỆ THỐNG LÒ RÈN (FORGE) =================
+window.currentForgeTab = 'enhance';
+window.selectedForgeItemIndex = null;
 
+window.switchForgeTab = function(tabName, btnElement) {
+    if(tabName === 'socket') return alert("Tính năng Khảm Bảo Thạch đang được Hội Thợ Săn xây dựng, vui lòng quay lại sau!");
+    
+    window.currentForgeTab = tabName;
+    const btns = document.querySelectorAll('#tab-forge .bag-side-btn');
+    btns.forEach(btn => {
+        btn.classList.remove('active');
+        btn.style.color = '#666';
+    });
+    btnElement.classList.add('active');
+    btnElement.style.color = '#ffcc00';
+    renderForgeList();
+};
+
+window.renderForgeList = function() {
+    const listArea = document.getElementById('forgeItemList');
+    if (!listArea) return;
+    
+    let html = "";
+    let hasItems = false;
+
+    // Quét toàn bộ túi đồ, chỉ lấy những món ĐƯỢC PHÉP CƯỜNG HÓA (Vũ khí, Giáp, Trang sức)
+    currentUser.inventory.forEach((itemObj, index) => {
+        const itemData = ITEM_DATA[itemObj.name];
+        if (!itemData) return;
+        
+        // Loại bỏ Material, Consumable, Costume
+        if (['consumable', 'material', 'rare', 'costume'].includes(itemData.type)) return;
+
+        hasItems = true;
+        let rank = itemData.rank || 'D';
+        let level = itemObj.enhanceLevel || 0;
+        let isSelected = (window.selectedForgeItemIndex === index);
+
+        html += `
+            <div class="bag-item-slot rank-${rank} ${isSelected ? 'selected' : ''}" style="border-color: ${isSelected ? '#ffcc00' : '#888'};" onclick="selectForgeItem(${index})">
+                <img src="${itemData.img}">
+                ${level > 0 ? `<div style="position: absolute; top: 2px; left: 4px; color: #ffcc00; font-weight: bold; font-size: 14px; text-shadow: 1px 1px 2px #000;">+${level}</div>` : ''}
+            </div>
+        `;
+    });
+
+    listArea.innerHTML = hasItems ? html : '<div style="color: #888; text-align: center; margin-top: 20px;">Túi đồ rỗng. (Lưu ý: Không thể cường hóa đồ đang mặc trên người)</div>';
+};
+
+window.selectForgeItem = function(index) {
+    playSound("audio/click.mp3");
+    window.selectedForgeItemIndex = index;
+    const itemObj = currentUser.inventory[index];
+    const itemData = ITEM_DATA[itemObj.name];
+    let level = itemObj.enhanceLevel || 0;
+
+    // Đẩy ảnh vào bệ rèn
+    const station = document.getElementById('forgeStation');
+    station.innerHTML = `<img src="${itemData.img}" style="width: 100px; height: 100px; object-fit: contain; filter: drop-shadow(0 0 10px #ffcc00);">`;
+    station.classList.add('forge-active');
+
+    // Hiển thị thông số
+    const infoBox = document.getElementById('forgeInfo');
+    infoBox.style.display = 'block';
+    
+    document.getElementById('forgeItemName').innerText = `${itemObj.name} ${level > 0 ? '(+' + level + ')' : ''}`;
+
+    if (level >= 10) {
+        document.getElementById('forgeCurrentStats').innerText = "TỐI ĐA";
+        document.getElementById('forgeNextStats').innerText = "TỐI ĐA";
+        document.getElementById('forgeSuccessRate').innerText = "0%";
+        document.getElementById('forgeCost').innerText = "Không thể nâng cấp thêm";
+        return;
+    }
+
+    // TÍNH TOÁN CHỈ SỐ: Tăng 10% chỉ số gốc mỗi cấp cường hóa (tối thiểu +2)
+    let currentStr = itemObj.str || 0, currentVit = itemObj.vit || 0, currentMp = itemObj.mp || 0, currentInt = itemObj.int || 0, currentAgi = itemObj.agi || 0;
+    
+    // Tạm tính chỉ số mới
+    let nextStr = currentStr > 0 ? currentStr + Math.max(2, Math.floor(currentStr * 0.1)) : 0;
+    let nextVit = currentVit > 0 ? currentVit + Math.max(2, Math.floor(currentVit * 0.1)) : 0;
+    let nextInt = currentInt > 0 ? currentInt + Math.max(2, Math.floor(currentInt * 0.1)) : 0;
+    let nextAgi = currentAgi > 0 ? currentAgi + Math.max(2, Math.floor(currentAgi * 0.1)) : 0;
+    let nextMp = currentMp > 0 ? currentMp + Math.max(10, Math.floor(currentMp * 0.1)) : 0;
+
+    document.getElementById('forgeCurrentStats').innerHTML = [currentStr ? `STR: ${currentStr}` : '', currentVit ? `VIT: ${currentVit}` : '', currentInt ? `INT: ${currentInt}` : '', currentAgi ? `AGI: ${currentAgi}` : '', currentMp ? `MP: ${currentMp}` : ''].filter(Boolean).join('<br>');
+    document.getElementById('forgeNextStats').innerHTML = [nextStr ? `STR: ${nextStr}` : '', nextVit ? `VIT: ${nextVit}` : '', nextInt ? `INT: ${nextInt}` : '', nextAgi ? `AGI: ${nextAgi}` : '', nextMp ? `MP: ${nextMp}` : ''].filter(Boolean).join('<br>');
+
+    // TÍNH TOÁN TỶ LỆ & CHI PHÍ
+    let baseRates = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10]; // Tỷ lệ từ +1 đến +10
+    let rate = baseRates[level];
+    
+    let cashCost = 1000 + (level * 1500); // 1000, 2500, 4000...
+    let gemCost = 1 + Math.floor(level / 3); // 1 đá, 2 đá, 3 đá...
+
+    document.getElementById('forgeSuccessRate').innerText = `${rate}%`;
+    document.getElementById('forgeSuccessRate').style.color = rate >= 70 ? '#00ffcc' : (rate >= 40 ? 'gold' : '#ff3333');
+    document.getElementById('forgeCost').innerText = `${cashCost} Cash + ${gemCost} [Ma Thạch Cấp Thấp]`;
+
+    renderForgeList(); // Cập nhật viền vàng cho món đang chọn
+};
+
+window.executeEnhance = async function() {
+    if (window.selectedForgeItemIndex === null) return alert("Vui lòng chọn trang bị để cường hóa!");
+    
+    const index = window.selectedForgeItemIndex;
+    const itemObj = currentUser.inventory[index];
+    let level = itemObj.enhanceLevel || 0;
+
+    if (level >= 10) return alert("Trang bị đã đạt cấp bậc tối đa (+10)!");
+
+    let cashCost = 1000 + (level * 1500);
+    let gemCost = 1 + Math.floor(level / 3);
+    
+    // Kiểm tra tài nguyên
+    if (currentUser.cash < cashCost) return alert(`Không đủ tiền! Cần ${cashCost} Cash.`);
+    
+    const gemIndex = currentUser.inventory.findIndex(i => i.name === "Ma Thạch Cấp Thấp");
+    if (gemIndex === -1 || (currentUser.inventory[gemIndex].quantity || 1) < gemCost) {
+        return alert(`Hệ thống: Không đủ vật liệu! Bạn cần ${gemCost} viên [Ma Thạch Cấp Thấp]. Đánh quái hầm ngục để rớt ra nhé.`);
+    }
+
+    // Trừ tài nguyên
+    currentUser.cash -= cashCost;
+    if (currentUser.inventory[gemIndex].quantity > gemCost) {
+        currentUser.inventory[gemIndex].quantity -= gemCost;
+    } else {
+        currentUser.inventory.splice(gemIndex, 1);
+        // Nếu lỡ trừ nhầm chính cái item đang forge thì báo lỗi (trường hợp hiếm)
+        if (gemIndex < index) window.selectedForgeItemIndex--;
+    }
+
+    // Quay Gacha Tỷ Lệ
+    let rate = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10][level];
+    let isSuccess = (Math.random() * 100) <= rate;
+
+    const station = document.getElementById('forgeStation');
+
+    if (isSuccess) {
+        playSound("audio/dungtrangbi.mp3"); // Bạn có thể đổi thành âm thanh đập búa nếu có
+        itemObj.enhanceLevel = level + 1;
+        
+        // Cộng chỉ số
+        if (itemObj.str > 0) itemObj.str += Math.max(2, Math.floor(itemObj.str * 0.1));
+        if (itemObj.vit > 0) itemObj.vit += Math.max(2, Math.floor(itemObj.vit * 0.1));
+        if (itemObj.int > 0) itemObj.int += Math.max(2, Math.floor(itemObj.int * 0.1));
+        if (itemObj.agi > 0) itemObj.agi += Math.max(2, Math.floor(itemObj.agi * 0.1));
+        if (itemObj.mp > 0) itemObj.mp += Math.max(10, Math.floor(itemObj.mp * 0.1));
+
+        station.innerHTML = `<div style="color: #00ff00; font-size: 24px; font-weight: bold; text-shadow: 0 0 10px #00ff00; z-index: 10; position: absolute;">THÀNH CÔNG!</div>` + station.innerHTML;
+        station.querySelector('img').classList.add('upgrade-success-anim');
+        
+        // Chờ animation chạy xong rồi render lại
+        setTimeout(async () => {
+            await saveUserData();
+            selectForgeItem(window.selectedForgeItemIndex);
+            renderForgeList();
+            render();
+        }, 1000);
+    } else {
+        // Thất bại
+        playSound("audio/monster_hit.mp3"); // Âm thanh vỡ/bể
+        station.innerHTML = `<div style="color: #ff3333; font-size: 24px; font-weight: bold; text-shadow: 0 0 10px #ff3333; z-index: 10; position: absolute; transform: rotate(-15deg);">THẤT BẠI!</div>` + station.innerHTML;
+        station.querySelector('img').style.filter = "grayscale(1) brightness(0.5)";
+        station.classList.remove('forge-active');
+        
+        setTimeout(async () => {
+            await saveUserData();
+            selectForgeItem(window.selectedForgeItemIndex);
+            renderForgeList();
+            render();
+        }, 1000);
+    }
+};
+
+// ================= GHI ĐÈ HÀM OPENTAB ĐỂ BẬT AUTO LOAD LÒ RÈN =================
+const originalOpenTabForForge = window.openTab;
+window.openTab = function(evt, tabName) {
+    originalOpenTabForForge(evt, tabName);
+    if (tabName === 'tab-forge' && window.renderForgeList) {
+        // Reset lại bệ rèn khi mở tab
+        window.selectedForgeItemIndex = null;
+        document.getElementById('forgeStation').innerHTML = '<div style="color: #ff9900; opacity: 0.5; font-weight: bold;">ĐẶT TRANG BỊ</div>';
+        document.getElementById('forgeStation').classList.remove('forge-active');
+        document.getElementById('forgeInfo').style.display = 'none';
+        window.renderForgeList();
+    }
+};
     setTimeout(window.startNewBattle, 2000);
 </script>
 </body>
