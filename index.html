@@ -5345,524 +5345,524 @@ window.switchInvTab = function(tabName, btnElement) {
     if (window.renderBag) window.renderBag();
 };
     // ================= HỆ THỐNG LOGIC SHOP MỚI (GACHA STYLE) =================
-window.currentShopTab = 'all';
-window.selectedShopItemKey = null;
-
-window.switchShopTab = function(tabName, btnElement) {
-    window.currentShopTab = tabName;
-    const btns = document.querySelectorAll('#tab-shop .bag-side-btn');
-    btns.forEach(btn => btn.classList.remove('active'));
-    if (btnElement) btnElement.classList.add('active');
-    
-    // Đặt lại hiển thị chi tiết bên phải
+    window.currentShopTab = 'all';
     window.selectedShopItemKey = null;
-    document.getElementById('shopDetailArea').innerHTML = '<div style="text-align:center; margin-top: 100px; color: #888; font-size: 16px; font-family: sans-serif;">Chọn một mặt hàng để xem chi tiết</div>';
     
-    renderShopGrid();
-    playSound("audio/click.mp3"); // Âm thanh click tab
-};
-
-window.renderShopGrid = function() {
-    const gridArea = document.getElementById('shopGridArea');
-    if (!gridArea) return;
-    
-    let html = "";
-    let hasItems = false;
-    
-    Object.keys(SHOP_DATA).forEach(key => {
-        const shopItem = SHOP_DATA[key];
+    window.switchShopTab = function(tabName, btnElement) {
+        window.currentShopTab = tabName;
+        const btns = document.querySelectorAll('#tab-shop .bag-side-btn');
+        btns.forEach(btn => btn.classList.remove('active'));
+        if (btnElement) btnElement.classList.add('active');
         
-        // Lọc vật phẩm theo Tab
-        let isMatch = false;
-        if (window.currentShopTab === 'all') isMatch = true;
-        else if (window.currentShopTab === 'potion' && key.includes('potion')) isMatch = true;
-        else if (window.currentShopTab === 'skill' && shopItem.type === 'skill') isMatch = true;
-        else if (window.currentShopTab === 'costume' && key.includes('costume')) isMatch = true;
+        // Đặt lại hiển thị chi tiết bên phải
+        window.selectedShopItemKey = null;
+        document.getElementById('shopDetailArea').innerHTML = '<div style="text-align:center; margin-top: 100px; color: #888; font-size: 16px; font-family: sans-serif;">Chọn một mặt hàng để xem chi tiết</div>';
         
-        if (!isMatch) return;
-        hasItems = true;
+        renderShopGrid();
+        playSound("audio/click.mp3"); // Âm thanh click tab
+    };
+    
+    window.renderShopGrid = function() {
+        const gridArea = document.getElementById('shopGridArea');
+        if (!gridArea) return;
         
-        // Trích xuất ảnh và cấp bậc (Rank) từ Data gốc
-        let itemData = null;
-        let rank = "C";
-        let imgSrc = "";
+        let html = "";
+        let hasItems = false;
         
-        if (shopItem.type === "skill") {
-            itemData = skillData[shopItem.skillName];
-            imgSrc = itemData ? itemData.icon : "";
-            rank = "S"; // Kỹ năng shop luôn có viền vàng đỏ (Rank S)
-        } else {
-            itemData = ITEM_DATA[shopItem.itemId];
-            imgSrc = itemData ? itemData.img : "";
-            rank = itemData ? (itemData.rank || "D") : "D";
-            if (key.includes("costume") && (!itemData || !itemData.rank)) {
-                rank = "SS"; 
-                }
-        }
-        
-        let isSelected = (window.selectedShopItemKey === key);
-        
-        html += `
-            <div class="bag-item-slot rank-${rank} ${isSelected ? 'selected' : ''}" onclick="selectShopItem('${key}')">
-                <img src="${imgSrc}">
-            </div>
-        `;
-    });
-    
-    if (!hasItems) {
-        gridArea.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #888; margin-top: 20px; font-family: sans-serif;">Chưa có mặt hàng nào trong danh mục này.</div>';
-    } else {
-        gridArea.innerHTML = html;
-    }
-};
-
-window.selectShopItem = function(key) {
-    playSound("audio/click.mp3"); // Âm thanh khi nhấp vào món đồ
-    window.selectedShopItemKey = key;
-    const shopItem = SHOP_DATA[key];
-    
-    let itemData = null, rank = "C", imgSrc = "", desc = "", statsStr = "";
-    
-    // Rút trích chỉ số cho Khung Chi Tiết
-    if (shopItem.type === "skill") {
-        itemData = skillData[shopItem.skillName];
-        imgSrc = itemData.icon;
-        rank = "S";
-        desc = itemData.desc;
-        statsStr = "Kỹ Năng Chủ Động";
-    } else {
-        itemData = ITEM_DATA[shopItem.itemId];
-        imgSrc = itemData.img;
-        rank = itemData.rank || "D";
-        desc = itemData.effect || "Không có mô tả.";
-        
-        statsStr = [
-            itemData.str > 0 ? `+${itemData.str} STR` : '',
-            itemData.vit > 0 ? `+${itemData.vit} VIT` : '',
-            itemData.mp > 0 ? `+${itemData.mp} MP` : '',
-            itemData.agi > 0 ? `+${itemData.agi} AGI` : '',
-            itemData.int > 0 ? `+${itemData.int} INT` : ''
-        ].filter(Boolean).join(' | ');
-    }
-    
-    let buyBtnHtml = "";
-    let priceText = shopItem.currencyType === "item" ? `${shopItem.price} ${shopItem.currencyItem.toUpperCase()}` : `${shopItem.price} CASH`;
-    
-    // Xác định trạng thái nút mua (Đã mua, Đang mặc, Chưa mua)
-    let isOwned = false;
-    if (shopItem.type === "skill" && currentUser.skills[shopItem.skillName] > 0) isOwned = true;
-    else if (key.includes("costume") && currentUser.ownedCostumes && currentUser.ownedCostumes.includes(shopItem.itemId)) isOwned = true;
-    
-    if (isOwned) {
-        if (key.includes("costume")) {
-            let isEquipped = (currentUser.equipped.costume && currentUser.equipped.costume.name === shopItem.itemId);
-            if (isEquipped) {
-                buyBtnHtml = `<button class="bag-action-btn-yellow" style="background: linear-gradient(to bottom, #8ea1b2, #5a6e84); color: #111;" disabled>Đang Sử Dụng</button>`;
+        Object.keys(SHOP_DATA).forEach(key => {
+            const shopItem = SHOP_DATA[key];
+            
+            // Lọc vật phẩm theo Tab
+            let isMatch = false;
+            if (window.currentShopTab === 'all') isMatch = true;
+            else if (window.currentShopTab === 'potion' && key.includes('potion')) isMatch = true;
+            else if (window.currentShopTab === 'skill' && shopItem.type === 'skill') isMatch = true;
+            else if (window.currentShopTab === 'costume' && key.includes('costume')) isMatch = true;
+            
+            if (!isMatch) return;
+            hasItems = true;
+            
+            // Trích xuất ảnh và cấp bậc (Rank) từ Data gốc
+            let itemData = null;
+            let rank = "C";
+            let imgSrc = "";
+            
+            if (shopItem.type === "skill") {
+                itemData = skillData[shopItem.skillName];
+                imgSrc = itemData ? itemData.icon : "";
+                rank = "S"; // Kỹ năng shop luôn có viền vàng đỏ (Rank S)
             } else {
-                buyBtnHtml = `<button class="bag-action-btn-yellow" onclick="handleCostume('${key}')" style="background: linear-gradient(to bottom, #5cb8ff, #1a75ff); color: #fff;">Thay Trang Phục</button>`;
+                itemData = ITEM_DATA[shopItem.itemId];
+                imgSrc = itemData ? itemData.img : "";
+                rank = itemData ? (itemData.rank || "D") : "D";
+                if (key.includes("costume") && (!itemData || !itemData.rank)) {
+                    rank = "SS"; 
+                    }
             }
-        } else {
-            buyBtnHtml = `<button class="bag-action-btn-yellow" style="background: #888; color: #fff; cursor: not-allowed;" disabled>Đã Lĩnh Ngộ</button>`;
-        }
-    } else {
-        let btnFunction = key.includes("costume") ? `handleCostume('${key}')` : `buyShopItem('${key}')`;
-        let btnBg = shopItem.currencyType === "item" ? `background: linear-gradient(to bottom, #cc66ff, #9900cc); color: #fff;` : ``;
-        buyBtnHtml = `<button class="bag-action-btn-yellow" onclick="${btnFunction}" style="${btnBg}">MUA (${priceText})</button>`;
-    }
-    
-    // Đổ Giao diện Chi tiết chuẩn Gacha lên Panel
-    document.getElementById('shopDetailArea').innerHTML = `
-        <div style="padding: 15px; display: flex; flex-direction: column; height: 100%;">
-            <div style="display: flex; gap: 15px; margin-bottom: 20px;">
-                <div class="bag-item-slot rank-${rank}" style="width: 85px; height: 85px; cursor: default;">
+            
+            let isSelected = (window.selectedShopItemKey === key);
+            
+            html += `
+                <div class="bag-item-slot rank-${rank} ${isSelected ? 'selected' : ''}" onclick="selectShopItem('${key}')">
                     <img src="${imgSrc}">
                 </div>
-                <div style="flex: 1; font-family: sans-serif;">
-                    <div style="color: #e67e22; font-weight: bold; font-size: 18px; text-shadow: 1px 1px 1px rgba(0,0,0,0.1); margin-bottom: 5px; line-height: 1.2;">${shopItem.name}</div>
-                    <div style="color: #007bff; font-weight: bold; font-size: 14px;">${priceText}</div>
-                </div>
-            </div>
+            `;
+        });
+        
+        if (!hasItems) {
+            gridArea.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #888; margin-top: 20px; font-family: sans-serif;">Chưa có mặt hàng nào trong danh mục này.</div>';
+        } else {
+            gridArea.innerHTML = html;
+        }
+    };
+
+    window.selectShopItem = function(key) {
+        playSound("audio/click.mp3"); // Âm thanh khi nhấp vào món đồ
+        window.selectedShopItemKey = key;
+        const shopItem = SHOP_DATA[key];
+        
+        let itemData = null, rank = "C", imgSrc = "", desc = "", statsStr = "";
+        
+        // Rút trích chỉ số cho Khung Chi Tiết
+        if (shopItem.type === "skill") {
+            itemData = skillData[shopItem.skillName];
+            imgSrc = itemData.icon;
+            rank = "S";
+            desc = itemData.desc;
+            statsStr = "Kỹ Năng Chủ Động";
+        } else {
+            itemData = ITEM_DATA[shopItem.itemId];
+            imgSrc = itemData.img;
+            rank = itemData.rank || "D";
+            desc = itemData.effect || "Không có mô tả.";
             
-            <div style="background: #f8f9fa; border: 1px solid #ddd; border-bottom: none; padding: 15px 20px; flex: 1; font-family: sans-serif;">
-                <div style="font-size: 16px; color: #222; line-height: 1.6; margin-bottom: 15px;">${desc}</div>
-                <div style="color: #dc3545; font-weight: bold; font-size: 14px;">${statsStr}</div>
-                <div style="text-align:center; color:#ccc; font-weight:bold; border-bottom: 1px solid #ddd; line-height:0.1em; margin: 40px 0 10px 0; font-family: 'Oswald', sans-serif; letter-spacing: 2px;">
-                    <span style="background:#f8f9fa; padding:0 15px;">SHOPPING CENTER</span>
+            statsStr = [
+                itemData.str > 0 ? `+${itemData.str} STR` : '',
+                itemData.vit > 0 ? `+${itemData.vit} VIT` : '',
+                itemData.mp > 0 ? `+${itemData.mp} MP` : '',
+                itemData.agi > 0 ? `+${itemData.agi} AGI` : '',
+                itemData.int > 0 ? `+${itemData.int} INT` : ''
+            ].filter(Boolean).join(' | ');
+        }
+        
+        let buyBtnHtml = "";
+        let priceText = shopItem.currencyType === "item" ? `${shopItem.price} ${shopItem.currencyItem.toUpperCase()}` : `${shopItem.price} CASH`;
+        
+        // Xác định trạng thái nút mua (Đã mua, Đang mặc, Chưa mua)
+        let isOwned = false;
+        if (shopItem.type === "skill" && currentUser.skills[shopItem.skillName] > 0) isOwned = true;
+        else if (key.includes("costume") && currentUser.ownedCostumes && currentUser.ownedCostumes.includes(shopItem.itemId)) isOwned = true;
+        
+        if (isOwned) {
+            if (key.includes("costume")) {
+                let isEquipped = (currentUser.equipped.costume && currentUser.equipped.costume.name === shopItem.itemId);
+                if (isEquipped) {
+                    buyBtnHtml = `<button class="bag-action-btn-yellow" style="background: linear-gradient(to bottom, #8ea1b2, #5a6e84); color: #111;" disabled>Đang Sử Dụng</button>`;
+                } else {
+                    buyBtnHtml = `<button class="bag-action-btn-yellow" onclick="handleCostume('${key}')" style="background: linear-gradient(to bottom, #5cb8ff, #1a75ff); color: #fff;">Thay Trang Phục</button>`;
+                }
+            } else {
+                buyBtnHtml = `<button class="bag-action-btn-yellow" style="background: #888; color: #fff; cursor: not-allowed;" disabled>Đã Lĩnh Ngộ</button>`;
+            }
+        } else {
+            let btnFunction = key.includes("costume") ? `handleCostume('${key}')` : `buyShopItem('${key}')`;
+            let btnBg = shopItem.currencyType === "item" ? `background: linear-gradient(to bottom, #cc66ff, #9900cc); color: #fff;` : ``;
+            buyBtnHtml = `<button class="bag-action-btn-yellow" onclick="${btnFunction}" style="${btnBg}">MUA (${priceText})</button>`;
+        }
+        
+        // Đổ Giao diện Chi tiết chuẩn Gacha lên Panel
+        document.getElementById('shopDetailArea').innerHTML = `
+            <div style="padding: 15px; display: flex; flex-direction: column; height: 100%;">
+                <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                    <div class="bag-item-slot rank-${rank}" style="width: 85px; height: 85px; cursor: default;">
+                        <img src="${imgSrc}">
+                    </div>
+                    <div style="flex: 1; font-family: sans-serif;">
+                        <div style="color: #e67e22; font-weight: bold; font-size: 18px; text-shadow: 1px 1px 1px rgba(0,0,0,0.1); margin-bottom: 5px; line-height: 1.2;">${shopItem.name}</div>
+                        <div style="color: #007bff; font-weight: bold; font-size: 14px;">${priceText}</div>
+                    </div>
                 </div>
-            </div>
-            
-            <div style="display: flex; gap: 10px; background: #f8f9fa; border: 1px solid #ddd; border-top: none; padding: 0 15px 20px 15px;">
-                ${buyBtnHtml}
-            </div>
-        </div>
-    `;
-
-    renderShopGrid(); // Refresh lại viền vàng nhấp nháy cho món đang chọn
-};
-
-    // ================= HỆ THỐNG GIAO DIỆN SHADOW ARMY (GACHA STYLE) =================
-window.currentShadowTab = 'all';
-window.selectedShadowId = null;
-
-// Lọc cấp bậc
-window.switchShadowTab = function(tabName, btnElement) {
-    window.currentShadowTab = tabName;
-    const btns = document.querySelectorAll('#tab-shadows .bag-side-btn');
-    btns.forEach(btn => btn.classList.remove('active'));
-    if (btnElement) btnElement.classList.add('active');
-
-    window.selectedShadowId = null;
-    document.getElementById('shadowDetailArea').innerHTML = '<div style="text-align:center; margin-top: 100px; color: #888; font-size: 16px; font-family: sans-serif;">Chọn một Bóng Ma để xem chi tiết</div>';
-
-    renderShadowArmy();
-    if(typeof playSound === 'function') playSound("audio/click.mp3");
-};
-
-// Ghi đè hàm renderShadowArmy cũ
-window.renderShadowArmy = function() {
-    if (!currentUser.ownedShadows) currentUser.ownedShadows = [];
-    const gridArea = document.getElementById('shadowGridArea');
-    if (!gridArea) return;
-
-    let html = "";
-    let hasItems = false;
-
-    currentUser.ownedShadows.forEach(bossId => {
-        const data = SHADOW_DATA[bossId];
-        if(!data) return;
-
-        let isMatch = false;
-        if (window.currentShadowTab === 'all') isMatch = true;
-        else if (window.currentShadowTab === 'knight' && (data.rank === 'Normal' || data.rank === 'Elite Knight')) isMatch = true;
-        else if (window.currentShadowTab === 'general' && data.rank === 'General') isMatch = true;
-        else if (window.currentShadowTab === 'monarch' && (data.rank === 'Marshal' || data.rank === 'Monarch')) isMatch = true;
-
-        if (!isMatch) return;
-        hasItems = true;
-
-        let rankClass = "B";
-        if (data.rank === "Elite Knight") rankClass = "A";
-        if (data.rank === "General") rankClass = "S";
-        if (data.rank === "Marshal" || data.rank === "Monarch") rankClass = "SS";
-
-        let imgSrc = data.img;
-        let isSelected = (window.selectedShadowId === bossId);
-        let isEquipped = (currentUser.equippedShadow === bossId);
-
-        let equipTag = isEquipped ? '<div style="position:absolute; bottom:2px; right:2px; font-size:10px; font-weight:bold; background:rgba(204,51,255,0.9); color:#fff; padding:2px 4px; border-radius:3px; z-index:5;">ĐANG DÙNG</div>' : '';
-
-        html += `
-            <div class="bag-item-slot rank-${rankClass} ${isSelected ? 'selected' : ''}" style="position: relative;" onclick="selectShadow('${bossId}')">
-                <img src="${imgSrc}" style="border-radius: 5px; width: 100%; height: 100%; object-fit: cover;">
-                ${equipTag}
-            </div>
-        `;
-    });
-
-    if (!hasItems) {
-        gridArea.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #888; margin-top: 20px; font-family: sans-serif;">Chưa có Bóng Ma nào trong phân loại này.</div>';
-    } else {
-        gridArea.innerHTML = html;
-    }
-};
-
-window.selectShadow = function(bossId) {
-    if(typeof playSound === 'function') playSound("audio/click.mp3");
-    window.selectedShadowId = bossId;
-    const data = SHADOW_DATA[bossId];
-
-    let rankClass = "B";
-    let rankColor = "#00bfff";
-    if (data.rank === "Elite Knight") { rankClass = "A"; rankColor = "#ff8c00"; }
-    if (data.rank === "General") { rankClass = "S"; rankColor = "#ff3333"; }
-    if (data.rank === "Marshal" || data.rank === "Monarch") { rankClass = "SS"; rankColor = "#cc33ff"; }
-
-    let isEquipped = (currentUser.equippedShadow === bossId);
-
-    let actionBtn = "";
-    if (isEquipped) {
-        actionBtn = `<button class="bag-action-btn-yellow" onclick="handleEquipShadow('${bossId}')" style="background: linear-gradient(to bottom, #8ea1b2, #5a6e84); color: #111;">THU HỒI VÀO BÓNG</button>`;
-    } else {
-        actionBtn = `<button class="bag-action-btn-yellow" onclick="handleEquipShadow('${bossId}')" style="background: linear-gradient(to bottom, #cc33ff, #9900cc); color: #fff; text-shadow: 0 0 5px #000;">TRỖI DẬY (TRIỆU HỒI)</button>`;
-    }
-
-    let imgSrc = data.img;
-
-    document.getElementById('shadowDetailArea').innerHTML = `
-        <div style="padding: 15px; display: flex; flex-direction: column; height: 100%;">
-            <div style="display: flex; gap: 15px; margin-bottom: 20px;">
-                <div class="bag-item-slot rank-${rankClass}" style="width: 85px; height: 85px; cursor: default;">
-                    <img src="${imgSrc}" style="border-radius: 5px; width: 100%; height: 100%; object-fit: cover;">
-                </div>
-                <div style="flex: 1; font-family: sans-serif;">
-                    <div style="color: ${rankColor}; font-weight: bold; font-size: 18px; text-shadow: 1px 1px 1px rgba(0,0,0,0.2); margin-bottom: 5px; line-height: 1.2; text-transform: uppercase;">${data.name}</div>
-                    <div style="color: #666; font-weight: bold; font-size: 14px;">Cấp bậc: <span style="color:${rankColor}">${data.rank}</span></div>
-                </div>
-            </div>
-
-            <div style="background: #f8f9fa; border: 1px solid #ddd; border-bottom: none; padding: 15px 20px; flex: 1; font-family: sans-serif; overflow-y: auto;">
                 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;">
-                    <div style="color: #e62e2e; font-size: 14px; font-weight:bold;">❤️ VIT: +${data.vit}</div>
-                    <div style="color: #ff8c00; font-size: 14px; font-weight:bold;">⚔️ STR: +${data.str}</div>
-                    <div style="color: #00bfff; font-size: 14px; font-weight:bold;">💨 AGI: +${data.agi}</div>
-                    <div style="color: #9933ff; font-size: 14px; font-weight:bold;">🔮 INT: +${data.int}</div>
+                <div style="background: #f8f9fa; border: 1px solid #ddd; border-bottom: none; padding: 15px 20px; flex: 1; font-family: sans-serif;">
+                    <div style="font-size: 16px; color: #222; line-height: 1.6; margin-bottom: 15px;">${desc}</div>
+                    <div style="color: #dc3545; font-weight: bold; font-size: 14px;">${statsStr}</div>
+                    <div style="text-align:center; color:#ccc; font-weight:bold; border-bottom: 1px solid #ddd; line-height:0.1em; margin: 40px 0 10px 0; font-family: 'Oswald', sans-serif; letter-spacing: 2px;">
+                        <span style="background:#f8f9fa; padding:0 15px;">SHOPPING CENTER</span>
+                    </div>
                 </div>
-
-                <div style="background: rgba(0, 191, 255, 0.05); border-left: 3px solid #00bfff; padding: 10px; margin-bottom: 15px;">
-                    <b style="color: #00bfff; font-size: 14px;">[ ${data.skillName} ]</b><br>
-                    <span style="color: #333; font-size: 13px;">${data.skillDesc}</span>
+                
+                <div style="display: flex; gap: 10px; background: #f8f9fa; border: 1px solid #ddd; border-top: none; padding: 0 15px 20px 15px;">
+                    ${buyBtnHtml}
                 </div>
-
-                <div style="color: #666; font-style: italic; font-size: 13px; line-height: 1.5;">
-                    "${data.bio}"
-                </div>
-
-                <div style="text-align:center; color:#ccc; font-weight:bold; border-bottom: 1px solid #ddd; line-height:0.1em; margin: 30px 0 10px 0; font-family: 'Oswald', sans-serif; letter-spacing: 2px;">
-                    <span style="background:#f8f9fa; padding:0 15px;">SHADOW LORE</span>
-                </div>
-            </div>
-
-            <div style="display: flex; gap: 10px; background: #f8f9fa; border: 1px solid #ddd; border-top: none; padding: 0 15px 20px 15px;">
-                ${actionBtn}
-            </div>
-        </div>
-    `;
-
-    renderShadowArmy(); 
-};
-window.handleEquipShadow = async function(bossId) {
-    
-    if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
-        return alert("⚠️ HỆ THỐNG: Khí tức hỗn loạn! Không thể thay đổi Đội Hình Bóng Tối khi đang chiến đấu!");
-    }
-    
-    let hpPercent = currentUser.hp / currentUser.maxHp;
-    let mpPercent = currentUser.maxMp > 0 ? (currentUser.mp / currentUser.maxMp) : 0;
-
-    if (currentUser.equippedShadow && SHADOW_DATA[currentUser.equippedShadow]) {
-        let oldData = SHADOW_DATA[currentUser.equippedShadow];
-        currentUser.str -= oldData.str; 
-        currentUser.vit -= oldData.vit;
-        currentUser.agi -= oldData.agi; 
-        currentUser.int -= oldData.int;
-        currentUser.maxHp -= oldData.vit * 10; 
-        currentUser.maxMp -= oldData.int * 5;
-        currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
-        currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
-    }
-
-    if (currentUser.equippedShadow === bossId) {
-        currentUser.equippedShadow = null;
-    } 
-
-    else {
-        currentUser.equippedShadow = bossId;
-        let newData = SHADOW_DATA[bossId];
-        currentUser.str += newData.str; 
-        currentUser.vit += newData.vit;
-        currentUser.agi += newData.agi; 
-        currentUser.int += newData.int;
-        currentUser.maxHp += newData.vit * 10; 
-        currentUser.maxMp += newData.int * 5;
-    }
-
-    currentUser.hp = Math.max(1, Math.floor(currentUser.maxHp * hpPercent));
-    currentUser.mp = Math.floor(currentUser.maxMp * mpPercent);
-
-    await saveUserData();
-    renderShadowArmy(); 
-    if(window.selectedShadowId) window.selectShadow(window.selectedShadowId); 
-    if(typeof playSound === 'function') playSound("audio/dungtrangbi.mp3"); 
-};
-    // ================= HỆ THỐNG LÒ RÈN (FORGE) =================
-window.currentForgeTab = 'enhance';
-window.selectedForgeItemIndex = null;
-
-window.switchForgeTab = function(tabName, btnElement) {
-    if(tabName === 'socket') return alert("Tính năng Khảm Bảo Thạch đang được Hội Thợ Săn xây dựng, vui lòng quay lại sau!");
-    
-    window.currentForgeTab = tabName;
-    const btns = document.querySelectorAll('#tab-forge .bag-side-btn');
-    btns.forEach(btn => {
-        btn.classList.remove('active');
-        btn.style.color = '#666';
-    });
-    btnElement.classList.add('active');
-    btnElement.style.color = '#ffcc00';
-    renderForgeList();
-};
-
-window.renderForgeList = function() {
-    const listArea = document.getElementById('forgeItemList');
-    if (!listArea) return;
-    
-    let html = "";
-    let hasItems = false;
-
-    // Quét toàn bộ túi đồ, chỉ lấy những món ĐƯỢC PHÉP CƯỜNG HÓA (Vũ khí, Giáp, Trang sức)
-    currentUser.inventory.forEach((itemObj, index) => {
-        const itemData = ITEM_DATA[itemObj.name];
-        if (!itemData) return;
-        
-        // Loại bỏ Material, Consumable, Costume
-        if (['consumable', 'material', 'rare', 'costume'].includes(itemData.type)) return;
-
-        hasItems = true;
-        let rank = itemData.rank || 'D';
-        let level = itemObj.enhanceLevel || 0;
-        let isSelected = (window.selectedForgeItemIndex === index);
-
-        html += `
-            <div class="bag-item-slot rank-${rank} ${isSelected ? 'selected' : ''}" style="border-color: ${isSelected ? '#ffcc00' : '#888'};" onclick="selectForgeItem(${index})">
-                <img src="${itemData.img}">
-                ${level > 0 ? `<div style="position: absolute; top: 2px; left: 4px; color: #ffcc00; font-weight: bold; font-size: 14px; text-shadow: 1px 1px 2px #000;">+${level}</div>` : ''}
             </div>
         `;
-    });
-
-    listArea.innerHTML = hasItems ? html : '<div style="color: #888; text-align: center; margin-top: 20px;">Túi đồ rỗng. (Lưu ý: Không thể cường hóa đồ đang mặc trên người)</div>';
-};
-
-window.selectForgeItem = function(index) {
-    playSound("audio/click.mp3");
-    window.selectedForgeItemIndex = index;
-    const itemObj = currentUser.inventory[index];
-    const itemData = ITEM_DATA[itemObj.name];
-    let level = itemObj.enhanceLevel || 0;
-
-    // Đẩy ảnh vào bệ rèn
-    const station = document.getElementById('forgeStation');
-    station.innerHTML = `<img src="${itemData.img}" style="width: 100px; height: 100px; object-fit: contain; filter: drop-shadow(0 0 10px #ffcc00);">`;
-    station.classList.add('forge-active');
-
-    // Hiển thị thông số
-    const infoBox = document.getElementById('forgeInfo');
-    infoBox.style.display = 'block';
     
-    document.getElementById('forgeItemName').innerText = `${itemObj.name} ${level > 0 ? '(+' + level + ')' : ''}`;
-
-    if (level >= 10) {
-        document.getElementById('forgeCurrentStats').innerText = "TỐI ĐA";
-        document.getElementById('forgeNextStats').innerText = "TỐI ĐA";
-        document.getElementById('forgeSuccessRate').innerText = "0%";
-        document.getElementById('forgeCost').innerText = "Không thể nâng cấp thêm";
-        return;
-    }
-
-    // TÍNH TOÁN CHỈ SỐ: Tăng 10% chỉ số gốc mỗi cấp cường hóa (tối thiểu +2)
-    let currentStr = itemObj.str || 0, currentVit = itemObj.vit || 0, currentMp = itemObj.mp || 0, currentInt = itemObj.int || 0, currentAgi = itemObj.agi || 0;
+        renderShopGrid(); // Refresh lại viền vàng nhấp nháy cho món đang chọn
+    };
     
-    // Tạm tính chỉ số mới
-    let nextStr = currentStr > 0 ? currentStr + Math.max(2, Math.floor(currentStr * 0.1)) : 0;
-    let nextVit = currentVit > 0 ? currentVit + Math.max(2, Math.floor(currentVit * 0.1)) : 0;
-    let nextInt = currentInt > 0 ? currentInt + Math.max(2, Math.floor(currentInt * 0.1)) : 0;
-    let nextAgi = currentAgi > 0 ? currentAgi + Math.max(2, Math.floor(currentAgi * 0.1)) : 0;
-    let nextMp = currentMp > 0 ? currentMp + Math.max(10, Math.floor(currentMp * 0.1)) : 0;
+        // ================= HỆ THỐNG GIAO DIỆN SHADOW ARMY (GACHA STYLE) =================
+    window.currentShadowTab = 'all';
+    window.selectedShadowId = null;
 
-    document.getElementById('forgeCurrentStats').innerHTML = [currentStr ? `STR: ${currentStr}` : '', currentVit ? `VIT: ${currentVit}` : '', currentInt ? `INT: ${currentInt}` : '', currentAgi ? `AGI: ${currentAgi}` : '', currentMp ? `MP: ${currentMp}` : ''].filter(Boolean).join('<br>');
-    document.getElementById('forgeNextStats').innerHTML = [nextStr ? `STR: ${nextStr}` : '', nextVit ? `VIT: ${nextVit}` : '', nextInt ? `INT: ${nextInt}` : '', nextAgi ? `AGI: ${nextAgi}` : '', nextMp ? `MP: ${nextMp}` : ''].filter(Boolean).join('<br>');
-
-    // TÍNH TOÁN TỶ LỆ & CHI PHÍ
-    let baseRates = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10]; // Tỷ lệ từ +1 đến +10
-    let rate = baseRates[level];
+    // Lọc cấp bậc
+    window.switchShadowTab = function(tabName, btnElement) {
+        window.currentShadowTab = tabName;
+        const btns = document.querySelectorAll('#tab-shadows .bag-side-btn');
+        btns.forEach(btn => btn.classList.remove('active'));
+        if (btnElement) btnElement.classList.add('active');
     
-    let cashCost = 1000 + (level * 1500); // 1000, 2500, 4000...
-    let gemCost = 1 + Math.floor(level / 3); // 1 đá, 2 đá, 3 đá...
-
-    document.getElementById('forgeSuccessRate').innerText = `${rate}%`;
-    document.getElementById('forgeSuccessRate').style.color = rate >= 70 ? '#00ffcc' : (rate >= 40 ? 'gold' : '#ff3333');
-    document.getElementById('forgeCost').innerText = `${cashCost} Cash + ${gemCost} [Ma Thạch Cấp Thấp]`;
-
-    renderForgeList(); // Cập nhật viền vàng cho món đang chọn
-};
-
-window.executeEnhance = async function() {
-    if (window.selectedForgeItemIndex === null) return alert("Vui lòng chọn trang bị để cường hóa!");
+        window.selectedShadowId = null;
+        document.getElementById('shadowDetailArea').innerHTML = '<div style="text-align:center; margin-top: 100px; color: #888; font-size: 16px; font-family: sans-serif;">Chọn một Bóng Ma để xem chi tiết</div>';
     
-    const index = window.selectedForgeItemIndex;
-    const itemObj = currentUser.inventory[index];
-    let level = itemObj.enhanceLevel || 0;
-
-    if (level >= 10) return alert("Trang bị đã đạt cấp bậc tối đa (+10)!");
-
-    let cashCost = 1000 + (level * 1500);
-    let gemCost = 1 + Math.floor(level / 3);
+        renderShadowArmy();
+        if(typeof playSound === 'function') playSound("audio/click.mp3");
+    };
     
-    // Kiểm tra tài nguyên
-    if (currentUser.cash < cashCost) return alert(`Không đủ tiền! Cần ${cashCost} Cash.`);
+    // Ghi đè hàm renderShadowArmy cũ
+    window.renderShadowArmy = function() {
+        if (!currentUser.ownedShadows) currentUser.ownedShadows = [];
+        const gridArea = document.getElementById('shadowGridArea');
+        if (!gridArea) return;
     
-    const gemIndex = currentUser.inventory.findIndex(i => i.name === "Ma Thạch Cấp Thấp");
-    if (gemIndex === -1 || (currentUser.inventory[gemIndex].quantity || 1) < gemCost) {
-        return alert(`Hệ thống: Không đủ vật liệu! Bạn cần ${gemCost} viên [Ma Thạch Cấp Thấp]. Đánh quái hầm ngục để rớt ra nhé.`);
-    }
-
-    // Trừ tài nguyên
-    currentUser.cash -= cashCost;
-    if (currentUser.inventory[gemIndex].quantity > gemCost) {
-        currentUser.inventory[gemIndex].quantity -= gemCost;
-    } else {
-        currentUser.inventory.splice(gemIndex, 1);
-        // Nếu lỡ trừ nhầm chính cái item đang forge thì báo lỗi (trường hợp hiếm)
-        if (gemIndex < index) window.selectedForgeItemIndex--;
-    }
-
-    // Quay Gacha Tỷ Lệ
-    let rate = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10][level];
-    let isSuccess = (Math.random() * 100) <= rate;
-
-    const station = document.getElementById('forgeStation');
-
-    if (isSuccess) {
-        playSound("audio/dungtrangbi.mp3"); // Bạn có thể đổi thành âm thanh đập búa nếu có
-        itemObj.enhanceLevel = level + 1;
+        let html = "";
+        let hasItems = false;
+    
+        currentUser.ownedShadows.forEach(bossId => {
+            const data = SHADOW_DATA[bossId];
+            if(!data) return;
+    
+            let isMatch = false;
+            if (window.currentShadowTab === 'all') isMatch = true;
+            else if (window.currentShadowTab === 'knight' && (data.rank === 'Normal' || data.rank === 'Elite Knight')) isMatch = true;
+            else if (window.currentShadowTab === 'general' && data.rank === 'General') isMatch = true;
+            else if (window.currentShadowTab === 'monarch' && (data.rank === 'Marshal' || data.rank === 'Monarch')) isMatch = true;
+    
+            if (!isMatch) return;
+            hasItems = true;
+    
+            let rankClass = "B";
+            if (data.rank === "Elite Knight") rankClass = "A";
+            if (data.rank === "General") rankClass = "S";
+            if (data.rank === "Marshal" || data.rank === "Monarch") rankClass = "SS";
+    
+            let imgSrc = data.img;
+            let isSelected = (window.selectedShadowId === bossId);
+            let isEquipped = (currentUser.equippedShadow === bossId);
+    
+            let equipTag = isEquipped ? '<div style="position:absolute; bottom:2px; right:2px; font-size:10px; font-weight:bold; background:rgba(204,51,255,0.9); color:#fff; padding:2px 4px; border-radius:3px; z-index:5;">ĐANG DÙNG</div>' : '';
+    
+            html += `
+                <div class="bag-item-slot rank-${rankClass} ${isSelected ? 'selected' : ''}" style="position: relative;" onclick="selectShadow('${bossId}')">
+                    <img src="${imgSrc}" style="border-radius: 5px; width: 100%; height: 100%; object-fit: cover;">
+                    ${equipTag}
+                </div>
+            `;
+        });
+    
+        if (!hasItems) {
+            gridArea.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #888; margin-top: 20px; font-family: sans-serif;">Chưa có Bóng Ma nào trong phân loại này.</div>';
+        } else {
+            gridArea.innerHTML = html;
+        }
+    };
+    
+    window.selectShadow = function(bossId) {
+        if(typeof playSound === 'function') playSound("audio/click.mp3");
+        window.selectedShadowId = bossId;
+        const data = SHADOW_DATA[bossId];
+    
+        let rankClass = "B";
+        let rankColor = "#00bfff";
+        if (data.rank === "Elite Knight") { rankClass = "A"; rankColor = "#ff8c00"; }
+        if (data.rank === "General") { rankClass = "S"; rankColor = "#ff3333"; }
+        if (data.rank === "Marshal" || data.rank === "Monarch") { rankClass = "SS"; rankColor = "#cc33ff"; }
+    
+        let isEquipped = (currentUser.equippedShadow === bossId);
+    
+        let actionBtn = "";
+        if (isEquipped) {
+            actionBtn = `<button class="bag-action-btn-yellow" onclick="handleEquipShadow('${bossId}')" style="background: linear-gradient(to bottom, #8ea1b2, #5a6e84); color: #111;">THU HỒI VÀO BÓNG</button>`;
+        } else {
+            actionBtn = `<button class="bag-action-btn-yellow" onclick="handleEquipShadow('${bossId}')" style="background: linear-gradient(to bottom, #cc33ff, #9900cc); color: #fff; text-shadow: 0 0 5px #000;">TRỖI DẬY (TRIỆU HỒI)</button>`;
+        }
+    
+        let imgSrc = data.img;
+    
+        document.getElementById('shadowDetailArea').innerHTML = `
+            <div style="padding: 15px; display: flex; flex-direction: column; height: 100%;">
+                <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                    <div class="bag-item-slot rank-${rankClass}" style="width: 85px; height: 85px; cursor: default;">
+                        <img src="${imgSrc}" style="border-radius: 5px; width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div style="flex: 1; font-family: sans-serif;">
+                        <div style="color: ${rankColor}; font-weight: bold; font-size: 18px; text-shadow: 1px 1px 1px rgba(0,0,0,0.2); margin-bottom: 5px; line-height: 1.2; text-transform: uppercase;">${data.name}</div>
+                        <div style="color: #666; font-weight: bold; font-size: 14px;">Cấp bậc: <span style="color:${rankColor}">${data.rank}</span></div>
+                    </div>
+                </div>
+    
+                <div style="background: #f8f9fa; border: 1px solid #ddd; border-bottom: none; padding: 15px 20px; flex: 1; font-family: sans-serif; overflow-y: auto;">
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;">
+                        <div style="color: #e62e2e; font-size: 14px; font-weight:bold;">❤️ VIT: +${data.vit}</div>
+                        <div style="color: #ff8c00; font-size: 14px; font-weight:bold;">⚔️ STR: +${data.str}</div>
+                        <div style="color: #00bfff; font-size: 14px; font-weight:bold;">💨 AGI: +${data.agi}</div>
+                        <div style="color: #9933ff; font-size: 14px; font-weight:bold;">🔮 INT: +${data.int}</div>
+                    </div>
+    
+                    <div style="background: rgba(0, 191, 255, 0.05); border-left: 3px solid #00bfff; padding: 10px; margin-bottom: 15px;">
+                        <b style="color: #00bfff; font-size: 14px;">[ ${data.skillName} ]</b><br>
+                        <span style="color: #333; font-size: 13px;">${data.skillDesc}</span>
+                    </div>
+    
+                    <div style="color: #666; font-style: italic; font-size: 13px; line-height: 1.5;">
+                        "${data.bio}"
+                    </div>
+    
+                    <div style="text-align:center; color:#ccc; font-weight:bold; border-bottom: 1px solid #ddd; line-height:0.1em; margin: 30px 0 10px 0; font-family: 'Oswald', sans-serif; letter-spacing: 2px;">
+                        <span style="background:#f8f9fa; padding:0 15px;">SHADOW LORE</span>
+                    </div>
+                </div>
+    
+                <div style="display: flex; gap: 10px; background: #f8f9fa; border: 1px solid #ddd; border-top: none; padding: 0 15px 20px 15px;">
+                    ${actionBtn}
+                </div>
+            </div>
+        `;
+    
+        renderShadowArmy(); 
+    };
+    window.handleEquipShadow = async function(bossId) {
         
-        // Cộng chỉ số
-        if (itemObj.str > 0) itemObj.str += Math.max(2, Math.floor(itemObj.str * 0.1));
-        if (itemObj.vit > 0) itemObj.vit += Math.max(2, Math.floor(itemObj.vit * 0.1));
-        if (itemObj.int > 0) itemObj.int += Math.max(2, Math.floor(itemObj.int * 0.1));
-        if (itemObj.agi > 0) itemObj.agi += Math.max(2, Math.floor(itemObj.agi * 0.1));
-        if (itemObj.mp > 0) itemObj.mp += Math.max(10, Math.floor(itemObj.mp * 0.1));
-
-        station.innerHTML = `<div style="color: #00ff00; font-size: 24px; font-weight: bold; text-shadow: 0 0 10px #00ff00; z-index: 10; position: absolute;">THÀNH CÔNG!</div>` + station.innerHTML;
-        station.querySelector('img').classList.add('upgrade-success-anim');
+        if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
+            return alert("⚠️ HỆ THỐNG: Khí tức hỗn loạn! Không thể thay đổi Đội Hình Bóng Tối khi đang chiến đấu!");
+        }
         
-        // Chờ animation chạy xong rồi render lại
-        setTimeout(async () => {
-            await saveUserData();
-            selectForgeItem(window.selectedForgeItemIndex);
-            renderForgeList();
-            render();
-        }, 1000);
-    } else {
-        // Thất bại
-        playSound("audio/monster_hit.mp3"); // Âm thanh vỡ/bể
-        station.innerHTML = `<div style="color: #ff3333; font-size: 24px; font-weight: bold; text-shadow: 0 0 10px #ff3333; z-index: 10; position: absolute; transform: rotate(-15deg);">THẤT BẠI!</div>` + station.innerHTML;
-        station.querySelector('img').style.filter = "grayscale(1) brightness(0.5)";
-        station.classList.remove('forge-active');
+        let hpPercent = currentUser.hp / currentUser.maxHp;
+        let mpPercent = currentUser.maxMp > 0 ? (currentUser.mp / currentUser.maxMp) : 0;
+    
+        if (currentUser.equippedShadow && SHADOW_DATA[currentUser.equippedShadow]) {
+            let oldData = SHADOW_DATA[currentUser.equippedShadow];
+            currentUser.str -= oldData.str; 
+            currentUser.vit -= oldData.vit;
+            currentUser.agi -= oldData.agi; 
+            currentUser.int -= oldData.int;
+            currentUser.maxHp -= oldData.vit * 10; 
+            currentUser.maxMp -= oldData.int * 5;
+            currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
+            currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
+        }
+    
+        if (currentUser.equippedShadow === bossId) {
+            currentUser.equippedShadow = null;
+        } 
+    
+        else {
+            currentUser.equippedShadow = bossId;
+            let newData = SHADOW_DATA[bossId];
+            currentUser.str += newData.str; 
+            currentUser.vit += newData.vit;
+            currentUser.agi += newData.agi; 
+            currentUser.int += newData.int;
+            currentUser.maxHp += newData.vit * 10; 
+            currentUser.maxMp += newData.int * 5;
+        }
+    
+        currentUser.hp = Math.max(1, Math.floor(currentUser.maxHp * hpPercent));
+        currentUser.mp = Math.floor(currentUser.maxMp * mpPercent);
+    
+        await saveUserData();
+        renderShadowArmy(); 
+        if(window.selectedShadowId) window.selectShadow(window.selectedShadowId); 
+        if(typeof playSound === 'function') playSound("audio/dungtrangbi.mp3"); 
+    };
+        // ================= HỆ THỐNG LÒ RÈN (FORGE) =================
+    window.currentForgeTab = 'enhance';
+    window.selectedForgeItemIndex = null;
+    
+    window.switchForgeTab = function(tabName, btnElement) {
+        if(tabName === 'socket') return alert("Tính năng Khảm Bảo Thạch đang được Hội Thợ Săn xây dựng, vui lòng quay lại sau!");
         
-        setTimeout(async () => {
-            await saveUserData();
-            selectForgeItem(window.selectedForgeItemIndex);
-            renderForgeList();
-            render();
-        }, 1000);
-    }
-};
-
-// ================= GHI ĐÈ HÀM OPENTAB ĐỂ BẬT AUTO LOAD LÒ RÈN =================
-const originalOpenTabForForge = window.openTab;
-window.openTab = function(evt, tabName) {
-    originalOpenTabForForge(evt, tabName);
-    if (tabName === 'tab-forge' && window.renderForgeList) {
-        // Reset lại bệ rèn khi mở tab
-        window.selectedForgeItemIndex = null;
-        document.getElementById('forgeStation').innerHTML = '<div style="color: #ff9900; opacity: 0.5; font-weight: bold;">ĐẶT TRANG BỊ</div>';
-        document.getElementById('forgeStation').classList.remove('forge-active');
-        document.getElementById('forgeInfo').style.display = 'none';
-        window.renderForgeList();
-    }
-};
+        window.currentForgeTab = tabName;
+        const btns = document.querySelectorAll('#tab-forge .bag-side-btn');
+        btns.forEach(btn => {
+            btn.classList.remove('active');
+            btn.style.color = '#666';
+        });
+        btnElement.classList.add('active');
+        btnElement.style.color = '#ffcc00';
+        renderForgeList();
+    };
+    
+    window.renderForgeList = function() {
+        const listArea = document.getElementById('forgeItemList');
+        if (!listArea) return;
+        
+        let html = "";
+        let hasItems = false;
+    
+        // Quét toàn bộ túi đồ, chỉ lấy những món ĐƯỢC PHÉP CƯỜNG HÓA (Vũ khí, Giáp, Trang sức)
+        currentUser.inventory.forEach((itemObj, index) => {
+            const itemData = ITEM_DATA[itemObj.name];
+            if (!itemData) return;
+            
+            // Loại bỏ Material, Consumable, Costume
+            if (['consumable', 'material', 'rare', 'costume'].includes(itemData.type)) return;
+    
+            hasItems = true;
+            let rank = itemData.rank || 'D';
+            let level = itemObj.enhanceLevel || 0;
+            let isSelected = (window.selectedForgeItemIndex === index);
+    
+            html += `
+                <div class="bag-item-slot rank-${rank} ${isSelected ? 'selected' : ''}" style="border-color: ${isSelected ? '#ffcc00' : '#888'};" onclick="selectForgeItem(${index})">
+                    <img src="${itemData.img}">
+                    ${level > 0 ? `<div style="position: absolute; top: 2px; left: 4px; color: #ffcc00; font-weight: bold; font-size: 14px; text-shadow: 1px 1px 2px #000;">+${level}</div>` : ''}
+                </div>
+            `;
+        });
+    
+        listArea.innerHTML = hasItems ? html : '<div style="color: #888; text-align: center; margin-top: 20px;">Túi đồ rỗng. (Lưu ý: Không thể cường hóa đồ đang mặc trên người)</div>';
+    };
+    
+    window.selectForgeItem = function(index) {
+        playSound("audio/click.mp3");
+        window.selectedForgeItemIndex = index;
+        const itemObj = currentUser.inventory[index];
+        const itemData = ITEM_DATA[itemObj.name];
+        let level = itemObj.enhanceLevel || 0;
+    
+        // Đẩy ảnh vào bệ rèn
+        const station = document.getElementById('forgeStation');
+        station.innerHTML = `<img src="${itemData.img}" style="width: 100px; height: 100px; object-fit: contain; filter: drop-shadow(0 0 10px #ffcc00);">`;
+        station.classList.add('forge-active');
+    
+        // Hiển thị thông số
+        const infoBox = document.getElementById('forgeInfo');
+        infoBox.style.display = 'block';
+        
+        document.getElementById('forgeItemName').innerText = `${itemObj.name} ${level > 0 ? '(+' + level + ')' : ''}`;
+    
+        if (level >= 10) {
+            document.getElementById('forgeCurrentStats').innerText = "TỐI ĐA";
+            document.getElementById('forgeNextStats').innerText = "TỐI ĐA";
+            document.getElementById('forgeSuccessRate').innerText = "0%";
+            document.getElementById('forgeCost').innerText = "Không thể nâng cấp thêm";
+            return;
+        }
+    
+        // TÍNH TOÁN CHỈ SỐ: Tăng 10% chỉ số gốc mỗi cấp cường hóa (tối thiểu +2)
+        let currentStr = itemObj.str || 0, currentVit = itemObj.vit || 0, currentMp = itemObj.mp || 0, currentInt = itemObj.int || 0, currentAgi = itemObj.agi || 0;
+        
+        // Tạm tính chỉ số mới
+        let nextStr = currentStr > 0 ? currentStr + Math.max(2, Math.floor(currentStr * 0.1)) : 0;
+        let nextVit = currentVit > 0 ? currentVit + Math.max(2, Math.floor(currentVit * 0.1)) : 0;
+        let nextInt = currentInt > 0 ? currentInt + Math.max(2, Math.floor(currentInt * 0.1)) : 0;
+        let nextAgi = currentAgi > 0 ? currentAgi + Math.max(2, Math.floor(currentAgi * 0.1)) : 0;
+        let nextMp = currentMp > 0 ? currentMp + Math.max(10, Math.floor(currentMp * 0.1)) : 0;
+    
+        document.getElementById('forgeCurrentStats').innerHTML = [currentStr ? `STR: ${currentStr}` : '', currentVit ? `VIT: ${currentVit}` : '', currentInt ? `INT: ${currentInt}` : '', currentAgi ? `AGI: ${currentAgi}` : '', currentMp ? `MP: ${currentMp}` : ''].filter(Boolean).join('<br>');
+        document.getElementById('forgeNextStats').innerHTML = [nextStr ? `STR: ${nextStr}` : '', nextVit ? `VIT: ${nextVit}` : '', nextInt ? `INT: ${nextInt}` : '', nextAgi ? `AGI: ${nextAgi}` : '', nextMp ? `MP: ${nextMp}` : ''].filter(Boolean).join('<br>');
+    
+        // TÍNH TOÁN TỶ LỆ & CHI PHÍ
+        let baseRates = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10]; // Tỷ lệ từ +1 đến +10
+        let rate = baseRates[level];
+        
+        let cashCost = 1000 + (level * 1500); // 1000, 2500, 4000...
+        let gemCost = 1 + Math.floor(level / 3); // 1 đá, 2 đá, 3 đá...
+    
+        document.getElementById('forgeSuccessRate').innerText = `${rate}%`;
+        document.getElementById('forgeSuccessRate').style.color = rate >= 70 ? '#00ffcc' : (rate >= 40 ? 'gold' : '#ff3333');
+        document.getElementById('forgeCost').innerText = `${cashCost} Cash + ${gemCost} [Ma Thạch Cấp Thấp]`;
+    
+        renderForgeList(); // Cập nhật viền vàng cho món đang chọn
+    };
+    
+    window.executeEnhance = async function() {
+        if (window.selectedForgeItemIndex === null) return alert("Vui lòng chọn trang bị để cường hóa!");
+        
+        const index = window.selectedForgeItemIndex;
+        const itemObj = currentUser.inventory[index];
+        let level = itemObj.enhanceLevel || 0;
+    
+        if (level >= 10) return alert("Trang bị đã đạt cấp bậc tối đa (+10)!");
+    
+        let cashCost = 1000 + (level * 1500);
+        let gemCost = 1 + Math.floor(level / 3);
+        
+        // Kiểm tra tài nguyên
+        if (currentUser.cash < cashCost) return alert(`Không đủ tiền! Cần ${cashCost} Cash.`);
+        
+        const gemIndex = currentUser.inventory.findIndex(i => i.name === "Ma Thạch Cấp Thấp");
+        if (gemIndex === -1 || (currentUser.inventory[gemIndex].quantity || 1) < gemCost) {
+            return alert(`Hệ thống: Không đủ vật liệu! Bạn cần ${gemCost} viên [Ma Thạch Cấp Thấp]. Đánh quái hầm ngục để rớt ra nhé.`);
+        }
+    
+        // Trừ tài nguyên
+        currentUser.cash -= cashCost;
+        if (currentUser.inventory[gemIndex].quantity > gemCost) {
+            currentUser.inventory[gemIndex].quantity -= gemCost;
+        } else {
+            currentUser.inventory.splice(gemIndex, 1);
+            // Nếu lỡ trừ nhầm chính cái item đang forge thì báo lỗi (trường hợp hiếm)
+            if (gemIndex < index) window.selectedForgeItemIndex--;
+        }
+    
+        // Quay Gacha Tỷ Lệ
+        let rate = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10][level];
+        let isSuccess = (Math.random() * 100) <= rate;
+    
+        const station = document.getElementById('forgeStation');
+    
+        if (isSuccess) {
+            playSound("audio/dungtrangbi.mp3"); // Bạn có thể đổi thành âm thanh đập búa nếu có
+            itemObj.enhanceLevel = level + 1;
+            
+            // Cộng chỉ số
+            if (itemObj.str > 0) itemObj.str += Math.max(2, Math.floor(itemObj.str * 0.1));
+            if (itemObj.vit > 0) itemObj.vit += Math.max(2, Math.floor(itemObj.vit * 0.1));
+            if (itemObj.int > 0) itemObj.int += Math.max(2, Math.floor(itemObj.int * 0.1));
+            if (itemObj.agi > 0) itemObj.agi += Math.max(2, Math.floor(itemObj.agi * 0.1));
+            if (itemObj.mp > 0) itemObj.mp += Math.max(10, Math.floor(itemObj.mp * 0.1));
+    
+            station.innerHTML = `<div style="color: #00ff00; font-size: 24px; font-weight: bold; text-shadow: 0 0 10px #00ff00; z-index: 10; position: absolute;">THÀNH CÔNG!</div>` + station.innerHTML;
+            station.querySelector('img').classList.add('upgrade-success-anim');
+            
+            // Chờ animation chạy xong rồi render lại
+            setTimeout(async () => {
+                await saveUserData();
+                selectForgeItem(window.selectedForgeItemIndex);
+                renderForgeList();
+                render();
+            }, 1000);
+        } else {
+            // Thất bại
+            playSound("audio/monster_hit.mp3"); // Âm thanh vỡ/bể
+            station.innerHTML = `<div style="color: #ff3333; font-size: 24px; font-weight: bold; text-shadow: 0 0 10px #ff3333; z-index: 10; position: absolute; transform: rotate(-15deg);">THẤT BẠI!</div>` + station.innerHTML;
+            station.querySelector('img').style.filter = "grayscale(1) brightness(0.5)";
+            station.classList.remove('forge-active');
+            
+            setTimeout(async () => {
+                await saveUserData();
+                selectForgeItem(window.selectedForgeItemIndex);
+                renderForgeList();
+                render();
+            }, 1000);
+        }
+    };
+    
+    // ================= GHI ĐÈ HÀM OPENTAB ĐỂ BẬT AUTO LOAD LÒ RÈN =================
+    const originalOpenTabForForge = window.openTab;
+    window.openTab = function(evt, tabName) {
+        originalOpenTabForForge(evt, tabName);
+        if (tabName === 'tab-forge' && window.renderForgeList) {
+            // Reset lại bệ rèn khi mở tab
+            window.selectedForgeItemIndex = null;
+            document.getElementById('forgeStation').innerHTML = '<div style="color: #ff9900; opacity: 0.5; font-weight: bold;">ĐẶT TRANG BỊ</div>';
+            document.getElementById('forgeStation').classList.remove('forge-active');
+            document.getElementById('forgeInfo').style.display = 'none';
+            window.renderForgeList();
+        }
+    };
     setTimeout(window.startNewBattle, 2000);
 </script>
 </body>
