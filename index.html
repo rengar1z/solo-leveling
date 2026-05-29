@@ -291,55 +291,70 @@
     </div>
 </div>
             
-<div id="tab-shop" class="tab-panel">
-    <div style="position: relative; width: 100%; max-width: 1400px; margin: 0 auto;">
-        <div style="position: absolute; top: -14px; left: 15px; background: #000; color: #fff; padding: 4px 20px; font-size: 22px; font-weight: bold; font-family: 'Oswald', sans-serif; z-index: 10; border: 2px solid #000; letter-spacing: 1px; clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);">
-            Shop
-        </div>
-        
-        <div class="new-bag-container"> <div class="bag-sidebar">
-                <button class="bag-side-btn active" onclick="switchShopTab('all', this)">All</button>
-                <button class="bag-side-btn" onclick="switchShopTab('potion', this)">Potions</button>
-                <button class="bag-side-btn" onclick="switchShopTab('skill', this)">Skills</button>
-                <button class="bag-side-btn" onclick="switchShopTab('costume', this)">Costumes</button>
+    <div id="tab-shop" class="tab-panel">
+        <div style="position: relative; width: 100%; max-width: 1400px; margin: 0 auto;">
+            <div style="position: absolute; top: -14px; left: 15px; background: #000; color: #fff; padding: 4px 20px; font-size: 22px; font-weight: bold; font-family: 'Oswald', sans-serif; z-index: 10; border: 2px solid #000; letter-spacing: 1px; clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);">
+                Shop
             </div>
-
-            <div class="bag-grid" id="shopGridArea" style="flex: 1; align-content: start; background: #e9ecef;">
+            
+            <div class="new-bag-container"> <div class="bag-sidebar">
+                    <button class="bag-side-btn active" onclick="switchShopTab('all', this)">All</button>
+                    <button class="bag-side-btn" onclick="switchShopTab('potion', this)">Potions</button>
+                    <button class="bag-side-btn" onclick="switchShopTab('skill', this)">Skills</button>
+                    <button class="bag-side-btn" onclick="switchShopTab('costume', this)">Costumes</button>
                 </div>
-
-            <div class="bag-detail" id="shopDetailArea">
-                <div style="text-align:center; margin-top: 100px; color: #888; font-size: 16px; font-family: sans-serif;">
-                    Chọn một mặt hàng để xem chi tiết
+    
+                <div class="bag-grid" id="shopGridArea" style="flex: 1; align-content: start; background: #e9ecef;">
+                    </div>
+    
+                <div class="bag-detail" id="shopDetailArea">
+                    <div style="text-align:center; margin-top: 100px; color: #888; font-size: 16px; font-family: sans-serif;">
+                        Chọn một mặt hàng để xem chi tiết
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-            <div id="tab-gacha" class="tab-panel">
-    <div class="gacha-wrapper">
-    
-        <div class="gacha-magic-circle"></div>
-        
-        <div style="z-index: 2; text-align: center; width: 100%;">
-            <h2 style="color: #ffcc00; text-shadow: 0 0 15px #ffcc00, 0 0 40px rgba(255, 204, 0, 0.5); font-weight: bold; font-size: 46px; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 4px;">
-                TẾ ĐÀN DỊ GIỚI
-            </h2>
-            <p style="color: #a4b3c6; font-size: 18px; margin-bottom: 40px; font-style: italic;">
-                Tế lễ <span style="color: #ffcc00; font-weight: bold; text-shadow: 0 0 5px gold;">Sandstorm Cube</span> để triệu hồi Bảo Vật Thất Truyền!
-            </p>
             
-            <div id="gachaResultArea" class="gacha-result-area">
-                <div id="gachaBox" class="gacha-box">
-                    <span>?</span>
-                </div>
+            <div id="tab-gacha" class="tab-panel">
+    <div style="position: relative; width: 100%; max-width: 1400px; margin: 0 auto;">
+        <div style="position: absolute; top: -14px; left: 15px; background: #000; color: #00ffcc; padding: 4px 20px; font-size: 22px; font-weight: bold; font-family: 'Oswald', sans-serif; z-index: 10; border: 2px solid #000; letter-spacing: 1px; clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);">
+            Altar
+        </div>
+        
+        <div class="new-bag-container" style="border-color: #00ffcc !important;">
+    
+            <div class="bag-sidebar" style="background: #001a1a; border-right: 2px solid #00ffcc;">
+                <button class="bag-side-btn active" style="color: #00ffcc;" onclick="switchGachaTab('equip', this)">Trang Bị</button>
+                <button class="bag-side-btn" style="color: #666;" onclick="switchGachaTab('artifact', this)">Cổ Vật <br><span style="font-size: 11px;">(Sắp mở)</span></button>
             </div>
 
-            <button class="gacha-btn-system" onclick="spinGacha()">
-                RÚT THƯỞNG (1 CUBE)
-            </button>
-            
-            <div style="margin-top: 30px; color: #a4b3c6; font-size: 20px; font-family: 'Oswald', sans-serif;">
-                Kho chứa Cube: <span id="cubeCountDisplay" style="color: #00ffcc; font-weight: bold; font-size: 28px; text-shadow: 0 0 10px #00ffcc; margin-left: 5px;">0</span>
+            <div style="flex: 1; position: relative; background: radial-gradient(circle at center, #003333, #000); display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; min-height: 550px;">
+                
+                <div class="gacha-magic-circle" style="opacity: 0.2; transform: scale(1.5);"></div>
+
+                <div style="z-index: 2; text-align: center; width: 100%;">
+                    <h2 style="color: #00ffcc; text-shadow: 0 0 15px #00ffcc, 0 0 30px rgba(0, 255, 204, 0.5); font-weight: bold; font-size: 42px; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 4px;">
+                        TẾ ĐÀN DỊ GIỚI
+                    </h2>
+                    <p style="color: #a4b3c6; font-size: 16px; margin-bottom: 30px; font-style: italic;">
+                        Tế lễ <span style="color: #ffcc00; font-weight: bold; text-shadow: 0 0 5px gold;">Sandstorm Cube</span> để triệu hồi Bảo Vật Thất Truyền!
+                    </p>
+                    
+                    <div id="gachaResultArea" class="gacha-result-area" style="margin-bottom: 25px;">
+                        <div id="gachaBox" class="gacha-box" style="width: 130px; height: 130px; border-color: #00ffcc; box-shadow: 0 0 20px rgba(0, 255, 204, 0.3); display: flex; justify-content: center; align-items: center;">
+                            <span style="color: #00ffcc; font-size: 50px;">?</span>
+                        </div>
+                    </div>
+
+                    <button id="btnSpinGacha" class="gacha-btn-system" style="border-color: #00ffcc; color: #00ffcc !important; padding: 12px 35px !important; font-size: 22px !important; box-shadow: inset 0 0 10px rgba(0,255,204,0.3);" onclick="spinGacha()">
+                        RÚT THƯỞNG (1 CUBE)
+                    </button>
+                    
+                    <div style="margin-top: 25px; color: #a4b3c6; font-size: 18px; font-family: 'Oswald', sans-serif;">
+                        Kho chứa Cube: <span id="cubeCountDisplay" style="color: #ffcc00; font-weight: bold; font-size: 26px; text-shadow: 0 0 10px gold; margin-left: 5px;">0</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1297,7 +1312,7 @@
         }
         updateCubeDisplay(); 
         
-        const spinBtn = document.querySelector("#tab-gacha button");
+        const spinBtn = document.getElementById("btnSpinGacha");
         if (spinBtn) {
             spinBtn.disabled = true;
             spinBtn.innerText = "ĐANG TỤ LỰC...";
@@ -1351,7 +1366,7 @@
                 
                 if (spinBtn) {
                     spinBtn.disabled = false;
-                    spinBtn.innerText = "QUAY 1 LẦN (1 CUBE)";
+                    spinBtn.innerText = "RÚT THƯỞNG (1 CUBE)";
                     spinBtn.style.opacity = "1";
                     spinBtn.style.cursor = "pointer";
                 }
@@ -5919,6 +5934,27 @@ window.switchInvTab = function(tabName, btnElement) {
             document.getElementById('forgeInfo').style.display = 'none';
             window.renderForgeList();
         }
+    };
+
+    window.currentGachaTab = 'equip';
+    
+    window.switchGachaTab = function(tabName, btnElement) {
+        if(tabName === 'artifact') {
+            playSound("audio/click.mp3");
+            return alert("Hệ thống: Tính năng Tế Lễ Cổ Vật đang bị phong ấn! Vui lòng chờ bản cập nhật tiếp theo.");
+        }
+        
+        playSound("audio/click.mp3");
+        window.currentGachaTab = tabName;
+        
+        const btns = document.querySelectorAll('#tab-gacha .bag-side-btn');
+        btns.forEach(btn => {
+            btn.classList.remove('active');
+            btn.style.color = '#666';
+        });
+        
+        btnElement.classList.add('active');
+        btnElement.style.color = '#00ffcc';
     };
     setTimeout(window.startNewBattle, 2000);
 </script>
