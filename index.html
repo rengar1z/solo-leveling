@@ -1018,6 +1018,11 @@
     };
     // --- DỮ LIỆU ITEM (ĐÃ THÊM RANK S, A, B, C, D) ---
     const ITEM_DATA = {
+        // --- CỔ VẬT ---
+        "Lõi Vũ Trang": { rank: "A", type: "gem", stat: "str", name: "Lõi Vũ Trang", effect: "[Cổ Vật] Chứa sức mạnh chiến đấu hủy diệt. Khảm vào trang bị tăng 5-15 STR.", img: "material/Abyssal_Crystal.png", sellPrice: 2000 },
+        "Lõi Sinh Mệnh": { rank: "A", type: "gem", stat: "vit", name: "Lõi Sinh Mệnh", effect: "[Cổ Vật] Cội nguồn của sinh lực. Khảm vào trang bị tăng 5-15 VIT.", img: "material/Abyssal_Crystal.png", sellPrice: 2000 },
+        "Lõi Xung Kích": { rank: "A", type: "gem", stat: "agi", name: "Lõi Xung Kích", effect: "[Cổ Vật] Nhẹ tựa lông hồng, nhanh như sấm sét. Khảm vào trang bị tăng 5-15 AGI.", img: "material/Abyssal_Crystal.png", sellPrice: 2000 },
+        "Lõi Ma Năng": { rank: "A", type: "gem", stat: "int", name: "Lõi Ma Năng", effect: "[Cổ Vật] Tinh hoa của ma thuật nguyên thủy. Khảm vào trang bị tăng 5-15 INT.", img: "material/Abyssal_Crystal.png", sellPrice: 2000 },
         // --- GUILD RAID CHESTS (RƯƠNG THƯỞNG BOSS HẠNG S) ---
         "Guild Raid Chest 1": { rank: "A", type: "consumable", effectType: "add_mixed", strAmt: 2, vitAmt: 2, intAmt: 2, name: "Guild Raid Chest 1", effect: "Rương thưởng từ Thợ Săn Giấu Mặt. Mở ra tăng VĨNH VIỄN 2 STR, 2 VIT và 2 INT.", img: "cons/Guild_Raid_Chest_I.png", sellPrice: 10000 },
         "Guild Raid Chest 2": { rank: "S", type: "consumable", effectType: "add_str", amount: 20, name: "Guild Raid Chest 2", effect: "Rương thưởng từ Hwang Dongsoo. Mở ra tăng VĨNH VIỄN 20 STR (Sức mạnh).", img: "cons/Guild_Raid_Chest_II.png", sellPrice: 20000 },
@@ -2923,9 +2928,23 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
 
     let statusText = isEquippedView ? `<div style="color: #2b61b3; font-size: 14px; font-weight: bold;">[ ĐANG TRANG BỊ ]</div>` : `<div style="color: #666; font-size: 15px; font-weight: bold;">Đang có: &nbsp;&nbsp;&nbsp; ${qty}</div>`;
     
-    
     let enhanceLv = itemObj.enhanceLevel || 0;
     let displayName = enhanceLv > 0 ? `${itemObj.name} (+${enhanceLv})` : itemObj.name;
+
+    // --- LOGIC RENDER KHẢM NẠM BẢO THẠCH ---
+    let socketHTML = "";
+    if (itemObj.sockets && itemObj.sockets.length > 0) {
+        socketHTML = `<div style="margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">`;
+        itemObj.sockets.forEach((s, idx) => {
+            socketHTML += `
+                <div style="color: #cc33ff; font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 8px; background: rgba(204, 51, 255, 0.1); padding: 5px 10px; border-radius: 5px; border-left: 3px solid #cc33ff;">
+                    <img src="material/mathachcapthap.png" style="width:18px; height:18px; filter: drop-shadow(0 0 2px #cc33ff);"> 
+                    Khe ${idx + 1}: +${s.val} ${s.stat.toUpperCase()}
+                </div>
+            `;
+        });
+        socketHTML += `</div>`;
+    }
 
     document.getElementById('bagDetailArea').innerHTML = `
         <div style="padding: 15px; display: flex; flex-direction: column; height: 100%;">
@@ -2940,15 +2959,16 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 </div>
             </div>
             
-            <div style="background: #f8f9fa; border: 1px solid #ddd; border-bottom: none; padding: 15px 20px; flex: 1; font-family: sans-serif;">
+            <div style="background: #f8f9fa; border: 1px solid #ddd; border-bottom: none; padding: 15px 20px; flex: 1; font-family: sans-serif; overflow-y: auto;">
                 <div style="font-size: 16px; color: #222; line-height: 1.6; margin-bottom: 15px;">
                     ${itemData.effect || 'Không có mô tả cho vật phẩm này.'}
                 </div>
                 <div style="color: #007bff; font-weight: bold; font-size: 14px;">${statsStr}</div>
                 
-                <div style="text-align:center; color:#ccc; font-weight:bold; border-bottom: 1px solid #ddd; line-height:0.1em; margin: 40px 0 10px 0; font-family: 'Oswald', sans-serif; letter-spacing: 2px;">
+                <div style="text-align:center; color:#ccc; font-weight:bold; border-bottom: 1px solid #ddd; line-height:0.1em; margin: 30px 0 10px 0; font-family: 'Oswald', sans-serif; letter-spacing: 2px;">
                     <span style="background:#f8f9fa; padding:0 15px;">SYSTEM</span>
                 </div>
+                ${socketHTML} 
             </div>
             
             <div style="display: flex; gap: 10px; background: #f8f9fa; border: 1px solid #ddd; border-top: none; padding: 0 15px 20px 15px;">
@@ -5710,8 +5730,7 @@ window.switchInvTab = function(tabName, btnElement) {
     window.selectedForgeItemIndex = null;
     
     window.switchForgeTab = function(tabName, btnElement) {
-        if(tabName === 'socket') return alert("Tính năng Khảm Bảo Thạch đang được Hội Thợ Săn xây dựng, vui lòng quay lại sau!");
-        
+        playSound("audio/click.mp3");
         window.currentForgeTab = tabName;
         const btns = document.querySelectorAll('#tab-forge .bag-side-btn');
         btns.forEach(btn => {
@@ -5720,7 +5739,11 @@ window.switchInvTab = function(tabName, btnElement) {
         });
         btnElement.classList.add('active');
         btnElement.style.color = '#ffcc00';
-        renderForgeList();
+        
+        // Cập nhật lại UI dựa trên Tab đang chọn
+        if (window.selectedForgeItemIndex !== null) {
+            selectForgeItem(window.selectedForgeItemIndex);
+        }
     };
     
     window.renderForgeList = function() {
@@ -5769,14 +5792,52 @@ window.switchInvTab = function(tabName, btnElement) {
         `;
         station.classList.add('forge-active');
     
-        // 2. KHỞI TẠO BẢNG THÔNG SỐ
         const infoBox = document.getElementById('forgeInfo');
         infoBox.style.display = 'block';
         document.getElementById('forgeItemName').innerText = `${itemObj.name} ${level > 0 ? '(+' + level + ')' : ''}`;
         
-        const enhanceBtn = infoBox.querySelector('button'); 
-    
-        // --- NẾU ĐỒ ĐÃ ĐẠT MAX CẤP (+10) ---
+        // ================= GIAO DIỆN KHẢM THẠCH =================
+        if (window.currentForgeTab === 'socket') {
+            let socketCount = itemObj.sockets ? itemObj.sockets.length : 0;
+            
+            document.getElementById('forgeCurrentStats').innerHTML = `Đã khảm: <span style="color:#cc33ff">${socketCount}/3</span>`;
+            document.getElementById('forgeNextStats').innerHTML = "Chỉ số ngẫu nhiên";
+            
+            document.getElementById('forgeSuccessRate').innerText = "100%";
+            document.getElementById('forgeSuccessRate').style.color = "#00ffcc";
+            
+            let cashReq = 5000;
+            let gemReq = 3;
+            document.getElementById('forgeCost').innerText = `${cashReq} Cash + ${gemReq} [Ma Thạch Cấp Thấp]`;
+            
+            // Re-render nút bấm thành nút Khảm
+            const oldBtn = infoBox.querySelector('button');
+            const newBtn = document.createElement('button');
+            newBtn.className = "gacha-btn-system";
+            newBtn.style = "width: 100%; margin-top: 15px; font-size: 20px !important; padding: 10px !important; background: linear-gradient(to bottom, #cc33ff, #9900cc); border-color: #ff99ff;";
+            newBtn.innerText = "KHẢM NẠM BẢO THẠCH";
+            newBtn.onclick = executeSocket;
+            
+            if (socketCount >= 3) {
+                newBtn.disabled = true;
+                newBtn.style.filter = "grayscale(1)";
+                newBtn.style.cursor = "not-allowed";
+                newBtn.innerText = "ĐÃ KHẢM TỐI ĐA";
+                document.getElementById('forgeCost').innerText = "Không thể đục thêm lỗ";
+            }
+            infoBox.replaceChild(newBtn, oldBtn);
+            renderForgeList();
+            return;
+        }
+
+        // ================= GIAO DIỆN CƯỜNG HÓA =================
+        // Đổi lại Nút thành Cường hóa nếu lỡ nhảy tab
+        const oldBtn = infoBox.querySelector('button');
+        const newBtn = document.createElement('button');
+        newBtn.className = "gacha-btn-system";
+        newBtn.style = "width: 100%; margin-top: 15px; font-size: 20px !important; padding: 10px !important;";
+        newBtn.onclick = executeEnhance;
+
         if (level >= 10) {
             document.getElementById('forgeCurrentStats').innerHTML = "<span style='color: gold;'>ĐẠT ĐỈNH CAO</span>";
             document.getElementById('forgeNextStats').innerHTML = "<span style='color: gold;'>ĐẠT ĐỈNH CAO</span>";
@@ -5784,24 +5845,22 @@ window.switchInvTab = function(tabName, btnElement) {
             document.getElementById('forgeSuccessRate').style.color = "#aaa";
             document.getElementById('forgeCost').innerText = "Không thể nâng cấp thêm";
             
-            if (enhanceBtn) {
-                enhanceBtn.disabled = true;
-                enhanceBtn.style.filter = "grayscale(1)";
-                enhanceBtn.style.cursor = "not-allowed";
-                enhanceBtn.innerText = "MAX LEVEL";
-            }
+            newBtn.disabled = true;
+            newBtn.style.filter = "grayscale(1)";
+            newBtn.style.cursor = "not-allowed";
+            newBtn.innerText = "MAX LEVEL";
+            infoBox.replaceChild(newBtn, oldBtn);
             renderForgeList(); 
             return;
         }
     
-        if (enhanceBtn) {
-            enhanceBtn.disabled = false;
-            enhanceBtn.style.filter = "none";
-            enhanceBtn.style.cursor = "pointer";
-            enhanceBtn.innerText = "CƯỜNG HÓA";
-        }
+        newBtn.disabled = false;
+        newBtn.style.filter = "none";
+        newBtn.style.cursor = "pointer";
+        newBtn.innerText = "CƯỜNG HÓA";
+        infoBox.replaceChild(newBtn, oldBtn);
     
-        // 3. TÍNH TOÁN CHỈ SỐ (Chặn lỗi khoảng trống)
+        // TÍNH TOÁN CHỈ SỐ CƯỜNG HÓA
         let currentStr = itemObj.str || 0, currentVit = itemObj.vit || 0, currentMp = itemObj.mp || 0, currentInt = itemObj.int || 0, currentAgi = itemObj.agi || 0;
         
         let nextStr = currentStr > 0 ? currentStr + Math.max(2, Math.floor(currentStr * 0.1)) : 0;
@@ -5820,17 +5879,11 @@ window.switchInvTab = function(tabName, btnElement) {
         let rate = baseRates[level];
         
         let cashCost = 1000 + (level * 1500); 
-        
         let gemName = "Ma Thạch Cấp Thấp";
         let gemCost = level + 1; 
         
-        if (level >= 3 && level <= 5) {
-            gemName = "Ma Thạch Trung Cấp";
-            gemCost = level - 2; 
-        } else if (level >= 6) {
-            gemName = "Ma Thạch Cao Cấp";
-            gemCost = level - 5; 
-        }
+        if (level >= 3 && level <= 5) { gemName = "Ma Thạch Trung Cấp"; gemCost = level - 2; } 
+        else if (level >= 6) { gemName = "Ma Thạch Cao Cấp"; gemCost = level - 5; }
     
         document.getElementById('forgeSuccessRate').innerText = `${rate}%`;
         document.getElementById('forgeSuccessRate').style.color = rate >= 70 ? '#00ffcc' : (rate >= 40 ? 'gold' : '#ff3333');
@@ -5933,7 +5986,74 @@ window.switchInvTab = function(tabName, btnElement) {
         }, 1000); 
     }
 };
-    
+
+    window.executeSocket = async function() {
+        if (window.selectedForgeItemIndex === null) return alert("Vui lòng chọn trang bị để khảm!");
+        
+        const enhanceBtn = document.querySelector('#forgeInfo button');
+        if (enhanceBtn && enhanceBtn.disabled) return; 
+
+        const index = window.selectedForgeItemIndex;
+        const itemObj = currentUser.inventory[index];
+        
+        if (!itemObj.sockets) itemObj.sockets = [];
+        if (itemObj.sockets.length >= 3) return alert("Trang bị này đã đục tối đa 3 lỗ!");
+
+        let cashCost = 5000;
+        let gemCost = 3;
+        let gemName = "Ma Thạch Cấp Thấp";
+        
+        // 1. KIỂM TRA & TRỪ TÀI NGUYÊN
+        if (currentUser.cash < cashCost) return alert(`Không đủ tiền! Cần ${cashCost} Cash để đục lỗ.`);
+        
+        const gemIndex = currentUser.inventory.findIndex(i => i.name === gemName);
+        if (gemIndex === -1 || (currentUser.inventory[gemIndex].quantity || 1) < gemCost) {
+            return alert(`Hệ thống: Không đủ vật liệu! Bạn cần ${gemCost} viên [${gemName}].`);
+        }
+
+        if (enhanceBtn) {
+            enhanceBtn.disabled = true;
+            enhanceBtn.style.filter = "grayscale(1)";
+            enhanceBtn.innerText = "ĐANG KHẢM...";
+        }
+
+        currentUser.cash -= cashCost;
+        if (currentUser.inventory[gemIndex].quantity > gemCost) {
+            currentUser.inventory[gemIndex].quantity -= gemCost;
+        } else {
+            currentUser.inventory.splice(gemIndex, 1);
+            if (gemIndex < index) window.selectedForgeItemIndex--;
+        }
+
+        // 2. RANDOM CHỈ SỐ BẢO THẠCH
+        const possibleStats = ['str', 'vit', 'agi', 'int']; 
+        const randomStat = possibleStats[Math.floor(Math.random() * possibleStats.length)];
+        const randomVal = Math.floor(Math.random() * 8) + 3; // Cộng từ 3 đến 10 điểm
+
+        itemObj.sockets.push({ stat: randomStat, val: randomVal });
+        
+        // CỘNG TRỰC TIẾP VÀO CHỈ SỐ TRANG BỊ ĐỂ HỆ THỐNG TỰ NHẬN DIỆN
+        if (!itemObj[randomStat]) itemObj[randomStat] = 0;
+        itemObj[randomStat] += randomVal;
+
+        // 3. HIỆU ỨNG THÀNH CÔNG
+        playSound("audio/tada.mp3"); 
+        const station = document.getElementById('forgeStation');
+        station.innerHTML = `
+            <img src="${ITEM_DATA[itemObj.name].img}" style="width: 100px; height: 100px; object-fit: contain; animation: smoothItemGlow 0.6s forwards; z-index: 10;">
+            <div class="smooth-success-text" style="color: #cc33ff; text-shadow: 0 0 10px #cc33ff, 2px 2px 0 #000;">KHẢM THÀNH CÔNG!</div>
+            <div style="position: absolute; bottom: -15px; background: rgba(0,0,0,0.8); border: 1px solid #cc33ff; color: #cc33ff; padding: 2px 10px; font-weight: bold; border-radius: 5px; animation: smoothSuccessPop 0.4s 0.2s both; z-index: 25;">
+                +${randomVal} ${randomStat.toUpperCase()}
+            </div>
+        `;
+        
+        setTimeout(async () => {
+            await saveUserData();
+            selectForgeItem(window.selectedForgeItemIndex);
+            renderForgeList();
+            render();
+        }, 1500);
+    };
     
     const originalOpenTabForForge = window.openTab;
     window.openTab = function(evt, tabName) {
@@ -5959,13 +6079,7 @@ window.switchInvTab = function(tabName, btnElement) {
     };
 
     window.currentGachaTab = 'equip';
-    
     window.switchGachaTab = function(tabName, btnElement) {
-        if(tabName === 'artifact') {
-            playSound("audio/click.mp3");
-            return alert("Hệ thống: Tính năng Tế Lễ Cổ Vật đang bị phong ấn! Vui lòng chờ bản cập nhật tiếp theo.");
-        }
-        
         playSound("audio/click.mp3");
         window.currentGachaTab = tabName;
         
@@ -5977,7 +6091,16 @@ window.switchInvTab = function(tabName, btnElement) {
         
         btnElement.classList.add('active');
         btnElement.style.color = '#00ffcc';
+        
+
+        const pDesc = document.querySelector('#tab-gacha p');
+        if (pDesc) {
+            pDesc.innerHTML = tabName === 'equip' 
+                ? 'Tế lễ <span style="color: #ffcc00; font-weight: bold; text-shadow: 0 0 5px gold;">Sandstorm Cube</span> để triệu hồi Bảo Vật Thất Truyền!' 
+                : 'Tế lễ <span style="color: #ffcc00; font-weight: bold; text-shadow: 0 0 5px gold;">Sandstorm Cube</span> để triệu hồi Cổ Vật Khảm Nạm!';
+        }
     };
+    
     setTimeout(window.startNewBattle, 2000);
 </script>
 </body>
