@@ -1181,7 +1181,7 @@
         if (!itemData) return null;
         
         // Nếu là đồ Tiêu hao / Vật liệu / Cổ vật -> Kiểm tra và cộng Quantity
-        if (['consumable', 'material', 'rare'].includes(itemData.type)) {
+        if (['consumable', 'material', 'rare', 'gem'].includes(itemData.type)) {
             let existingItem = currentUser.inventory.find(i => i.name === itemName);
             if (existingItem) {
                 existingItem.quantity = (existingItem.quantity || 1) + 1;
@@ -2793,7 +2793,7 @@
         if (!itemObj || !ITEM_DATA[itemObj.name]) return;
 
         const type = ITEM_DATA[itemObj.name].type;
-        if (['consumable', 'material', 'rare'].includes(type)) {
+        if (['consumable', 'material', 'rare', 'gem'].includes(type)) {
             if (stackMap[itemObj.name]) {
                 stackMap[itemObj.name].quantity += (itemObj.quantity || 1);
             } else {
@@ -2822,7 +2822,7 @@
         if (window.currentInvTab === 'all') isMatch = true;
         else if (window.currentInvTab === 'equip' && ['weapon', 'armor', 'helmet', 'gloves', 'shoes', 'ring', 'necklace', 'earring', 'costume'].includes(type)) isMatch = true;
         else if (window.currentInvTab === 'item' && type === 'consumable') isMatch = true;
-        else if (window.currentInvTab === 'material' && ['material', 'rare'].includes(type)) isMatch = true;
+        else if (window.currentInvTab === 'material' && ['material', 'rare', 'gem'].includes(type)) isMatch = true;
 
         if (isMatch) {
             let isStacked = ['consumable', 'material', 'rare'].includes(type);
@@ -5860,8 +5860,12 @@ window.switchInvTab = function(tabName, btnElement) {
         }
 
         // ================= GIAO DIỆN CƯỜNG HÓA =================
-        // Đổi lại Nút thành Cường hóa nếu lỡ nhảy tab
-        const oldBtn = infoBox.querySelector('button');
+        let container = document.getElementById('socketBtnContainer');
+        if (container) container.remove(); 
+        
+        let oldBtn = infoBox.querySelector('button');
+        if (oldBtn) oldBtn.remove();
+        
         const newBtn = document.createElement('button');
         newBtn.className = "gacha-btn-system";
         newBtn.style = "width: 100%; margin-top: 15px; font-size: 20px !important; padding: 10px !important;";
@@ -5878,16 +5882,18 @@ window.switchInvTab = function(tabName, btnElement) {
             newBtn.style.filter = "grayscale(1)";
             newBtn.style.cursor = "not-allowed";
             newBtn.innerText = "MAX LEVEL";
-            infoBox.replaceChild(newBtn, oldBtn);
+            
+            infoBox.appendChild(newBtn); 
             renderForgeList(); 
             return;
         }
     
+        // Nếu đồ chưa Max Level
         newBtn.disabled = false;
         newBtn.style.filter = "none";
         newBtn.style.cursor = "pointer";
         newBtn.innerText = "CƯỜNG HÓA";
-        infoBox.replaceChild(newBtn, oldBtn);
+        infoBox.appendChild(newBtn);
     
         // TÍNH TOÁN CHỈ SỐ CƯỜNG HÓA
         let currentStr = itemObj.str || 0, currentVit = itemObj.vit || 0, currentMp = itemObj.mp || 0, currentInt = itemObj.int || 0, currentAgi = itemObj.agi || 0;
