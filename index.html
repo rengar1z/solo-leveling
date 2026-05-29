@@ -5734,50 +5734,72 @@ window.switchInvTab = function(tabName, btnElement) {
     };
     
     window.selectForgeItem = function(index) {
-        playSound("audio/click.mp3");
+        if(typeof playSound === 'function') playSound("audio/click.mp3");
+        
         window.selectedForgeItemIndex = index;
         const itemObj = currentUser.inventory[index];
         const itemData = ITEM_DATA[itemObj.name];
         let level = itemObj.enhanceLevel || 0;
     
-        // Đẩy ảnh vào bệ rèn
         const station = document.getElementById('forgeStation');
-        station.innerHTML = `<img src="${itemData.img}" style="width: 100px; height: 100px; object-fit: contain; filter: drop-shadow(0 0 10px #ffcc00);">`;
+        station.innerHTML = `
+            <img src="${itemData.img}" style="width: 100px; height: 100px; object-fit: contain; filter: drop-shadow(0 0 10px #ffcc00);">
+            ${level > 0 ? `<div style="position: absolute; top: 10px; right: 10px; color: #ffcc00; font-weight: bold; font-size: 20px; text-shadow: 1px 1px 2px #000; z-index: 5;">+${level}</div>` : ''}
+        `;
         station.classList.add('forge-active');
     
-        // Hiển thị thông số
+        // 2. KHỞI TẠO BẢNG THÔNG SỐ
         const infoBox = document.getElementById('forgeInfo');
         infoBox.style.display = 'block';
-        
         document.getElementById('forgeItemName').innerText = `${itemObj.name} ${level > 0 ? '(+' + level + ')' : ''}`;
+        
+        const enhanceBtn = infoBox.querySelector('button'); 
     
+        // --- NẾU ĐỒ ĐÃ ĐẠT MAX CẤP (+10) ---
         if (level >= 10) {
-            document.getElementById('forgeCurrentStats').innerText = "TỐI ĐA";
-            document.getElementById('forgeNextStats').innerText = "TỐI ĐA";
-            document.getElementById('forgeSuccessRate').innerText = "0%";
+            document.getElementById('forgeCurrentStats').innerHTML = "<span style='color: gold;'>ĐẠT ĐỈNH CAO</span>";
+            document.getElementById('forgeNextStats').innerHTML = "<span style='color: gold;'>ĐẠT ĐỈNH CAO</span>";
+            document.getElementById('forgeSuccessRate').innerText = "---";
+            document.getElementById('forgeSuccessRate').style.color = "#aaa";
             document.getElementById('forgeCost').innerText = "Không thể nâng cấp thêm";
+            
+            if (enhanceBtn) {
+                enhanceBtn.disabled = true;
+                enhanceBtn.style.filter = "grayscale(1)";
+                enhanceBtn.style.cursor = "not-allowed";
+                enhanceBtn.innerText = "MAX LEVEL";
+            }
+            renderForgeList(); 
             return;
         }
     
-        // TÍNH TOÁN CHỈ SỐ: Tăng 10% chỉ số gốc mỗi cấp cường hóa (tối thiểu +2)
+        if (enhanceBtn) {
+            enhanceBtn.disabled = false;
+            enhanceBtn.style.filter = "none";
+            enhanceBtn.style.cursor = "pointer";
+            enhanceBtn.innerText = "CƯỜNG HÓA";
+        }
+    
+        // 3. TÍNH TOÁN CHỈ SỐ (Chặn lỗi khoảng trống)
         let currentStr = itemObj.str || 0, currentVit = itemObj.vit || 0, currentMp = itemObj.mp || 0, currentInt = itemObj.int || 0, currentAgi = itemObj.agi || 0;
         
-        // Tạm tính chỉ số mới
         let nextStr = currentStr > 0 ? currentStr + Math.max(2, Math.floor(currentStr * 0.1)) : 0;
         let nextVit = currentVit > 0 ? currentVit + Math.max(2, Math.floor(currentVit * 0.1)) : 0;
         let nextInt = currentInt > 0 ? currentInt + Math.max(2, Math.floor(currentInt * 0.1)) : 0;
         let nextAgi = currentAgi > 0 ? currentAgi + Math.max(2, Math.floor(currentAgi * 0.1)) : 0;
         let nextMp = currentMp > 0 ? currentMp + Math.max(10, Math.floor(currentMp * 0.1)) : 0;
     
-        document.getElementById('forgeCurrentStats').innerHTML = [currentStr ? `STR: ${currentStr}` : '', currentVit ? `VIT: ${currentVit}` : '', currentInt ? `INT: ${currentInt}` : '', currentAgi ? `AGI: ${currentAgi}` : '', currentMp ? `MP: ${currentMp}` : ''].filter(Boolean).join('<br>');
-        document.getElementById('forgeNextStats').innerHTML = [nextStr ? `STR: ${nextStr}` : '', nextVit ? `VIT: ${nextVit}` : '', nextInt ? `INT: ${nextInt}` : '', nextAgi ? `AGI: ${nextAgi}` : '', nextMp ? `MP: ${nextMp}` : ''].filter(Boolean).join('<br>');
+        let currentStatsStr = [currentStr ? `STR: ${currentStr}` : '', currentVit ? `VIT: ${currentVit}` : '', currentInt ? `INT: ${currentInt}` : '', currentAgi ? `AGI: ${currentAgi}` : '', currentMp ? `MP: ${currentMp}` : ''].filter(Boolean).join('<br>');
+        let nextStatsStr = [nextStr ? `STR: ${nextStr}` : '', nextVit ? `VIT: ${nextVit}` : '', nextInt ? `INT: ${nextInt}` : '', nextAgi ? `AGI: ${nextAgi}` : '', nextMp ? `MP: ${nextMp}` : ''].filter(Boolean).join('<br>');
     
-        
+        document.getElementById('forgeCurrentStats').innerHTML = currentStatsStr || "<span style='color:#666'>Không có</span>";
+        document.getElementById('forgeNextStats').innerHTML = nextStatsStr || "<span style='color:#666'>Không có</span>";
+    
+        // 4. TÍNH TOÁN TỶ LỆ & CHI PHÍ
         let baseRates = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10];
         let rate = baseRates[level];
         
         let cashCost = 1000 + (level * 1500); 
-    
         
         let gemName = "Ma Thạch Cấp Thấp";
         let gemCost = level + 1; 
