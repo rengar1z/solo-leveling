@@ -677,7 +677,8 @@
         "boss/Boss_Baran_the_Demon_King.png", "bot/Boss_1st_Gen._Fire_Ant_Leader.png",
         "bot/Boss_Purple_Blade_Camula.png", "bot/Boss_1st_Gen._White_Ant_Leader.png", "boss/Thomas_Andre.png", "boss/Rage_Thomas.png",
         "boss/Boss_Queen_Ant.png", "boss/Boss_Ant_King.png", "boss/Rage_Ant_King.png", "boss/Rage_Igris.png",
-        
+        // Cores
+        "core/loihothe.png", "core/loibaokich.png", "core/loihuydiet.png",
         // Quái Red Gate
         "bot/linhtienbang.png", "bot/canvetienbang.png", "bot/trinhsattienbang.png",
         "bot/thulinhgaubang.png", "boss/bakura.png",
@@ -1019,9 +1020,9 @@
     // --- DỮ LIỆU ITEM (ĐÃ THÊM RANK S, A, B, C, D) ---
     const ITEM_DATA = {
         // --- CỔ VẬT ---
-        "Lõi Hủy Diệt": { rank: "S", type: "gem", stat: "dmg_boost", val: 0.05, name: "Lõi Hủy Diệt", effect: "[Cổ Vật] Chứa sức mạnh chiến đấu tàn bạo. Khảm vào trang bị: Tăng 5% sát thương gây ra.", img: "material/Abyssal_Crystal.png", sellPrice: 5000 },
-        "Lõi Hộ Thể": { rank: "S", type: "gem", stat: "dmg_reduce", val: 0.05, name: "Lõi Hộ Thể", effect: "[Cổ Vật] Cội nguồn của sự phòng ngự. Khảm vào trang bị: Giảm 5% sát thương gánh chịu.", img: "material/Abyssal_Crystal.png", sellPrice: 5000 },
-        "Lõi Bạo Kích": { rank: "S", type: "gem", stat: "crit_dmg", val: 0.10, name: "Lõi Bạo Kích", effect: "[Cổ Vật] Sức mạnh xuyên thấu chí mạng. Khảm vào trang bị: Tăng 10% sát thương bạo kích.", img: "material/Abyssal_Crystal.png", sellPrice: 5000 },
+        "Lõi Hủy Diệt": { rank: "S", type: "gem", stat: "dmg_boost", val: 0.05, name: "Lõi Hủy Diệt", effect: "[Cổ Vật] Chứa sức mạnh chiến đấu tàn bạo. Khảm vào trang bị: Tăng 5% sát thương gây ra.", img: "core/loihuydiet.png", sellPrice: 5000 },
+        "Lõi Hộ Thể": { rank: "S", type: "gem", stat: "dmg_reduce", val: 0.05, name: "Lõi Hộ Thể", effect: "[Cổ Vật] Cội nguồn của sự phòng ngự. Khảm vào trang bị: Giảm 5% sát thương gánh chịu.", img: "core/loihothe.png", sellPrice: 5000 },
+        "Lõi Bạo Kích": { rank: "S", type: "gem", stat: "crit_dmg", val: 0.10, name: "Lõi Bạo Kích", effect: "[Cổ Vật] Sức mạnh xuyên thấu chí mạng. Khảm vào trang bị: Tăng 10% sát thương bạo kích.", img: "core/loibaokich.png", sellPrice: 5000 },
         // --- GUILD RAID CHESTS (RƯƠNG THƯỞNG BOSS HẠNG S) ---
         "Guild Raid Chest 1": { rank: "A", type: "consumable", effectType: "add_mixed", strAmt: 2, vitAmt: 2, intAmt: 2, name: "Guild Raid Chest 1", effect: "Rương thưởng từ Thợ Săn Giấu Mặt. Mở ra tăng VĨNH VIỄN 2 STR, 2 VIT và 2 INT.", img: "cons/Guild_Raid_Chest_I.png", sellPrice: 10000 },
         "Guild Raid Chest 2": { rank: "S", type: "consumable", effectType: "add_str", amount: 20, name: "Guild Raid Chest 2", effect: "Rương thưởng từ Hwang Dongsoo. Mở ra tăng VĨNH VIỄN 20 STR (Sức mạnh).", img: "cons/Guild_Raid_Chest_II.png", sellPrice: 20000 },
