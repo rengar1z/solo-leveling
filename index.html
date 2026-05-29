@@ -1019,10 +1019,9 @@
     // --- DỮ LIỆU ITEM (ĐÃ THÊM RANK S, A, B, C, D) ---
     const ITEM_DATA = {
         // --- CỔ VẬT ---
-        "Lõi Vũ Trang": { rank: "A", type: "gem", stat: "str", name: "Lõi Vũ Trang", effect: "[Cổ Vật] Chứa sức mạnh chiến đấu hủy diệt. Khảm vào trang bị tăng 5-15 STR.", img: "material/Abyssal_Crystal.png", sellPrice: 2000 },
-        "Lõi Sinh Mệnh": { rank: "A", type: "gem", stat: "vit", name: "Lõi Sinh Mệnh", effect: "[Cổ Vật] Cội nguồn của sinh lực. Khảm vào trang bị tăng 5-15 VIT.", img: "material/Abyssal_Crystal.png", sellPrice: 2000 },
-        "Lõi Xung Kích": { rank: "A", type: "gem", stat: "agi", name: "Lõi Xung Kích", effect: "[Cổ Vật] Nhẹ tựa lông hồng, nhanh như sấm sét. Khảm vào trang bị tăng 5-15 AGI.", img: "material/Abyssal_Crystal.png", sellPrice: 2000 },
-        "Lõi Ma Năng": { rank: "A", type: "gem", stat: "int", name: "Lõi Ma Năng", effect: "[Cổ Vật] Tinh hoa của ma thuật nguyên thủy. Khảm vào trang bị tăng 5-15 INT.", img: "material/Abyssal_Crystal.png", sellPrice: 2000 },
+        "Lõi Hủy Diệt": { rank: "S", type: "gem", stat: "dmg_boost", val: 0.05, name: "Lõi Hủy Diệt", effect: "[Cổ Vật] Chứa sức mạnh chiến đấu tàn bạo. Khảm vào trang bị: Tăng 5% sát thương gây ra.", img: "material/Abyssal_Crystal.png", sellPrice: 5000 },
+        "Lõi Hộ Thể": { rank: "S", type: "gem", stat: "dmg_reduce", val: 0.05, name: "Lõi Hộ Thể", effect: "[Cổ Vật] Cội nguồn của sự phòng ngự. Khảm vào trang bị: Giảm 5% sát thương gánh chịu.", img: "material/Abyssal_Crystal.png", sellPrice: 5000 },
+        "Lõi Bạo Kích": { rank: "S", type: "gem", stat: "crit_dmg", val: 0.10, name: "Lõi Bạo Kích", effect: "[Cổ Vật] Sức mạnh xuyên thấu chí mạng. Khảm vào trang bị: Tăng 10% sát thương bạo kích.", img: "material/Abyssal_Crystal.png", sellPrice: 5000 },
         // --- GUILD RAID CHESTS (RƯƠNG THƯỞNG BOSS HẠNG S) ---
         "Guild Raid Chest 1": { rank: "A", type: "consumable", effectType: "add_mixed", strAmt: 2, vitAmt: 2, intAmt: 2, name: "Guild Raid Chest 1", effect: "Rương thưởng từ Thợ Săn Giấu Mặt. Mở ra tăng VĨNH VIỄN 2 STR, 2 VIT và 2 INT.", img: "cons/Guild_Raid_Chest_I.png", sellPrice: 10000 },
         "Guild Raid Chest 2": { rank: "S", type: "consumable", effectType: "add_str", amount: 20, name: "Guild Raid Chest 2", effect: "Rương thưởng từ Hwang Dongsoo. Mở ra tăng VĨNH VIỄN 20 STR (Sức mạnh).", img: "cons/Guild_Raid_Chest_II.png", sellPrice: 20000 },
@@ -1334,7 +1333,7 @@
         const spinSpeed = 80; 
 
         // ================= KHO ĐỒ GACHA =================
-        const CORE_POOL = ["Lõi Vũ Trang", "Lõi Sinh Mệnh", "Lõi Xung Kích", "Lõi Ma Năng"];
+        const CORE_POOL = ["Lõi Hủy Diệt", "Lõi Hộ Thể", "Lõi Bạo Kích"];
 
         const spinInterval = setInterval(() => {
             // KIỂM TRA XEM ĐANG Ở TAB NÀO ĐỂ LẤY ĐÚNG KHO ĐỒ
@@ -2942,10 +2941,21 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
     if (itemObj.sockets && itemObj.sockets.length > 0) {
         socketHTML = `<div style="margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">`;
         itemObj.sockets.forEach((s, idx) => {
+            let gemImg = (ITEM_DATA[s.name] && ITEM_DATA[s.name].img) ? ITEM_DATA[s.name].img : 'material/Abyssal_Crystal.png';
+            
+            let statLabel = s.stat;
+            let displayVal = s.val;
+            
+            if (s.stat === 'dmg_boost') { statLabel = "Sát Thương"; displayVal = (s.val * 100) + "%"; }
+            else if (s.stat === 'dmg_reduce') { statLabel = "Miễn Thương"; displayVal = (s.val * 100) + "%"; }
+            else if (s.stat === 'crit_dmg') { statLabel = "ST Bạo Kích"; displayVal = (s.val * 100) + "%"; }
+    
+            else { displayVal = "+" + s.val; statLabel = s.stat.toUpperCase(); }
+
             socketHTML += `
                 <div style="color: #cc33ff; font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 8px; background: rgba(204, 51, 255, 0.1); padding: 5px 10px; border-radius: 5px; border-left: 3px solid #cc33ff;">
-                    <img src="material/mathachcapthap.png" style="width:18px; height:18px; filter: drop-shadow(0 0 2px #cc33ff);"> 
-                    Khe ${idx + 1}: +${s.val} ${s.stat.toUpperCase()}
+                    <img src="${gemImg}" style="width:18px; height:18px; filter: drop-shadow(0 0 2px #cc33ff);"> 
+                    Khe ${idx + 1}: <span style="color: #ffcc00;">+${displayVal} ${statLabel}</span>
                 </div>
             `;
         });
@@ -3178,6 +3188,20 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         renderBag();
     };
 
+    window.getSocketTotal = function(statName) {
+        let total = 0;
+        if (!currentUser || !currentUser.equipped) return total;
+        for (let slot in currentUser.equipped) {
+            let item = currentUser.equipped[slot];
+            if (item && item.sockets) {
+                item.sockets.forEach(s => {
+                    if (s.stat === statName) total += s.val;
+                });
+            }
+        }
+        return total;
+    };
+
     function calcPlayerDamage(config) {
         let multi = config.multi || 1.0;
         let baseStat = currentUser[config.stat || 'str'] || 0; 
@@ -3276,12 +3300,17 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         if (currentUser.equippedShadow === "igris") critMulti += 0.15;
         if (currentUser.skills["Nhát Chém Tử Thần"] > 0) critMulti += 0.30;
 
+        let socketCritDmg = window.getSocketTotal('crit_dmg');
+        if (socketCritDmg > 0) {
+            critMulti += socketCritDmg;
+        }
+        
         let isCrit = false;
         // Áp dụng buff Tàn Sát của Sát Thủ (100% Chí mạng)
         if (window.stealthCrit || Math.random() * 100 < critRate) {
             finalDmg = finalDmg * critMulti;
             isCrit = true;
-            window.stealthCrit = false; // Chém xong thì mất buff Chí mạng
+            window.stealthCrit = false; 
         }
         
         // 5. BỊ ĐỘNG: SÁT KHÍ (Buff 20% sát thương khi máu đỏ)
@@ -3315,7 +3344,11 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         if (window.isPlayerBeastForm && window.isPlayerBeastForm > 0) {
             finalDmg *= 1.30; 
         }
-
+        let socketDmgBoost = window.getSocketTotal('dmg_boost');
+        if (socketDmgBoost > 0) {
+            finalDmg *= (1 + socketDmgBoost);
+        }
+        
         // 7. CƠ CHẾ CHẶN SÁT THƯƠNG CỦA LỚP GIÁP ẢO (SHIELD BARRIER BÊN QUÁI)
         let actualDmg = Math.floor(finalDmg);
         if (!config.ignoreShield && enemy.shieldHP && enemy.shieldHP > 0) {
@@ -4566,8 +4599,12 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 
                 
                 if (currentUser.skills["Cơ Thể Thép"] > 0) dmg *= 0.80; 
+
+                let socketDmgReduce = window.getSocketTotal('dmg_reduce');
+                if (socketDmgReduce > 0) {
+                    dmg *= (1 - socketDmgReduce);
+                }
                 
-                // Trong enemyTurn (Đoạn tính dmg) thay thế 'shield' bằng 'armor'
                 if (currentUser.equipped && currentUser.equipped.armor && currentUser.equipped.armor.name === "Shield") dmg *= 0.985;
                 if (currentUser.equipped && currentUser.equipped.necklace && currentUser.equipped.necklace.name === "Ice Elf Cloak") dmg *= 0.95;
                 if (currentUser.equipped && currentUser.equipped.helmet && currentUser.equipped.helmet.name === "Red Knight's Helmet") dmg *= 0.92;
@@ -6053,23 +6090,26 @@ window.switchInvTab = function(tabName, btnElement) {
             if (gemIndex < index) window.selectedForgeItemIndex--;
         }
 
-        // ĐỌC CHỈ SỐ TỪ LÕI VÀ CỘNG VÀO TRANG BỊ
+        // ĐỌC CHỈ SỐ TỪ LÕI VÀ GẮN VÀO TRANG BỊ
         const gemData = ITEM_DATA[gemName];
         const statToBoost = gemData.stat; 
-        const randomVal = Math.floor(Math.random() * 11) + 5; // + từ 5 đến 15 điểm
+        const socketVal = gemData.val; 
 
-        itemObj.sockets.push({ stat: statToBoost, val: randomVal, name: gemName }); // Lưu kèm tên Lõi
+        itemObj.sockets.push({ stat: statToBoost, val: socketVal, name: gemName }); 
         
-        if (!itemObj[statToBoost]) itemObj[statToBoost] = 0;
-        itemObj[statToBoost] += randomVal;
+        let statLabel = "";
+        let displayVal = (socketVal * 100) + "%";
+        if (statToBoost === 'dmg_boost') statLabel = "SÁT THƯƠNG";
+        else if (statToBoost === 'dmg_reduce') statLabel = "MIỄN THƯƠNG";
+        else if (statToBoost === 'crit_dmg') statLabel = "ST BẠO KÍCH";
 
         if (typeof playSound === 'function') playSound("audio/tada.mp3"); 
         const station = document.getElementById('forgeStation');
         station.innerHTML = `
             <img src="${ITEM_DATA[itemObj.name].img}" style="width: 100px; height: 100px; object-fit: contain; animation: smoothItemGlow 0.6s forwards; z-index: 10;">
             <div class="smooth-success-text" style="color: #cc33ff; text-shadow: 0 0 10px #cc33ff, 2px 2px 0 #000;">KHẢM THÀNH CÔNG!</div>
-            <div style="position: absolute; bottom: -15px; background: rgba(0,0,0,0.8); border: 1px solid #cc33ff; color: #cc33ff; padding: 2px 10px; font-weight: bold; border-radius: 5px; animation: smoothSuccessPop 0.4s 0.2s both; z-index: 25;">
-                +${randomVal} ${statToBoost.toUpperCase()}
+            <div style="position: absolute; bottom: -15px; background: rgba(0,0,0,0.8); border: 1px solid #cc33ff; color: #cc33ff; padding: 2px 10px; font-weight: bold; border-radius: 5px; white-space: nowrap; animation: smoothSuccessPop 0.4s 0.2s both; z-index: 25;">
+                +${displayVal} ${statLabel}
             </div>
         `;
         
