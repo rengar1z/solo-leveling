@@ -2747,6 +2747,7 @@
             slotContainer.innerHTML = `
                 <div class="bag-item-slot rank-${rank} ${isSelected ? 'selected' : ''}" onclick="selectEquippedItem('${slot}')" style="width:85px; height:85px; margin:0 auto;">
                     <img src="${itemData.img}">
+                    ${itemObj.enhanceLevel > 0 ? `<div style="position: absolute; top: 2px; left: 4px; color: #ffcc00; font-weight: bold; font-size: 14px; text-shadow: 1px 1px 2px #000; z-index: 5;">+${itemObj.enhanceLevel}</div>` : ''}
                 </div>
             `;
         } else {
@@ -2818,6 +2819,7 @@
         gridHTML += `
             <div class="bag-item-slot rank-${rank} ${isSelected ? 'selected' : ''}" onclick="selectBagItem(${clickParam})">
                 <img src="${item.data.img}">
+                ${item.obj.enhanceLevel > 0 ? `<div style="position: absolute; top: 2px; left: 4px; color: #ffcc00; font-weight: bold; font-size: 14px; text-shadow: 1px 1px 2px #000; z-index: 5;">+${item.obj.enhanceLevel}</div>` : ''}
                 ${item.qty > 1 || item.isStacked ? `<div class="bag-item-qty">${item.qty}</div>` : ''}
             </div>
         `;
@@ -2908,15 +2910,20 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
     ].filter(Boolean).join(' | ');
 
     let statusText = isEquippedView ? `<div style="color: #2b61b3; font-size: 14px; font-weight: bold;">[ ĐANG TRANG BỊ ]</div>` : `<div style="color: #666; font-size: 15px; font-weight: bold;">Đang có: &nbsp;&nbsp;&nbsp; ${qty}</div>`;
+    
+    
+    let enhanceLv = itemObj.enhanceLevel || 0;
+    let displayName = enhanceLv > 0 ? `${itemObj.name} (+${enhanceLv})` : itemObj.name;
 
     document.getElementById('bagDetailArea').innerHTML = `
         <div style="padding: 15px; display: flex; flex-direction: column; height: 100%;">
             <div style="display: flex; gap: 15px; margin-bottom: 20px;">
-                <div class="bag-item-slot rank-${rank}" style="width: 85px; height: 85px; cursor: default;">
+                <div class="bag-item-slot rank-${rank}" style="width: 85px; height: 85px; cursor: default; position: relative;">
                     <img src="${itemData.img}">
+                    ${enhanceLv > 0 ? `<div style="position: absolute; top: 2px; left: 4px; color: #ffcc00; font-weight: bold; font-size: 14px; text-shadow: 1px 1px 2px #000; z-index: 5;">+${enhanceLv}</div>` : ''}
                 </div>
                 <div style="flex: 1; font-family: sans-serif;">
-                    <div style="color: #e67e22; font-weight: bold; font-size: 18px; text-shadow: 1px 1px 1px rgba(0,0,0,0.1); margin-bottom: 5px;">${itemObj.name}</div>
+                    <div style="color: #e67e22; font-weight: bold; font-size: 18px; text-shadow: 1px 1px 1px rgba(0,0,0,0.1); margin-bottom: 5px;">${displayName}</div>
                     ${statusText}
                 </div>
             </div>
