@@ -5764,8 +5764,7 @@ window.switchInvTab = function(tabName, btnElement) {
             const itemData = ITEM_DATA[itemObj.name];
             if (!itemData) return;
             
-            // Loại bỏ Material, Consumable, Costume
-            if (['consumable', 'material', 'rare', 'costume'].includes(itemData.type)) return;
+            if (['consumable', 'material', 'rare', 'costume', 'gem'].includes(itemData.type)) return;
     
             hasItems = true;
             let rank = itemData.rank || 'D';
