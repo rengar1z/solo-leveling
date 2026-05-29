@@ -2031,3 +2031,23 @@
             cursor: not-allowed;
             box-shadow: none;
         }
+
+        /* ================= HIỆU ỨNG LÒ RÈN ================= */
+        @keyframes forgeGlow {
+            0% { box-shadow: 0 0 10px #ff3300, inset 0 0 20px #ff3300; border-color: #ff3300; transform: scale(1); }
+            100% { box-shadow: 0 0 30px #ffcc00, inset 0 0 40px #ff9900; border-color: #ffcc00; transform: scale(1.05); }
+        }
+        .forge-active {
+            animation: forgeGlow 0.5s infinite alternate !important;
+            background: radial-gradient(circle, rgba(255,100,0,0.4), rgba(0,0,0,0.8)) !important;
+            border-style: solid !important;
+        }
+        
+        @keyframes itemUpgradePop {
+            0% { transform: scale(0.5) translateY(50px); opacity: 0; }
+            50% { transform: scale(1.2) translateY(-20px); opacity: 1; filter: drop-shadow(0 0 30px #00ff00); }
+            100% { transform: scale(1) translateY(0); filter: drop-shadow(0 0 15px #00ff00); }
+        }
+        .upgrade-success-anim {
+            animation: itemUpgradePop 0.8s ease-out forwards;
+        }
