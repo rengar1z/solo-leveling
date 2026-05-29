@@ -685,8 +685,8 @@
         "event/event.png",
 
         //VẬT LIỆU
-        "material/Glue.png", "material/Abyssal_Crystal.png", "material/Gold.png", "material/mathachcapthap.png",
-        "material/Old Bandage.png", "wp/Sandstorm_Cube.png", "material/giaychungnhanthosan.png",
+        "material/Glue.png", "material/Abyssal_Crystal.png", "material/Gold.png", "material/mathachcapthap.png", "material/mathachtrungcap.png", 
+        "material/Old Bandage.png", "wp/Sandstorm_Cube.png", "material/giaychungnhanthosan.png", "material/mathachcaocap.png",
         
         // Costumes
         "cos/Sung_Jinwoo_Black_Suit.png", "cos/Sung_Jinwoo_Mining_Work.png", 
@@ -908,7 +908,7 @@
                 { name: "Quỷ Lùn Cấp Thấp", hp: 15000, atk: 500, def: 150, exp: 2000, img: "bot/enemy.png" },
                 { name: "Chiến Binh Quỷ", hp: 20000, atk: 600, def: 200, exp: 2500, img: "bot/enemy.png" },
                 { name: "Ác Quỷ Lửa Tinh Nhuệ", hp: 25000, atk: 700, def: 250, exp: 3500, img: "bot/enemy.png" },
-                { name: "BOSS: Chúa Tể Tham Lam Vulcan", hp: 60000, atk: 1200, def: 400, exp: 15000, img: "boss/Boss_Avaricious_Vulcan.png", isBoss: true, bossType: "vulcan" }
+                { name: "BOSS: Chúa Tể Tham Lam Vulcan", hp: 60000, atk: 1200, def: 400, exp: 15000, img: "boss/Boss_Avaricious_Vulcan.png", isBoss: true, bossType: "vulcan", rareDrops: ["Ma Thạch Trung Cấp"] }
             ]
         },
         "demon_castle_3": {
@@ -917,7 +917,7 @@
                 { name: "Khô Lâu Vệ Binh", hp: 25000, atk: 650, def: 250, exp: 3000, img: "bot/enemy.png" },
                 { name: "Khô Lâu Pháp Sư", hp: 30000, atk: 800, def: 150, exp: 4000, img: "bot/enemy.png" },
                 { name: "Hiệp Sĩ Vong Linh Thượng Cấp", hp: 40000, atk: 900, def: 350, exp: 6000, img: "bot/enemy.png" },
-                { name: "BOSS: Kẻ Dẫn Dắt Linh Hồn Metus", hp: 90000, atk: 1500, def: 300, exp: 25000, img: "boss/Boss_Soul_Shepherd_Metus.png", isBoss: true, bossType: "metus" }
+                { name: "BOSS: Kẻ Dẫn Dắt Linh Hồn Metus", hp: 90000, atk: 1500, def: 300, exp: 25000, img: "boss/Boss_Soul_Shepherd_Metus.png", isBoss: true, bossType: "metus", rareDrops: ["Ma Thạch Trung Cấp"] }
             ]
         },
         "demon_castle_4": {
@@ -927,7 +927,7 @@
                 { name: "Kỵ Sĩ Ác Quỷ", hp: 55000, atk: 1200, def: 400, exp: 7000, img: "bot/enemy.png" },
                 { name: "Rồng Sét Wyvern", hp: 65000, atk: 1400, def: 350, exp: 10000, img: "bot/enemy.png" },
                 { name: "Cận Vệ Hoàng Gia Đỏ", hp: 80000, atk: 1600, def: 500, exp: 15000, img: "bot/enemy.png" },
-                { name: "BOSS: Vua Quỷ Baran", hp: 180000, atk: 2500, def: 600, exp: 50000, img: "boss/Boss_Baran_of_White_Flames.png", isBoss: true, bossType: "baran", rareDrops: ["Dao găm của ma vương", "Đại kiếm ma vương", "Khuyên tai của ma vương", "Dây chuyền của ma vương", "Nhẫn của quỷ vương", "Lõi Ma Tinh"] }
+                { name: "BOSS: Vua Quỷ Baran", hp: 180000, atk: 2500, def: 600, exp: 50000, img: "boss/Boss_Baran_of_White_Flames.png", isBoss: true, bossType: "baran", rareDrops: ["Ma Thạch Cao Cấp", "Dao găm của ma vương", "Đại kiếm ma vương", "Khuyên tai của ma vương", "Dây chuyền của ma vương", "Nhẫn của quỷ vương", "Lõi Ma Tinh"] }
             ]
         },
         "hunter_trial": {
@@ -946,7 +946,7 @@
                 { name: "Kiến Cánh Trinh Sát", hp: 80000, atk: 1500, def: 350, exp: 12000, img: "bot/Boss_Purple_Blade_Camula.png" },
                 { name: "Kiến Cận Vệ Hoàng Gia", hp: 120000, atk: 2000, def: 500, exp: 18000, img: "bot/Boss_1st_Gen._White_Ant_Leader.png" },
                 { name: "Nữ Hoàng Kiến", hp: 200000, atk: 2500, def: 600, exp: 35000, img: "boss/Boss_Queen_Ant.png", isBoss: true, bossType: "ant_queen" },
-                { name: "BOSS: Vua Kiến", hp: 400000, atk: 4000, def: 800, exp: 100000, img: "boss/Boss_Ant_King.png", isBoss: true, bossType: "beru", rareDrops: ["Sandstorm Cube"] }
+                { name: "BOSS: Vua Kiến", hp: 400000, atk: 4000, def: 800, exp: 100000, img: "boss/Boss_Ant_King.png", isBoss: true, bossType: "beru", rareDrops: ["Sandstorm Cube", "Ma Thạch Trung Cấp"] }
             ]
         },
         "scavenger_usa": {
@@ -1051,6 +1051,8 @@
         "Mảnh Giáp Yêu Tinh": { rank: "D", type: "material", name: "Mảnh Giáp Yêu Tinh", effect: "Mảnh giáp phế liệu. Có thể bán lấy tiền.", img: "wp/shield.png", sellPrice: 20 },
         "Túi Độc Côn Trùng": { rank: "C", type: "material", name: "Túi Độc Côn Trùng", effect: "Chứa nọc độc nhẹ. Có thể bán lấy tiền.", img: "cons/Item_SP_Potion.png", sellPrice: 40 },
         "Ma Thạch Cấp Thấp": { rank: "C", type: "material", name: "Ma Thạch Cấp Thấp", effect: "Chứa một lượng nhỏ ma lực. Có thể bán lấy tiền.", img: "material/mathachcapthap.png", sellPrice: 70 },
+        "Ma Thạch Trung Cấp": { rank: "B", type: "material", name: "Ma Thạch Trung Cấp", effect: "Viên đá tinh khiết tỏa ra ma lực ấm áp. Dùng để cường hóa trang bị.", img: "material/mathachtrungcap.png", sellPrice: 500 },
+        "Ma Thạch Cao Cấp": { rank: "S", type: "material", name: "Ma Thạch Cao Cấp", effect: "Tuyệt tác ma thuật với sức mạnh cuộn trào. Dùng để đập trang bị lên mức Tối Đa.", img: "material/mathachcaocap.png", sellPrice: 2500 },
         "Băng Gạc Cũ": { rank: "C", type: "material", name: "Băng Gạc Cũ", effect: "Một cuộn băng gạc đã rách nát và cáu bẩn.", img: "material/Old Bandage.png", sellPrice: 70 },
         "Keo dán": { rank: "C", type: "material", name: "Keo dán", effect: "Lọ keo dính rẻ tiền. Dùng để bán lấy tiền lẻ.", img: "material/Glue.png", sellPrice: 70 },
         
@@ -5770,18 +5772,29 @@ window.switchInvTab = function(tabName, btnElement) {
         document.getElementById('forgeCurrentStats').innerHTML = [currentStr ? `STR: ${currentStr}` : '', currentVit ? `VIT: ${currentVit}` : '', currentInt ? `INT: ${currentInt}` : '', currentAgi ? `AGI: ${currentAgi}` : '', currentMp ? `MP: ${currentMp}` : ''].filter(Boolean).join('<br>');
         document.getElementById('forgeNextStats').innerHTML = [nextStr ? `STR: ${nextStr}` : '', nextVit ? `VIT: ${nextVit}` : '', nextInt ? `INT: ${nextInt}` : '', nextAgi ? `AGI: ${nextAgi}` : '', nextMp ? `MP: ${nextMp}` : ''].filter(Boolean).join('<br>');
     
-        // TÍNH TOÁN TỶ LỆ & CHI PHÍ
-        let baseRates = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10]; // Tỷ lệ từ +1 đến +10
+        
+        let baseRates = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10];
         let rate = baseRates[level];
         
-        let cashCost = 1000 + (level * 1500); // 1000, 2500, 4000...
-        let gemCost = 1 + Math.floor(level / 3); // 1 đá, 2 đá, 3 đá...
+        let cashCost = 1000 + (level * 1500); 
+    
+        
+        let gemName = "Ma Thạch Cấp Thấp";
+        let gemCost = level + 1; 
+        
+        if (level >= 3 && level <= 5) {
+            gemName = "Ma Thạch Trung Cấp";
+            gemCost = level - 2; 
+        } else if (level >= 6) {
+            gemName = "Ma Thạch Cao Cấp";
+            gemCost = level - 5; 
+        }
     
         document.getElementById('forgeSuccessRate').innerText = `${rate}%`;
         document.getElementById('forgeSuccessRate').style.color = rate >= 70 ? '#00ffcc' : (rate >= 40 ? 'gold' : '#ff3333');
-        document.getElementById('forgeCost').innerText = `${cashCost} Cash + ${gemCost} [Ma Thạch Cấp Thấp]`;
+        document.getElementById('forgeCost').innerText = `${cashCost} Cash + ${gemCost} [${gemName}]`;
     
-        renderForgeList(); // Cập nhật viền vàng cho món đang chọn
+        renderForgeList(); 
     };
     
     window.executeEnhance = async function() {
@@ -5796,7 +5809,7 @@ window.switchInvTab = function(tabName, btnElement) {
         let cashCost = 1000 + (level * 1500);
         let gemCost = 1 + Math.floor(level / 3);
         
-        // Kiểm tra tài nguyên
+        
         if (currentUser.cash < cashCost) return alert(`Không đủ tiền! Cần ${cashCost} Cash.`);
         
         const gemIndex = currentUser.inventory.findIndex(i => i.name === "Ma Thạch Cấp Thấp");
@@ -5804,34 +5817,30 @@ window.switchInvTab = function(tabName, btnElement) {
             return alert(`Hệ thống: Không đủ vật liệu! Bạn cần ${gemCost} viên [Ma Thạch Cấp Thấp]. Đánh quái hầm ngục để rớt ra nhé.`);
         }
     
-        // Trừ tài nguyên
         currentUser.cash -= cashCost;
         if (currentUser.inventory[gemIndex].quantity > gemCost) {
             currentUser.inventory[gemIndex].quantity -= gemCost;
         } else {
             currentUser.inventory.splice(gemIndex, 1);
-            // Nếu lỡ trừ nhầm chính cái item đang forge thì báo lỗi (trường hợp hiếm)
+            
             if (gemIndex < index) window.selectedForgeItemIndex--;
         }
     
-        // Quay Gacha Tỷ Lệ
         let rate = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10][level];
         let isSuccess = (Math.random() * 100) <= rate;
     
         const station = document.getElementById('forgeStation');
     
         if (isSuccess) {
-        playSound("audio/dungtrangbi.mp3"); 
+        playSound("audio/forge_item.mp3"); 
         itemObj.enhanceLevel = level + 1;
         
-        // Cộng chỉ số
         if (itemObj.str > 0) itemObj.str += Math.max(2, Math.floor(itemObj.str * 0.1));
         if (itemObj.vit > 0) itemObj.vit += Math.max(2, Math.floor(itemObj.vit * 0.1));
         if (itemObj.int > 0) itemObj.int += Math.max(2, Math.floor(itemObj.int * 0.1));
         if (itemObj.agi > 0) itemObj.agi += Math.max(2, Math.floor(itemObj.agi * 0.1));
         if (itemObj.mp > 0) itemObj.mp += Math.max(10, Math.floor(itemObj.mp * 0.1));
 
-        // HIỆU ỨNG THÀNH CÔNG NHẸ NHÀNG, MƯỢT MÀ
         station.innerHTML = `
             <img src="${ITEM_DATA[itemObj.name].img}" style="width: 100px; height: 100px; object-fit: contain; animation: smoothItemGlow 0.6s forwards; z-index: 10;">
             <div class="smooth-success-text">SUCCESS!</div>
