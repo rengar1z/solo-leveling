@@ -2048,6 +2048,48 @@
             50% { transform: scale(1.2) translateY(-20px); opacity: 1; filter: drop-shadow(0 0 30px #00ff00); }
             100% { transform: scale(1) translateY(0); filter: drop-shadow(0 0 15px #00ff00); }
         }
-        .upgrade-success-anim {
-            animation: itemUpgradePop 0.8s ease-out forwards;
+       
+        /* --- HIỆU ỨNG CƯỜNG HÓA TỐI ƯU FPS --- */
+        @keyframes smoothItemGlow {
+            0% { filter: drop-shadow(0 0 5px #ff9900); transform: scale(1); }
+            100% { filter: drop-shadow(0 0 25px #00ff00); transform: scale(1.1); }
+        }
+        
+        @keyframes smoothSuccessPop {
+            0% { opacity: 0; transform: translateY(20px) scale(0.9); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        
+        @keyframes smoothFailFade {
+            0% { opacity: 1; filter: grayscale(0); }
+            100% { opacity: 0.6; filter: grayscale(1) brightness(0.6); }
+        }
+        
+        .smooth-success-text {
+            position: absolute;
+            color: #00ffcc;
+            font-size: 30px;
+            font-weight: bold;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px #00bfff, 0 0 20px #00ffcc, 2px 2px 0 #000;
+            z-index: 20;
+            animation: smoothSuccessPop 0.4s ease-out forwards;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        
+        .smooth-fail-text {
+            position: absolute;
+            color: #ff4d4d;
+            font-size: 30px;
+            font-weight: bold;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 15px #cc0000, 2px 2px 0 #000;
+            z-index: 20;
+            animation: smoothSuccessPop 0.4s ease-out forwards;
+            pointer-events: none;
         }
