@@ -1317,7 +1317,7 @@
         }
         updateCubeDisplay(); 
         
-        const spinBtn = document.getElementById("btnSpinGacha");
+        const spinBtn = document.getElementById("btnSpinGacha"); // Cập nhật lấy theo ID
         if (spinBtn) {
             spinBtn.disabled = true;
             spinBtn.innerText = "ĐANG TỤ LỰC...";
@@ -1333,8 +1333,13 @@
         const maxSpins = 20; 
         const spinSpeed = 80; 
 
+        // ================= KHO ĐỒ GACHA =================
+        const CORE_POOL = ["Lõi Vũ Trang", "Lõi Sinh Mệnh", "Lõi Xung Kích", "Lõi Ma Năng"];
+
         const spinInterval = setInterval(() => {
-            const randomFakeName = GACHA_POOL[Math.floor(Math.random() * GACHA_POOL.length)];
+            // KIỂM TRA XEM ĐANG Ở TAB NÀO ĐỂ LẤY ĐÚNG KHO ĐỒ
+            const activePool = window.currentGachaTab === 'artifact' ? CORE_POOL : GACHA_POOL;
+            const randomFakeName = activePool[Math.floor(Math.random() * activePool.length)];
             const fakeData = ITEM_DATA[randomFakeName];
             
             box.style.borderColor = "#fff";
@@ -1351,7 +1356,8 @@
             if (spinCount >= maxSpins) {
                 clearInterval(spinInterval); 
                 
-                const rewardName = GACHA_POOL[Math.floor(Math.random() * GACHA_POOL.length)];
+                // CHỐT KẾT QUẢ TỪ ĐÚNG KHO ĐỒ
+                const rewardName = activePool[Math.floor(Math.random() * activePool.length)];
                 const itemData = ITEM_DATA[rewardName];
                 const rank = itemData.rank || 'S';
 
