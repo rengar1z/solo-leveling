@@ -5815,6 +5815,10 @@ window.switchInvTab = function(tabName, btnElement) {
     window.executeEnhance = async function() {
         if (window.selectedForgeItemIndex === null) return alert("Vui lòng chọn trang bị để cường hóa!");
         
+        // --- [BỔ SUNG 1]: CHẶN SPAM CLICK NẾU ĐANG RÈN DỞ ---
+        const enhanceBtn = document.querySelector('#forgeInfo button');
+        if (enhanceBtn && enhanceBtn.disabled) return; 
+
         const index = window.selectedForgeItemIndex;
         const itemObj = currentUser.inventory[index];
         let level = itemObj.enhanceLevel || 0;
@@ -5841,7 +5845,13 @@ window.switchInvTab = function(tabName, btnElement) {
             return alert(`Hệ thống: Không đủ vật liệu! Bạn cần ${gemCost} viên [${gemName}]. Hãy đánh Boss Hầm Ngục để thu thập nhé!`);
         }
 
-        // Trừ tài nguyên
+        if (enhanceBtn) {
+            enhanceBtn.disabled = true;
+            enhanceBtn.style.filter = "grayscale(1)";
+            enhanceBtn.style.cursor = "not-allowed";
+            enhanceBtn.innerText = "ĐANG RÈN...";
+        }
+
         currentUser.cash -= cashCost;
         if (currentUser.inventory[gemIndex].quantity > gemCost) {
             currentUser.inventory[gemIndex].quantity -= gemCost;
