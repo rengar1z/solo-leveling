@@ -5891,7 +5891,7 @@ window.switchInvTab = function(tabName, btnElement) {
         }, 1200);
     } else {
 
-        playSound("audio/forge_item.mp3"); 
+        playSound("audio/failed.mp3"); 
         station.innerHTML = `
             <img src="${ITEM_DATA[itemObj.name].img}" style="width: 100px; height: 100px; object-fit: contain; animation: smoothFailFade 0.4s forwards; z-index: 10;">
             <div class="smooth-fail-text">FAILED</div>
