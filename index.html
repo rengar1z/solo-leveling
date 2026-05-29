@@ -4235,7 +4235,6 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
             }
             else {
                 // Đánh thường cộng hưởng phòng thủ (Defense Scaling)
-                // Bắt chước nội tại Arise: Thomas lấy Thủ bù Công
                 let rawDmg = (enemyAtk * 1.0) + (enemy.def * 1.5); 
                 dmg = Math.max(50, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                 isSpecialAttack = true;
@@ -5795,7 +5794,6 @@ window.switchInvTab = function(tabName, btnElement) {
         document.getElementById('forgeCurrentStats').innerHTML = currentStatsStr || "<span style='color:#666'>Không có</span>";
         document.getElementById('forgeNextStats').innerHTML = nextStatsStr || "<span style='color:#666'>Không có</span>";
     
-        // 4. TÍNH TOÁN TỶ LỆ & CHI PHÍ
         let baseRates = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10];
         let rate = baseRates[level];
         
@@ -5829,22 +5827,31 @@ window.switchInvTab = function(tabName, btnElement) {
         if (level >= 10) return alert("Trang bị đã đạt cấp bậc tối đa (+10)!");
     
         let cashCost = 1000 + (level * 1500);
-        let gemCost = 1 + Math.floor(level / 3);
         
+        let gemName = "Ma Thạch Cấp Thấp";
+        let gemCost = level + 1;
+        
+        if (level >= 3 && level <= 5) {
+            gemName = "Ma Thạch Trung Cấp";
+            gemCost = level - 2;
+        } else if (level >= 6) {
+            gemName = "Ma Thạch Cao Cấp";
+            gemCost = level - 5;
+        }
         
         if (currentUser.cash < cashCost) return alert(`Không đủ tiền! Cần ${cashCost} Cash.`);
         
-        const gemIndex = currentUser.inventory.findIndex(i => i.name === "Ma Thạch Cấp Thấp");
+        const gemIndex = currentUser.inventory.findIndex(i => i.name === gemName);
         if (gemIndex === -1 || (currentUser.inventory[gemIndex].quantity || 1) < gemCost) {
-            return alert(`Hệ thống: Không đủ vật liệu! Bạn cần ${gemCost} viên [Ma Thạch Cấp Thấp]. Đánh quái hầm ngục để rớt ra nhé.`);
+            return alert(`Hệ thống: Không đủ vật liệu! Bạn cần ${gemCost} viên [${gemName}]. Hãy đánh Boss Hầm Ngục để thu thập nhé!`);
         }
-    
+
+        // Trừ tài nguyên
         currentUser.cash -= cashCost;
         if (currentUser.inventory[gemIndex].quantity > gemCost) {
             currentUser.inventory[gemIndex].quantity -= gemCost;
         } else {
             currentUser.inventory.splice(gemIndex, 1);
-            
             if (gemIndex < index) window.selectedForgeItemIndex--;
         }
     
