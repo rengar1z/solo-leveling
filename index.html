@@ -4797,6 +4797,10 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         window.checkLevelUp(hasExtraction);
 
         saveUserData(); 
+
+        const pre = (isDungeonMode || currentRedGateId) ? 'd-' : '';
+        const skillRow = document.getElementById(pre + 'skillRow');
+        if (skillRow) skillRow.style.display = 'none';
         window.combatTimer = setTimeout(resetToButtonMode, 1500);
 
         // ================= XỬ LÝ TIẾN TRÌNH HẦM NGỤC / CỔNG ĐỎ =================
@@ -4869,8 +4873,11 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         logBattle(`<span style="color:red; font-size: 20px; font-weight:bold;">['PLAYER' HAS DIED.]</span>`);
         resetToButtonMode();
         saveUserData();
-        
-        // Bật Popup chữ vàng tĩnh lên
+            
+        const pre = (isDungeonMode || currentRedGateId) ? 'd-' : '';
+        const skillRow = document.getElementById(pre + 'skillRow');
+        if (skillRow) skillRow.style.display = 'none';
+    
         document.getElementById('deathPopup').classList.remove('hidden');
     
         if (currentRedGateId) {
@@ -5065,7 +5072,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         enemy = { ...template, maxHp: template.hp, shieldHP: 0 };
         isMyTurn = true;
         isPlayerStunned = false;
-        isEnemyStunned = false; // <--- THÊM DÒNG NÀY ĐỂ GIẢI CHOÁNG QUÁI MỚI
+        isEnemyStunned = false; 
         monarchWrathUses = 0;
         playerBleedTurns = 0;
         playerArmorBreakTurns = 0;
@@ -5082,6 +5089,8 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         document.getElementById('e-name').innerText = enemy.name;
         document.getElementById('e-img').src = enemy.img;
         document.getElementById('battleLog').innerHTML = `Đã tìm thấy <span style="color:#ff4d4d">${enemy.name}</span>!`;
+
+        document.getElementById('skillRow').style.display = '';
         
         if (currentUser.equippedShadow && SHADOW_DATA[currentUser.equippedShadow]) {
             const shadowName = SHADOW_DATA[currentUser.equippedShadow].name;
@@ -5160,6 +5169,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         document.getElementById('btnExitDungeon').classList.remove('hidden');
         document.getElementById('btnExitDungeon').innerText = "BỎ CUỘC & THOÁT";
         
+        document.getElementById('d-skillRow').style.display = '';
         document.getElementById('d-battleLog').innerHTML = `Tiến vào Ải ${dCurrentStage + 1}! Khám phá thấy <span style="color:#ff4d4d">${enemy.name}</span>!`;
         // === THÊM LỜI THOẠI CỦA CÁC BOSS HẦM NGỤC THEO CỐT TRUYỆN ===
         if (enemy.isBoss) {
@@ -5280,8 +5290,10 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         document.getElementById('d-e-img').src = enemy.img || "bot/enemy.png";
 
         document.getElementById('btnNextStage').classList.add('hidden');
-        document.getElementById('btnExitDungeon').classList.add('hidden'); // KHÓA NÚT THOÁT
+        document.getElementById('btnExitDungeon').classList.add('hidden'); 
 
+        document.getElementById('d-skillRow').style.display = '';
+        
         // --- LỜI THOẠI MỞ MÀN ---
         let introLog = `<span style="color:${gateData.themeColor}">Không gian xung quanh biến đổi... </span> <span style="color:#ff4d4d">${enemy.name}</span> lao đến!`;
         
