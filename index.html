@@ -1289,7 +1289,7 @@
             return alert("Bạn không có Sandstorm Cube! Hãy tiến vào Hầm ngục Đảo Jeju và đánh bại Vua Kiến Beru để tìm kiếm.");
         }
 
-        // 2. Trừ vé & Khóa nút quay để tránh Spam click
+        // 2. Trừ vé & Khóa nút quay
         if (currentUser.inventory[cubeIndex].quantity > 1) {
             currentUser.inventory[cubeIndex].quantity--;
         } else {
@@ -1297,7 +1297,6 @@
         }
         updateCubeDisplay(); 
         
-        // Tìm nút quay (có thể lấy thông qua event hoặc querySelector)
         const spinBtn = document.querySelector("#tab-gacha button");
         if (spinBtn) {
             spinBtn.disabled = true;
@@ -1305,20 +1304,21 @@
             spinBtn.style.opacity = "0.5";
             spinBtn.style.cursor = "not-allowed";
         }
-
-        // 3. HIỆU ỨNG VÒNG QUAY ĐẢO ITEM LIÊN TỤC (ROULETTE)
+        
+        if (typeof playSound === 'function') playSound("audio/gacha.mp3");
+        
+        // 3. HIỆU ỨNG VÒNG QUAY ĐẢO ITEM LIÊN TỤC
         const box = document.getElementById('gachaBox');
         let spinCount = 0;
-        const maxSpins = 20; // Số lần nhấp nháy chuyển đồ (20 lần)
-        const spinSpeed = 80; // Tốc độ nhấp nháy (80 mili-giây/lần)
+        const maxSpins = 20; 
+        const spinSpeed = 80; 
 
         const spinInterval = setInterval(() => {
-            // Lấy ngẫu nhiên 1 hình ảnh làm hiệu ứng "ảo"
             const randomFakeName = GACHA_POOL[Math.floor(Math.random() * GACHA_POOL.length)];
             const fakeData = ITEM_DATA[randomFakeName];
             
             box.style.borderColor = "#fff";
-            box.style.boxShadow = `0 0 ${10 + (spinCount % 5) * 5}px #fff`; // Làm viền đập nhịp nhàng
+            box.style.boxShadow = `0 0 ${10 + (spinCount % 5) * 5}px #fff`; 
             
             box.innerHTML = `
                 <div style="text-align: center; opacity: 0.8; transform: scale(0.9);">
@@ -1328,20 +1328,17 @@
             
             spinCount++;
             
-            // 4. KẾT THÚC VÒNG QUAY: Chốt kết quả thực sự
             if (spinCount >= maxSpins) {
-                clearInterval(spinInterval); // Dừng nhấp nháy
+                clearInterval(spinInterval); 
                 
-                // Random ra món đồ thật sẽ nhận được
                 const rewardName = GACHA_POOL[Math.floor(Math.random() * GACHA_POOL.length)];
-                
                 const itemData = ITEM_DATA[rewardName];
                 const rank = itemData.rank || 'S';
 
-                // Nhét vào kho đồ
+                if (typeof playSound === 'function') playSound("audio/tada.mp3");
+
                 window.giveItem(rewardName);
                 
-                // Hiển thị vật phẩm rớt ra với hiệu ứng Nổ Pop
                 let color = rank === 'S' ? '#ff3333' : (rank === 'A' ? '#ff8c00' : '#00bfff');
                 box.style.borderColor = color;
                 box.style.boxShadow = `0 0 40px ${color}, inset 0 0 20px ${color}`;
@@ -1352,7 +1349,6 @@
                     </div>
                 `;
                 
-                // Mở khóa lại nút quay
                 if (spinBtn) {
                     spinBtn.disabled = false;
                     spinBtn.innerText = "QUAY 1 LẦN (1 CUBE)";
@@ -1360,16 +1356,15 @@
                     spinBtn.style.cursor = "pointer";
                 }
 
-                // Hiện thông báo Log và lưu dữ liệu (delay 100ms để kịp vẽ giao diện)
                 setTimeout(async () => {
-                    alert(`🎉 ÁNH SÁNG CHÓI LÓA! Bạn đã triệu hồi thành công [${rewardName}] (Hạng ${rank})!`);
+                    alert(`Bạn đã triệu hồi thành công [${rewardName}] (Hạng ${rank})!`);
                     await saveUserData();
                     if (window.renderBag) window.renderBag();
                 }, 800); 
             }
         }, spinSpeed);
     };
-    // Hàm cập nhật số lượng Cube hiển thị trên UI
+    
     window.updateCubeDisplay = function() {
         const display = document.getElementById('cubeCountDisplay');
         if (!display || !currentUser || !currentUser.inventory) return;
