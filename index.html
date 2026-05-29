@@ -5926,13 +5926,23 @@ window.switchInvTab = function(tabName, btnElement) {
     const originalOpenTabForForge = window.openTab;
     window.openTab = function(evt, tabName) {
         originalOpenTabForForge(evt, tabName);
+        
         if (tabName === 'tab-forge' && window.renderForgeList) {
-            // Reset lại bệ rèn khi mở tab
             window.selectedForgeItemIndex = null;
             document.getElementById('forgeStation').innerHTML = '<div style="color: #ff9900; opacity: 0.5; font-weight: bold;">ĐẶT TRANG BỊ</div>';
             document.getElementById('forgeStation').classList.remove('forge-active');
             document.getElementById('forgeInfo').style.display = 'none';
             window.renderForgeList();
+        }
+        
+        if (tabName === 'tab-gacha') {
+            const box = document.getElementById('gachaBox');
+            if (box) {
+                box.style.borderColor = '#00ffcc';
+                box.style.boxShadow = '0 0 20px rgba(0, 255, 204, 0.3)';
+                box.innerHTML = '<span style="color: #00ffcc; font-size: 50px;">?</span>';
+            }
+            if (window.updateCubeDisplay) window.updateCubeDisplay(); 
         }
     };
 
