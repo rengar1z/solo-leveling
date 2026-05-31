@@ -834,6 +834,10 @@
         DOM.d_e_hp_bar = document.getElementById('d-e-hp-bar');
         DOM.d_e_hp_text = document.getElementById('d-e-hp-text');
         DOM.d_e_img = document.getElementById('d-e-img');
+
+
+        DOM.tabPanels = document.getElementsByClassName("tab-panel");
+        DOM.tabBtns = document.getElementsByClassName("tab-btn");
         
         DOM.isCached = true;
 }
@@ -2207,37 +2211,34 @@
     // --- TAB ĐIỀU HƯỚNG ---
     window.openTab = function(evt, tabName) {
         if (currentRedGateId) {
-        alert("CẢNH BÁO: Cổng Đỏ đã phong ấn không gian! Bạn không thể thoát ra ngoài hoặc chuyển tab cho đến khi giết được Boss hoặc... tử trận!");
-        return;
-    }
-    
-    if (isDungeonMode && tabName !== 'tab-dungeon') {
-        if (confirm("Bạn đang khiêu chiến Hầm Ngục! Rời tab lúc này đồng nghĩa với BỎ CUỘC và phải đi lại từ đầu. Chắc chắn thoát?")) {
-            exitDungeon();
-        } else {
-            return; 
+            alert("CẢNH BÁO: Cổng Đỏ đã phong ấn không gian! Bạn không thể thoát ra ngoài hoặc chuyển tab cho đến khi giết được Boss hoặc... tử trận!");
+            return;
         }
-    }
+    
+        if (isDungeonMode && tabName !== 'tab-dungeon') {
+            if (confirm("Bạn đang khiêu chiến Hầm Ngục! Rời tab lúc này đồng nghĩa với BỎ CUỘC và phải đi lại từ đầu. Chắc chắn thoát?")) {
+                exitDungeon();
+            } else {
+                return; 
+            }
+        }
 
-        const panels = document.getElementsByClassName("tab-panel");
-        for (let i = 0; i < panels.length; i++) panels[i].classList.remove("active");
+        if (!DOM.isCached) initDOM();
 
-        const btns = document.getElementsByClassName("tab-btn");
-        for (let i = 0; i < btns.length; i++) btns[i].classList.remove("active");
+        for (let i = 0; i < DOM.tabPanels.length; i++) DOM.tabPanels[i].classList.remove("active");
+        for (let i = 0; i < DOM.tabBtns.length; i++) DOM.tabBtns[i].classList.remove("active");
 
         document.getElementById(tabName).classList.add("active");
         evt.currentTarget.classList.add("active");
 
         let dropdown = evt.currentTarget.closest('.dropdown-content');
         if (dropdown) {
-            // Giấu bảng menu đi ngay lập tức (đánh lừa CSS hover)
             dropdown.style.display = 'none'; 
-            
-            // Khôi phục lại trạng thái sau 50 mili-giây để lần sau bạn rê chuột vào nó vẫn hiện lên
             setTimeout(() => {
                 dropdown.style.display = ''; 
             }, 50);
         }
+        
         if (tabName === 'tab-shop' && window.renderShopGrid) window.renderShopGrid();
         if (tabName === 'tab-shadows' && window.renderShadowArmy) window.renderShadowArmy();
         if (tabName === 'tab-bag' && window.renderBag) window.renderBag();
