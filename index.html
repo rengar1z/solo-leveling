@@ -754,7 +754,7 @@
         "effect/Heal_Effect.png", "effect/Burn_Effect.png", "effect/Defense_Decrease_Effect.png", "effect/rage_beru.png", "effect/HP.png", "effect/mana.png",
         "effect/Stun_Effect.png", "effect/Punishment_Effect.png", "effect/Poison_Effect.png", "effect/Defense_Magic_Effect.png", "effect/Strorm_of_White_Flames_Effect.png",
         "effect/Attack_Increase_Effect.png", "effect/Sian_Halat_Scarlet_Domination_Effect.png", "effect/Kasaka_Deadly_Poison_Effect.png", "effect/Bleed_Immune_Effect.png", "effect/phandon.png", 
-        "effect/Impulsive_Revenge_Effect.png", "effect/Beast_Form_Effect.png", "effect/The_Dancer_Effect.png", "effect/Beast_Form_Effect_2.png",
+        "effect/Impulsive_Revenge_Effect.png", "effect/Beast_Form_Effect.png", "effect/The_Dancer_Effect.png", "effect/Beast_Form_Effect_2.png", "effect/chanthebanggia.png", "effect/bannangkhatmau.png",
         
         // Skills
         "skill/tansat.png", "skill/tanghinh.jpg", "skill/dagger.jpg", "skill/loimathuat.png", "skill/ngonluahacam.png", "skill/khienmathuat.png",
@@ -2431,6 +2431,16 @@
                             <img src="effect/Beast_Form_Effect.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px; box-shadow: 0 0 8px #ffffff;" alt="Rage">
                           </div>`;
             }
+            else if (enemy.bossType === "rakan") {
+                eHTML += `<div class="status-icon" title="Bản Năng Khát Máu (ATK +35%)">
+                            <img src="effect/bannangkhatmau.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px; box-shadow: 0 0 8px #ff3300;" alt="Rage">
+                          </div>`;
+            }
+            else if (enemy.bossType === "frost_monarch") {
+                eHTML += `<div class="status-icon" title="Chân Thể Băng Giá (ATK +30%)">
+                            <img src="effect/chanthebanggia.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px; box-shadow: 0 0 8px #00ffff;" alt="Rage">
+                          </div>`;
+            }
         }
         
         eBoard.innerHTML = eHTML;
@@ -2563,6 +2573,12 @@
                     eImgElement.src = enemy.img;
                 } else if(enemy.bossType === "baek_yoonho") {
                     enemy.img = "char/Silver_Mane_Baek_Yoonho.png"; 
+                    eImgElement.src = enemy.img;
+                } else if(enemy.bossType === "rakan") {
+                    enemy.img = "boss/Rage_rakan.png"; 
+                    eImgElement.src = enemy.img;
+                } else if(enemy.bossType === "frost_monarch") {
+                    enemy.img = "boss/Rage_Frost_Monarch.png"; 
                     eImgElement.src = enemy.img;
                 }
             }
