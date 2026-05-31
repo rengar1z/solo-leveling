@@ -893,6 +893,7 @@
     let monarchWrathUses = 0;
     let playerBleedTurns = 0; 
     let playerArmorBreakTurns = 0;
+    window.monarchHealingDebuff = false;
     window.isPlayerBeastForm = 0;
     window.enemyDeathMark = false;
     window.specialCooldown = 0;
@@ -5344,6 +5345,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         window.playerVulnerabilityTurns = 0;
         window.enemyAtkBuffTurns = 0;
         window.enemyDeathMark = false;
+        window.monarchHealingDebuff = false;
         window.enemyBurnTurns = 0; window.enemyDefBreakTurns = 0; window.stealthDodge = false; window.stealthCrit = false; currentUser.shieldHP = 0;
 
         document.getElementById('e-name').innerText = enemy.name;
@@ -5374,6 +5376,9 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         
         const dcArea = document.getElementById('demonCastleArea');
         if (dcArea) dcArea.classList.add('hidden'); 
+
+        const monarchArea = document.getElementById('monarchDungeonArea');
+        if (monarchArea) monarchArea.classList.add('hidden');
 
         document.getElementById('dungeonCombatUI').classList.remove('hidden');
         document.getElementById('dDungeonTitle').innerText = dungeonData[id].name;
@@ -5420,14 +5425,14 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         window.enemyAtkBuffTurns = 0;
         window.enemyDeathMark = false;
         window.enemyBurnTurns = 0; window.enemyDefBreakTurns = 0; window.stealthDodge = false; window.stealthCrit = false; currentUser.shieldHP = 0;
-
+        window.monarchHealingDebuff = false;
     
         if (dCurrentId.includes('monarch_dungeon')) {
             window.monarchHealingDebuff = true;
             setTimeout(() => {
                 let bossWarning = dCurrentId === 'monarch_dungeon_1' 
-                    ? `<span style="color:#ff3300; font-weight:bold;">🩸 Vua Muôn Thú Rakan cắn xé không gian, để lại vết thương rỉ máu vĩnh viễn! (Bị giảm 30% mọi hiệu ứng Hồi Máu)</span>`
-                    : `<span style="color:#00ffff; font-weight:bold;">❄️ Hơi thở của Hoàng Đế Băng làm đông đặc huyết mạch! (Bị giảm 30% mọi hiệu ứng Hồi Máu)</span>`;
+                    ? `<span style="color:#ff3300; font-weight:bold;">🩸 Không gian Rừng Rậm ngập ngụa Sát khí của Vua Muôn Thú! Các vết thương rỉ máu không ngừng... (Bị giảm 30% Hồi Máu)</span>`
+                    : `<span style="color:#00ffff; font-weight:bold;">❄️ Bão tuyết Vĩnh Cửu làm đông đặc huyết mạch của bạn! (Bị giảm 30% Hồi Máu)</span>`;
                 logBattle(bossWarning);
             }, 1000);
         } else {
@@ -5563,7 +5568,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         window.enemyAtkBuffTurns = 0;
         window.enemyDeathMark = false;
         window.enemyBurnTurns = 0; window.enemyDefBreakTurns = 0; window.stealthDodge = false; window.stealthCrit = false; currentUser.shieldHP = 0;
-        
+        window.monarchHealingDebuff = false;
         document.getElementById('dStageText').innerText = `Ải ${rgCurrentStage + 1}/${gateData.stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
         document.getElementById('dStageText').style.color = gateData.themeColor;
         document.getElementById('d-e-name').innerText = enemy.name;
