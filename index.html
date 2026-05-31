@@ -711,8 +711,8 @@
         "boss/Boss_The_Gatekeeper_of_Hell,_Cerberus.png", "boss/Boss_Avaricious_Vulcan.png",
         "boss/Boss_Soul_Shepherd_Metus.png", "boss/Boss_Baran_of_White_Flames.png",
         "boss/Boss_Baran_the_Demon_King.png", "bot/Boss_1st_Gen._Fire_Ant_Leader.png",
-        "bot/Boss_Purple_Blade_Camula.png", "bot/Boss_1st_Gen._White_Ant_Leader.png", "boss/Thomas_Andre.png", "boss/Rage_Thomas.png",
-        "boss/Boss_Queen_Ant.png", "boss/Boss_Ant_King.png", "boss/Rage_Ant_King.png", "boss/Rage_Igris.png",
+        "bot/Boss_Purple_Blade_Camula.png", "bot/Boss_1st_Gen._White_Ant_Leader.png", "boss/Thomas_Andre.png", "boss/Rage_Thomas.png", "boss/Rage_Frost_Monarch.png", "boss/Rage_rakan.png",
+        "boss/Boss_Queen_Ant.png", "boss/Boss_Ant_King.png", "boss/Rage_Ant_King.png", "boss/Rage_Igris.png", "boss/Beast_Monarch.png", "boss/Frost_Monarch.png",
         // Cores
         "core/loihothe.png", "core/loibaokich.png", "core/loihuydiet.png",
         // Quái Red Gate
@@ -753,7 +753,7 @@
         // Effects
         "effect/Heal_Effect.png", "effect/Burn_Effect.png", "effect/Defense_Decrease_Effect.png", "effect/rage_beru.png", "effect/HP.png", "effect/mana.png",
         "effect/Stun_Effect.png", "effect/Punishment_Effect.png", "effect/Poison_Effect.png", "effect/Defense_Magic_Effect.png", "effect/Strorm_of_White_Flames_Effect.png",
-        "effect/Attack_Increase_Effect.png", "effect/Sian_Halat_Scarlet_Domination_Effect.png", "effect/Kasaka_Deadly_Poison_Effect.png",
+        "effect/Attack_Increase_Effect.png", "effect/Sian_Halat_Scarlet_Domination_Effect.png", "effect/Kasaka_Deadly_Poison_Effect.png", "effect/Bleed_Immune_Effect.png", "effect/phandon.png", 
         "effect/Impulsive_Revenge_Effect.png", "effect/Beast_Form_Effect.png", "effect/The_Dancer_Effect.png", "effect/Beast_Form_Effect_2.png",
         
         // Skills
@@ -1014,13 +1014,13 @@
         "monarch_dungeon_1": {
             name: "Rừng Rậm Bạo Chúa",
             stages: [
-                { name: "BOSS: Vua Muôn Thú Rakan", hp: 3000000, atk: 8500, def: 2000, exp: 200000, img: "boss/rakan.png", isBoss: true, bossType: "rakan", rareDrops: ["Sandstorm Cube", "Ma Thạch Cao Cấp"] }
+                { name: "BOSS: Vua Muôn Thú Rakan", hp: 3000000, atk: 8500, def: 2000, exp: 200000, img: "boss/Beast_Monarch.png", isBoss: true, bossType: "rakan", rareDrops: ["Sandstorm Cube", "Ma Thạch Cao Cấp"] }
             ]
         },
         "monarch_dungeon_2": {
             name: "Miền Đất Giá Lạnh Vĩnh Cửu",
             stages: [
-                { name: "BOSS: Hoàng Đế Băng", hp: 2500000, atk: 7000, def: 1900, exp: 220000, img: "boss/frost_monarch.png", isBoss: true, bossType: "frost_monarch", rareDrops: ["Sandstorm Cube", "Ma Thạch Cao Cấp"] }
+                { name: "BOSS: Hoàng Đế Băng", hp: 2500000, atk: 7000, def: 1900, exp: 220000, img: "boss/Frost_Monarch.png", isBoss: true, bossType: "frost_monarch", rareDrops: ["Sandstorm Cube", "Ma Thạch Cao Cấp"] }
             ]
         }
     };
@@ -1067,7 +1067,25 @@
 
         // --- BOSS THẢM HỌA (HẠNG S+) ---
         "beru": { rank: "Marshal", name: "Vua Kiến Beru", str: 150, vit: 30, agi: 100, int: 0, skillName: "Kẻ Săn Mồi", skillDesc: "Hồi 3% HP tối đa ở cuối mỗi lượt.", img: "boss/Boss_Ant_King.png", icon: "shadow/Beru_Icon.png", bio: "Vị vua sinh ra để tiêu diệt nhân loại trên Đảo Jeju. Mang trong mình sức mạnh tuyệt đối, tốc độ kinh hoàng và khả năng tự chữa lành." },
-        "baran": { rank: "Monarch", name: "Vua Quỷ Baran", str: 150, vit: 100, agi: 80, int: 120, skillName: "Uy Áp Của Vua", skillDesc: "Tăng 15% TẤT CẢ sát thương gây ra (Cả Vật Lý và Phép).", img: "boss/Boss_Baran_of_White_Flames.png", bio: "Một trong 9 vị Quân Vương nguyên thủy. Kẻ cai trị Bạch Cốt với sức mạnh áp đảo cả ma thuật lẫn thể chất." }
+        "baran": { rank: "Monarch", name: "Vua Quỷ Baran", str: 150, vit: 100, agi: 80, int: 120, skillName: "Uy Áp Của Vua", skillDesc: "Tăng 15% TẤT CẢ sát thương gây ra (Cả Vật Lý và Phép).", img: "boss/Boss_Baran_of_White_Flames.png", bio: "Một trong 9 vị Quân Vương nguyên thủy. Kẻ cai trị Bạch Cốt với sức mạnh áp đảo cả ma thuật lẫn thể chất." },
+        "rakan": { 
+            rank: "Monarch", 
+            name: "Vua Muôn Thú Rakan", 
+            str: 400, vit: 80, agi: 120, int: 0, 
+            skillName: "Dã Tính Nguyên Thủy", 
+            skillDesc: "Tăng 15% Sát thương Vật Lý (STR) và +10% Tỷ lệ Bạo Kích.", 
+            img: "boss/rakan.png", 
+            bio: "Hoàng đế của muôn thú. Nắm giữ sức mạnh nhục thể tột đỉnh và tốc độ xé gió, giờ đây đã quy phục dưới trướng Lãnh chúa." 
+        },
+        "frost_monarch": { 
+            rank: "Monarch", 
+            name: "Hoàng Đế Băng Sillad", 
+            str: 0, vit: 120, agi: 50, int: 400, 
+            skillName: "Lãnh Địa Băng Giá", 
+            skillDesc: "Tăng 20% Sát thương Phép (INT) và Giảm 10% sát thương gánh chịu.", 
+            img: "boss/frost_monarch.png", 
+            bio: "Vị vua cai quản vùng đất băng giá vĩnh cửu. Ma thuật của hắn có thể phong ấn vạn vật trong sự tĩnh lặng vô tận." 
+        }
     };
     // --- DỮ LIỆU ITEM (ĐÃ THÊM RANK S, A, B, C, D) ---
     const ITEM_DATA = {
@@ -3335,13 +3353,17 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 }
             }
         }
-
+        if (config.stat === 'str' && currentUser.equippedShadow === "rakan") {
+            finalDmg *= 1.15; // Tăng 15% Sát thương vật lý
+        }
         // 4. AGI: Tính toán Bạo kích
         let critRate = (currentUser.agi * 0.25) + (config.bonusCritRate || 0);
         if (currentUser.equippedShadow === "ice_king") {
             critRate += 10; // Nội tại Vua Tiên Băng
         }
-        
+        if (currentUser.equippedShadow === "rakan") {
+            critRate += 10; // Nội tại Vua Muôn Thú
+        }
         if (currentUser.equipped && currentUser.equipped.gloves && currentUser.equipped.gloves.name === "High-ranking Demon's Gloves") {
             critRate += 10;
         }
@@ -3377,7 +3399,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         if (config.stat === 'int') {
             if (currentUser.skills["Lõi Ma Thuật"] > 0) finalDmg *= 1.25; 
             if (currentUser.equippedShadow === "kargalgan") finalDmg *= 1.20;
-            
+            if (currentUser.equippedShadow === "frost_monarch") finalDmg *= 1.20;
             let earring = currentUser.equipped.earring?.name;
             let necklace = currentUser.equipped.necklace?.name;
             
@@ -4486,6 +4508,96 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 specialAttackLog = `<span style="color:#00ffff; font-weight:bold;">🔊 TIẾNG GẦM CHÚA TỂ!</span> Sóng âm từ tiếng gầm xé tai gây ${Math.floor(dmg)} ST và chấn động tâm trí, <span style="color:orange;">[PHÁ GIÁP]</span> của bạn trong 3 lượt!`;
             }
         }
+
+        // 14. KỸ NĂNG CỦA VUA MUÔN THÚ RAKAN
+        if (isDungeonMode && enemy.bossType === "rakan") {
+            let rand = Math.random(); 
+            
+            // --- GIAI ĐOẠN 2: BẢN NĂNG KHÁT MÁU (Dưới 50% Máu) ---
+            if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasBeastInstinct) {
+                enemy.hasBeastInstinct = true;
+                if (!enemy.isEnraged) {
+                    enemy.isEnraged = true;
+                    enemy.atk = Math.floor(enemy.atk * 1.35); // Tăng 35% ATK
+                }
+                
+                let healAmount = Math.floor(enemy.maxHp * 0.20);
+                enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
+                
+                dmg = 0; isSpecialAttack = true;
+                specialAttackLog = `<span style="color:#ff3300; font-weight:bold; text-shadow: 0 0 10px #ff0000;">🐺 BẢN NĂNG KHÁT MÁU!</span> Rakan gầm lên một tiếng xé toạc màng nhĩ! Hắn hồi phục <span style="color:#00ff00">${healAmount} HP</span> và bộc phát dã tính tột đỉnh!`;
+                
+                const eImgElement = document.getElementById(getPrefix() + 'e-img');
+                if (eImgElement) { eImgElement.classList.add('shake'); setTimeout(() => eImgElement.classList.remove('shake'), 600); }
+            }
+            // --- KỸ NĂNG NGẪU NHIÊN ---
+            else if (rand <= 0.3) {
+                let rawDmg = enemyAtk * 2.2; 
+                dmg = Math.max(100, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; 
+                applyBleedToPlayer = true; 
+                specialAttackLog = `<span style="color:#ff0000; font-weight:bold;">🩸 HÀM RĂNG ĐOẠT MẠNG!</span> Rakan lao đến cắn xé với tốc độ ánh sáng, giáng ${Math.floor(dmg)} ST và khiến bạn bị <span style="color:red;">[CHẢY MÁU]</span> đầm đìa 2 lượt!`;
+            } 
+            else if (rand <= 0.55) {
+                let rawDmg = enemyAtk * 1.8; 
+                dmg = Math.max(80, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; 
+                isPlayerStunned = true; 
+                specialAttackLog = `<span style="color:#ffcc00; font-weight:bold;">🌪️ UY ÁP KẺ SĂN MỒI!</span> Áp lực từ Vua Muôn Thú đè bẹp ý chí của bạn, gây ${Math.floor(dmg)} ST và làm bạn <span style="color:yellow;">[CHOÁNG VÁNG]</span>!`;
+            }
+            else if (rand <= 0.75) {
+                let rawDmg = enemyAtk * 2.5; 
+                dmg = Math.max(120, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; 
+                effectArmorBreak = 3; 
+                specialAttackLog = `<span style="color:#ff6600; font-weight:bold;">🐾 MÓNG VUỐT HỦY DIỆT!</span> Một cú vát móng vuốt xé rách không gian, gây ${Math.floor(dmg)} ST và <span style="color:orange;">[PHÁ GIÁP]</span> của bạn trong 3 lượt!`;
+            }
+        }
+
+        // 15. KỸ NĂNG CỦA HOÀNG ĐẾ BĂNG SILLAD
+        if (isDungeonMode && enemy.bossType === "frost_monarch") {
+            let rand = Math.random(); 
+            
+            // --- GIAI ĐOẠN 2: CHÂN THỂ BĂNG GIÁ (Dưới 50% Máu) ---
+            if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasTrueIceForm) {
+                enemy.hasTrueIceForm = true;
+                if (!enemy.isEnraged) {
+                    enemy.isEnraged = true;
+                    enemy.atk = Math.floor(enemy.atk * 1.3); 
+                }
+                
+                let shieldAmount = Math.floor(enemy.maxHp * 0.40); 
+                enemy.shieldHP = shieldAmount; 
+                
+                dmg = 0; isSpecialAttack = true;
+                specialAttackLog = `<span style="color:#00ffff; font-weight:bold; text-shadow: 0 0 10px #00ffff;">❄️ CHÂN THỂ BĂNG GIÁ!</span> Không gian bị đóng băng tuyệt đối! Sillad bọc cơ thể trong một lớp băng vĩnh cửu, nhận <span style="color:#00ffff">${shieldAmount} Khiên Băng</span>. Hơi lạnh thấu xương làm sát thương của hắn tăng vọt!`;
+                
+                const eImgElement = document.getElementById(getPrefix() + 'e-img');
+                if (eImgElement) { eImgElement.classList.add('shake'); setTimeout(() => eImgElement.classList.remove('shake'), 600); }
+            }
+            // --- KỸ NĂNG NGẪU NHIÊN ---
+            else if (rand <= 0.3) {
+                let rawDmg = enemyAtk * 1.8; 
+                dmg = Math.max(80, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; 
+                isPlayerStunned = true; 
+                specialAttackLog = `<span style="color:#00bfff; font-weight:bold;">🧊 NGỤC TÙ BĂNG GIÁ!</span> Sillad giam cầm bạn trong khối băng khổng lồ, gây ${Math.floor(dmg)} ST và khiến bạn bị <span style="color:yellow;">[ĐÔNG CỨNG/CHOÁNG]</span>!`;
+            } 
+            else if (rand <= 0.6) {
+                let rawDmg = enemyAtk * 2.2; 
+                dmg = Math.max(100, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; 
+                effectArmorBreak = 3; 
+                specialAttackLog = `<span style="color:#ccffff; font-weight:bold;">🏹 MƯA TÊN BĂNG!</span> Hàng vạn mũi tên băng lao xuống xé toạc phòng ngự, giáng ${Math.floor(dmg)} ST và <span style="color:orange;">[PHÁ GIÁP]</span> trong 3 lượt!`;
+            }
+            else if (rand <= 0.75) {
+                let rawDmg = enemyAtk * 1.5; 
+                dmg = Math.max(60, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; 
+                effectLifeStealRate = 1.0; 
+                specialAttackLog = `<span style="color:#66ccff; font-weight:bold;">🌬️ HƠI THỞ MÙA ĐÔNG!</span> Cái lạnh tuyệt đối rút kiệt sinh lực của bạn, gây ${Math.floor(dmg)} ST và Sillad hấp thụ nó để tự phục hồi!`;
+            }
+        }
         
         // --- CƠ CHẾ KỸ NĂNG CỦA CÁC BOSS CỔNG ĐỎ ---
         if (currentRedGateId && enemy.isBoss) {
@@ -4676,6 +4788,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 if (currentUser.equippedShadow === "hobgoblin_leader") dmg *= 0.92; 
                 if (currentUser.equippedShadow === "giant_spider") dmg *= 0.95; 
                 if (currentUser.equippedShadow === "vulcan") dmg *= 0.88; 
+                if (currentUser.equippedShadow === "frost_monarch") dmg *= 0.90;
                 dmg = Math.floor(dmg);
 
                 triggerPlayerShake();
