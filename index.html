@@ -5743,6 +5743,22 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                     bossWarning = `<span style="color:#ffcc00; font-weight:bold; text-shadow: 0 0 10px gold;">[CẢNH BÁO SS+] KẺ THỐNG TRỊ THOMAS ANDRE XUẤT HIỆN! Không gian như bị nghiền nát bởi áp lực vật lý!</span>`;
                     bossDialog = `<span style="color:gold; font-style:italic; font-size: 22px; text-shadow: 0 0 5px #ffcc00;">Thomas Andre: 'Mày dám đụng vào người của Scavenger sao? Tao sẽ nghiền nát mày thành cám!'</span>`;
                     break;
+                case "rakan":
+                    bossWarning = `<span style="color:#ff3300; font-weight:bold; text-shadow: 0 0 10px #ff3300;">[CẢNH BÁO HOÀNG ĐẾ] VUA MUÔN THÚ RAKAN ĐÃ THỨC TỈNH! Sát khí hoang dã bóp nghẹt lồng ngực bạn!</span>`;
+                    bossDialog = `<span style="color:#ff6600; font-style:italic; font-size: 22px;">Rakan: 'Một con mồi nhỏ bé... Lâu lắm rồi ta mới ngửi thấy mùi máu tươi hấp dẫn thế này!'</span>`;
+                    break;
+                case "frost_monarch":
+                    bossWarning = `<span style="color:#00ffff; font-weight:bold; text-shadow: 0 0 10px #00ffff;">[CẢNH BÁO HOÀNG ĐẾ] HOÀNG ĐẾ BĂNG SILLAD XUẤT HIỆN! Không gian đóng băng ở độ không tuyệt đối!</span>`;
+                    bossDialog = `<span style="color:#00bfff; font-style:italic; font-size: 22px;">Hoàng Đế Băng: 'Hơi ấm của sự sống thật kinh tởm. Hãy để ta ban cho ngươi sự tĩnh lặng vĩnh cửu.'</span>`;
+                    break;
+                case "querehsha":
+                    bossWarning = `<span style="color:#33cc33; font-weight:bold; text-shadow: 0 0 10px #00ff00;">[CẢNH BÁO HOÀNG ĐẾ] NỮ HOÀNG BỆNH DỊCH QUEREHSHA HÀNG LÂM! Chướng khí thối rữa lan tỏa khắp nơi!</span>`;
+                    bossDialog = `<span style="color:#99cc00; font-style:italic; font-size: 22px;">Querehsha: 'Cơ thể khỏe mạnh quá nhỉ... Sẽ là một tổ kén tuyệt vời cho những đứa con của ta đây~'</span>`;
+                    break;
+                case "legia":
+                    bossWarning = `<span style="color:#e67e22; font-weight:bold; text-shadow: 0 0 10px #e67e22;">[CẢNH BÁO HOÀNG ĐẾ] VUA KHỔNG LỒ LEGIA ĐÃ GIẬT ĐỨT XIỀNG XÍCH! Trọng lực bị bẻ cong hoàn toàn!</span>`;
+                    bossDialog = `<span style="color:#cc6600; font-style:italic; font-size: 22px;">Legia: 'Kẻ Thống Trị đê tiện... Không, ngươi là con người? Bất kể là ai, ta cũng sẽ nghiền nát!'</span>`;
+                    break;
             }
 
             // In ra Dòng cảnh báo trước, 1 giây sau mới in Câu thoại cho kịch tính!
