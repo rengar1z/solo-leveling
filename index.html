@@ -542,6 +542,20 @@
                                     <p style="font-size: 20px; color: #ccc;">Số ải: 1 | Boss: <span style="color: #00ffff; font-weight: bold;">Hoàng Đế Băng Giá</span></p>
                                     <button class="tab-btn btn-system" style="border-color: #00ffff; color: #00ffff !important; font-size: 24px;">TIẾN VÀO</button>
                                 </div>
+
+                                <!-- NỮ HOÀNG BỆNH DỊCH QUEREHSHA -->
+                                <div class="dungeon-card" onclick="enterDungeon('monarch_dungeon_3')" style="background: rgba(10, 30, 10, 0.8); border-color: #33cc33; margin-bottom: 0; box-shadow: 0 0 20px rgba(51, 204, 51, 0.5);">
+                                    <h3 style="color: #33cc33; text-shadow: 0 0 15px #00ff00;">3. ĐẦM LẦY CHẾT CHÓC</h3>
+                                    <p style="font-size: 20px; color: #ccc;">Số ải: 1 | Boss: <span style="color: #33cc33; font-weight: bold;">Nữ Hoàng Bệnh Dịch Querehsha</span></p>
+                                    <button class="tab-btn btn-system" style="border-color: #33cc33; color: #33cc33 !important; font-size: 24px;">TIẾN VÀO</button>
+                                </div>
+                    
+                                <!-- VUA KHỔNG LỒ LEGIA -->
+                                <div class="dungeon-card" onclick="enterDungeon('monarch_dungeon_4')" style="background: rgba(30, 15, 0, 0.8); border-color: #e67e22; margin-bottom: 0; box-shadow: 0 0 20px rgba(230, 126, 34, 0.5);">
+                                    <h3 style="color: #e67e22; text-shadow: 0 0 15px #e67e22;">4. VỰC THẲM KHỞI NGUYÊN</h3>
+                                    <p style="font-size: 20px; color: #ccc;">Số ải: 1 | Boss: <span style="color: #e67e22; font-weight: bold;">Vua Khổng Lồ Legia</span></p>
+                                    <button class="tab-btn btn-system" style="border-color: #e67e22; color: #e67e22 !important; font-size: 24px;">TIẾN VÀO</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1021,6 +1035,18 @@
             stages: [
                 { name: "BOSS: Hoàng Đế Băng", hp: 2500000, atk: 8500, def: 1900, exp: 220000, img: "boss/Frost_Monarch.png", isBoss: true, bossType: "frost_monarch", rareDrops: ["Sandstorm Cube", "Ma Thạch Cao Cấp"] }
             ]
+        },
+        "monarch_dungeon_3": {
+            name: "Đầm Lầy Chết Chóc",
+            stages: [
+                { name: "BOSS: Nữ Hoàng Querehsha", hp: 3200000, atk: 9000, def: 1800, exp: 250000, img: "boss/Querehsha.png", isBoss: true, bossType: "querehsha", rareDrops: ["Sandstorm Cube", "Ma Thạch Cao Cấp"] }
+            ]
+        },
+        "monarch_dungeon_4": {
+            name: "Vực Thẳm Khởi Nguyên",
+            stages: [
+                { name: "BOSS: Vua Khổng Lồ Legia", hp: 4500000, atk: 12000, def: 2800, exp: 300000, img: "boss/Legia.png", isBoss: true, bossType: "legia", rareDrops: ["Sandstorm Cube", "Ma Thạch Cao Cấp"] }
+            ]
         }
     };
 
@@ -1084,6 +1110,24 @@
             skillDesc: "Tăng 20% Sát thương Phép (INT) và Giảm 10% sát thương gánh chịu.", 
             img: "boss/Frost_Monarch.png", 
             bio: "Vị vua cai quản vùng đất băng giá vĩnh cửu. Ma thuật của hắn có thể phong ấn vạn vật trong sự tĩnh lặng vô tận." 
+        },
+        "querehsha": { 
+            rank: "Monarch", 
+            name: "Nữ Hoàng Bệnh Dịch Querehsha", 
+            str: 0, vit: 150, agi: 100, int: 550, 
+            skillName: "Ký Sinh Trùng Đoạt Mệnh", 
+            skillDesc: "Mỗi khi đánh trúng địch, hồi phục HP bằng 15% sát thương gây ra.", 
+            img: "boss/Querehsha.png", 
+            bio: "Nữ hoàng cai quản côn trùng và bệnh dịch. Sự hiện diện của ả gieo rắc sự thối rữa lên mọi sinh vật sống." 
+        },
+        "legia": { 
+            rank: "Monarch", 
+            name: "Vua Khổng Lồ Legia", 
+            str: 750, vit: 300, agi: 20, int: 0, 
+            skillName: "Trọng Lực Của Đất", 
+            skillDesc: "Bỏ qua 25% Giáp của kẻ địch trong mọi đòn đánh Vật Lý (STR).", 
+            img: "boss/Legia.png", 
+            bio: "Hoàng Đế Khởi Nguyên mang sức mạnh thể chất tiệm cận Vua Rồng. Cú đấm của hắn có thể làm vỡ nát các vì sao." 
         }
     };
     // --- DỮ LIỆU ITEM (ĐÃ THÊM RANK S, A, B, C, D) ---
@@ -2446,6 +2490,16 @@
                             <img src="effect/chanthebanggia.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px; box-shadow: 0 0 8px #00ffff;" alt="Rage">
                           </div>`;
             }
+            else if (enemy.bossType === "querehsha") {
+                eHTML += `<div class="status-icon" title="Thức Tỉnh Bào Tử (ATK +30%)">
+                            <img src="effect/Poison_Effect.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px; box-shadow: 0 0 8px #00ff00;" alt="Rage">
+                          </div>`;
+            }
+            else if (enemy.bossType === "legia") {
+                eHTML += `<div class="status-icon" title="Xiềng Xích Bị Phá Vỡ (ATK +50%)">
+                            <img src="effect/Attack_Increase_Effect.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px; box-shadow: 0 0 8px #e67e22;" alt="Rage">
+                          </div>`;
+            }
         }
         
         eBoard.innerHTML = eHTML;
@@ -2584,6 +2638,12 @@
                     eImgElement.src = enemy.img;
                 } else if(enemy.bossType === "frost_monarch") {
                     enemy.img = "boss/Rage_Frost_Monarch.png"; 
+                    eImgElement.src = enemy.img;
+                } else if(enemy.bossType === "querehsha") {
+                    enemy.img = "boss/Rage_Querehsha.PNG"; 
+                    eImgElement.src = enemy.img;
+                } else if(enemy.bossType === "legia") {
+                    enemy.img = "boss/Rage_Legia.png"; 
                     eImgElement.src = enemy.img;
                 }
             }
@@ -3319,7 +3379,9 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         if (config.stat === 'str' && currentUser.equippedShadow === "cerberus") {
             totalIgnoreDef += 0.10;
         }
-
+        if (config.stat === 'str' && currentUser.equippedShadow === "legia") {
+            totalIgnoreDef += 0.25;
+        }
         // BỔ SUNG: Nội tại Vũ khí Xuyên giáp
         if (config.stat === 'str' && currentUser.equipped && currentUser.equipped.weapon) {
             if (currentUser.equipped.weapon.name === "Dao găm kẻ giết hiệp sĩ") totalIgnoreDef += 0.10;
@@ -3471,7 +3533,14 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         } else {
             playSound("audio/slash.mp3"); 
         }
-
+         if (currentUser.equippedShadow === "querehsha" && actualDmg > 0) {
+            let healAmount = Math.floor(actualDmg * 0.15);
+            // Vẫn tuân thủ luật giảm 30% hồi máu nếu đang ở Hầm Hoàng Đế
+            if (window.monarchHealingDebuff) healAmount = Math.floor(healAmount * 0.7); 
+            
+            currentUser.hp = Math.min(currentUser.maxHp, currentUser.hp + healAmount);
+            logBattle(`<span style="color:#00ff00; font-style:italic;">🪲 Ký sinh trùng mang về ${healAmount} HP!</span>`);
+        }   
         return { dmg: actualDmg, isCrit: isCrit };
     }
     
@@ -4659,6 +4728,103 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 specialAttackLog = `<span style="color:#66ccff; font-weight:bold;">🌬️ HƠI THỞ MÙA ĐÔNG!</span> Cái lạnh tuyệt đối rút kiệt sinh lực của bạn, gây ${Math.floor(dmg)} ST và Sillad hấp thụ nó để tự phục hồi!`;
             }
         }
+
+        // 16. KỸ NĂNG CỦA NỮ HOÀNG BỆNH DỊCH QUEREHSHA
+        if (isDungeonMode && enemy.bossType === "querehsha") {
+            let rand = Math.random(); 
+            
+            // --- GIAI ĐOẠN 2: THỨC TỈNH BÀO TỬ (Dưới 50% Máu) ---
+            if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasSporeAwakened) {
+                enemy.hasSporeAwakened = true;
+                if (!enemy.isEnraged) {
+                    enemy.isEnraged = true;
+                    enemy.atk = Math.floor(enemy.atk * 1.3); 
+                }
+                
+                let healAmount = Math.floor(enemy.maxHp * 0.35); // Hồi 35% máu (Rất trâu bò)
+                enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
+                let shieldAmount = Math.floor(enemy.maxHp * 0.20); 
+                enemy.shieldHP = shieldAmount; 
+                
+                dmg = 0; isSpecialAttack = true;
+                specialAttackLog = `<span style="color:#33cc33; font-weight:bold; text-shadow: 0 0 10px #00ff00;">🪲 BIỂN CÔN TRÙNG!</span> Querehsha giải phóng hàng tỷ ký sinh trùng! Ả hấp thụ chúng để phục hồi <span style="color:#00ff00">${healAmount} HP</span> và tạo <span style="color:#00ffff">${shieldAmount} Khiên Côn Trùng</span>. Không gian nồng nặc mùi chết chóc!`;
+                
+                const eImgElement = document.getElementById(getPrefix() + 'e-img');
+                if (eImgElement) { eImgElement.classList.add('shake'); setTimeout(() => eImgElement.classList.remove('shake'), 600); }
+            }
+            // --- KỸ NĂNG NGẪU NHIÊN ---
+            else if (rand <= 0.35) {
+                let rawDmg = enemyAtk * 1.5; 
+                dmg = Math.max(80, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; 
+                
+                // Tiêm độc mạnh (Kích hoạt 3 lượt độc tàn phá)
+                if (typeof enemyPoisonTurns !== 'undefined') {
+                    window.playerBleedTurns = 3; // Lấy cơ chế chảy máu làm hiệu ứng Độc lên người chơi
+                }
+                specialAttackLog = `<span style="color:#00ff00; font-weight:bold;">☠️ ĐỘC TỐ THỐI RỮA!</span> Làn sương độc tiêm thẳng vào da thịt bạn! Gây ${Math.floor(dmg)} ST và khiến bạn bị <span style="color:#00ff00;">[NHIỄM ĐỘC MẠNH]</span> mất máu trong 3 lượt!`;
+            } 
+            else if (rand <= 0.65) {
+                let rawDmg = enemyAtk * 1.8; 
+                dmg = Math.max(100, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; 
+                effectLifeStealRate = 1.5; // Hút máu cực mạnh
+                specialAttackLog = `<span style="color:#cc33ff; font-weight:bold;">🩸 KÝ SINH ĐOẠT MỆNH!</span> Querehsha cắm móng vuốt cắn nuốt sinh lực của bạn, gây ${Math.floor(dmg)} ST và tước đoạt lượng máu khổng lồ để tự phục hồi!`;
+            }
+            else if (rand <= 0.85) {
+                let rawDmg = enemyAtk * 2.2; 
+                dmg = Math.max(120, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; 
+                effectArmorBreak = 3; 
+                specialAttackLog = `<span style="color:#99cc00; font-weight:bold;">🌪️ BÃO KÝ SINH!</span> Một cơn lốc côn trùng xé nát giáp của bạn, gây ${Math.floor(dmg)} ST và <span style="color:orange;">[PHÁ GIÁP]</span> trong 3 lượt!`;
+            }
+        }
+
+        // 17. KỸ NĂNG CỦA VUA KHỔNG LỒ LEGIA
+        if (isDungeonMode && enemy.bossType === "legia") {
+            let rand = Math.random(); 
+            
+            // --- GIAI ĐOẠN 2: BẺ GÃY XIỀNG XÍCH (Dưới 50% Máu) ---
+            if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasBrokenChains) {
+                enemy.hasBrokenChains = true;
+                if (!enemy.isEnraged) {
+                    enemy.isEnraged = true;
+                    enemy.atk = Math.floor(enemy.atk * 1.5); // ATK tăng tận 50% vì sức mạnh nguyên thủy được giải phóng
+                }
+                
+                let shieldAmount = Math.floor(enemy.maxHp * 0.50); // Khiên Đất cực kỳ dày
+                enemy.shieldHP = shieldAmount; 
+                
+                dmg = 0; isSpecialAttack = true;
+                specialAttackLog = `<span style="color:#e67e22; font-weight:bold; text-shadow: 0 0 10px #e67e22;">⛓️ BẺ GÃY XIỀNG XÍCH!</span> Legia rống lên, giật đứt phong ấn của các Kẻ Thống Trị! Hắn tạo ra <span style="color:#00ffff">${shieldAmount} Lớp Giáp Đất Đá</span> và bộc phát Sức mạnh hủy diệt!`;
+                
+                const eImgElement = document.getElementById(getPrefix() + 'e-img');
+                if (eImgElement) { eImgElement.classList.add('shake'); setTimeout(() => eImgElement.classList.remove('shake'), 800); }
+            }
+            // --- KỸ NĂNG NGẪU NHIÊN ---
+            else if (rand <= 0.3) {
+                let rawDmg = enemyAtk * 2.5; 
+                dmg = Math.max(150, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; 
+                isPlayerStunned = true; 
+                specialAttackLog = `<span style="color:#cc6600; font-weight:bold;">🌋 ĐẠI ĐỊA CHẤN!</span> Vua Khổng Lồ dậm chân, đất đá nứt toác! Bạn trúng ${Math.floor(dmg)} ST, mất thăng bằng và bị <span style="color:yellow;">[CHOÁNG VÁNG]</span>!`;
+            } 
+            else if (rand <= 0.55) {
+                let rawDmg = enemyAtk * 3.0; // Modifier cực lớn
+                dmg = Math.max(200, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; 
+                effectArmorBreak = 4; // Phá giáp 4 lượt
+                specialAttackLog = `<span style="color:#ff3300; font-weight:bold;">👊 CÚ ĐẤM KHỞI NGUYÊN!</span> Cú đấm che khuất cả bầu trời giáng xuống! Gây ${Math.floor(dmg)} ST khủng khiếp và <span style="color:orange;">[NGHIỀN NÁT GIÁP]</span> của bạn trong 4 lượt!`;
+            }
+            else if (rand <= 0.75) {
+                let rawDmg = enemyAtk * 2.0; 
+                dmg = Math.max(120, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; 
+                isPlayerStunned = true; 
+                applyBleedToPlayer = true;
+                specialAttackLog = `<span style="color:#ff9900; font-weight:bold;">⛓️ XIỀNG XÍCH MA LỰC!</span> Legia dùng chính xiềng xích từng trói buộc hắn quất nát cơ thể bạn! Nhận ${Math.floor(dmg)} ST, bị <span style="color:yellow;">[TRÓI/CHOÁNG]</span> và <span style="color:red;">[CHẢY MÁU]</span>!`;
+            }
+        }
         
         // --- CƠ CHẾ KỸ NĂNG CỦA CÁC BOSS CỔNG ĐỎ ---
         if (currentRedGateId && enemy.isBoss) {
@@ -5476,9 +5642,11 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         if (dCurrentId.includes('monarch_dungeon')) {
             window.monarchHealingDebuff = true;
             setTimeout(() => {
-                let bossWarning = dCurrentId === 'monarch_dungeon_1' 
-                    ? `<span style="color:#ff3300; font-weight:bold;">🩸 Không gian Rừng Rậm ngập ngụa Sát khí của Vua Muôn Thú! Các vết thương rỉ máu không ngừng... (Bị giảm 30% Hồi Máu)</span>`
-                    : `<span style="color:#00ffff; font-weight:bold;">❄️ Bão tuyết Vĩnh Cửu làm đông đặc huyết mạch của bạn! (Bị giảm 30% Hồi Máu)</span>`;
+                let bossWarning = "";
+                if (dCurrentId === 'monarch_dungeon_1') bossWarning = `<span style="color:#ff3300; font-weight:bold;">🩸 Không gian Rừng Rậm ngập ngụa Sát khí của Vua Muôn Thú! Các vết thương rỉ máu không ngừng... (Bị giảm 30% Hồi Máu)</span>`;
+                else if (dCurrentId === 'monarch_dungeon_2') bossWarning = `<span style="color:#00ffff; font-weight:bold;">❄️ Bão tuyết Vĩnh Cửu làm đông đặc huyết mạch của bạn! (Bị giảm 30% Hồi Máu)</span>`;
+                else if (dCurrentId === 'monarch_dungeon_3') bossWarning = `<span style="color:#33cc33; font-weight:bold;">🪲 Chướng khí thối rữa từ Đầm Lầy ăn mòn sinh lực của bạn! (Bị giảm 30% Hồi Máu)</span>`;
+                else if (dCurrentId === 'monarch_dungeon_4') bossWarning = `<span style="color:#e67e22; font-weight:bold;">⛓️ Trọng lực khủng khiếp đè nát nội tạng, vết thương không thể khép miệng! (Bị giảm 30% Hồi Máu)</span>`;
                 logBattle(bossWarning);
             }, 1000);
         } else {
