@@ -4038,7 +4038,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         }
         
         // --- CƠ CHẾ NGƯỜI CHƠI BỊ CHẢY MÁU ---
-        if (window.playerBleedTurns && window.playerBleedTurns > 0) {
+        if (playerBleedTurns > 0) { // Xóa chữ window.
             let bleedDmg = Math.floor(currentUser.maxHp * 0.05); 
             
             if (currentUser.shieldHP && currentUser.shieldHP > 0) {
@@ -4053,7 +4053,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 currentUser.hp = Math.max(0, currentUser.hp - bleedDmg); 
             }
 
-            window.playerBleedTurns--;
+            playerBleedTurns--; // Xóa chữ window.
             logBattle(`<span style="color:#ff0000; font-style:italic;">🩸 Bạn bị mất máu liên tục! Trừ ${bleedDmg} Máu/Khiên.</span>`);
             updateCombatUI(); 
             if (currentUser.hp <= 0) { return setTimeout(loseBattle, 1000); }
@@ -4760,10 +4760,10 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 
                 // Tiêm độc mạnh (Kích hoạt 3 lượt độc tàn phá)
                 if (typeof enemyPoisonTurns !== 'undefined') {
-                    window.playerBleedTurns = 3; // Lấy cơ chế chảy máu làm hiệu ứng Độc lên người chơi
+                    playerBleedTurns = 3; // Xóa chữ window.
                 }
                 specialAttackLog = `<span style="color:#00ff00; font-weight:bold;">☠️ ĐỘC TỐ THỐI RỮA!</span> Làn sương độc tiêm thẳng vào da thịt bạn! Gây ${Math.floor(dmg)} ST và khiến bạn bị <span style="color:#00ff00;">[NHIỄM ĐỘC MẠNH]</span> mất máu trong 3 lượt!`;
-            } 
+            }
             else if (rand <= 0.65) {
                 let rawDmg = enemyAtk * 1.8; 
                 dmg = Math.max(100, Math.floor(rawDmg * (1 - vitDmgReduction))); 
@@ -5427,27 +5427,48 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 if (window.enemyAtkBuffTurns && window.enemyAtkBuffTurns > 0) window.enemyAtkBuffTurns--;
                 setTimeout(() => {
                     
-                    // BOSS BỊ CHOÁNG VẪN PHẢI DÍNH ĐỘC
-                   if (enemyPoisonTurns > 0) {
+                    // 1. BOSS BỊ CHOÁNG VẪN PHẢI DÍNH ĐỘC (CÓ TÍNH KHIÊN)
+                    if (enemyPoisonTurns > 0) {
                         if (window.enemyNewlyPoisoned) {
                             window.enemyNewlyPoisoned = false;
                         } else {
                             let poisonDmg = Math.floor(enemy.maxHp * 0.05);
-                            enemy.hp = Math.max(0, enemy.hp - poisonDmg);
+                            if (enemy.shieldHP && enemy.shieldHP > 0) {
+                                if (enemy.shieldHP >= poisonDmg) enemy.shieldHP -= poisonDmg;
+                                else {
+                                    let leftOver = poisonDmg - enemy.shieldHP;
+                                    enemy.shieldHP = 0;
+                                    enemy.hp = Math.max(0, enemy.hp - leftOver);
+                                }
+                            } else {
+                                enemy.hp = Math.max(0, enemy.hp - poisonDmg);
+                            }
                             enemyPoisonTurns--;
-                            logBattle(`<span style="color:#00ff00; font-style:italic;">☠️ Độc tính phát tác! Kẻ địch mất ${poisonDmg} HP.</span>`);
+                            logBattle(`<span style="color:#00ff00; font-style:italic;">☠️ Độc tính phát tác! Kẻ địch mất ${poisonDmg} Máu/Khiên.</span>`);
                             if (enemy.hp <= 0) { updateCombatUI(); return setTimeout(winBattle, 500); }
                         }
                     }
+
+                    // 2. NGƯỜI CHƠI BỊ CHẢY MÁU KHI BOSS CHOÁNG (CÓ TÍNH KHIÊN)
                     if (playerBleedTurns > 0 && currentUser.hp > 0) {
                         let bleedDmg = Math.floor(currentUser.maxHp * 0.05);
-                        currentUser.hp = Math.max(0, currentUser.hp - bleedDmg);
+                        if (currentUser.shieldHP && currentUser.shieldHP > 0) {
+                            if (currentUser.shieldHP >= bleedDmg) currentUser.shieldHP -= bleedDmg;
+                            else {
+                                let leftOver = bleedDmg - currentUser.shieldHP;
+                                currentUser.shieldHP = 0;
+                                currentUser.hp = Math.max(0, currentUser.hp - leftOver);
+                            }
+                        } else {
+                            currentUser.hp = Math.max(0, currentUser.hp - bleedDmg);
+                        }
                         playerBleedTurns--;
-                        logBattle(`<span style="color:red; font-style:italic;">🩸 Vết thương rỉ máu! Bạn mất thêm ${bleedDmg} HP.</span>`);
+                        logBattle(`<span style="color:red; font-style:italic;">🩸 Vết thương rỉ máu! Bạn mất thêm ${bleedDmg} Máu/Khiên.</span>`);
                     }
+
+                    // 3. HÓA THÚ CỦA NGƯỜI CHƠI (GIỮ NGUYÊN VÌ BẠN ĐÃ LÀM CHUẨN)
                     if (window.isPlayerBeastForm && window.isPlayerBeastForm > 0) {
                         let beastDmg = Math.floor(currentUser.maxHp * 0.15);
-                        
                         if (currentUser.shieldHP && currentUser.shieldHP > 0) {
                             if (currentUser.shieldHP >= beastDmg) { currentUser.shieldHP -= beastDmg; } 
                             else {
@@ -5458,21 +5479,30 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                         } else {
                             currentUser.hp = Math.max(0, currentUser.hp - beastDmg); 
                         }
-
                         window.isPlayerBeastForm--;
                         logBattle(`<span style="color:#ff0000; font-style:italic;">🐅 Khí huyết cuộn trào do Hóa Thú! Bạn mất ${beastDmg} Máu/Khiên.</span>`);
                         if (window.isPlayerBeastForm === 0) logBattle(`<span style="color:#aaa; font-style:italic;">Trạng thái Hóa Thú đã kết thúc. Cơ thể bạn trở lại bình thường.</span>`);
                     }
-                    // Thêm xử lý Thiêu Đốt khi Boss choáng
+
+                    // 4. BOSS BỊ THIÊU ĐỐT KHI CHOÁNG (CÓ TÍNH KHIÊN)
                     if (window.enemyBurnTurns && window.enemyBurnTurns > 0) {
                         let burnDmg = Math.floor(enemy.maxHp * 0.03);
-                        enemy.hp = Math.max(0, enemy.hp - burnDmg);
+                        if (enemy.shieldHP && enemy.shieldHP > 0) {
+                            if (enemy.shieldHP >= burnDmg) enemy.shieldHP -= burnDmg;
+                            else {
+                                let leftOver = burnDmg - enemy.shieldHP;
+                                enemy.shieldHP = 0;
+                                enemy.hp = Math.max(0, enemy.hp - leftOver);
+                            }
+                        } else {
+                            enemy.hp = Math.max(0, enemy.hp - burnDmg);
+                        }
                         window.enemyBurnTurns--;
-                        logBattle(`<span style="color:#ff3300; font-style:italic;">🔥 Lửa Hắc Ám thiêu đốt! Kẻ địch mất ${burnDmg} HP.</span>`);
+                        logBattle(`<span style="color:#ff3300; font-style:italic;">🔥 Lửa Hắc Ám thiêu đốt! Kẻ địch mất ${burnDmg} Máu/Khiên.</span>`);
                         if (enemy.hp <= 0) { updateCombatUI(); return setTimeout(winBattle, 500); }
                     }
 
-                    // Thêm đếm lùi Vỡ Giáp khi Boss choáng
+                    // --- CÁC DEBUFF ĐẾM LƯỢT KHÁC ---
                     if (window.enemyDefBreakTurns && window.enemyDefBreakTurns > 0) {
                         window.enemyDefBreakTurns--;
                         if (window.enemyDefBreakTurns === 0) logBattle(`<span style="color:#aaa; font-style:italic;">🛡️ Lớp giáp của kẻ địch đã khôi phục!</span>`);
@@ -5484,13 +5514,14 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                     if (window.playerVulnerabilityTurns && window.playerVulnerabilityTurns > 0) {
                         window.playerVulnerabilityTurns--;
                     }
+                    
                     if (currentUser.hp <= 0) {
                         updateCombatUI();
                         return loseBattle();
                     }
                     logBattle(`<span style="color:yellow; font-weight:bold;">Kẻ địch đang bị choáng, mất lượt!</span>`);
                     isMyTurn = true;
-                    updateCombatUI(); // Trả lại lượt cho bạn
+                    updateCombatUI(); 
                 }, 1000);
             } else {
                 window.combatTimer = setTimeout(enemyTurn, 1000); 
