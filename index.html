@@ -4758,10 +4758,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 dmg = Math.max(80, Math.floor(rawDmg * (1 - vitDmgReduction))); 
                 isSpecialAttack = true; 
                 
-                // Tiêm độc mạnh (Kích hoạt 3 lượt độc tàn phá)
-                if (typeof enemyPoisonTurns !== 'undefined') {
-                    playerBleedTurns = 3; // Xóa chữ window.
-                }
+                applyBleedToPlayer = true; 
                 specialAttackLog = `<span style="color:#00ff00; font-weight:bold;">☠️ ĐỘC TỐ THỐI RỮA!</span> Làn sương độc tiêm thẳng vào da thịt bạn! Gây ${Math.floor(dmg)} ST và khiến bạn bị <span style="color:#00ff00;">[NHIỄM ĐỘC MẠNH]</span> mất máu trong 3 lượt!`;
             }
             else if (rand <= 0.65) {
@@ -4918,7 +4915,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
             dodgeChance = 1.0; 
         }
         // Lọc bỏ đoạn "gây X sát thương..."
-        let skillNameOnly = isSpecialAttack ? specialAttackLog.split(/, gây|, giáng|, nhận/)[0] + "..." : "";
+        let skillNameOnly = isSpecialAttack ? specialAttackLog.split(/(, gây|, giáng|, nhận|\! Gây|\! Nhận|\! Giáng|\. Gây|\. Nhận)/i)[0] + "..." : "";
 
         // CHẶN NÉ TRÁNH NẾU ĐANG BẬT KHIÊN PHẢN ĐÒN
         if (dodgeChance > 0 && Math.random() <= dodgeChance && dmg > 0 && !isPlayerCountering) {
@@ -5045,7 +5042,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 }
                 
                 if (applyBleedToPlayer) {
-                    playerBleedTurns = 2; 
+                    playerBleedTurns = (enemy.bossType === "querehsha") ? 3 : 2; 
                 }
             }
         }
