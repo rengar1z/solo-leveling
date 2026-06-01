@@ -5420,7 +5420,8 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 }
                 if (window.counterCooldown && window.counterCooldown > 0) window.counterCooldown--;
                 if (window.tanSatCooldown && window.tanSatCooldown > 0) window.tanSatCooldown--;
-                if (window.potionCooldown && window.potionCooldown > 0) window.potionCooldown--; 
+                if (window.potionCooldown && window.potionCooldown > 0) window.potionCooldown--;
+                if (window.specialCooldown && window.specialCooldown > 0) window.specialCooldown--;
                 if (window.enemyAtkBuffTurns && window.enemyAtkBuffTurns > 0) window.enemyAtkBuffTurns--;
                 setTimeout(() => {
                     
