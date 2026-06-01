@@ -1907,7 +1907,12 @@
         if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
             return alert("⚠️ HỆ THỐNG: Tập trung vào trận chiến! Không thể thay đổi Danh Hiệu lúc này!");
         }
+    
+        // === 2. CHỐT TỶ LỆ MÁU/MANA TRƯỚC KHI THAY ĐỔI ===
+        let hpPercent = currentUser.hp / currentUser.maxHp;
+        let mpPercent = currentUser.maxMp > 0 ? (currentUser.mp / currentUser.maxMp) : 0;
         
+        // === 3. XÓA CHỈ SỐ CỦA DANH HIỆU CŨ (NẾU CÓ) ===
         if (currentUser.equippedTitle && TITLE_DATA[currentUser.equippedTitle]) {
             const oldT = TITLE_DATA[currentUser.equippedTitle];
             currentUser.str -= oldT.str;
@@ -1917,19 +1922,9 @@
             
             currentUser.maxHp -= oldT.vit * 10;
             currentUser.maxMp -= oldT.int * 5;
-            
-            
-            if (oldT.vit > 0) {
-                currentUser.hp = Math.max(1, currentUser.hp - (oldT.vit * 10));
-            }
-            if (oldT.int > 0) {
-                currentUser.mp = Math.max(0, currentUser.mp - (oldT.int * 5));
-            }
-        
-            currentUser.hp = Math.min(currentUser.hp, currentUser.maxHp);
-            currentUser.mp = Math.min(currentUser.mp, currentUser.maxMp);
         }
-
+    
+        // === 4. CỘNG CHỈ SỐ CỦA DANH HIỆU MỚI ===
         currentUser.equippedTitle = titleId;
         const newT = TITLE_DATA[titleId];
         currentUser.str += newT.str;
@@ -1939,18 +1934,21 @@
         
         currentUser.maxHp += newT.vit * 10;
         currentUser.maxMp += newT.int * 5;
-         
-        if (newT.vit > 0) {
-            currentUser.hp += newT.vit * 10;
-        }
-        if (newT.int > 0) {
-            currentUser.mp += newT.int * 5;
-        }
-
-        alert(`Đã trang bị danh hiệu [${newT.name}]! Lực chiến tăng mạnh!`);
-        await saveUserData();
-    };
+            
+        // === 5. ĐỒNG BỘ LẠI HP/MP TƯƠNG ĐƯƠNG THEO TỶ LỆ VÀ MAX HP/MP MỚI ===
+      
+        currentUser.hp = Math.max(1, Math.floor(currentUser.maxHp * hpPercent));
+        currentUser.mp = Math.floor(currentUser.maxMp * mpPercent);
     
+        alert(`Đã trang bị danh hiệu [${newT.name}]! Lực chiến tăng mạnh!`);
+        
+        await saveUserData();
+        
+        if (typeof renderAchievements === 'function') {
+            renderAchievements();
+        }
+    };
+        
     window.checkAchievements = function() {
         if (!currentUser.unlockedTitles) currentUser.unlockedTitles = ["weakest"];
         let unlockedNew = false;
