@@ -893,6 +893,7 @@
     let monarchWrathUses = 0;
     let playerBleedTurns = 0; 
     let playerArmorBreakTurns = 0;
+    window.holySanctuaryBuff = false;
     window.monarchHealingDebuff = false;
     window.isPlayerBeastForm = 0;
     window.enemyDeathMark = false;
@@ -1293,6 +1294,7 @@
         "skill_hellfire": { name: "Bí Kỹ: Hỏa Ngục", price: 500000, type: "skill", skillName: "Hỏa Ngục Bộc Phá" },
         "skill_shatter": { name: "Bí Kỹ: Toái Giáp", price: 500000, type: "skill", skillName: "Toái Giáp Trảm" },
         "skill_beast": { name: "Bí Kỹ: Hóa Thú", price: 10, currencyType: "item", currencyItem: "Giấy chứng nhận thợ săn", type: "skill", skillName: "Hóa Thú (Beast Form)" },
+        "skill_holy_sanctuary": { name: "Bí Kỹ: Thánh Vực", price: 20, currencyType: "item", currencyItem: "Giấy chứng nhận thợ săn", type: "skill", skillName: "Thánh Vực Thanh Tẩy" },
         "costume_demon_king": { name: "Ma Vương Hàng Lâm", price: 10, currencyType: "item", currencyItem: "Lõi Ma Tinh", type: "item", itemId: "Ma Vương Hàng Lâm" },
         "costume_blood_armor": { name: "Huyết Giáp Vô Song", price: 15, currencyType: "item", currencyItem: "Lõi Ma Tinh", type: "item", itemId: "Huyết Giáp Vô Song" },
         "costume_cha_haein_spirit": { name: "Cha Hae-In Tinh Linh", price: 20, currencyType: "item", currencyItem: "Lõi Ma Tinh", type: "item", itemId: "Cha Hae-In Tinh Linh" },
@@ -1341,6 +1343,11 @@
             branch: "Đặc biệt", type: "active", maxLv: 1, cost: 0, mp: 60, func: "useHellfireBlast", 
             desc: "[Bí Kỹ] Gây ST Phép. Nếu địch bị [Thiêu Đốt], sát thương x1.5 và gây [Choáng]. (Giá: 500.000 CASH)", 
             icon: "skill/hoangucbocpha.png" 
+        },
+        "Thánh Vực Thanh Tẩy": { 
+            branch: "Đặc biệt", type: "active", maxLv: 1, cost: 0, mp: 80, func: "useHolySanctuary", 
+            desc: "[Bí Kỹ] Không gây sát thương. Lập tức XÓA BỎ mọi bùa hại (Chảy máu, Vỡ giáp, Chấn động...), hồi 30% Max HP và tăng 20% sát thương cho đòn đánh tiếp theo. (Giá: 15 Giấy chứng nhận thợ săn)", 
+            icon: "skill/thanhca.png" 
         },
         "Toái Giáp Trảm": { 
             branch: "Đặc biệt", type: "active", maxLv: 1, cost: 0, mp: 50, func: "useArmorShatter", 
@@ -2611,7 +2618,7 @@
             cost = getActualMpCost(baseWrath); 
         }
         
-        const isSpecialSkill = btn.getAttribute('onclick') && (btn.getAttribute('onclick').includes('useExecuteBlade') || btn.getAttribute('onclick').includes('useHellfireBlast') || btn.getAttribute('onclick').includes('useArmorShatter') || btn.getAttribute('onclick').includes('useBeastForm'));
+        const isSpecialSkill = btn.getAttribute('onclick') && (btn.getAttribute('onclick').includes('useExecuteBlade') || btn.getAttribute('onclick').includes('useHellfireBlast') || btn.getAttribute('onclick').includes('useArmorShatter') || btn.getAttribute('onclick').includes('useBeastForm') || btn.getAttribute('onclick').includes('useHolySanctuary'));
 
         let isLocked = false;
         
@@ -3411,7 +3418,12 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         if (currentUser.skills["Sát Khí"] > 0 && currentUser.hp <= currentUser.maxHp * 0.3) {
             finalDmg *= 1.20; 
         }
-
+        
+        // --- BUFF TỪ THÁNH VỰC THANH TẨY ---
+        if (window.holySanctuaryBuff) {
+            finalDmg *= 1.20; 
+            window.holySanctuaryBuff = false; 
+        }    
         // 6. BỊ ĐỘNG: LÕI MA THUẬT & TUSK (Buff hệ Pháp Sư)
         if (config.stat === 'int') {
             if (currentUser.skills["Lõi Ma Thuật"] > 0) finalDmg *= 1.25; 
@@ -3702,6 +3714,41 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
     
         logBattle(`<span style="color:#cc00ff; text-shadow: 0 0 5px #cc00ff;">DẤU ẤN TỬ THẦN!</span> Gây ${hit.dmg} ST. Kẻ địch đã bị lộ điểm yếu, đòn Bí Kỹ tiếp theo sẽ tạo ra lượng sát thương khủng khiếp!`);
         updateCombatUI(); checkBattleEnd();
+    };
+
+    window.useHolySanctuary = function() {
+        if (window.specialCooldown > 0) {
+            logBattle(`<span style='color:orange; font-weight:bold;'>Bí Kỹ đang hồi chiêu! Cần chờ ${window.specialCooldown} lượt nữa.</span>`);
+            return;
+        }
+        let reqMp = getActualMpCost(80);
+        if (!enemy || !isMyTurn || enemy.hp <= 0 || currentUser.mp < reqMp) {
+            if(currentUser.mp < reqMp) logBattle(`<span style='color:orange'>Thiếu ${reqMp} MP!</span>`); return;
+        }
+
+        currentUser.mp -= reqMp;
+
+        // 1. XÓA BỎ MỌI BÙA HẠI BẤT LỢI TRÊN NGƯỜI CHƠI
+        playerBleedTurns = 0;
+        playerArmorBreakTurns = 0;
+        if (window.playerVulnerabilityTurns) window.playerVulnerabilityTurns = 0;
+
+        // 2. HỒI 30% MÁU (Vẫn bị trừ 30% nếu đang ở Hầm ngục Hoàng Đế)
+        let healAmount = Math.floor(currentUser.maxHp * 0.30);
+        if (window.monarchHealingDebuff) healAmount = Math.floor(healAmount * 0.7);
+        currentUser.hp = Math.min(currentUser.maxHp, currentUser.hp + healAmount);
+
+        // 3. KÍCH HOẠT BUFF DAME & CÀI ĐẶT DELAY 3 LƯỢT (COOLDOWN)
+        window.holySanctuaryBuff = true;
+        window.specialCooldown = 3; 
+
+        triggerPlayerShake();
+
+        let debuffNote = window.monarchHealingDebuff ? " <span style='color:#ff4d4d'>(Đã bị giảm 30%)</span>" : "";
+        logBattle(`<span style="color:#ffcc00; font-weight:bold; font-size:18px;">✨ THÁNH VỰC THANH TẨY!</span> Ánh sáng thần thánh thanh tẩy mọi bùa hại, phục hồi <span style="color:#00ff00">${healAmount} HP</span>${debuffNote} và cường hóa 20% sát thương cho đòn đánh kế tiếp!`);
+
+        updateCombatUI();
+        checkBattleEnd();
     };
     
     // --- KỸ NĂNG TỐI THƯỢNG (THỊNH NỘ QUÂN VƯƠNG) - TĂNG 50 MP MỖI LẦN ---
@@ -5346,6 +5393,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         window.enemyAtkBuffTurns = 0;
         window.enemyDeathMark = false;
         window.monarchHealingDebuff = false;
+        window.holySanctuaryBuff = false;
         window.enemyBurnTurns = 0; window.enemyDefBreakTurns = 0; window.stealthDodge = false; window.stealthCrit = false; currentUser.shieldHP = 0;
 
         document.getElementById('e-name').innerText = enemy.name;
@@ -5426,6 +5474,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         window.enemyDeathMark = false;
         window.enemyBurnTurns = 0; window.enemyDefBreakTurns = 0; window.stealthDodge = false; window.stealthCrit = false; currentUser.shieldHP = 0;
         window.monarchHealingDebuff = false;
+        window.holySanctuaryBuff = false;
     
         if (dCurrentId.includes('monarch_dungeon')) {
             window.monarchHealingDebuff = true;
@@ -5569,6 +5618,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         window.enemyDeathMark = false;
         window.enemyBurnTurns = 0; window.enemyDefBreakTurns = 0; window.stealthDodge = false; window.stealthCrit = false; currentUser.shieldHP = 0;
         window.monarchHealingDebuff = false;
+        window.holySanctuaryBuff = false;
         document.getElementById('dStageText').innerText = `Ải ${rgCurrentStage + 1}/${gateData.stages.length}: ${enemy.isBoss ? "BOSS" : "QUÁI VẬT"}`;
         document.getElementById('dStageText').style.color = gateData.themeColor;
         document.getElementById('d-e-name').innerText = enemy.name;
