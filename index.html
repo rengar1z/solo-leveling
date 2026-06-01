@@ -446,7 +446,7 @@
                         <div class="dungeon-card" onclick="enterDungeon('hunter_trial')" style="border-color: #00ffff; box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);">
                             <h3 style="color: #00ffff; text-shadow: 0 0 10px #00ffff;">THÁP THỬ THÁCH (HẠNG S)</h3>
                             <p style="font-size: 20px; color: #ccc;">Số ải: 3 | Độ khó: <span style="color: #00ffff; font-weight: bold;">HẠNG S</span></p>
-                            <button class="tab-btn btn-system" style="border-color: #00ffff; color: #00ffff !important; font-size: 24px;">KHIÊU CHIẾN THỢ SĂN</button>
+                            <button class="tab-btn btn-system" style="border-color: #00ffff; color: #00ffff !important; font-size: 24px;">TIẾN VÀO HẦM NGỤC</button>
                         </div>
 
                         <!-- CỔNG ĐẢO JEJU (HẠNG S+) -->
@@ -758,7 +758,7 @@
         "skill/hutmaluc.png", "skill/flame_ball.png", "skill/cothethep.png", "skill/cunenphadia.png", "skill/Beast_Form_Skill.png",
         "skill/trichxuatbongtoi.png", "skill/satkhi.png", "skill/haphuyet.png",
         "skill/thinhnoquanvuong.png", "skill/phandon.png", "skill/basic_attack.png", "skill/buochanbongtoi.png", "skill/nhatchemtuthan.png", "skill/nemdao.png", "skill/daodoc.png", "skill/dagger_rush.png",
-        "https://cdn-icons-png.flaticon.com/512/9483/9483031.png", "skill/doatmenhluoidao.png", "skill/hoangucbocpha.png", 
+        "https://cdn-icons-png.flaticon.com/512/9483/9483031.png", "skill/doatmenhluoidao.png", "skill/hoangucbocpha.png", , "skill/phattriencaptoc.png", "skill/thechatsieupham.png", "skill/sieugiacquan.png", "skill/thosantienthuong.png", "skill/bantaymayman.png",
         "https://cdn-icons-png.flaticon.com/256/1845/1845861.png", "skill/thanhca.png",
         "https://cdn-icons-png.flaticon.com/512/709/709612.png"
     ];
@@ -1300,11 +1300,11 @@
     // --- CƠ SỞ DỮ LIỆU KỸ NĂNG ĐA NHÁNH (MULTI-CLASS) ---
     const skillData = {
         // --- NHÁNH CHUNG (NỘI TẠI) ---
-        "Phát Triển Cấp Tốc": { branch: "Chung", type: "passive", maxLv: 3, cost: 1, desc: "Tăng lượng EXP nhận được thêm 10% mỗi cấp.", icon: "https://cdn-icons-png.flaticon.com/512/9483/9483031.png" },
-        "Thể Chất Siêu Phàm": { branch: "Chung", type: "passive", maxLv: 3, cost: 1, desc: "Khi cộng, tăng ngay lập tức 5 STR và 5 VIT.", icon: "https://cdn-icons-png.flaticon.com/256/1845/1845861.png" },
-        "Siêu Giác Quan": { branch: "Chung", type: "passive", maxLv: 3, cost: 5, desc: "Tăng thêm 3% tỷ lệ né tránh đòn đánh mỗi cấp.", icon: "https://cdn-icons-png.flaticon.com/512/709/709612.png" },        
-        "Thợ Săn Tiền Thưởng": { branch: "Chung", type: "passive", maxLv: 3, cost: 2, desc: "Tăng 15% Cash nhận được sau mỗi trận thắng.", icon: "skill/amsat.jpg" },
-        "Bàn Tay May Mắn": { branch: "Chung", type: "passive", maxLv: 1, cost: 5, desc: "Tăng 10% tỷ lệ rớt đồ hiếm khi tiêu diệt Boss.", icon: "skill/amsat.jpg" },
+        "Phát Triển Cấp Tốc": { branch: "Chung", type: "passive", maxLv: 3, cost: 1, desc: "Tăng lượng EXP nhận được thêm 10% mỗi cấp.", icon: "skill/phattriencaptoc.png" },
+        "Thể Chất Siêu Phàm": { branch: "Chung", type: "passive", maxLv: 3, cost: 1, desc: "Khi cộng, tăng ngay lập tức 5 STR và 5 VIT.", icon: "skill/thechatsieupham.png" },
+        "Siêu Giác Quan": { branch: "Chung", type: "passive", maxLv: 3, cost: 5, desc: "Tăng thêm 3% tỷ lệ né tránh đòn đánh mỗi cấp.", icon: "skill/sieugiacquan.png" },        
+        "Thợ Săn Tiền Thưởng": { branch: "Chung", type: "passive", maxLv: 3, cost: 2, desc: "Tăng 15% Cash nhận được sau mỗi trận thắng.", icon: "skill/thosantienthuong.png" },
+        "Bàn Tay May Mắn": { branch: "Chung", type: "passive", maxLv: 1, cost: 5, desc: "Tăng 10% tỷ lệ rớt đồ hiếm khi tiêu diệt Boss.", icon: "skill/bantaymayman.png" },
     
         // --- NHÁNH SÁT THỦ (TỐC ĐỘ / BẠO KÍCH) ---
         "Bước Chân Bóng Tối": { branch: "Sát Thủ", type: "passive", maxLv: 1, cost: 5, desc: "Có 10% cơ hội né tránh hoàn toàn đòn đánh.", icon: "skill/buochanbongtoi.png" },
