@@ -25,13 +25,27 @@
     <div id="loadingText">Connecting... 0%</div>
 </div>
     
-<div id="auth" style="text-align:center; padding: 50px 20px;">
-    <h2 style="font-size: 40px; text-shadow: 0 0 10px #00bfff;">CỔNG DỊ GIỚI ĐANG MỞ</h2>
-    <input id="username" placeholder="Tên thợ săn...">
-    <input id="password" type="password" placeholder="Mật mã...">
-    <br><br>
-    <button onclick="register()">ĐĂNG KÝ THỨC TỈNH</button>
-    <button onclick="login()">ĐĂNG NHẬP HỆ THỐNG</button>
+<div id="auth" class="auth-container">
+    <div class="auth-box sys-window">
+        <div class="auth-header">
+            <span class="symbol">⚠</span> SYSTEM REQUIREMENT <span class="symbol">⚠</span>
+        </div>
+        
+        <h2 class="auth-title">CỔNG DỊ GIỚI</h2>
+        <p class="auth-subtitle">Vui lòng xác thực danh tính Thợ Săn để tiến vào</p>
+        
+        <div class="auth-input-group">
+            <input id="username" class="auth-input" placeholder="Tên thợ săn..." autocomplete="off">
+        </div>
+        <div class="auth-input-group">
+            <input id="password" class="auth-input" type="password" placeholder="Mật mã xác thực...">
+        </div>
+        
+        <div class="auth-btn-group">
+            <button class="auth-btn btn-login" onclick="login()">ĐĂNG NHẬP HỆ THỐNG</button>
+            <button class="auth-btn btn-register" onclick="register()">THỨC TỈNH (ĐĂNG KÝ)</button>
+        </div>
+    </div>
 </div>
 
 <div class="wrapper hidden" id="gameWrap">
