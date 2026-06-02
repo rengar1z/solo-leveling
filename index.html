@@ -570,6 +570,13 @@
                                     <p style="font-size: 20px; color: #ccc;">Số ải: 1 | Boss: <span style="color: #DC143C; font-weight: bold;">Vua Thiết Huyết Tarnak</span></p>
                                     <button class="tab-btn btn-system" style="border-color: #8B0000; color: #DC143C !important; font-size: 24px;">TIẾN VÀO</button>
                                 </div>
+
+                                 <!-- HOÀNG ĐẾ HỦY DIỆT ANTARES (FINAL BOSS) -->
+                                <div class="dungeon-card" onclick="enterDungeon('monarch_dungeon_7')" style="background: linear-gradient(to bottom, #200000, #000000); border-color: #FF0000; margin-bottom: 0; box-shadow: 0 0 30px rgba(255, 0, 0, 0.8), inset 0 0 20px rgba(139, 0, 0, 0.5);">
+                                    <h3 style="color: #FF3333; text-shadow: 0 0 15px #FF0000, 0 0 30px #8B0000; letter-spacing: 3px;">7. LÃNH ĐỊA HỦY DIỆT (END GAME)</h3>
+                                    <p style="font-size: 20px; color: #ffcccc;">Số ải: 1 | Boss: <span style="color: #FF0000; font-weight: bold; text-shadow: 0 0 8px red;">Hoàng Đế Hủy Diệt Antares</span></p>
+                                    <button class="tab-btn btn-system" style="border-color: #FF0000; color: #FF3333 !important; font-size: 24px; box-shadow: inset 0 0 15px rgba(255, 0, 0, 0.4);"> KHIÊU CHIẾN QUÂN VƯƠNG</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1073,6 +1080,12 @@
             stages: [
                 { name: "BOSS: Vua Thiết Huyết Tarnak", hp: 3800000, atk: 9500, def: 2500, exp: 260000, img: "boss/Tarnak.png", isBoss: true, bossType: "tarnak", rareDrops: ["Sandstorm Cube", "Ma Thạch Cao Cấp"] }
             ]
+        },
+        "monarch_dungeon_7": {
+            name: "Lãnh Địa Hủy Diệt",
+            stages: [
+                { name: "BOSS: Hoàng Đế Hủy Diệt Antares", hp: 10000000, atk: 25000, def: 5000, exp: 360000, img: "boss/Antares.png", isBoss: true, bossType: "antares", rareDrops: ["Sandstorm Cube", "Ma Thạch Cao Cấp", "Lõi Ma Tinh"] }
+            ]
         }
     };
 
@@ -1168,6 +1181,13 @@
             skillName: "Khung Xương Kim Loại", 
             skillDesc: "Giảm 15% sát thương gánh chịu và bỏ qua 15% Giáp kẻ địch khi dùng Vật lý (STR).", 
             img: "boss/Tarnak.png", bio: "Hoàng đế của loài Humanoid. Thể xác kim loại của hắn cực kỳ cứng cáp và không thể bị phá hủy bởi các đòn tấn công thông thường." 
+        },
+        "antares": {
+            rank: "Monarch", name: "Hoàng Đế Hủy Diệt Antares",
+            str: 1000, vit: 500, agi: 100, int: 500,
+            skillName: "Hơi Thở Hủy Diệt",
+            skillDesc: "Tăng mạnh 25% toàn bộ sát thương đầu ra và giảm 15% sát thương gánh chịu.",
+            img: "boss/Antares.png", bio: "Vua của loài rồng, Quân Vương Hủy Diệt tối cao. Thực thể mạnh nhất dị giới mang ngọn lửa có thể thiêu rụi cả linh hồn."
         }
     };
     // --- DỮ LIỆU ITEM (ĐÃ THÊM RANK S, A, B, C, D) ---
@@ -2548,6 +2568,11 @@
                             <img src="effect/Attack_Increase_Effect.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px; box-shadow: 0 0 8px #8B0000;" alt="Rage">
                           </div>`;
             }
+            else if (enemy.bossType === "antares") {
+                eHTML += `<div class="status-icon" title="Long Vương Khải Huyền (ATK +40%, DEF +30%)">
+                            <img src="effect/Strorm_of_White_Flames_Effect.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px; box-shadow: 0 0 12px #FF0000;" alt="Rage">
+                          </div>`;
+            }
         }
         
         eBoard.innerHTML = eHTML;
@@ -2698,6 +2723,9 @@
                     eImgElement.src = enemy.img;
                 } else if(enemy.bossType === "tarnak") {
                     enemy.img = "boss/Rage_Tarnak.png"; 
+                    eImgElement.src = enemy.img;
+                } else if(enemy.bossType === "antares") {
+                    enemy.img = "boss/Rage_Antares.png"; 
                     eImgElement.src = enemy.img;
                 }
             }
@@ -3562,6 +3590,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         if (currentUser.equippedShadow === "baran") {
             finalDmg *= 1.15; 
         }
+        if (currentUser.equippedShadow === "antares") { finalDmg *= 1.25; }
         if (window.isPlayerBeastForm && window.isPlayerBeastForm > 0) {
             finalDmg *= 1.30; 
         }
@@ -4956,6 +4985,52 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 specialAttackLog = `<span style="color:#CD5C5C; font-weight:bold;">🚧 TƯỜNG THÉP ÉP XÁC!</span> Tarnak húc thẳng vào bạn bằng toàn bộ cơ thể đồ sộ! Nhận ${Math.floor(dmg)} ST và <span style="color:yellow;">[CHOÁNG VÁNG]</span>!`;
             }
         }
+
+        // 20. KỸ NĂNG CỦA HOÀNG ĐẾ HỦY DIỆT ANTARES (FINAL BOSS - END GAME)
+        if (isDungeonMode && enemy.bossType === "antares") {
+            let rand = Math.random(); 
+            
+            // --- GIAI ĐOẠN 2: CHÂN THỂ LONG VƯƠNG (Dưới 50% Máu) ---
+            if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasDragonForm) {
+                enemy.hasDragonForm = true;
+                if (!enemy.isEnraged) { 
+                    enemy.isEnraged = true; 
+                    enemy.atk = Math.floor(enemy.atk * 1.40); // Tăng bạo phát 40% ATK
+                }
+                enemy.def = Math.floor(enemy.def * 1.30); // Tăng mạnh 30% Thủ vĩnh viễn
+                
+                let shieldAmount = Math.floor(enemy.maxHp * 0.40); // Nhận lớp khiên Long Lân khổng lồ (4 triệu Khiên)
+                enemy.shieldHP = shieldAmount; 
+                
+                dmg = 0; isSpecialAttack = true;
+                specialAttackLog = `<span style="color:#FF0000; font-weight:bold; text-shadow: 0 0 15px #FF0000, 0 0 30px #FF4500;">🐉 CHÂN THỂ LONG VƯƠNG (LONG LÂN HỘ THỂ)!</span> Antares hóa giải hình dạng nhân loại, giải phóng thực thể Thần Rồng Khổng Lồ! Hắn bọc cơ thể trong <span style="color:#00ffff">${shieldAmount} Khiên Thần</span>, ATK tăng 40% và DEF tăng 30%!`;
+                
+                const eImgElement = document.getElementById(getPrefix() + 'e-img');
+                if (eImgElement) { eImgElement.classList.add('shake'); setTimeout(() => eImgElement.classList.remove('shake'), 1000); }
+            }
+            // --- BỘ CHIÊU THỨC CHỦ ĐỘNG ---
+            else if (rand <= 0.30) {
+                // Long Vương Thổ Tức - Dragon Breath
+                let rawDmg = enemyAtk * 3.0; 
+                dmg = Math.max(300, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; applyBleedToPlayer = true; // Gây hiệu ứng thiêu đốt liên tục (dùng hệ thống bleed)
+                specialAttackLog = `<span style="color:#FF4500; font-weight:bold; text-shadow: 0 0 8px #FF0000;">🔥 LONG VƯƠNG THỔ TỨC (DRAGON BREATH)!</span> Ngọn lửa hủy diệt nguyên thủy thiêu rụi toàn bộ tế bào của bạn! Gây ${Math.floor(dmg)} ST và khiến vết thương dính hiệu ứng <span style="color:#FF4500; font-weight:bold;">[THIÊU ĐỐT TRỌNG THƯƠNG]</span>!`;
+            } 
+            else if (rand <= 0.60) {
+                // Long Vương Trảo
+                let rawDmg = enemyAtk * 2.5; 
+                dmg = Math.max(200, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; effectArmorBreak = 4; // Phá hủy giáp nặng nề trong 4 lượt
+                specialAttackLog = `<span style="color:#8B0000; font-weight:bold;">⚔️ LONG VƯƠNG TRẢO!</span> Cú vát móng vuốt mang sức nặng của thần linh xé toạc không gian hư không, giáng thẳng xuống người bạn! Gây ${Math.floor(dmg)} ST và <span style="color:orange; font-weight:bold;">[PHÁ GIÁP]</span> trong 4 lượt!`;
+            }
+            else if (rand <= 0.85) {
+                // Tiếng Rống Diệt Thế
+                let rawDmg = enemyAtk * 2.0; 
+                dmg = Math.max(150, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; isPlayerStunned = true; effectVulnerability = 3; // Gây Choáng và Chấn Động tăng nhận ST
+                specialAttackLog = `<span style="color:#FF1493; font-weight:bold;">🔊 TIẾNG RỐNG DIỆT THẾ!</span> Sóng chấn động tột cùng làm vỡ vụn tâm trí và ý chí phản kháng! Bạn chịu ${Math.floor(dmg)} ST, dính trạng thái <span style="color:yellow;">[CHOÁNG VÁNG]</span> và <span style="color:#FF1493;">[CHẤN ĐỘNG SUY YẾU]</span>!`;
+            }
+        }
         
         // --- CƠ CHẾ KỸ NĂNG CỦA CÁC BOSS CỔNG ĐỎ ---
         if (currentRedGateId && enemy.isBoss) {
@@ -5151,6 +5226,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 if (currentUser.equippedShadow === "vulcan") dmg *= 0.88; 
                 if (currentUser.equippedShadow === "frost_monarch") dmg *= 0.90;
                 if (currentUser.equippedShadow === "tarnak") dmg *= 0.85;
+                if (currentUser.equippedShadow === "antares") dmg *= 0.85;
                 dmg = Math.floor(dmg);
 
                 triggerPlayerShake();
@@ -5515,9 +5591,36 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
             const shadowName = SHADOW_DATA[window.currentExtractTarget].name;
             alert(`🔥 TRÍCH XUẤT THÀNH CÔNG! Trỗi dậy đi, [${shadowName}]!`);
             logBattle(`<span style="color:#cc33ff; font-weight:bold; font-size: 18px; text-shadow: 0 0 10px #cc33ff;">Trích xuất thành công! ${shadowName} đã gia nhập Đội Quân Bóng Tối!</span>`);
-            if (window.currentExtractTarget === "beru") {
-                setTimeout(() => { logBattle(`<span style="color:#cc33ff; font-weight:bold; font-size: 20px; font-style:italic;">Beru: 'Thần... xin... quy... phục... Chủ nhân...'</span>`); }, 800);
+            
+            let target = window.currentExtractTarget;
+            let dialogLog = "";
+
+            if (target === "beru") {
+                dialogLog = `<span style="color:#cc33ff; font-weight:bold; font-size: 20px; font-style:italic;">Beru: 'Thần... xin... quy... phục... Chủ nhân...'</span>`;
+            } else if (target === "igris") {
+                dialogLog = `<span style="color:#cc0000; font-weight:bold; font-size: 20px; font-style:italic;">Igris quỳ xuống và dâng lên thanh kiếm: 'Chủ nhân... thanh kiếm này sẽ mãi mãi vung lên vì ngài.'</span>`;
+            } else if (target === "baran") {
+                dialogLog = `<span style="color:#ff3333; font-weight:bold; font-size: 20px; font-style:italic;">Vua Quỷ Baran: 'Sức mạnh của ngai vàng Bạch Cốt... giờ đây hoàn toàn thuộc về ngươi.'</span>`;
+            } else if (target === "rakan") {
+                dialogLog = `<span style="color:#ff6600; font-weight:bold; font-size: 20px; font-style:italic;">Rakan: 'Grrr... Bản năng hoang dã của ta đã tìm được một Kẻ Thống Trị mới! Hãy để ta xé xác kẻ thù cho ngài!'</span>`;
+            } else if (target === "frost_monarch") {
+                dialogLog = `<span style="color:#00ffff; font-weight:bold; font-size: 20px; font-style:italic;">Hoàng Đế Băng Sillad: 'Cái lạnh vĩnh cửu của ta... từ nay sẽ đóng băng mọi kẻ thù cản bước ngài.'</span>`;
+            } else if (target === "querehsha") {
+                dialogLog = `<span style="color:#33cc33; font-weight:bold; font-size: 20px; font-style:italic;">Querehsha: 'Fufufu... Đội quân ký sinh của ta sẽ không ngừng sinh sôi dưới bóng tối của ngài, thưa Lãnh chúa.'</span>`;
+            } else if (target === "legia") {
+                dialogLog = `<span style="color:#e67e22; font-weight:bold; font-size: 20px; font-style:italic;">Legia: 'Sức mạnh bẻ gãy cả bầu trời... giờ đây tuân theo ý chí của ngài!'</span>`;
+            } else if (target === "yogumunt") {
+                dialogLog = `<span style="color:#9932CC; font-weight:bold; font-size: 20px; font-style:italic;">Yogumunt: 'Không gian và thời gian... tất cả sẽ uốn cong theo mệnh lệnh từ bóng tối của ngài.'</span>`;
+            } else if (target === "tarnak") {
+                dialogLog = `<span style="color:#8B0000; font-weight:bold; font-size: 20px; font-style:italic;">Tarnak: 'Cương thể kim loại này sẽ là tấm khiên bất hoại cho Chủ nhân!'</span>`;
+            } else if (target === "antares") {
+                dialogLog = `<span style="color:#FF0000; font-weight:bold; font-size: 20px; font-style:italic; text-shadow: 0 0 5px #ff0000;">Antares: 'Dù có trở thành cái bóng... Ngọn lửa của ta vẫn sẽ thiêu rụi mọi thứ cản đường ngươi, hỡi Quân Vương Bóng Tối!'</span>`;
             }
+
+            if (dialogLog !== "") {
+                setTimeout(() => { logBattle(dialogLog); }, 800);
+            }
+
             await saveUserData();
             if(window.renderShadowArmy) window.renderShadowArmy();
         } else {
@@ -5526,7 +5629,6 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         }
         window.currentExtractTarget = null;
         
-        // Trích xuất xong thì gọi bảng Lên cấp (nếu có)
         if (window.pendingLevelUp) {
             showPopup(window.pendingLevelUp.oldJob, window.pendingLevelUp.newJob);
             window.pendingLevelUp = null;
@@ -5816,6 +5918,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 else if (dCurrentId === 'monarch_dungeon_4') bossWarning = `<span style="color:#e67e22; font-weight:bold;">Trọng lực khủng khiếp đè nát nội tạng, vết thương không thể khép miệng! (Bị giảm 30% Hồi Máu)</span>`;
                 else if (dCurrentId === 'monarch_dungeon_5') bossWarning = `<span style="color:#9932CC; font-weight:bold;">Không gian vặn vẹo khiến ma lực và sinh lực của bạn không thể lưu thông bình thường! (Bị giảm 30% Hồi Máu)</span>`;
                 else if (dCurrentId === 'monarch_dungeon_6') bossWarning = `<span style="color:#8B0000; font-weight:bold;">Không khí ngột ngạt sặc mùi rỉ sét cản trở khả năng tự tái tạo của cơ thể! (Bị giảm 30% Hồi Máu)</span>`;
+                else if (dCurrentId === 'monarch_dungeon_7') bossWarning = `<span style="color:#FF3300; font-weight:bold;">Hỏa Ngục Diệt Thế của Antares thiêu đốt vạn vật! Sức nóng khủng khiếp khiến năng lực trị thương suy giảm! (Bị giảm 30% Hồi Máu)</span>`;
                 logBattle(bossWarning);
             }, 1000);
         } else {
@@ -5908,6 +6011,10 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 case "tarnak":
                     bossWarning = `<span style="color:#8B0000; font-weight:bold; text-shadow: 0 0 10px #8B0000;">[CẢNH BÁO HOÀNG ĐẾ] VUA THIẾT HUYẾT TARNAK XUẤT HIỆN! Tiếng kim loại va đập vang dội khắp chiến trường!</span>`;
                     bossDialog = `<span style="color:#DC143C; font-style:italic; font-size: 22px;">Tarnak: 'Thân xác bằng thịt yếu ớt của ngươi sẽ bị nghiền nát dưới gót chân kim loại của ta!'</span>`;
+                    break;
+                case "antares":
+                    bossWarning = `<span style="color:#FF0000; font-weight:bold; text-shadow: 0 0 20px #FF0000, 0 0 40px #8B0000; letter-spacing: 2px;">[CẢNH BÁO TỐI CAO:] HOÀNG ĐẾ HỦY DIỆT ANTARES HÀNG LÂM! Thiên địa sụp đổ, ngọn lửa diệt thế đang nuốt chửng linh hồn bạn!</span>`;
+                    bossDialog = `<span style="color:#FF4500; font-style:italic; font-size: 24px; text-shadow: 0 0 5px #FF0000;">Antares: 'Kẻ kế thừa của Bóng Tối... Ngươi nghĩ thanh kiếm nhỏ bé đó có thể chạm tới Long Vương sao? Hãy tan thành tro bụi cùng thế giới này đi!'</span>`;
                     break;
             }
 
