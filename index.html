@@ -556,6 +556,20 @@
                                     <p style="font-size: 20px; color: #ccc;">Số ải: 1 | Boss: <span style="color: #e67e22; font-weight: bold;">Vua Khổng Lồ Legia</span></p>
                                     <button class="tab-btn btn-system" style="border-color: #e67e22; color: #e67e22 !important; font-size: 24px;">TIẾN VÀO</button>
                                 </div>
+
+                                <!-- VUA BIẾN DỊ YOGUMUNT -->
+                                <div class="dungeon-card" onclick="enterDungeon('monarch_dungeon_5')" style="background: rgba(40, 0, 40, 0.8); border-color: #9932CC; margin-bottom: 0; box-shadow: 0 0 20px rgba(153, 50, 204, 0.5);">
+                                    <h3 style="color: #BA55D3; text-shadow: 0 0 15px #800080;">5. KHE NỨT KHÔNG GIAN</h3>
+                                    <p style="font-size: 20px; color: #ccc;">Số ải: 1 | Boss: <span style="color: #BA55D3; font-weight: bold;">Vua Biến Dị Yogumunt</span></p>
+                                    <button class="tab-btn btn-system" style="border-color: #9932CC; color: #BA55D3 !important; font-size: 24px;">TIẾN VÀO</button>
+                                </div>
+                                
+                                <!-- VUA THIẾT HUYẾT TARNAK -->
+                                <div class="dungeon-card" onclick="enterDungeon('monarch_dungeon_6')" style="background: rgba(50, 10, 10, 0.8); border-color: #8B0000; margin-bottom: 0; box-shadow: 0 0 20px rgba(139, 0, 0, 0.5);">
+                                    <h3 style="color: #DC143C; text-shadow: 0 0 15px #8B0000;">6. THÀNH TRÌ KIM LOẠI</h3>
+                                    <p style="font-size: 20px; color: #ccc;">Số ải: 1 | Boss: <span style="color: #DC143C; font-weight: bold;">Vua Thiết Huyết Tarnak</span></p>
+                                    <button class="tab-btn btn-system" style="border-color: #8B0000; color: #DC143C !important; font-size: 24px;">TIẾN VÀO</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -721,7 +735,7 @@
         "bot/Boss_High_Orc_Spellmaster.png", "boss/Boss_Almighty_Shaman,_Kargalgan.png",
         "boss/Boss_The_Gatekeeper_of_Hell,_Cerberus.png", "boss/Boss_Avaricious_Vulcan.png",
         "boss/Boss_Soul_Shepherd_Metus.png", "boss/Boss_Baran_of_White_Flames.png", "boss/Legia.png", "boss/Rage_Legia.png", "boss/Rage_Querehsha.PNG", "boss/Querehsha.png",
-        "boss/Boss_Baran_the_Demon_King.png", "bot/Boss_1st_Gen._Fire_Ant_Leader.png",
+        "boss/Boss_Baran_the_Demon_King.png", "bot/Boss_1st_Gen._Fire_Ant_Leader.png", "boss/Yogumunt.png", "boss/Rage_Yogumunt.png", "boss/Tarnak.png", "boss/Rage_Tarnak.png",
         "bot/Boss_Purple_Blade_Camula.png", "bot/Boss_1st_Gen._White_Ant_Leader.png", "boss/Thomas_Andre.png", "boss/Rage_Thomas.png", "boss/Rage_Frost_Monarch.png", "boss/Rage_rakan.png",
         "boss/Boss_Queen_Ant.png", "boss/Boss_Ant_King.png", "boss/Rage_Ant_King.png", "boss/Rage_Igris.png", "boss/Beast_Monarch.png", "boss/Frost_Monarch.png",
         // Cores
@@ -1047,6 +1061,18 @@
             stages: [
                 { name: "BOSS: Vua Khổng Lồ Legia", hp: 4500000, atk: 12000, def: 2800, exp: 300000, img: "boss/Legia.png", isBoss: true, bossType: "legia", rareDrops: ["Sandstorm Cube", "Ma Thạch Cao Cấp"] }
             ]
+        },
+        "monarch_dungeon_5": {
+            name: "Khe Nứt Không Gian",
+            stages: [
+                { name: "BOSS: Vua Biến Dị Yogumunt", hp: 2800000, atk: 8500, def: 1800, exp: 180000, img: "boss/Yogumunt.png", isBoss: true, bossType: "yogumunt", rareDrops: ["Sandstorm Cube", "Ma Thạch Cao Cấp"] }
+            ]
+        },
+        "monarch_dungeon_6": {
+            name: "Thành Trì Kim Loại",
+            stages: [
+                { name: "BOSS: Vua Thiết Huyết Tarnak", hp: 3800000, atk: 9500, def: 2500, exp: 260000, img: "boss/Tarnak.png", isBoss: true, bossType: "tarnak", rareDrops: ["Sandstorm Cube", "Ma Thạch Cao Cấp"] }
+            ]
         }
     };
 
@@ -1128,6 +1154,20 @@
             skillDesc: "Bỏ qua 25% Giáp của kẻ địch trong mọi đòn đánh Vật Lý (STR).", 
             img: "boss/Legia.png", 
             bio: "Hoàng Đế Khởi Nguyên mang sức mạnh thể chất tiệm cận Vua Rồng. Cú đấm của hắn có thể làm vỡ nát các vì sao." 
+        },
+        "yogumunt": { 
+            rank: "Monarch", name: "Vua Biến Dị Yogumunt", 
+            str: 0, vit: 100, agi: 100, int: 500, 
+            skillName: "Thao Túng Không Gian", 
+            skillDesc: "Tăng 15% Tỷ lệ né tránh và 15% Sát thương Phép (INT).", 
+            img: "boss/Yogumunt.png", bio: "Kẻ cai trị không gian và sự biến dị. Sức mạnh ma thuật của hắn tạo ra những khe nứt nuốt chửng kẻ thù." 
+        },
+        "tarnak": { 
+            rank: "Monarch", name: "Vua Thiết Huyết Tarnak", 
+            str: 600, vit: 200, agi: 50, int: 0, 
+            skillName: "Khung Xương Kim Loại", 
+            skillDesc: "Giảm 15% sát thương gánh chịu và bỏ qua 15% Giáp kẻ địch khi dùng Vật lý (STR).", 
+            img: "boss/Tarnak.png", bio: "Hoàng đế của loài Humanoid. Thể xác kim loại của hắn cực kỳ cứng cáp và không thể bị phá hủy bởi các đòn tấn công thông thường." 
         }
     };
     // --- DỮ LIỆU ITEM (ĐÃ THÊM RANK S, A, B, C, D) ---
@@ -2498,6 +2538,16 @@
                             <img src="effect/Attack_Increase_Effect.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px; box-shadow: 0 0 8px #e67e22;" alt="Rage">
                           </div>`;
             }
+            else if (enemy.bossType === "yogumunt") {
+                eHTML += `<div class="status-icon" title="Thao Túng Không Gian (ATK +30%)">
+                            <img src="effect/Defense_Magic_Effect.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px; box-shadow: 0 0 8px #9932CC;" alt="Rage">
+                          </div>`;
+            }
+            else if (enemy.bossType === "tarnak") {
+                eHTML += `<div class="status-icon" title="Cương Thể Thiết Huyết (ATK +35%)">
+                            <img src="effect/Attack_Increase_Effect.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px; box-shadow: 0 0 8px #8B0000;" alt="Rage">
+                          </div>`;
+            }
         }
         
         eBoard.innerHTML = eHTML;
@@ -2642,6 +2692,12 @@
                     eImgElement.src = enemy.img;
                 } else if(enemy.bossType === "legia") {
                     enemy.img = "boss/Rage_Legia.png"; 
+                    eImgElement.src = enemy.img;
+                } else if(enemy.bossType === "yogumunt") {
+                    enemy.img = "boss/Rage_Yogumunt.png"; 
+                    eImgElement.src = enemy.img;
+                } else if(enemy.bossType === "tarnak") {
+                    enemy.img = "boss/Rage_Tarnak.png"; 
                     eImgElement.src = enemy.img;
                 }
             }
@@ -3380,6 +3436,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         if (config.stat === 'str' && currentUser.equippedShadow === "legia") {
             totalIgnoreDef += 0.25;
         }
+        if (config.stat === 'str' && currentUser.equippedShadow === "tarnak") { totalIgnoreDef += 0.15; }
         // BỔ SUNG: Nội tại Vũ khí Xuyên giáp
         if (config.stat === 'str' && currentUser.equipped && currentUser.equipped.weapon) {
             if (currentUser.equipped.weapon.name === "Dao găm kẻ giết hiệp sĩ") totalIgnoreDef += 0.10;
@@ -3486,6 +3543,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
             if (currentUser.skills["Lõi Ma Thuật"] > 0) finalDmg *= 1.25; 
             if (currentUser.equippedShadow === "kargalgan") finalDmg *= 1.20;
             if (currentUser.equippedShadow === "frost_monarch") finalDmg *= 1.20;
+            if (currentUser.equippedShadow === "yogumunt") finalDmg *= 1.15;
             let earring = currentUser.equipped.earring?.name;
             let necklace = currentUser.equipped.necklace?.name;
             
@@ -4820,6 +4878,84 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 specialAttackLog = `<span style="color:#ff9900; font-weight:bold;">⛓️ XIỀNG XÍCH MA LỰC!</span> Legia dùng chính xiềng xích từng trói buộc hắn quất nát cơ thể bạn! Nhận ${Math.floor(dmg)} ST, bị <span style="color:yellow;">[TRÓI/CHOÁNG]</span> và <span style="color:red;">[CHẢY MÁU]</span>!`;
             }
         }
+
+        // 18. KỸ NĂNG CỦA VUA BIẾN DỊ YOGUMUNT (Phép thuật, Không gian)
+        if (isDungeonMode && enemy.bossType === "yogumunt") {
+            let rand = Math.random(); 
+            
+            // Giai đoạn 2: Khống Chế Không Gian
+            if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasSpaceControl) {
+                enemy.hasSpaceControl = true;
+                if (!enemy.isEnraged) { enemy.isEnraged = true; enemy.atk = Math.floor(enemy.atk * 1.3); }
+                
+                let shieldAmount = Math.floor(enemy.maxHp * 0.35); 
+                enemy.shieldHP = shieldAmount; 
+                
+                dmg = 0; isSpecialAttack = true;
+                specialAttackLog = `<span style="color:#9932CC; font-weight:bold; text-shadow: 0 0 10px #9932CC;">🌌 KHỐNG CHẾ KHÔNG GIAN!</span> Yogumunt bẻ cong không gian xung quanh, tạo ra <span style="color:#00ffff">${shieldAmount} Khiên Ma Thuật</span>! Mọi đòn tấn công của hắn trở nên khó lường!`;
+                
+                const eImgElement = document.getElementById(getPrefix() + 'e-img');
+                if (eImgElement) { eImgElement.classList.add('shake'); setTimeout(() => eImgElement.classList.remove('shake'), 600); }
+            }
+            else if (rand <= 0.3) {
+                let rawDmg = enemyAtk * 1.8; 
+                dmg = Math.max(70, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; effectManaSteal = 100;
+                specialAttackLog = `<span style="color:#BA55D3; font-weight:bold;">🌀 VỰC THẲM KHÔNG GIAN!</span> Một khe nứt mở ra hút lấy ma lực của bạn! Gây ${Math.floor(dmg)} ST và <span style="color:blue;">[THIÊU ĐỐT 100 MP]</span>!`;
+            } 
+            else if (rand <= 0.6) {
+                let rawDmg = enemyAtk * 2.2; 
+                dmg = Math.max(90, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; isPlayerStunned = true; 
+                specialAttackLog = `<span style="color:#8A2BE2; font-weight:bold;">💠 NHÁT CHÉM CHIỀU KHÔNG GIAN!</span> Không gian bị cắt đứt! Lưỡi dao ma thuật giáng ${Math.floor(dmg)} ST, khiến bạn mất thăng bằng và <span style="color:yellow;">[CHOÁNG VÁNG]</span>!`;
+            }
+            else if (rand <= 0.8) {
+                let rawDmg = enemyAtk * 2.0; 
+                dmg = Math.max(80, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; effectArmorBreak = 3; 
+                specialAttackLog = `<span style="color:#DA70D6; font-weight:bold;">💥 ÁP LỰC ĐA CHIỀU!</span> Áp suất từ các chiều không gian đè nát phòng ngự của bạn! Nhận ${Math.floor(dmg)} ST và <span style="color:orange;">[PHÁ GIÁP]</span> 3 lượt!`;
+            }
+        }
+
+        // 19. KỸ NĂNG CỦA VUA THIẾT HUYẾT TARNAK (Sức mạnh thể chất, Cứng cáp)
+        if (isDungeonMode && enemy.bossType === "tarnak") {
+            let rand = Math.random(); 
+            
+            // Giai đoạn 2: Cương Thể Thiết Huyết
+            if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasIronBlood) {
+                enemy.hasIronBlood = true;
+                if (!enemy.isEnraged) { enemy.isEnraged = true; enemy.atk = Math.floor(enemy.atk * 1.35); } // Buff mạnh vật lý
+                
+                let healAmount = Math.floor(enemy.maxHp * 0.20);
+                enemy.hp = Math.min(enemy.maxHp, enemy.hp + healAmount);
+                let shieldAmount = Math.floor(enemy.maxHp * 0.40); // Khiên kim loại rất dày
+                enemy.shieldHP = shieldAmount; 
+                
+                dmg = 0; isSpecialAttack = true;
+                specialAttackLog = `<span style="color:#8B0000; font-weight:bold; text-shadow: 0 0 10px #8B0000;">⚙️ CƯƠNG THỂ THIẾT HUYẾT!</span> Cơ thể Tarnak tỏa ra ánh kim loại chói lòa! Hắn phục hồi <span style="color:#00ff00">${healAmount} HP</span>, kích hoạt <span style="color:#00ffff">${shieldAmount} Lớp Giáp Thép</span> và tăng vọt sát thương!`;
+                
+                const eImgElement = document.getElementById(getPrefix() + 'e-img');
+                if (eImgElement) { eImgElement.classList.add('shake'); setTimeout(() => eImgElement.classList.remove('shake'), 600); }
+            }
+            else if (rand <= 0.3) {
+                let rawDmg = enemyAtk * 2.5; 
+                dmg = Math.max(120, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; applyBleedToPlayer = true; 
+                specialAttackLog = `<span style="color:#DC143C; font-weight:bold;">🗡️ LƯỠI CƯA TÀN BẠO!</span> Cánh tay kim loại biến thành lưỡi cưa khổng lồ xé nát cơ thể bạn! Nhận ${Math.floor(dmg)} ST và bị <span style="color:red;">[CHẢY MÁU]</span> 2 lượt!`;
+            } 
+            else if (rand <= 0.6) {
+                let rawDmg = enemyAtk * 2.8; 
+                dmg = Math.max(150, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; effectArmorBreak = 4; 
+                specialAttackLog = `<span style="color:#B22222; font-weight:bold;">🔨 CHÙY SẮT HỦY DIỆT!</span> Một cú nện mang sức nặng ngàn tấn! Gây ${Math.floor(dmg)} ST kinh hoàng và <span style="color:orange;">[ĐẬP NÁT GIÁP]</span> trong 4 lượt tới!`;
+            }
+            else if (rand <= 0.8) {
+                let rawDmg = enemyAtk * 1.8; 
+                dmg = Math.max(90, Math.floor(rawDmg * (1 - vitDmgReduction))); 
+                isSpecialAttack = true; isPlayerStunned = true; 
+                specialAttackLog = `<span style="color:#CD5C5C; font-weight:bold;">🚧 TƯỜNG THÉP ÉP XÁC!</span> Tarnak húc thẳng vào bạn bằng toàn bộ cơ thể đồ sộ! Nhận ${Math.floor(dmg)} ST và <span style="color:yellow;">[CHOÁNG VÁNG]</span>!`;
+            }
+        }
         
         // --- CƠ CHẾ KỸ NĂNG CỦA CÁC BOSS CỔNG ĐỎ ---
         if (currentRedGateId && enemy.isBoss) {
@@ -4907,6 +5043,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         }
         if (currentUser.equippedShadow === "kasaka") dodgeChance += 0.05;
         if (currentUser.equippedShadow === "ice_king") dodgeChance += 0.10;
+        if (currentUser.equippedShadow === "yogumunt") dodgeChance += 0.15;
 
         // --- ÁP DỤNG BUFF TÀN SÁT (100% NÉ TRÁNH) ---
         if (window.stealthDodge) {
@@ -5011,6 +5148,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 if (currentUser.equippedShadow === "giant_spider") dmg *= 0.95; 
                 if (currentUser.equippedShadow === "vulcan") dmg *= 0.88; 
                 if (currentUser.equippedShadow === "frost_monarch") dmg *= 0.90;
+                if (currentUser.equippedShadow === "tarnak") dmg *= 0.85;
                 dmg = Math.floor(dmg);
 
                 triggerPlayerShake();
@@ -5670,10 +5808,12 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
             window.monarchHealingDebuff = true;
             setTimeout(() => {
                 let bossWarning = "";
-                if (dCurrentId === 'monarch_dungeon_1') bossWarning = `<span style="color:#ff3300; font-weight:bold;">🩸 Không gian Rừng Rậm ngập ngụa Sát khí của Vua Muôn Thú! Các vết thương rỉ máu không ngừng... (Bị giảm 30% Hồi Máu)</span>`;
-                else if (dCurrentId === 'monarch_dungeon_2') bossWarning = `<span style="color:#00ffff; font-weight:bold;">❄️ Bão tuyết Vĩnh Cửu làm đông đặc huyết mạch của bạn! (Bị giảm 30% Hồi Máu)</span>`;
-                else if (dCurrentId === 'monarch_dungeon_3') bossWarning = `<span style="color:#33cc33; font-weight:bold;">🪲 Chướng khí thối rữa từ Đầm Lầy ăn mòn sinh lực của bạn! (Bị giảm 30% Hồi Máu)</span>`;
-                else if (dCurrentId === 'monarch_dungeon_4') bossWarning = `<span style="color:#e67e22; font-weight:bold;">⛓️ Trọng lực khủng khiếp đè nát nội tạng, vết thương không thể khép miệng! (Bị giảm 30% Hồi Máu)</span>`;
+                if (dCurrentId === 'monarch_dungeon_1') bossWarning = `<span style="color:#ff3300; font-weight:bold;">Không gian Rừng Rậm ngập ngụa Sát khí của Vua Muôn Thú! Các vết thương rỉ máu không ngừng... (Bị giảm 30% Hồi Máu)</span>`;
+                else if (dCurrentId === 'monarch_dungeon_2') bossWarning = `<span style="color:#00ffff; font-weight:bold;">Bão tuyết Vĩnh Cửu làm đông đặc huyết mạch của bạn! (Bị giảm 30% Hồi Máu)</span>`;
+                else if (dCurrentId === 'monarch_dungeon_3') bossWarning = `<span style="color:#33cc33; font-weight:bold;">Chướng khí thối rữa từ Đầm Lầy ăn mòn sinh lực của bạn! (Bị giảm 30% Hồi Máu)</span>`;
+                else if (dCurrentId === 'monarch_dungeon_4') bossWarning = `<span style="color:#e67e22; font-weight:bold;">Trọng lực khủng khiếp đè nát nội tạng, vết thương không thể khép miệng! (Bị giảm 30% Hồi Máu)</span>`;
+                else if (dCurrentId === 'monarch_dungeon_5') bossWarning = `<span style="color:#9932CC; font-weight:bold;">Không gian vặn vẹo khiến ma lực và sinh lực của bạn không thể lưu thông bình thường! (Bị giảm 30% Hồi Máu)</span>`;
+                else if (dCurrentId === 'monarch_dungeon_6') bossWarning = `<span style="color:#8B0000; font-weight:bold;">Không khí ngột ngạt sặc mùi rỉ sét cản trở khả năng tự tái tạo của cơ thể! (Bị giảm 30% Hồi Máu)</span>`;
                 logBattle(bossWarning);
             }, 1000);
         } else {
@@ -5758,6 +5898,14 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 case "legia":
                     bossWarning = `<span style="color:#e67e22; font-weight:bold; text-shadow: 0 0 10px #e67e22;">[CẢNH BÁO HOÀNG ĐẾ] VUA KHỔNG LỒ LEGIA ĐÃ GIẬT ĐỨT XIỀNG XÍCH! Trọng lực bị bẻ cong hoàn toàn!</span>`;
                     bossDialog = `<span style="color:#cc6600; font-style:italic; font-size: 22px;">Legia: 'Kẻ Thống Trị đê tiện... Không, ngươi là con người? Bất kể là ai, ta cũng sẽ nghiền nát!'</span>`;
+                    break;
+                case "yogumunt":
+                    bossWarning = `<span style="color:#9932CC; font-weight:bold; text-shadow: 0 0 10px #9932CC;">[CẢNH BÁO HOÀNG ĐẾ] VUA BIẾN DỊ YOGUMUNT XUẤT HIỆN! Không gian xung quanh đang bị xé rách!</span>`;
+                    bossDialog = `<span style="color:#BA55D3; font-style:italic; font-size: 22px;">Yogumunt: 'Sức mạnh của ngươi... để ta phân tách và xem xét nó xem nào!'</span>`;
+                    break;
+                case "tarnak":
+                    bossWarning = `<span style="color:#8B0000; font-weight:bold; text-shadow: 0 0 10px #8B0000;">[CẢNH BÁO HOÀNG ĐẾ] VUA THIẾT HUYẾT TARNAK XUẤT HIỆN! Tiếng kim loại va đập vang dội khắp chiến trường!</span>`;
+                    bossDialog = `<span style="color:#DC143C; font-style:italic; font-size: 22px;">Tarnak: 'Thân xác bằng thịt yếu ớt của ngươi sẽ bị nghiền nát dưới gót chân kim loại của ta!'</span>`;
                     break;
             }
 
