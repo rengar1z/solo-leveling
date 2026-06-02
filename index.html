@@ -1976,6 +1976,7 @@
 
     window.equipTitle = async function(titleId) {
         if (!currentUser.unlockedTitles.includes(titleId)) return;
+        if(typeof playSound === 'function') playSound("audio/click.mp3");
         
         // === 1. CHẶN THAY DANH HIỆU TRONG CHIẾN ĐẤU ===
         if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
@@ -2090,7 +2091,7 @@
 
     // --- HÀM XỬ LÝ CLICK ĐÓNG/MỞ NHÁNH ---
     window.toggleSkillBranch = function(branchName) {
-    
+        if(typeof playSound === 'function') playSound("audio/click.mp3");
         let isOpening = !window.branchToggleState[branchName];
         
         for (let key in window.branchToggleState) {
@@ -2220,6 +2221,7 @@
     // --- LOGIC NÂNG CẤP SKILL KẾT HỢP KHÓA NHÁNH ---
     window.upgradeSkill = async function(e, name) {
         e.stopPropagation(); 
+        if(typeof playSound === 'function') playSound("audio/click.mp3");
         const data = skillData[name];
 
         let currentClass = null;
@@ -2256,8 +2258,8 @@
 
     window.upgradeStat = async function(e, statKey) {
         e.stopPropagation(); 
-
-        // LỚP BẢO VỆ: Cấm cộng điểm khi đang đối đầu quái vật còn sống
+        if(typeof playSound === 'function') playSound("audio/click.mp3");
+    
         if (enemy && enemy.hp > 0 && currentUser.hp > 0) {
             return alert("⚠️ HỆ THỐNG: Không thể phân bổ điểm tiềm năng trong lúc chiến đấu!");
         }
@@ -2401,6 +2403,8 @@
             alert("CẢNH BÁO: Cổng Đỏ đã phong ấn không gian! Bạn không thể thoát ra ngoài hoặc chuyển tab cho đến khi giết được Boss hoặc... tử trận!");
             return;
         }
+        
+        if(typeof playSound === 'function') playSound("audio/click.mp3");
     
         if (isDungeonMode && tabName !== 'tab-dungeon') {
             if (confirm("Bạn đang khiêu chiến Hầm Ngục! Rời tab lúc này đồng nghĩa với BỎ CUỘC và phải đi lại từ đầu. Chắc chắn thoát?")) {
@@ -3115,6 +3119,7 @@
 };
 
 window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
+    if (!isRefresh && typeof playSound === 'function') playSound("audio/click.mp3");
     let itemObj, itemData, originalIndex = null;
     if (isStacked) {
         originalIndex = currentUser.inventory.findIndex(i => i.name === identifier);
@@ -3159,6 +3164,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
 };
 
     window.selectEquippedItem = function(slot, isRefresh = false) {
+    if (!isRefresh && typeof playSound === 'function') playSound("audio/click.mp3");
     const itemObj = currentUser.equipped[slot];
     if (!itemObj) return;
 
@@ -5881,22 +5887,26 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
     }
 
     window.openDemonCastleMenu = function() {
+        if(typeof playSound === 'function') playSound("audio/click.mp3");
         document.getElementById('dungeonListArea').classList.add('hidden');
         document.getElementById('demonCastleArea').classList.remove('hidden');
     };
 
     window.closeDemonCastleMenu = function() {
+        if(typeof playSound === 'function') playSound("audio/click.mp3");
         document.getElementById('demonCastleArea').classList.add('hidden');
         document.getElementById('dungeonListArea').classList.remove('hidden');
     };
 
     window.openMonarchDungeonMenu = function() {
+        if(typeof playSound === 'function') playSound("audio/click.mp3");
         document.getElementById('dungeonListArea').classList.add('hidden');
         document.getElementById('demonCastleArea').classList.add('hidden');
         document.getElementById('monarchDungeonArea').classList.remove('hidden');
     };
 
     window.closeMonarchDungeonMenu = function() {
+        if(typeof playSound === 'function') playSound("audio/click.mp3");
         document.getElementById('monarchDungeonArea').classList.add('hidden');
         document.getElementById('dungeonListArea').classList.remove('hidden');
     };
@@ -6170,6 +6180,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
     window.selectedBagItemInfo = null;
     
     window.switchInvTab = function(tabName, btnElement) {
+        if(typeof playSound === 'function') playSound("audio/click.mp3");
         window.currentInvTab = tabName;
         const btns = document.querySelectorAll('.bag-side-btn');
         btns.forEach(btn => btn.classList.remove('active'));
