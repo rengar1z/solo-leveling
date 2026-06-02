@@ -5115,10 +5115,12 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                     let manaSteal = Math.min(currentUser.mp, effectManaSteal);
                     currentUser.mp -= manaSteal;
                     enemy.hp = Math.min(enemy.maxHp, enemy.hp + (manaSteal * 10));
-                    // Sửa câu của Kargalgan
+        
                     specialAttackLog = specialAttackLog.replace("hút cạn MP!", `hút cạn <span style="color:#00bfff">${manaSteal} MP</span>!`);
-                    // Sửa câu của Metus
+        
                     specialAttackLog = specialAttackLog.replace("[THIÊU ĐỐT 150 MP]", `[THIÊU ĐỐT <span style="color:#00bfff">${manaSteal} MP</span>]`);
+
+                    specialAttackLog = specialAttackLog.replace("[THIÊU ĐỐT 100 MP]", `[THIÊU ĐỐT <span style="color:#00bfff">${manaSteal} MP</span>]`);
                 }
                 if (effectLifeStealRate > 0) {
                     let healAmount = Math.floor(dmg * effectLifeStealRate);
