@@ -2148,43 +2148,49 @@
             margin-top: 30px;
         }
         
-        /* ================= ĐẶC QUYỀN SIZE ẢNH ================= */
+        /* ================= ĐẶC QUYỀN FRAME KHÔNG BỊ CẮT - FIT CHUẨN ẢNH GỐC ================= */
         .modern-avatar-frame {
-            background: rgba(0, 0, 0, 0.8);
-            border: 3px solid; /* Viền dày hơn */
+            background: radial-gradient(circle, rgba(10, 20, 40, 0.4) 0%, rgba(0, 0, 0, 0.8) 100%); /* Nền mờ huyền ảo làm nổi bật ảnh PNG trong suốt */
+            border: 3px solid;
             position: relative;
             flex-shrink: 0;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.9);
-            transform: skewX(-10deg);
-            overflow: hidden;
+            transform: skewX(-10deg); /* Giữ vát chéo Cyberpunk phong cách Arise */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; 
         }
         
-        /* Ảnh bên trong bự và tràn viền */
+        /* ẢNH GỐC: Hiển thị trọn vẹn 100% không mất một pixel nào */
         .modern-avatar-frame img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Lấp đầy khung */
-            object-position: top center;
-            transform: skewX(10deg) scale(1.15); /* Chống méo ảnh và zoom nhẹ lên cho ngầu */
+            height: 100% !important; /* Ép chiều cao lấp đầy khung */
+            width: auto !important;  /* Chiều rộng TỰ ĐỘNG co giãn theo đúng tỷ lệ của ảnh gốc */
+            object-fit: contain !important; /* Đảm bảo hình ảnh nằm trọn vẹn bên trong khung */
+            transform: skewX(10deg) scale(1); /* Khử skew để nhân vật không bị méo và giữ nguyên kích cỡ gốc */
             transition: all 0.3s ease;
         }
         
-        /* BOSS: Size Siêu To Khổng Lồ (Áp đảo) */
+        /* BOSS: Chiều cao vượt trội tạo cảm giác áp đảo, chiều rộng tự động ôm sát ảnh */
         .modern-enemy .modern-avatar-frame { 
-            width: 200px; 
-            height: 200px; 
+            height: 260px; /* Tăng chiều cao lên dạng thẻ đứng siêu ngầu */
+            width: auto;   /* Để trình duyệt tự tính toán độ rộng dựa trên ảnh gốc của Boss */
+            min-width: 150px; /* Độ rộng tối thiểu khi ảnh quá gầy */
+            max-width: 280px; /* Giới hạn độ rộng tối đa để không lấn át thanh máu */
             margin-left: 25px; 
             border-color: #ff4d4d; 
-            box-shadow: inset 0 0 25px rgba(255,77,77,0.4), 0 0 20px rgba(255,77,77,0.3); 
+            box-shadow: inset 0 0 20px rgba(255,77,77,0.3), 0 0 30px rgba(255,77,77,0.5); 
         }
         
-        /* PLAYER: Size To Vừa Phải (Nhanh nhẹn) */
+        /* PLAYER: Kích thước thon gọn hơn một chút, chuẩn góc nhìn thợ săn vượt cấp */
         .modern-player .modern-avatar-frame { 
-            width: 170px; 
-            height: 170px; 
+            height: 220px; /* Thẻ đứng cho người chơi */
+            width: auto;   /* Tự động ôm khít ảnh Sung Jin Woo */
+            min-width: 130px;
+            max-width: 240px;
             margin-right: 25px; 
             border-color: #00bfff; 
-            box-shadow: inset 0 0 25px rgba(0,191,255,0.4), 0 0 20px rgba(0,191,255,0.3); 
+            box-shadow: inset 0 0 20px rgba(0,191,255,0.3), 0 0 30px rgba(0,191,255,0.5); 
         }
         
         /* ================= GIAO DIỆN CHỈ SỐ CÂN XỨNG VỚI ẢNH ================= */
