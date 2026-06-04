@@ -2147,43 +2147,49 @@
             margin-top: 30px;
         }
 
-        /* ================= KHUNG AVATAR DẠNG GỐC (NHƯNG SIZE TO HOÀNH TRÁNG) ================= */
+        /* ================= KHUNG AVATAR: STYLE TRÀN VIỀN AURA (TRƯỜNG HỢP 1) ================= */
         .modern-avatar-frame {
-            width: 200px;  /* Tăng từ 140px lên 200px cho to rõ */
-            height: 200px; /* Tăng từ 140px lên 200px */
-            background: rgba(0, 0, 0, 0.8);
-            border: 3px solid; /* Tăng độ dày viền lên một chút cho ngầu */
-            border-radius: 12px; /* Bo góc cân xứng với size to, chuẩn gốc */
+            height: 240px; /* Chiều cao to, rõ, ngầu */
+            width: auto;   /* Chiều rộng tự động ôm sát theo từng ảnh Boss/Player */
+            min-width: 150px;
+            max-width: 320px;
+            background: transparent !important; /* Xóa nền đen */
+            border: none !important; /* Xóa viền vuông */
+            box-shadow: none !important; /* Xóa viền sáng của hộp */
+            padding: 0 !important;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end; /* Ép hình ảnh chạm đáy, tạo cảm giác đang đứng vững */
             position: relative;
-            flex-shrink: 0;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.8);
-            overflow: hidden; 
+            overflow: visible !important; /* Xóa giới hạn khung, cho phép cánh/vũ khí bung ra ngoài */
         }
         
-        /* ẢNH BÊN TRONG LẤP ĐẦY KHUNG */
         .modern-avatar-frame img {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: cover !important; /* Cắt ảnh vừa vặn với khung to */
-            object-position: top center;
+            height: 100% !important; /* Lấp đầy 100% chiều cao 240px */
+            width: auto !important;
+            object-fit: contain !important; /* Đảm bảo hiển thị trọn vẹn */
             filter: none; 
             transition: all 0.3s ease;
         }
         
-        /* KHUNG BOSS (Phe Địch) */
-        .modern-enemy .modern-avatar-frame { 
-            margin-left: 20px; 
-            border-color: #ff4d4d; 
-            box-shadow: 0 0 20px rgba(255, 77, 77, 0.4); 
+        /* --- Phe Địch (Boss) --- */
+        .modern-enemy .modern-avatar-frame {
+            margin-left: 15px; 
+        }
+        .modern-enemy .modern-avatar-frame img {
+            /* Hiệu ứng 1: Đổ bóng đen dưới mặt đất. Hiệu ứng 2: Aura đỏ ma mị ôm sát cơ thể Boss */
+            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.8)) drop-shadow(0 0 12px rgba(255, 77, 77, 0.6));
         }
         
-        /* KHUNG NGƯỜI CHƠI (Phe Ta) */
-        .modern-player .modern-avatar-frame { 
-            margin-right: 20px; 
-            border-color: #00bfff; 
-            box-shadow: 0 0 20px rgba(0, 191, 255, 0.4); 
+        /* --- Phe Ta (Sung Jin Woo) --- */
+        .modern-player .modern-avatar-frame {
+            margin-right: 15px; 
         }
-                
+        .modern-player .modern-avatar-frame img {
+            /* Hiệu ứng 1: Đổ bóng đen dưới mặt đất. Hiệu ứng 2: Aura xanh lam ôm sát cơ thể Sung Jin Woo */
+            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.8)) drop-shadow(0 0 12px rgba(0, 191, 255, 0.6));
+        }
+                        
         /* ================= GIAO DIỆN CHỈ SỐ CÂN XỨNG VỚI ẢNH ================= */
         .modern-info {
             flex: 1;
