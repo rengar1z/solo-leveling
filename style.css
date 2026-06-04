@@ -2153,7 +2153,7 @@
             height: 200px; /* Tăng từ 140px lên 200px */
             background: rgba(0, 0, 0, 0.8);
             border: 3px solid; /* Tăng độ dày viền lên một chút cho ngầu */
-            border-radius: 12px; /* Bo góc cân xứng với size to */
+            border-radius: 12px; /* Bo góc cân xứng với size to, chuẩn gốc */
             position: relative;
             flex-shrink: 0;
             box-shadow: 0 8px 25px rgba(0,0,0,0.8);
