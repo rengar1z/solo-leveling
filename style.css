@@ -2202,27 +2202,26 @@
         }
         
         .modern-name {
-            font-size: 32px; /* Chữ to hơn */
+            font-size: 32px; 
             font-weight: bold;
             font-family: 'Oswald', sans-serif;
             letter-spacing: 3px;
             text-transform: uppercase;
             margin-bottom: 8px;
-            font-style: italic;
+            font-style: normal; 
         }
-        
         .player-color { color: #00bfff; text-shadow: 0 0 10px rgba(0, 191, 255, 0.8); }
         .enemy-color { color: #ff4d4d; text-shadow: 0 0 10px rgba(255, 77, 77, 0.8); }
         
-        /* Thanh HP Dày dặn hơn */
         .modern-hp-track {
             width: 100%;
-            height: 26px; /* Thanh máu mập hơn */
+            height: 26px; 
             background: rgba(0, 0, 0, 0.8);
             border: 2px solid;
             position: relative;
-            transform: skewX(-15deg);
+            transform: none; 
             box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+            border-radius: 4px; */
         }
         
         .modern-player .modern-hp-track { border-color: #007acc; }
