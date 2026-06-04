@@ -612,45 +612,6 @@
         }
 
         /* ================= GIAO DIỆN CHIẾN ĐẤU (ARENA & DUNGEON) ================= */
-
-        .vs-text {
-            font-size: 60px !important;
-            font-weight: bold;
-            color: #ffcc00;
-            font-style: italic;
-            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff4d4d, 0 0 40px #ffcc00;
-        }
-
-        @keyframes pulseVS {
-            from { transform: scale(1); opacity: 0.8; }
-            to { transform: scale(1.1); opacity: 1; }
-        }
-
-        .combat-hp-track {
-            height: 18px !important;
-            background: rgba(0, 0, 0, 0.8) !important;
-            border: 2px solid #444;
-            border-radius: 10px;
-            margin: 15px 0 !important;
-            box-shadow: inset 0 0 10px #000;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .combat-hp-fill-player {
-            height: 100%;
-            background: linear-gradient(90deg, #0088ff, #00ffff) !important;
-            box-shadow: 0 0 15px #00ffff;
-            transition: width 0.4s ease-out;
-        }
-
-        .combat-hp-fill-enemy {
-            height: 100%;
-            background: linear-gradient(90deg, #cc0000, #ff4d4d) !important; 
-            box-shadow: 0 0 15px #ff4d4d;
-            transition: width 0.4s ease-out;
-        }
-                
         .combat-shield-bar {
             position: absolute;
             top: 0;
@@ -668,35 +629,6 @@
             font-weight: bold;
             letter-spacing: 1px;
             text-shadow: 0 0 8px #000, 0 0 15px rgba(0,0,0,0.8);
-        }
-
-        /* 4. Tân trang Nhật ký Chiến đấu (Battle Log) - Chữ to, dễ đọc, cuộn mượt */
-        #battleLog, #d-battleLog {
-            height: 180px !important;
-            background: linear-gradient(to bottom, rgba(0, 10, 30, 0.9), rgba(0, 0, 10, 0.95)) !important;
-            border: 2px solid rgba(0, 191, 255, 0.4) !important;
-            border-radius: 8px;
-            box-shadow: inset 0 0 20px rgba(0, 191, 255, 0.1);
-            margin-top: 20px !important;
-            padding: 15px 20px !important;
-            font-size: 18px !important;
-            line-height: 1.6;
-            color: #e0e0e0 !important;
-            font-family: 'Oswald', sans-serif !important;
-            overflow-y: auto;
-        }
-
-        #battleLog::-webkit-scrollbar, #d-battleLog::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        #battleLog::-webkit-scrollbar-track, #d-battleLog::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.5);
-        }
-
-        #battleLog::-webkit-scrollbar-thumb, #d-battleLog::-webkit-scrollbar-thumb {
-            background: #00bfff;
-            border-radius: 4px;
         }
 
         /* --- CSS CHO KHAY HIỆU ỨNG (BUFF/DEBUFF) --- */
@@ -1244,83 +1176,6 @@
             0% { background-position: 0% center; }
             100% { background-position: 200% center; }
         }
-
-        /* ================= NÂNG CẤP KHÔNG GIAN CHIẾN ĐẤU (BOSS ROOM) ================= */
-        .combat-stage {
-            background: radial-gradient(circle at center, rgba(30, 0, 0, 0.7) 0%, rgba(5, 5, 10, 0.95) 100%);
-            border: 2px solid #ff3333;
-            border-radius: 10px;
-            padding: 30px 20px;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.15), inset 0 0 50px rgba(0, 0, 0, 0.8);
-            margin-bottom: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        /* Thêm tia sét/sương mù mờ ảo sau lưng */
-        .combat-stage::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1), rgba(0,0,0,0.1) 2px, transparent 2px, transparent 4px);
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        /* Bố cục 2 bên mặt đối mặt */
-        .combat-entities {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .combat-entity {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 38%;
-        }
-        
-        /* Khung Avatar Nhân vật & Quái vật */
-        .combat-avatar-frame {
-            width: 140px;
-            height: 140px;
-            border-radius: 10px; /* Bỏ tròn, dùng góc bo nhẹ cho mạnh mẽ */
-            border: 2px solid;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.8);
-            position: relative;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-        
-        .combat-avatar-frame img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            filter: drop-shadow(0 0 8px currentColor);
-        }
-        
-        .enemy-entity {
-            color: #ff4d4d;
-        }
-        .enemy-entity .combat-avatar-frame {
-            border-color: #ff4d4d;
-            box-shadow: inset 0 0 20px rgba(255, 77, 77, 0.3), 0 0 20px rgba(255, 77, 77, 0.2);
-        }
-        .player-entity {
-            color: #00bfff;
-        }
-        .player-entity .combat-avatar-frame {
-            border-color: #00bfff;
-            box-shadow: inset 0 0 20px rgba(0, 191, 255, 0.3), 0 0 20px rgba(0, 191, 255, 0.2);
-        }
-        
         
         @keyframes floatMonster {
             0%, 100% { transform: translateY(0); }
