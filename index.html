@@ -1658,7 +1658,7 @@
         await set(ref(db, 'users/' + currentUser.username), currentUser);
         render();
 
-        if (window.selectedShopItemKey) window.selectShopItem(window.selectedShopItemKey);
+        if (window.selectedShopItemKey) window.selectShopItem(window.selectedShopItemKey, true);
     };
     
     // ================= XỬ LÝ TỦ ĐỒ (COSTUME) =================
@@ -1698,13 +1698,17 @@
             }
 
             currentUser.ownedCostumes.push(itemId);
+            
+            if (typeof playSound === 'function') {
+                playSound("audio/buy_item.mp3"); 
+            }
+            
             alert(`Đã sở hữu [${shopItem.name}] thành công! Bấm MẶC TRANG PHỤC để sử dụng.`);
             
             await set(ref(db, 'users/' + currentUser.username), currentUser);
             render();
 
-            // CHÈN UPDATE GIAO DIỆN VÀO TRƯỚC KHI RETURN
-            if (window.selectedShopItemKey) window.selectShopItem(window.selectedShopItemKey);
+            if (window.selectedShopItemKey) window.selectShopItem(window.selectedShopItemKey, true);
             if (window.renderShopGrid) window.renderShopGrid();
             return; 
         }
