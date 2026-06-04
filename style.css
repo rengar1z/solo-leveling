@@ -2229,3 +2229,158 @@
             transform: scale(1.03);
             box-shadow: inset 0 0 15px rgba(0, 191, 255, 0.5);
         }
+
+        /* ================= GIAO DIỆN CHIẾN ĐẤU HIỆN ĐẠI (ARISE STYLE) ================= */
+.combat-stage {
+    background: radial-gradient(circle at center, rgba(15, 20, 30, 0.9) 0%, rgba(5, 5, 10, 1) 100%) !important;
+    border: 2px solid rgba(0, 191, 255, 0.3) !important;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.9) !important;
+    padding: 0 !important;
+    min-height: 380px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.modern-layout {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    margin-bottom: 0 !important;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Chữ VS chìm dưới nền */
+.modern-vs-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) skewX(-15deg);
+    font-size: 150px;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.03);
+    font-style: italic;
+    pointer-events: none;
+    z-index: 0;
+    letter-spacing: 10px;
+}
+
+/* Khối chung cho Player và Enemy */
+.modern-entity {
+    display: flex;
+    align-items: center;
+    z-index: 2;
+    width: 75%;
+}
+
+/* Kẻ địch (Góc trên bên phải) */
+.modern-enemy {
+    align-self: flex-end;
+    justify-content: flex-end;
+    text-align: right;
+    margin-bottom: 30px;
+}
+
+/* Người chơi (Góc dưới bên trái) */
+.modern-player {
+    align-self: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    margin-top: 20px;
+}
+
+/* Khung Avatar Vát Chéo */
+.modern-avatar-frame {
+    width: 110px;
+    height: 110px;
+    background: #000;
+    border: 2px solid;
+    position: relative;
+    flex-shrink: 0;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+    transform: skewX(-10deg); /* Vát khung */
+    overflow: hidden;
+}
+
+.modern-avatar-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    transform: skewX(10deg) scale(1.1); /* Dựng ngược lại ảnh bên trong cho không bị méo */
+}
+
+.modern-player .modern-avatar-frame { margin-right: 20px; border-color: #00bfff; box-shadow: inset 0 0 15px rgba(0,191,255,0.4), 0 0 15px rgba(0,191,255,0.2); }
+.modern-enemy .modern-avatar-frame { margin-left: 20px; border-color: #ff4d4d; box-shadow: inset 0 0 15px rgba(255,77,77,0.4), 0 0 15px rgba(255,77,77,0.2); }
+
+/* Vùng Thông tin (Tên + HP) */
+.modern-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.modern-name {
+    font-size: 24px;
+    font-weight: bold;
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    font-style: italic;
+}
+
+.player-color { color: #00bfff; text-shadow: 0 0 8px rgba(0, 191, 255, 0.6); }
+.enemy-color { color: #ff4d4d; text-shadow: 0 0 8px rgba(255, 77, 77, 0.6); }
+
+/* Thanh HP Vát Chéo Tốc Độ */
+.modern-hp-track {
+    width: 100%;
+    height: 22px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid;
+    position: relative;
+    transform: skewX(-15deg);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.modern-player .modern-hp-track { border-color: #007acc; }
+.modern-enemy .modern-hp-track { border-color: #cc0000; }
+
+.modern-hp-fill {
+    height: 100%;
+    transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.player-fill { background: linear-gradient(90deg, #0088ff, #00ffff); box-shadow: inset 0 0 10px #00ffff; }
+.enemy-fill { background: linear-gradient(90deg, #cc0000, #ff4d4d); box-shadow: inset 0 0 10px #ff4d4d; }
+
+.modern-hp-text {
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    margin-top: 4px;
+    font-family: sans-serif;
+}
+
+/* Sửa lại thanh giáp ảo (Shield) cho hợp với thanh vát chéo */
+.modern-hp-track .combat-shield-bar {
+    transform: none; /* Khung cha đã skew, không cần skew lại */
+    background: linear-gradient(180deg, #ffffff 0%, #c4cbd4 100%) !important;
+}
+
+/* Bảng Buff/Debuff dàn ngang */
+.modern-player .status-board { justify-content: flex-start; margin-top: 8px; }
+.modern-enemy .status-board { justify-content: flex-end; margin-top: 8px; }
+
+/* Khay Action Controls ghim xuống dưới cùng */
+.modern-action-controls {
+    background: rgba(0, 5, 10, 0.95);
+    border-top: 1px solid rgba(0, 191, 255, 0.3);
+    padding: 15px 20px;
+    position: relative;
+    z-index: 10;
+}
