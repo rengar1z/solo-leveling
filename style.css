@@ -596,21 +596,25 @@
         /* --- HIỆU ỨNG RAGE MODE (KHÔNG CẦN ĐỔI ẢNH) --- */
         @keyframes rageAuraPulsate {
             0% { 
-                filter: drop-shadow(0 0 15px #ff0000) sepia(0.5) saturate(2) hue-rotate(-15deg); 
+                /* Giữ lại bóng dưới chân + thêm hào quang đỏ thẫm ôm sát cơ thể */
+                filter: drop-shadow(0 15px 15px rgba(0,0,0,0.8)) drop-shadow(0 0 20px #ff0000) sepia(0.3) saturate(1.5) hue-rotate(-10deg); 
                 transform: scale(1.02); 
             }
             100% { 
-                filter: drop-shadow(0 0 35px #ff0000) drop-shadow(0 0 20px #ff4d4d) sepia(0.8) saturate(3) hue-rotate(-25deg); 
+                /* Hào quang bùng nổ mạnh hơn */
+                filter: drop-shadow(0 15px 15px rgba(0,0,0,0.8)) drop-shadow(0 0 40px #ff0000) drop-shadow(0 0 25px #ff4d4d) sepia(0.6) saturate(2) hue-rotate(-20deg); 
                 transform: scale(1.08); 
             }
         }
 
-        .boss-enraged-img {
-            animation: rageAuraPulsate 0.6s infinite alternate !important;
-            border-color: #ff0000 !important;
-            box-shadow: inset 0 0 20px rgba(255, 0, 0, 0.5), 0 0 20px rgba(255, 0, 0, 0.5) !important;
-        }
-
+.boss-enraged-img {
+    animation: rageAuraPulsate 0.6s infinite alternate !important;
+    /* Ép xóa toàn bộ viền vuông và box-shadow gây lỗi */
+    box-shadow: none !important;
+    border: none !important;
+    outline: none !important;
+    border-color: transparent !important;
+}
         /* ================= GIAO DIỆN CHIẾN ĐẤU (ARENA & DUNGEON) ================= */
         .combat-shield-bar {
             position: absolute;
