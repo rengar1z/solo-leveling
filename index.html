@@ -1639,6 +1639,10 @@
             }
             currentUser.cash -= item.price;
         }
+
+        if (typeof playSound === 'function') {
+            playSound("audio/buy_item.mp3"); 
+        }
     
         if (item.type === "skill") {
             if (currentUser.skills[item.skillName] > 0) {
