@@ -6304,7 +6304,7 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
             }
         };
     
-        window.selectShopItem = function(key) {
+        window.selectShopItem = function(key, isRefresh = false) {
             playSound("audio/click.mp3"); // Âm thanh khi nhấp vào món đồ
             window.selectedShopItemKey = key;
             const shopItem = SHOP_DATA[key];
