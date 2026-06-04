@@ -2147,16 +2147,16 @@
             margin-top: 30px;
         }
 
-        /* ================= KHUNG AVATAR VỀ LẠI DẠNG GỐC CƠ BẢN ================= */
+        /* ================= KHUNG AVATAR DẠNG GỐC (NHƯNG SIZE TO HOÀNH TRÁNG) ================= */
         .modern-avatar-frame {
-            width: 140px;
-            height: 140px;
+            width: 200px;  /* Tăng từ 140px lên 200px cho to rõ */
+            height: 200px; /* Tăng từ 140px lên 200px */
             background: rgba(0, 0, 0, 0.8);
-            border: 2px solid;
-            border-radius: 10px; /* Trả lại bo góc vuông vức y như giao diện gốc */
+            border: 3px solid; /* Tăng độ dày viền lên một chút cho ngầu */
+            border-radius: 12px; /* Bo góc cân xứng với size to */
             position: relative;
             flex-shrink: 0;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.8);
             overflow: hidden; 
         }
         
@@ -2164,23 +2164,24 @@
         .modern-avatar-frame img {
             width: 100% !important;
             height: 100% !important;
-            object-fit: cover !important; /* Cắt ảnh vừa vặn với khung 140x140 */
+            object-fit: cover !important; /* Cắt ảnh vừa vặn với khung to */
             object-position: top center;
-            filter: none; /* Xóa hiệu ứng phát sáng ôm sát nhân vật */
+            filter: none; 
+            transition: all 0.3s ease;
         }
         
         /* KHUNG BOSS (Phe Địch) */
         .modern-enemy .modern-avatar-frame { 
             margin-left: 20px; 
             border-color: #ff4d4d; 
-            box-shadow: 0 0 15px rgba(255, 77, 77, 0.4); 
+            box-shadow: 0 0 20px rgba(255, 77, 77, 0.4); 
         }
         
         /* KHUNG NGƯỜI CHƠI (Phe Ta) */
         .modern-player .modern-avatar-frame { 
             margin-right: 20px; 
             border-color: #00bfff; 
-            box-shadow: 0 0 15px rgba(0, 191, 255, 0.4); 
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.4); 
         }
                 
         /* ================= GIAO DIỆN CHỈ SỐ CÂN XỨNG VỚI ẢNH ================= */
