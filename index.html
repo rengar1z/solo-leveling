@@ -2787,9 +2787,9 @@
         if (isCounterSkill && window.counterCooldown && window.counterCooldown > 0) isLocked = true; 
         if (isTanSatSkill && window.tanSatCooldown && window.tanSatCooldown > 0) isLocked = true;
         
-        if (isLocked) {
+        if (isLocked || !isMyTurn) { 
             if (btn.style.cursor !== "not-allowed") {
-                btn.style.filter = "grayscale(1) brightness(0.5)"; 
+                btn.style.filter = "grayscale(1) brightness(0.4)"; // Hạ brightness xuống 0.4 cho tối hẳn
                 btn.style.cursor = "not-allowed";
                 btn.style.pointerEvents = "none"; 
             }
