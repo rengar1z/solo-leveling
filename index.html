@@ -6789,59 +6789,59 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         };
         
         window.executeEnhance = async function() {
-            if (window.selectedForgeItemIndex === null) return alert("Vui lòng chọn trang bị để cường hóa!");
-            
-            // --- [BỔ SUNG 1]: CHẶN SPAM CLICK NẾU ĐANG RÈN DỞ ---
-            const enhanceBtn = document.querySelector('#forgeInfo button');
-            if (enhanceBtn && enhanceBtn.disabled) return; 
+        if (window.selectedForgeItemIndex === null) return alert("Vui lòng chọn trang bị để cường hóa!");
+        
+        // --- [BỔ SUNG 1]: CHẶN SPAM CLICK NẾU ĐANG RÈN DỞ ---
+        const enhanceBtn = document.querySelector('#forgeInfo button');
+        if (enhanceBtn && enhanceBtn.disabled) return; 
     
-            const index = window.selectedForgeItemIndex;
-            const itemObj = currentUser.inventory[index];
-            let level = itemObj.enhanceLevel || 0;
-        
-            if (level >= 10) return alert("Trang bị đã đạt cấp bậc tối đa (+10)!");
-        
-            let cashCost = 1000 + (level * 1500);
-            
-            let gemName = "Ma Thạch Cấp Thấp";
-            let gemCost = level + 1;
-            
-            if (level >= 3 && level <= 5) {
-                gemName = "Ma Thạch Trung Cấp";
-                gemCost = level - 2;
-            } else if (level >= 6) {
-                gemName = "Ma Thạch Cao Cấp";
-                gemCost = level - 5;
-            }
-            
-            if (currentUser.cash < cashCost) return alert(`Không đủ tiền! Cần ${cashCost} Cash.`);
-            
-            const gemIndex = currentUser.inventory.findIndex(i => i.name === gemName);
-            if (gemIndex === -1 || (currentUser.inventory[gemIndex].quantity || 1) < gemCost) {
-                return alert(`Hệ thống: Không đủ vật liệu! Bạn cần ${gemCost} viên [${gemName}]. Hãy đánh Boss Hầm Ngục để thu thập nhé!`);
-            }
+        const index = window.selectedForgeItemIndex;
+        const itemObj = currentUser.inventory[index];
+        let level = itemObj.enhanceLevel || 0;
     
-            if (enhanceBtn) {
-                enhanceBtn.disabled = true;
-                enhanceBtn.style.filter = "grayscale(1)";
-                enhanceBtn.style.cursor = "not-allowed";
-                enhanceBtn.innerText = "ĐANG RÈN...";
-            }
+        if (level >= 10) return alert("Trang bị đã đạt cấp bậc tối đa (+10)!");
     
-            currentUser.cash -= cashCost;
-            if (currentUser.inventory[gemIndex].quantity > gemCost) {
-                currentUser.inventory[gemIndex].quantity -= gemCost;
-            } else {
-                currentUser.inventory.splice(gemIndex, 1);
-                if (gemIndex < index) window.selectedForgeItemIndex--;
-            }
+        let cashCost = 1000 + (level * 1500);
         
-            let rate = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10][level];
-            let isSuccess = (Math.random() * 100) <= rate;
+        let gemName = "Ma Thạch Cấp Thấp";
+        let gemCost = level + 1;
         
-            const station = document.getElementById('forgeStation');
+        if (level >= 3 && level <= 5) {
+            gemName = "Ma Thạch Trung Cấp";
+            gemCost = level - 2;
+        } else if (level >= 6) {
+            gemName = "Ma Thạch Cao Cấp";
+            gemCost = level - 5;
+        }
         
-            if (isSuccess) {
+        if (currentUser.cash < cashCost) return alert(`Không đủ tiền! Cần ${cashCost} Cash.`);
+        
+        const gemIndex = currentUser.inventory.findIndex(i => i.name === gemName);
+        if (gemIndex === -1 || (currentUser.inventory[gemIndex].quantity || 1) < gemCost) {
+            return alert(`Hệ thống: Không đủ vật liệu! Bạn cần ${gemCost} viên [${gemName}]. Hãy đánh Boss Hầm Ngục để thu thập nhé!`);
+        }
+    
+        if (enhanceBtn) {
+            enhanceBtn.disabled = true;
+            enhanceBtn.style.filter = "grayscale(1)";
+            enhanceBtn.style.cursor = "not-allowed";
+            enhanceBtn.innerText = "ĐANG RÈN...";
+        }
+    
+        currentUser.cash -= cashCost;
+        if (currentUser.inventory[gemIndex].quantity > gemCost) {
+            currentUser.inventory[gemIndex].quantity -= gemCost;
+        } else {
+            currentUser.inventory.splice(gemIndex, 1);
+            if (gemIndex < index) window.selectedForgeItemIndex--;
+        }
+    
+        let rate = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10][level];
+        let isSuccess = (Math.random() * 100) <= rate;
+    
+        const station = document.getElementById('forgeStation');
+    
+        if (isSuccess) {
             playSound("audio/forge_item.mp3"); 
             itemObj.enhanceLevel = level + 1;
             
@@ -6851,10 +6851,11 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
             if (itemObj.agi > 0) itemObj.agi += Math.max(2, Math.floor(itemObj.agi * 0.1));
             if (itemObj.mp > 0) itemObj.mp += Math.max(10, Math.floor(itemObj.mp * 0.1));
     
+            // ================= GIAO DIỆN GUNNY LÚC THÀNH CÔNG =================
             station.innerHTML = `
-                <img src="${ITEM_DATA[itemObj.name].img}" style="width: 100px; height: 100px; object-fit: contain; animation: smoothItemGlow 0.6s forwards; z-index: 10;">
-                <div class="smooth-success-text">SUCCESS!</div>
-                <div style="position: absolute; top: -10px; right: -10px; color: #ffcc00; font-size: 26px; font-weight: bold; font-family: 'Oswald', sans-serif; text-shadow: 0 0 10px gold, 2px 2px 0 #000; animation: smoothSuccessPop 0.4s 0.2s both; z-index: 25;">
+                <img src="${ITEM_DATA[itemObj.name].img}" class="item-success" style="width: 100px; height: 100px; object-fit: contain; z-index: 10;">
+                <div class="gunny-msg gunny-success">THÀNH CÔNG!</div>
+                <div style="position: absolute; top: -10px; right: -10px; color: #ffcc00; font-size: 26px; font-weight: bold; font-family: 'Oswald', sans-serif; text-shadow: 0 0 10px gold, 2px 2px 0 #000; animation: gunnyPopUp 1.5s both; z-index: 25;">
                     +${itemObj.enhanceLevel}
                 </div>
             `;
@@ -6864,13 +6865,15 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 selectForgeItem(window.selectedForgeItemIndex);
                 renderForgeList();
                 render();
-            }, 1200);
+            }, 1500); // Chờ 1.5s cho chạy xong animation Gunny
         } else {
     
             playSound("audio/failed.mp3"); 
+            
+            // ================= GIAO DIỆN GUNNY LÚC THẤT BẠI =================
             station.innerHTML = `
-                <img src="${ITEM_DATA[itemObj.name].img}" style="width: 100px; height: 100px; object-fit: contain; animation: smoothFailFade 0.4s forwards; z-index: 10;">
-                <div class="smooth-fail-text">FAILED</div>
+                <img src="${ITEM_DATA[itemObj.name].img}" class="item-fail" style="width: 100px; height: 100px; object-fit: contain; z-index: 10;">
+                <div class="gunny-msg gunny-fail">THẤT BẠI!</div>
             `;
             station.classList.remove('forge-active');
             
@@ -6879,71 +6882,73 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
                 selectForgeItem(window.selectedForgeItemIndex);
                 renderForgeList();
                 render();
-            }, 1000); 
+            }, 1200); 
         }
     };
     
-        window.executeSocket = async function(gemName) {
-            if (window.selectedForgeItemIndex === null) return alert("Vui lòng chọn trang bị để khảm!");
+    window.executeSocket = async function(gemName) {
+        if (window.selectedForgeItemIndex === null) return alert("Vui lòng chọn trang bị để khảm!");
     
-            const index = window.selectedForgeItemIndex;
-            const itemObj = currentUser.inventory[index];
-            
-            if (!itemObj.sockets) itemObj.sockets = [];
-            if (itemObj.sockets.length >= 3) return alert("Trang bị này đã đục tối đa 3 lỗ!");
+        const index = window.selectedForgeItemIndex;
+        const itemObj = currentUser.inventory[index];
+        
+        if (!itemObj.sockets) itemObj.sockets = [];
+        if (itemObj.sockets.length >= 3) return alert("Trang bị này đã đục tối đa 3 lỗ!");
     
-            let cashCost = 5000;
-            if (currentUser.cash < cashCost) return alert(`Không đủ tiền! Cần ${cashCost} Cash để đục lỗ.`);
-            
-            // KIỂM TRA ĐÚNG LOẠI LÕI ĐƯỢC CHỌN
-            const gemIndex = currentUser.inventory.findIndex(i => i.name === gemName);
-            if (gemIndex === -1) return alert(`Không tìm thấy [${gemName}] trong túi!`);
+        let cashCost = 5000;
+        if (currentUser.cash < cashCost) return alert(`Không đủ tiền! Cần ${cashCost} Cash để đục lỗ.`);
+        
+        // KIỂM TRA ĐÚNG LOẠI LÕI ĐƯỢC CHỌN
+        const gemIndex = currentUser.inventory.findIndex(i => i.name === gemName);
+        if (gemIndex === -1) return alert(`Không tìm thấy [${gemName}] trong túi!`);
     
-            // XÓA LIST NÚT VÀ HIỆN CHỮ ĐANG KHẢM
-            const container = document.getElementById('socketBtnContainer');
-            if (container) {
-                container.innerHTML = `<button class="gacha-btn-system" style="width: 100%; margin-top: 15px; background: #444; filter: grayscale(1); cursor: not-allowed;" disabled>ĐANG KHẢM...</button>`;
-            }
+        // XÓA LIST NÚT VÀ HIỆN CHỮ ĐANG KHẢM
+        const container = document.getElementById('socketBtnContainer');
+        if (container) {
+            container.innerHTML = `<button class="gacha-btn-system" style="width: 100%; margin-top: 15px; background: #444; filter: grayscale(1); cursor: not-allowed;" disabled>ĐANG KHẢM...</button>`;
+        }
     
-            // TRỪ TÀI NGUYÊN
-            currentUser.cash -= cashCost;
-            if (currentUser.inventory[gemIndex].quantity > 1) {
-                currentUser.inventory[gemIndex].quantity--;
-            } else {
-                currentUser.inventory.splice(gemIndex, 1);
-                if (gemIndex < index) window.selectedForgeItemIndex--;
-            }
+        // TRỪ TÀI NGUYÊN
+        currentUser.cash -= cashCost;
+        if (currentUser.inventory[gemIndex].quantity > 1) {
+            currentUser.inventory[gemIndex].quantity--;
+        } else {
+            currentUser.inventory.splice(gemIndex, 1);
+            if (gemIndex < index) window.selectedForgeItemIndex--;
+        }
     
-            // ĐỌC CHỈ SỐ TỪ LÕI VÀ GẮN VÀO TRANG BỊ
-            const gemData = ITEM_DATA[gemName];
-            const statToBoost = gemData.stat; 
-            const socketVal = gemData.val; 
+        // ĐỌC CHỈ SỐ TỪ LÕI VÀ GẮN VÀO TRANG BỊ
+        const gemData = ITEM_DATA[gemName];
+        const statToBoost = gemData.stat; 
+        const socketVal = gemData.val; 
     
-            itemObj.sockets.push({ stat: statToBoost, val: socketVal, name: gemName }); 
-            
-            let statLabel = "";
-            let displayVal = (socketVal * 100) + "%";
-            if (statToBoost === 'dmg_boost') statLabel = "SÁT THƯƠNG";
-            else if (statToBoost === 'dmg_reduce') statLabel = "MIỄN THƯƠNG";
-            else if (statToBoost === 'crit_dmg') statLabel = "ST BẠO KÍCH";
+        itemObj.sockets.push({ stat: statToBoost, val: socketVal, name: gemName }); 
+        
+        let statLabel = "";
+        let displayVal = (socketVal * 100) + "%";
+        if (statToBoost === 'dmg_boost') statLabel = "SÁT THƯƠNG";
+        else if (statToBoost === 'dmg_reduce') statLabel = "MIỄN THƯƠNG";
+        else if (statToBoost === 'crit_dmg') statLabel = "ST BẠO KÍCH";
     
-            if (typeof playSound === 'function') playSound("audio/tada.mp3"); 
-            const station = document.getElementById('forgeStation');
-            station.innerHTML = `
-                <img src="${ITEM_DATA[itemObj.name].img}" style="width: 100px; height: 100px; object-fit: contain; animation: smoothItemGlow 0.6s forwards; z-index: 10;">
-                <div class="smooth-success-text" style="color: #cc33ff; text-shadow: 0 0 10px #cc33ff, 2px 2px 0 #000;">KHẢM THÀNH CÔNG!</div>
-                <div style="position: absolute; bottom: -15px; background: rgba(0,0,0,0.8); border: 1px solid #cc33ff; color: #cc33ff; padding: 2px 10px; font-weight: bold; border-radius: 5px; white-space: nowrap; animation: smoothSuccessPop 0.4s 0.2s both; z-index: 25;">
-                    +${displayVal} ${statLabel}
-                </div>
-            `;
-            
-            setTimeout(async () => {
-                await saveUserData();
-                selectForgeItem(window.selectedForgeItemIndex);
-                renderForgeList();
-                render();
-            }, 1500);
-        };
+        if (typeof playSound === 'function') playSound("audio/tada.mp3"); 
+        const station = document.getElementById('forgeStation');
+        
+        // ================= GIAO DIỆN GUNNY LÚC KHẢM THÀNH CÔNG =================
+        station.innerHTML = `
+            <img src="${ITEM_DATA[itemObj.name].img}" class="item-success" style="width: 100px; height: 100px; object-fit: contain; z-index: 10;">
+            <div class="gunny-msg gunny-success" style="color: #e6b3ff; -webkit-text-stroke: 1.5px #4b0082; text-shadow: 0px 4px 0px #4b0082, 0 0 20px #cc33ff, 0 0 40px #ff00ff;">KHẢM THÀNH CÔNG!</div>
+            <div style="position: absolute; bottom: -15px; background: rgba(0,0,0,0.8); border: 1px solid #cc33ff; color: #cc33ff; padding: 2px 10px; font-weight: bold; border-radius: 5px; white-space: nowrap; animation: gunnyPopUp 1.5s both; z-index: 25;">
+                +${displayVal} ${statLabel}
+            </div>
+        `;
+        
+        setTimeout(async () => {
+            await saveUserData();
+            selectForgeItem(window.selectedForgeItemIndex);
+            renderForgeList();
+            render();
+        }, 1500);
+    };
         
         const originalOpenTabForForge = window.openTab;
         window.openTab = function(evt, tabName) {
