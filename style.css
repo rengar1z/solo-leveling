@@ -2317,3 +2317,61 @@
             border-radius: 0px; /* Bỏ bo tròn, để vuông chuẩn khoa học viễn tưởng */
             box-shadow: 0 0 10px #00bfff;
         }
+
+        /* ================= HIỆU ỨNG THÀNH CÔNG / THẤT BẠI (CHUẨN GUNNY) ================= */
+        .gunny-msg {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Arial Black', 'Oswald', sans-serif;
+            font-size: 38px;
+            font-weight: 900;
+            text-align: center;
+            white-space: nowrap;
+            z-index: 100;
+            pointer-events: none;
+            animation: gunnyPopUp 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        
+        /* Chữ Thành Công: Vàng rực, viền nâu, bóng neon xanh lá */
+        .gunny-success {
+            color: #ffde00;
+            -webkit-text-stroke: 1.5px #8b4500;
+            text-shadow: 0px 4px 0px #8b4500, 0 0 20px #00ff00, 0 0 40px #00ffcc;
+        }
+        
+        /* Chữ Thất Bại: Xám xịt, viền đen, bóng đỏ máu */
+        .gunny-fail {
+            color: #bfbfbf;
+            -webkit-text-stroke: 1.5px #333333;
+            text-shadow: 0px 4px 0px #333333, 0 0 20px #ff0000;
+        }
+        
+        /* Hiệu ứng chữ nảy lên */
+        @keyframes gunnyPopUp {
+            0% { transform: translate(-50%, 0) scale(0.3); opacity: 0; }
+            40% { transform: translate(-50%, -60px) scale(1.1); opacity: 1; }
+            60% { transform: translate(-50%, -50px) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -80px) scale(1); opacity: 0; }
+        }
+        
+        /* Hiệu ứng trang bị phát sáng chói lóa khi thành công */
+        @keyframes gunnyItemSuccess {
+            0% { filter: brightness(1); transform: scale(1); }
+            50% { filter: brightness(2.5) drop-shadow(0 0 30px #00ff00); transform: scale(1.2); }
+            100% { filter: brightness(1); transform: scale(1); }
+        }
+        
+        /* Hiệu ứng trang bị xám xịt và rung lắc khi thất bại */
+        @keyframes gunnyItemFail {
+            0% { transform: translateX(0); filter: grayscale(0); }
+            20% { transform: translateX(-5px); filter: grayscale(0.8); }
+            40% { transform: translateX(5px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+            100% { transform: translateX(0); filter: grayscale(0.8) brightness(0.6); }
+        }
+        
+        .item-success { animation: gunnyItemSuccess 0.8s ease forwards; }
+        .item-fail { animation: gunnyItemFail 0.6s ease forwards; }
