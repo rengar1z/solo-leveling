@@ -2236,7 +2236,7 @@
         .enemy-fill { background: linear-gradient(90deg, #cc0000, #ff4d4d); box-shadow: inset 0 0 15px #ff4d4d; }
         
         .modern-hp-text {
-            font-size: 18px; /* Tăng text máu */
+            font-size: 18px; 
             font-weight: bold;
             color: #fff;
             margin-top: 6px;
@@ -2249,7 +2249,6 @@
             background: linear-gradient(180deg, #ffffff 0%, #c4cbd4 100%) !important;
         }
         
-        /* Icon Buff/Debuff to hơn 1 xíu để hợp giao diện */
         .modern-player .status-board { justify-content: flex-start; margin-top: 10px; gap: 10px;}
         .modern-enemy .status-board { justify-content: flex-end; margin-top: 10px; gap: 10px;}
         .modern-player .status-icon, .modern-enemy .status-icon {
@@ -2257,7 +2256,6 @@
             height: 32px;
         }
         
-        /* Khay Action Controls ghim xuống dưới cùng */
         .modern-action-controls {
             background: rgba(0, 5, 10, 0.95);
             border-top: 1px solid rgba(0, 191, 255, 0.3);
@@ -2271,11 +2269,9 @@
             height: 180px !important;
             background: linear-gradient(135deg, rgba(5, 10, 20, 0.95) 0%, rgba(2, 5, 10, 0.98) 100%) !important;
             border: none !important;
-            
-            /* Cắt góc chuẩn System: Góc trên bên trái & Dưới cùng bên phải */
+
             clip-path: polygon(25px 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%, 0 100%, 0 25px);
             
-            /* Vạch sáng giả lập viền neon (do clip-path không hỗ trợ border thông thường) */
             box-shadow: inset 3px 3px 0px rgba(0, 191, 255, 0.3), inset -3px -3px 0px rgba(0, 191, 255, 0.1) !important;
             
             margin-top: 25px !important;
@@ -2285,40 +2281,37 @@
             
             font-size: 18px !important;
             line-height: 1.6;
-            color: #a4b3c6 !important; /* Màu xanh xám kim loại để hợp tone hệ thống */
+            color: #a4b3c6 !important; 
             font-family: 'Oswald', sans-serif !important;
-            font-style: italic; /* Chữ nghiêng tạo cảm giác tốc độ trận đấu */
+            font-style: italic; 
             overflow-y: auto;
             position: relative;
             
-            /* Hiệu ứng viền phát sáng nhẹ từ sau lưng */
             filter: drop-shadow(0 0 10px rgba(0, 191, 255, 0.2));
         }
         
-        /* Định dạng các từ bôi đậm (Sát thương, tên chiêu...) cho nổi bật trên nền đen */
         #battleLog b, #d-battleLog b, 
         #battleLog strong, #d-battleLog strong {
             color: #fff;
             text-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
             letter-spacing: 1px;
-            font-style: italic; /* Giữ thống nhất nghiêng */
+            font-style: italic; 
         }
         
-        /* Thanh cuộn Cyberpunk vát vuông vức */
         #battleLog::-webkit-scrollbar, #d-battleLog::-webkit-scrollbar {
             width: 6px;
         }
         #battleLog::-webkit-scrollbar-track, #d-battleLog::-webkit-scrollbar-track {
             background: transparent;
-            border-left: 1px dashed rgba(0, 191, 255, 0.15); /* Đường vạch đứt phân chia track */
+            border-left: 1px dashed rgba(0, 191, 255, 0.15); 
         }
         #battleLog::-webkit-scrollbar-thumb, #d-battleLog::-webkit-scrollbar-thumb {
             background: #00bfff;
-            border-radius: 0px; /* Bỏ bo tròn, để vuông chuẩn khoa học viễn tưởng */
+            border-radius: 0px; 
             box-shadow: 0 0 10px #00bfff;
         }
 
-        /* ================= HIỆU ỨNG THÀNH CÔNG / THẤT BẠI (CHUẨN GUNNY) ================= */
+        /* ================= HIỆU ỨNG THÀNH CÔNG / THẤT BẠI ================= */
         .gunny-msg {
             position: absolute;
             top: 30%;
@@ -2334,14 +2327,12 @@
             animation: gunnyPopUp 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
         
-        /* Chữ Thành Công: Vàng rực, viền nâu, bóng neon xanh lá */
         .gunny-success {
             color: #ffde00;
             -webkit-text-stroke: 1.5px #8b4500;
             text-shadow: 0px 4px 0px #8b4500, 0 0 20px #00ff00, 0 0 40px #00ffcc;
         }
         
-        /* Chữ Thất Bại: Xám xịt, viền đen, bóng đỏ máu */
         .gunny-fail {
             color: #bfbfbf;
             -webkit-text-stroke: 1.5px #333333;
@@ -2356,14 +2347,12 @@
             100% { transform: translate(-50%, -80px) scale(1); opacity: 0; }
         }
         
-        /* Hiệu ứng trang bị phát sáng chói lóa khi thành công */
         @keyframes gunnyItemSuccess {
             0% { filter: brightness(1); transform: scale(1); }
             50% { filter: brightness(2.5) drop-shadow(0 0 30px #00ff00); transform: scale(1.2); }
             100% { filter: brightness(1); transform: scale(1); }
         }
         
-        /* Hiệu ứng trang bị xám xịt và rung lắc khi thất bại */
         @keyframes gunnyItemFail {
             0% { transform: translateX(0); filter: grayscale(0); }
             20% { transform: translateX(-5px); filter: grayscale(0.8); }
