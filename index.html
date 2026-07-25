@@ -6758,6 +6758,35 @@ window.selectBagItem = function(identifier, isStacked, qty, isRefresh = false) {
         
             renderForgeList(); 
         };
+
+        // Hàm hiển thị hiệu ứng Gunny
+        window.showGunnyEffect = function(isSuccess) {
+            const station = document.getElementById('forgeStation');
+            const img = station.querySelector('img');
+    
+            // Reset class hiệu ứng cho trang bị
+            if (img) {
+                img.classList.remove('item-success', 'item-fail');
+                void img.offsetWidth; // Bắt trình duyệt load lại animation
+                img.classList.add(isSuccess ? 'item-success' : 'item-fail');
+            }
+    
+            // Tạo chữ bay lên
+            const msg = document.createElement('div');
+            msg.className = 'gunny-msg ' + (isSuccess ? 'gunny-success' : 'gunny-fail');
+            msg.innerHTML = isSuccess ? 'THÀNH CÔNG!' : 'THẤT BẠI!';
+            station.appendChild(msg);
+    
+            // Âm thanh
+            if (isSuccess && typeof playSound === 'function') playSound("audio/tada.mp3");
+            else if (!isSuccess && typeof playSound === 'function') playSound("audio/monster_hit.mp3");
+    
+            // Tự động dọn dẹp sau 1.5 giây
+            setTimeout(() => {
+                if (station.contains(msg)) station.removeChild(msg);
+                if (img) img.classList.remove('item-success', 'item-fail');
+            }, 1500);
+        };
         
         window.executeEnhance = async function() {
             if (window.selectedForgeItemIndex === null) return alert("Vui lòng chọn trang bị để cường hóa!");
